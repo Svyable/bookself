@@ -12,6 +12,8 @@ Rules for AI agents working in this repository.
   table of contents and the Chapters count in the same change.
 - When you add a book, add its slug to the Book dropdown in
   `.github/ISSUE_TEMPLATE/chapter-feedback.yml` in the same change.
+- Do not put book prose in `reader/`. The reader fetches Markdown from
+  `books/<slug>/`. Authors and agents only edit Markdown and `media/`.
 
 ## Voice
 
@@ -38,7 +40,35 @@ Rules for AI agents working in this repository.
   explicit approval.
 - Do not reformat a file wholesale (line wrapping, heading levels, quote
   style) as a drive-by.
-- Do not add a build step, GitHub Pages, CODEOWNERS, or branch protection
-  unless a human asked for that by name.
+- Do not add a build step, CODEOWNERS, or branch protection unless a human
+  asked for that by name.
+- Do not change GitHub Pages source away from the repository root, or add a
+  custom domain, unless a human asked.
 - Do not commit secrets, credentials, or unpublished manuscripts copied from
   outside this repository.
+
+## Verbs (author and agent)
+
+These are the whole public lifecycle. Each is Markdown (and maybe `media/`).
+
+**Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
+authors, `Status: Drafting`. Add the slug to the chapter-feedback dropdown.
+Do not add the book to the portal README catalog yet.
+
+**Write / edit.** One chapter file per change. If you add, rename, or remove
+a chapter, update that book's README TOC and Chapters count in the same
+change.
+
+**Preview.** After a push, the unlisted reader URL is
+`reader/#/b/<slug>/`. It works while Drafting. It does not appear on the
+shelf.
+
+**Publish.** In one change set: set the book README Status to the exact
+string `Published`, and add one row to the portal README table under
+“The books” linking `books/<slug>/`. Both are required. Lead author merges.
+
+**Unpublish.** Set Status to anything except `Published` and remove the
+portal README row.
+
+**Revise a published book.** Edit the Markdown and push. The reader fetches
+live files. Do not bump a version stamp.

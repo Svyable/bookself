@@ -56,6 +56,17 @@ list:
 Tick boxes by editing `[ ]` to `[x]` (see the author guide). Update the
 Chapters count when it drifts.
 
+**Status** is how the public reader decides what to list.
+
+- `Drafting` (or anything except `Published`) — GitHub only, plus an
+  unlisted reader URL `reader/#/b/<slug>/`.
+- `Published` — appears on the public shelf **after** the portal README
+  also links `books/<slug>/`.
+
+Optional cover art: `media/cover.png` (or `.jpg` / `.webp`). The reader
+uses it on the generated cover. If it is missing, the reader makes a cloth
+cover from the title.
+
 ## Manuscript
 
 - One file per chapter.

@@ -16,16 +16,19 @@ editor, pull requests, issues, and line comments — with no build step anywhere
 - Authors write plain Markdown that renders natively on GitHub.
 - Non-technical authors can contribute without knowing git.
 - Adding a book means copying a folder — no tooling, no config files to learn.
-- Day-one setup stays minimal; rendering and previews come later, when a real book needs them.
+- Day-one setup stays minimal. The public Kindle-style reader is specified in
+  `2026-08-22-openbookbinder-reader.md`.
 
 ## Non-Goals (Deferred)
 
-Recorded so they are easy to find later. Each is added when a real book requires it:
+Recorded so they are easy to find later:
 
 - PDF/ePub rendering pipeline
-- GitHub Pages preview site
 - Branch protection rules
 - CODEOWNERS
+
+GitHub Pages (repo root, `.nojekyll`) and the public reader are no longer
+deferred; see the reader spec.
 
 ## Approach
 
@@ -49,6 +52,10 @@ openbookbinder/
 │   ├── author-guide.md           # "Never used GitHub?" — writing via the web editor
 │   ├── editor-guide.md           # Branch → edit → pull request → review
 │   └── book-anatomy.md           # What every book folder must contain
+├── reader/                       # Public Kindle-style GUI (see reader spec)
+│   ├── index.html
+│   ├── css/style.css
+│   └── js/
 ├── books/
 │   └── _TEMPLATE/                # Copy this folder to start a new book
 │       ├── README.md             # Book hub: info table + clickable TOC with status

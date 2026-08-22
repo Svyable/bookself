@@ -36,6 +36,19 @@ When you add a book:
 When you retire a book, remove its option in the same PR that removes the
 folder.
 
+## Publishing and the public catalog
+
+The public reader lists a book only when **both** are true:
+
+1. The book README Status is exactly `Published`.
+2. The portal `README.md` table under **The books** links `books/<slug>/`.
+
+Do that in one pull request (or one commit, if you are the lead author).
+Do not edit `reader/` to add a book.
+
+Unpublish by reversing both. Preview without publishing:
+`reader/#/b/<slug>/`.
+
 ## Line-comment reviews
 
 Review the manuscript, not the idea of the book, unless the PR is a new-book

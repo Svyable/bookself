@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Book Binder</title>
+  <meta name="description" content="Read books written in public — a Kindle-style binder for open manuscripts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="binder">
+  <div class="night-light-overlay" id="nightLightOverlay"></div>
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="app-header" id="readerChrome">
+      <div class="header-left">
+        <button class="logo" id="logoBtn" type="button" title="Binder">
+          <span class="logo-mark">⌘</span>
+          <span class="logo-text">Open Book Binder</span>
+        </button>
+        <span class="draft-badge" id="draftBadge" hidden>Draft</span>
+      </div>
+      <div class="header-right">
+        <button class="header-btn" id="fontDecrease" type="button" title="Smaller type" aria-label="Smaller type"><span>A−</span></button>
+        <button class="header-btn" id="fontIncrease" type="button" title="Larger type" aria-label="Larger type"><span>A+</span></button>
+        <button class="header-btn night-light-btn" id="nightLightBtn" type="button" title="Night light" aria-label="Night light">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="header-btn" id="bookmarkBtn" type="button" title="Bookmark this page" aria-label="Bookmark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="header-btn progress-btn" id="progressBtn" type="button" title="Reading progress" aria-label="Reading progress">
+          <span id="progressPercent">0%</span>
+        </button>
+        <button class="header-btn" id="themeBtn" type="button" title="Toggle theme" aria-label="Toggle theme">
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="header-btn" id="tocBtn" type="button" title="Contents" aria-label="Table of contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        </button>
+        <div class="reading-time" id="readingTime">0m</div>
+      </div>
+    </header>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBarFill"></div>
+    </div>
+
+    <main class="stage">
+      <section class="binder-view" id="binderView">
+        <div class="binder-hero">
+          <p class="binder-kicker">Written on GitHub · Read like a book</p>
+          <h1>The public binder</h1>
+          <p class="binder-lede">Manuscripts live as plain Markdown. When an author marks a book Published, it takes a place on this shelf.</p>
+          <p class="binder-actions">
+            <a class="write-link" id="writeLink" href="https://github.com/Svyable/openbookbinder">Write on GitHub</a>
+          </p>
+        </div>
+        <p class="shelf-error" id="shelfError" hidden></p>
+        <div class="shelf" id="shelf"></div>
+        <p class="empty-shelf" id="emptyShelf">No published books yet. Copy <code>books/_TEMPLATE/</code>, write, then set Status to <code>Published</code> and add a row to the portal README.</p>
+      </section>
+
+      <div class="book-stage" id="bookStage">
+        <article class="cover-page" id="coverPage" hidden>
+          <div class="cover-front" id="coverFront">
+            <div class="cover-rule"></div>
+            <h1 class="cover-title" id="coverTitle"></h1>
+            <p class="cover-subtitle" id="coverSubtitle"></p>
+            <p class="cover-author" id="coverAuthor"></p>
+            <p class="cover-year" id="coverYear"></p>
+            <div class="cover-actions">
+              <button class="start-btn" id="startBtn" type="button">Begin reading</button>
+              <button class="ghost-btn" id="continueBtn" type="button" hidden>Continue</button>
+            </div>
+          </div>
+        </article>
+
+        <div class="pages-wrapper" id="pagesWrapper">
+          <div class="page-surface left" id="pageLeft">
+            <div class="page-inner"></div>
+            <span class="page-num"></span>
+          </div>
+          <div class="gutter" aria-hidden="true"></div>
+          <div class="page-surface right" id="pageRight">
+            <div class="page-inner"></div>
+            <span class="page-num"></span>
+          </div>
+        </div>
+
+        <article class="back-cover" id="backCover">
+          <div class="cover-front">
+            <p class="cover-kicker">The end</p>
+            <h2 class="cover-title" id="backTitle"></h2>
+            <p class="cover-ornament">❧</p>
+            <p class="cover-author" id="backAuthor"></p>
+            <div class="cover-actions">
+              <button class="ghost-btn" id="rereadBtn" type="button">Return to cover</button>
+              <button class="start-btn" id="homeFromEnd" type="button">Back to the binder</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <nav class="page-nav" id="pageNav" hidden>
+      <button class="nav-btn" id="prevBtn" type="button" aria-label="Previous page">‹</button>
+      <div class="nav-center">
+        <span class="page-chapter" id="currentChapter"></span>
+        <div class="page-indicator">
+          <span id="currentPage">1</span>
+          <span class="separator">/</span>
+          <span id="totalPages">1</span>
+        </div>
+        <button class="view-toggle" id="viewModeBtn" type="button">Single</button>
+      </div>
+      <button class="nav-btn" id="nextBtn" type="button" aria-label="Next page">›</button>
+    </nav>
+  </div>
+
+  <aside class="toc-overlay" id="tocOverlay">
+    <div class="toc-header">
+      <h2>Contents</h2>
+      <button class="toc-close" id="tocClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="toc-search">
+      <input type="search" id="tocSearch" placeholder="Search chapters…" autocomplete="off">
+    </div>
+    <ul class="toc-list" id="tocList"></ul>
+    <div class="toc-marks" id="tocMarks" hidden>
+      <h3>Bookmarks</h3>
+      <ul class="toc-list" id="bookmarkList"></ul>
+    </div>
+  </aside>
+
+  <div class="stats-overlay" id="progressPanel">
+    <div class="stats-card">
+      <h3>Reading progress</h3>
+      <div class="stats-circle" id="statsCircle"><span id="statsPercent">0%</span></div>
+      <div class="stats-details">
+        <div class="stat-item"><span class="stat-value" id="pagesRead">0</span><span class="stat-label">Page</span></div>
+        <div class="stat-item"><span class="stat-value" id="chaptersRead">0</span><span class="stat-label">Chapters</span></div>
+        <div class="stat-item"><span class="stat-value" id="timeSpent">0m</span><span class="stat-label">Time</span></div>
+      </div>
+      <button class="stats-close" id="statsClose" type="button">Close</button>
+    </div>
+  </div>
+
+  <div class="loader" id="loader" hidden>
+    <div class="loader-book" aria-hidden="true"></div>
+    <p>Opening the book…</p>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+  <div class="page-surface measure" id="pageMeasure" aria-hidden="true">
+    <div class="page-inner" id="pageMeasureInner"></div>
+  </div>
+
+  <script src="vendor/marked.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -26,7 +26,8 @@ A pull request should touch one chapter file (or front/back matter), plus the
 book README only when the table of contents or status needs to match.
 
 Do not bundle unrelated chapters, repo-wide reformats, or tooling changes
-into a chapter PR.
+into a chapter PR. Changes to `reader/` are framework work, not a chapter
+PR — keep them separate.
 
 ## Direct-to-main for lead authors
 

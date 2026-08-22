@@ -96,3 +96,31 @@ If you would rather not touch the text:
 
 Use **New book proposal** only when you are pitching a title that does not
 exist yet.
+
+## 8. Reading the published book
+
+The public binder is the [reader](../reader/). It looks like a book: two
+pages, a lamp, a bookmark. It only lists books whose Status is
+`Published`.
+
+You can still look at a draft the same way. After your files are on GitHub,
+open `reader/#/b/<your-slug>/`. That address is unlisted — it will not
+appear on the shelf until you publish. Share it with a reviewer.
+
+The reader cannot open from a `file://` page. GitHub Pages (or any static
+server at the repository root) has to serve the files.
+
+## 9. Publishing
+
+Publishing is two edits, together. Nothing in `reader/` changes.
+
+1. In the book `README.md`, set **Status** to the exact word `Published`.
+2. In the portal README (`README.md` at the root of the repository), add a
+   row under **The books** that links to `books/<your-slug>/`.
+
+The reader lists the portal table, then checks Status. Both must be true.
+
+To unpublish, reverse both edits.
+
+A GitHub-authed agent can do every step in this guide. It should never edit
+reader JavaScript to put your book on the shelf.

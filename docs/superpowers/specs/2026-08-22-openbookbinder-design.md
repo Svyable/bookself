@@ -70,7 +70,8 @@ openbookbinder/
 - `books/_TEMPLATE/` — leading underscore pins it to the top of the folder listing
   and signals "not a real book". Copy, rename, start writing.
 - Chapter files are `chNN-slug.md` — zero-padding makes the file list read like a
-  table of contents with no tooling.
+  table of contents with no tooling. Beyond 99 chapters, `ch100-…` continues sorting
+  acceptably after the zero-padded files.
 - No build step. Every file is readable and editable in the browser as-is.
 - Per-book `media/` keeps images next to their manuscript; relative links
   (`![alt](../media/figure-1.png)`) survive renames within a book.
@@ -91,7 +92,7 @@ TOC that doubles as the progress tracker:
 |---|---|
 | **Authors**   | @svyable |
 | **Status**    | Drafting |
-| **Chapters**  | 3 of 12 drafted |
+| **Chapters**  | 1 of 12 drafted |
 
 ## Contents
 
@@ -138,9 +139,10 @@ Three lanes matched to skill level:
 
 ### Issue templates
 
-- `chapter-feedback.yml` — dropdowns for book, chapter, and type
-  (typo / clarity / structure / bigger idea), plus free text. For people who will
-  never touch git.
+- `chapter-feedback.yml` — dropdowns for book and type (typo / clarity / structure /
+  bigger idea), plus a free-text field for chapter. For people who will never touch
+  git. `docs/editor-guide.md` assigns upkeep of the book list to whoever adds a book
+  (one line per new book), so the dropdown doesn't go stale silently.
 - `new-book-proposal.md` — pitch template (working title, premise, audience, chapter
   sketch) so books are scaffolded deliberately.
 
@@ -155,6 +157,10 @@ update the book README's TOC/status when adding chapters.
 Framework scaffolding and docs under MIT. Book manuscripts remain © their respective
 authors (stated in LICENSE and in each book's front matter). This keeps the framework
 reusable while protecting unpublished work.
+
+Mechanism: a single `LICENSE` file with a dual notice — MIT for the scaffolding
+(everything outside `books/`), all-rights-reserved for manuscripts inside `books/` —
+plus one copyright line per book in its `front-matter.md`. No per-book license files.
 
 ## Setup Sequence
 

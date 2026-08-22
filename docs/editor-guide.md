@@ -38,6 +38,10 @@ folder.
 
 ## Publishing and the public catalog
 
+For a house that keeps drafts off the street, see [Bookself](bookself.md):
+private workshop, public library. Promoting a book is copy-the-folder, then
+the two edits below **on the library**.
+
 The public reader lists a book only when **both** are true:
 
 1. The book README Status is exactly `Published`.

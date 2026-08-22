@@ -3,7 +3,7 @@
   "shortName": "Binder",
   "description": "Open-source software for a Git-native bookshelf. Fork it, add Markdown, publish.",
   "kicker": "Written on GitHub · Read like a book",
-  "lede": "This is the software. Fork the repo, put books in Markdown, and you have a shelf.",
+  "lede": "This is the software. Fork once for a public shelf, or twice for Bookself: a private workshop and a public library.",
   "credit": "A live example is Svyable Shelf",
   "creditHref": "https://svyable.github.io/shelf/reader/",
   "writeHref": "https://github.com/Svyable/openbookbinder",
@@ -15,7 +15,8 @@
   "steps": [
     { "n": "1", "title": "Copy", "body": "books/_TEMPLATE to books/your-title" },
     { "n": "2", "title": "Write", "body": "Plain Markdown. Pencil icon. Commit." },
-    { "n": "3", "title": "Publish", "body": "Status: Published, plus a row in the README" }
+    { "n": "3", "title": "Publish", "body": "On a public repo: Status Published, plus a row in the README" },
+    { "n": "4", "title": "Bookself", "body": "Secret drafts stay in a private workshop until you copy them to the library" }
   ],
   "github": {
     "owner": "Svyable",

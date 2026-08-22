@@ -12,8 +12,12 @@ This walkthrough uses the GitHub website on a computer.
 3. Preview at `reader/#/b/your-title/`. When you are ready, set Status to
    `Published` and add a row for the book in the root `README.md`.
 
-That is the whole publishing loop. The rest of this guide is the same
-path, slower.
+That is the whole publishing loop **on one repository**. If some books must
+stay secret, use [Bookself](bookself.md): write in a **private** workshop,
+then copy a folder to a **public** library when it is meant to be read.
+A draft on a public repo is unlisted, not private.
+
+The rest of this guide is the same path, slower.
 
 ## 1. What this place is
 
@@ -121,6 +125,9 @@ The reader cannot open from a `file://` page. GitHub Pages (or any static
 server at the repository root) has to serve the files.
 
 ## 9. Publishing
+
+If the repo is **public**, this puts the book on the public shelf. If you
+need a closed studio, write in a private workshop first ([Bookself](bookself.md)).
 
 Publishing is two edits, together. Nothing in `reader/` changes.
 

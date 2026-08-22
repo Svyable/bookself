@@ -65,6 +65,9 @@ Chapters count when it drifts.
 - `Published` — appears on the public shelf **after** the portal README
   also links `books/<slug>/`.
 
+Unlisted is not private. For a closed studio plus a public shelf, see
+[Bookself](bookself.md).
+
 Optional cover art: `media/cover.png` (or `.jpg` / `.webp`). The reader
 uses it on the generated cover. If it is missing, the reader makes a cloth
 cover from the title.

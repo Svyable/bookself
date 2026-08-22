@@ -50,3 +50,9 @@ If you are a lead author editing someone else's book, still open a PR.
 `.github/ISSUE_TEMPLATE/chapter-feedback.yml` has a **Book** dropdown. When
 you add a book, add its slug as a new option on that list in the same PR that
 introduces `books/<slug>/`. Details are in [the editor guide](docs/editor-guide.md).
+
+## Private and public shelves
+
+Unlisted drafts on a public repository are not private. Authors and
+publishers who need a closed studio run [Bookself](docs/bookself.md): a
+private workshop and a public library, both using this software.

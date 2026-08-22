@@ -7,19 +7,25 @@ Kindle-style reader. No build step. No WordPress. No lock-in.
 
 Writing happens on GitHub. Reading happens in the [reader](reader/).
 
-## A live shelf
+**[Bookself](docs/bookself.md)** is the full author and publisher workflow:
+a **private workshop** for drafts and a **public library** for what the
+street may read. This repo is only the engine. Unlisted files on a public
+repo are not secret — privacy is a private GitHub repository.
 
-This repo is the software. A real imprint running it:
+## A live Bookself
 
-| | |
+| Role | Where |
 |---|---|
-| **Read** | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
-| **Books** | [github.com/Svyable/shelf](https://github.com/Svyable/shelf) |
+| **Software** | this repository |
+| **Read (library)** | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
+| **Public books** | [github.com/Svyable/shelf](https://github.com/Svyable/shelf) |
+| **Private workshop** | a private binder, not this repo |
 
-Start your own the same way: fork Open Book Binder, copy `books/_TEMPLATE/`,
-set Status to `Published`, add a row under **The books**.
+Start your own: follow [Bookself](docs/bookself.md), or fork this repo for a
+single public shelf. Copy `books/_TEMPLATE/`, set Status to `Published`, add
+a row under **The books**.
 
-Reader upgrades land here first, then copy to a shelf with
+Reader upgrades land here first, then copy to each shelf with
 `scripts/sync-reader.sh`.
 
 ## Why
@@ -53,6 +59,7 @@ here. Details are in the [author guide](docs/author-guide.md).
 | If you are… | Start here |
 |---|---|
 | Here to read a real shelf | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
+| Here to run private + public shelves | [Bookself](docs/bookself.md) |
 | Here to try the software | [The demo binder](reader/) |
 | New to GitHub | [Author guide](docs/author-guide.md) — write in the browser |
 | Comfortable with pull requests | [Editor guide](docs/editor-guide.md) and [Contributing](CONTRIBUTING.md) |

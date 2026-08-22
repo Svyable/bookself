@@ -83,6 +83,13 @@ shelf.
 **Publish.** In one change set: set the book README Status to the exact
 string `Published`, and add one row to the portal README table under
 “The books” linking `books/<slug>/`. Both are required. Lead author merges.
+Do this on the **public library** repo. Unpublished manuscripts belong in
+a **private workshop** — see `docs/bookself.md`. Do not copy secret books
+into a public repo to “preview” them.
+
+**Promote (Bookself).** Copy `books/<slug>/` from the private workshop into
+the public library (`scripts/promote-book.sh <slug> [path-to-library]`),
+then Publish on the library. Do not edit `reader/` to add a book.
 
 **Unpublish.** Set Status to anything except `Published` and remove the
 portal README row.

@@ -1,4 +1,4 @@
-import { fetchText, firstExisting } from './base.js';
+import { fetchText, fetchDocument, firstExisting } from './base.js';
 import {
   parsePortalCatalog,
   parseBookReadme,
@@ -17,7 +17,7 @@ import {
   loadStats,
   saveStats,
 } from './storage.js';
-import { parseHash, binderHash, coverHash, readHash, go } from './router.js';
+import { parseRoute, binderHash, coverHash, readHash, go } from './router.js';
 import {
   loadNotes,
   addNote,
@@ -42,6 +42,7 @@ const app = {
   toastTimer: null,
   pubFilter: 'All',
   pendingNote: null,
+  routing: false,
 };
 
 function $(id) {
@@ -89,8 +90,10 @@ async function loadCatalog() {
 
 async function loadBook(slug) {
   if (app.books.has(slug)) return app.books.get(slug);
-  const hub = await fetchText(`books/${slug}/README.md`);
+  const hubDoc = await fetchDocument(`books/${slug}/README.md`);
+  const hub = hubDoc.text;
   const meta = parseBookReadme(hub, slug);
+  meta.modified = hubDoc.modified;
   let fm = { title: meta.title, subtitle: '', year: '' };
   const chapters = await Promise.all(
     meta.contents.map(async (c) => {
@@ -223,6 +226,10 @@ function paintPages() {
   updateProgressUi();
   fillToc(app.book);
   setTitle();
+  const live = $('pageLive');
+  if (live) {
+    live.textContent = `${$('currentChapter').textContent}, page ${$('currentPage').textContent} of ${$('totalPages').textContent}`;
+  }
 }
 
 function showStage(name) {
@@ -266,7 +273,14 @@ function fillCover(book, { draft }) {
     words ? `~${mins} min` : '',
     book.isbn ? `ISBN ${book.isbn}` : '',
   ].filter(Boolean);
+  if (book.modified) {
+    const when = new Date(book.modified);
+    if (!Number.isNaN(when.getTime())) {
+      metaBits.push(`as of ${when.toISOString().slice(0, 10)}`);
+    }
+  }
   $('coverMeta').textContent = metaBits.join(' · ');
+  document.documentElement.lang = htmlLang(book.language);
   $('backColophon').textContent = [
     book.year ? `© ${book.year}` : '',
     book.publisher || '',
@@ -288,12 +302,23 @@ function fillCover(book, { draft }) {
   const prog = loadProgress(book.slug);
   const canContinue = !!(prog && book.contents.some((c) => c.id === prog.chapter));
   $('continueBtn').hidden = !canContinue;
-  fillProof(book);
+  fillProof(book, draft);
+  const src = $('sourceLink');
+  if (src) src.href = sourceUrl(book);
   setTitle();
 }
 
-function fillProof(book) {
+function htmlLang(value) {
+  if (!value) return 'en';
+  const v = value.trim();
+  if (/^[a-z]{2}([-_][A-Za-z]{2})?$/.test(v)) return v.replace('_', '-');
+  const map = { english: 'en', french: 'fr', spanish: 'es', german: 'de' };
+  return map[v.toLowerCase()] || 'en';
+}
+
+function fillProof(book, draft) {
   const issues = [];
+  if (draft && !book.cover) issues.push('No cover image (media/cover.png)');
   for (const ch of book.chapters || []) {
     if (ch.missing) issues.push(`Missing file: ${ch.file}`);
     else if (!(ch.markdown || '').replace(/^#.*$/m, '').trim()) issues.push(`Empty: ${ch.title}`);
@@ -481,6 +506,36 @@ function githubRepo() {
   const href = $('writeLink')?.getAttribute('href') || '';
   const m = href.match(/github\.com\/([^/]+)\/([^/#]+)/);
   return m ? { owner: m[1], repo: m[2].replace(/\.git$/, '') } : { owner: 'Svyable', repo: 'openbookbinder' };
+}
+
+function sourceUrl(book) {
+  if (!book) return '#';
+  const { owner, repo } = githubRepo();
+  return `https://github.com/${owner}/${repo}/tree/main/books/${book.slug}`;
+}
+
+function citeBook(book) {
+  const authors = (book.authors || '').replace(/@/g, '').trim();
+  const year = book.year || '';
+  const pub = book.publisher || '';
+  const url = `${window.location.origin}${window.location.pathname}?b=${encodeURIComponent(book.slug)}`;
+  return `${authors}${authors ? '. ' : ''}${book.title}.${pub || year ? ' ' : ''}${[pub, year].filter(Boolean).join(', ')}. ${url}`;
+}
+
+function feedbackUrl(quote) {
+  if (!app.book) return '#';
+  const { owner, repo } = githubRepo();
+  const ch = app.book.contents.find((c) => c.id === chapterOfPage(app.pageIndex));
+  const title = `[Feedback]: ${app.book.title}${ch ? ` — ${ch.title}` : ''}`;
+  const body = [
+    `**Book:** \`${app.book.slug}\``,
+    ch ? `**Chapter:** ${ch.title} (\`${ch.file}\`)` : '',
+    quote ? `**Passage:**\n\n> ${quote}` : '',
+    `**Reader:** ${locationUrl()}`,
+    '',
+    'What would you change, and why?',
+  ].filter(Boolean).join('\n');
+  return `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
 }
 
 function githubEditUrl(book, chapterId) {
@@ -702,17 +757,19 @@ function turn(delta) {
 }
 
 async function onRoute() {
-  const route = parseHash();
+  const route = parseRoute();
   $('tocOverlay').classList.remove('active');
   $('progressPanel').classList.remove('active');
   $('settingsPanel').classList.remove('active');
   $('searchOverlay').classList.remove('active');
   $('noteDialog').classList.remove('active');
+  $('helpOverlay').classList.remove('active');
   hideSelPop();
   if (route.view === 'binder') {
     showStage('binder');
     app.slug = null;
     app.book = null;
+    document.documentElement.lang = 'en';
     setTitle();
     renderShelf(app.catalog);
     return;
@@ -858,6 +915,21 @@ function bindUi() {
     e.stopPropagation();
     copyText(locationUrl());
   });
+  $('citeBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (app.book) copyText(citeBook(app.book));
+  });
+  $('feedbackBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.open(feedbackUrl(), '_blank', 'noopener');
+  });
+  $('helpClose').addEventListener('click', () => $('helpOverlay').classList.remove('active'));
+  $('helpBtn').addEventListener('click', () => $('helpOverlay').classList.toggle('active'));
+  $('selReport').addEventListener('click', () => {
+    const cur = currentSelection();
+    hideSelPop();
+    if (cur) window.open(feedbackUrl(cur.text), '_blank', 'noopener');
+  });
   $('settingsBtn').addEventListener('click', () => {
     applyPrefs();
     $('settingsPanel').classList.toggle('active');
@@ -959,7 +1031,7 @@ function bindUi() {
     turn(x < rect.width / 2 ? -1 : 1);
   });
   $('coverPage').addEventListener('click', (e) => {
-    if (e.target.closest('button')) return;
+    if (e.target.closest('button, a')) return;
     if (!$('continueBtn').hidden) $('continueBtn').click();
     else $('startBtn').click();
   });
@@ -979,13 +1051,15 @@ function bindUi() {
         $('progressPanel').classList.contains('active') ||
         $('settingsPanel').classList.contains('active') ||
         $('searchOverlay').classList.contains('active') ||
-        $('noteDialog').classList.contains('active')
+        $('noteDialog').classList.contains('active') ||
+        $('helpOverlay').classList.contains('active')
       ) {
         $('tocOverlay').classList.remove('active');
         $('progressPanel').classList.remove('active');
         $('settingsPanel').classList.remove('active');
         $('searchOverlay').classList.remove('active');
         $('noteDialog').classList.remove('active');
+        $('helpOverlay').classList.remove('active');
         hideSelPop();
         return;
       }
@@ -1015,6 +1089,10 @@ function bindUi() {
       app.prefs.focus = !app.prefs.focus;
       savePrefs(app.prefs);
       applyPrefs();
+    }
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+      e.preventDefault();
+      $('helpOverlay').classList.toggle('active');
     }
   });
 
@@ -1067,7 +1145,16 @@ async function init() {
     $('shelfError').textContent =
       'Could not load the binder catalog. Serve the repository root (not file://) so Markdown can be fetched.';
   }
-  window.addEventListener('hashchange', onRoute);
+  const requestRoute = () => {
+    if (app.routing) return;
+    app.routing = true;
+    queueMicrotask(() => {
+      app.routing = false;
+      onRoute();
+    });
+  };
+  window.addEventListener('hashchange', requestRoute);
+  window.addEventListener('popstate', requestRoute);
   await onRoute();
 }
 

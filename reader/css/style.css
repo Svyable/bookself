@@ -462,6 +462,9 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
   cursor: pointer;
   border-radius: 999px;
   padding: 0.7rem 1.4rem;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
 }
 
 .start-btn {
@@ -1005,6 +1008,30 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
 }
 
 .toc-edit a { color: var(--accent); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.help-keys {
+  list-style: none;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+.help-keys kbd {
+  display: inline-block;
+  min-width: 1.4rem;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 0.15rem;
+}
 
 #noteList li, #bookmarkList li {
   display: flex;

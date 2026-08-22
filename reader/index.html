@@ -48,6 +48,7 @@
         <button class="header-btn" id="tocBtn" type="button" title="Contents" aria-label="Table of contents">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
         </button>
+        <button class="header-btn" id="helpBtn" type="button" title="Keyboard" aria-label="Help">?</button>
         <button class="header-btn" id="settingsBtn" type="button" title="Type and tools" aria-label="Settings">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         </button>
@@ -94,6 +95,9 @@
               <button class="start-btn" id="startBtn" type="button">Begin reading</button>
               <button class="ghost-btn" id="continueBtn" type="button" hidden>Continue</button>
               <button class="ghost-btn" id="copyPreviewBtn" type="button">Copy link</button>
+              <button class="ghost-btn" id="citeBtn" type="button">Cite</button>
+              <button class="ghost-btn" id="feedbackBtn" type="button">Send feedback</button>
+              <a class="ghost-btn source-link" id="sourceLink" href="#" target="_blank" rel="noopener">Source</a>
             </div>
           </div>
         </article>
@@ -139,6 +143,7 @@
         <button class="view-toggle" id="viewModeBtn" type="button">Single</button>
       </div>
       <button class="nav-btn" id="nextBtn" type="button" aria-label="Next page">›</button>
+      <p class="sr-only" id="pageLive" aria-live="polite"></p>
     </nav>
   </div>
 
@@ -219,6 +224,7 @@
     <button type="button" id="selCopy">Copy</button>
     <button type="button" id="selNote">Note</button>
     <button type="button" id="selShare">Share</button>
+    <button type="button" id="selReport">Report</button>
   </div>
 
   <div class="stats-overlay" id="noteDialog">
@@ -238,6 +244,23 @@
     <p>Opening the book…</p>
   </div>
   <div class="toast" id="toast" hidden></div>
+  <div class="search-overlay" id="helpOverlay">
+    <div class="search-card">
+      <div class="toc-header">
+        <h2>Keys</h2>
+        <button class="toc-close" id="helpClose" type="button" aria-label="Close">×</button>
+      </div>
+      <ul class="help-keys">
+        <li><kbd>←</kbd> <kbd>→</kbd> pages</li>
+        <li><kbd>space</kbd> next page</li>
+        <li><kbd>/</kbd> search</li>
+        <li><kbd>b</kbd> bookmark</li>
+        <li><kbd>f</kbd> focus</li>
+        <li><kbd>?</kbd> this list</li>
+        <li><kbd>esc</kbd> back / close</li>
+      </ul>
+    </div>
+  </div>
   <div id="printRoot" class="print-root" hidden></div>
   <div class="page-surface measure" id="pageMeasure" aria-hidden="true">
     <div class="page-inner" id="pageMeasureInner"></div>

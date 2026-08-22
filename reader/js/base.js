@@ -16,7 +16,7 @@ export function fileUrl(relativePath) {
   return `${base}${clean}`;
 }
 
-export async function fetchText(relativePath) {
+export async function fetchDocument(relativePath) {
   const url = fileUrl(relativePath);
   const res = await fetch(url, { cache: 'no-cache' });
   if (!res.ok) {
@@ -25,7 +25,15 @@ export async function fetchText(relativePath) {
     err.url = url;
     throw err;
   }
-  return res.text();
+  return {
+    text: await res.text(),
+    modified: res.headers.get('Last-Modified'),
+  };
+}
+
+export async function fetchText(relativePath) {
+  const doc = await fetchDocument(relativePath);
+  return doc.text;
 }
 
 export async function fileExists(relativePath) {

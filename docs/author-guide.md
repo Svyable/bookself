@@ -141,4 +141,9 @@ Optional rows on the book README — Publisher, Edition, Language, ISBN —
 show on the cover and the back. They are not required to publish.
 
 While reading, Contents includes **Edit this chapter on GitHub**. Select
-text to copy, highlight a note, or share a passage with the page URL.
+text to copy, highlight a note, share a passage, or **Report** it as a
+GitHub issue with the chapter and quote filled in. The cover has **Send
+feedback**, **Cite**, and **Source** (the manuscript folder).
+
+A book URL can be the hash (`reader/#/b/<slug>/`) or the query
+(`reader/?b=<slug>`). Both work. `?` in the reader lists keys.

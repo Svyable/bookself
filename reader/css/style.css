@@ -20,22 +20,24 @@
   --base-font-size: 18px;
   --night-light-color: rgba(255, 176, 96, 0.38);
   --header-bg: rgba(12, 11, 10, 0.78);
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-duration: 0.42s;
 }
 
 [data-theme="light"] {
-  --bg-primary: #f4efe6;
-  --bg-secondary: #ebe4d6;
-  --bg-page: #fbf7ef;
-  --bg-elevated: #ffffff;
-  --text-primary: #1c1814;
-  --text-secondary: #4a433a;
-  --text-muted: #857c70;
-  --accent: #8b5a2b;
-  --accent-dim: #a67c52;
-  --accent-glow: rgba(139, 90, 43, 0.16);
-  --border: #d8d0c2;
-  --shadow: rgba(70, 50, 20, 0.12);
-  --header-bg: rgba(251, 247, 239, 0.82);
+  --bg-primary: #e8e6e1;
+  --bg-secondary: #ddd9d2;
+  --bg-page: #f2f0eb;
+  --bg-elevated: #f6f4ef;
+  --text-primary: #141311;
+  --text-secondary: #4c4a45;
+  --text-muted: #7a766f;
+  --accent: #8a7348;
+  --accent-dim: #6e5c38;
+  --accent-glow: rgba(138, 115, 72, 0.18);
+  --border: #c8c3ba;
+  --shadow: rgba(24, 22, 18, 0.14);
+  --header-bg: rgba(232, 230, 225, 0.86);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +50,7 @@ html, body {
 body {
   font-family: var(--font-body);
   background:
-    radial-gradient(1200px 600px at 50% -10%, #2a2218 0%, transparent 55%),
+    radial-gradient(1200px 600px at 50% -10%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 55%),
     var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -309,7 +311,7 @@ body[data-stage="binder"] .progress-bar-container { opacity: 0; }
   height: 14.2rem;
   text-decoration: none;
   color: var(--text-primary);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--motion-duration) var(--motion-ease);
 }
 
 .volume:hover { transform: translateY(-8px); z-index: 2; }
@@ -324,8 +326,13 @@ body[data-stage="binder"] .progress-bar-container { opacity: 0; }
 .volume-cover {
   flex: 1;
   background:
+    linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55)),
+    var(--cover-jpg),
+    var(--cover-png),
     linear-gradient(145deg, rgba(255,255,255,0.08), transparent 40%),
     var(--cloth);
+  background-size: cover;
+  background-position: center;
   border-radius: 0 4px 4px 0;
   padding: 1.2rem 0.85rem;
   display: flex;
@@ -401,22 +408,32 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
   z-index: 5;
 }
 
-.cover-page { cursor: pointer; }
-.cover-page.opened, .cover-page[hidden] { display: none; }
+.cover-page {
+  cursor: pointer;
+  transition: opacity var(--motion-duration) var(--motion-ease),
+              transform var(--motion-duration) var(--motion-ease);
+}
+.cover-page[hidden] { display: none; }
+.cover-page.opened {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.96);
+  pointer-events: none;
+}
 
 .back-cover {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translate(-50%, -50%) rotateY(18deg);
-  transition: opacity 0.5s ease, transform 0.6s ease;
+  transform: translate(-50%, -50%) scale(0.96);
+  transition: opacity var(--motion-duration) var(--motion-ease),
+              transform var(--motion-duration) var(--motion-ease);
 }
 
 .back-cover.show {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .cover-front {
@@ -643,6 +660,12 @@ body[data-stage="cover"] .cover-dock { display: flex; }
   line-height: var(--line-height, 1.55);
 }
 
+.page-inner.is-short {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 [data-font="sans"] {
   --font-body: "Instrument Sans", "Helvetica Neue", sans-serif;
 }
@@ -678,12 +701,12 @@ body[data-stage="cover"] .cover-dock { display: flex; }
 .page-surface.right .page-running { text-align: right; }
 
 .page-surface.turning {
-  animation: pageTurn 0.28s ease;
+  animation: pageTurn var(--motion-duration) var(--motion-ease);
 }
 
 @keyframes pageTurn {
-  from { opacity: 0.55; transform: translateX(8px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0.55; }
+  to { opacity: 1; }
 }
 
 .page-inner h2, .page-inner h3 {
@@ -1221,7 +1244,9 @@ body.focus-mode:hover .page-nav {
     animation: none !important;
     transition: none !important;
   }
+  .volume { transition: none; }
   .volume:hover { transform: none; }
+  .cover-page { transition: none; }
 }
 
 @media (max-width: 780px) {

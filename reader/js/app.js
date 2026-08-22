@@ -1,4 +1,4 @@
-import { fetchText, fetchDocument, firstExisting } from './base.js';
+import { fetchText, fetchDocument, firstExisting, fileUrl } from './base.js';
 import {
   parsePortalCatalog,
   parseBookReadme,
@@ -210,6 +210,12 @@ function fillPage(el, page, num, side, two) {
   }
   el.classList.toggle('left', two && side === 'left');
   el.classList.toggle('right', !two || side === 'right');
+  requestAnimationFrame(() => {
+    inner.classList.toggle(
+      'is-short',
+      !!(page && inner.clientHeight && inner.scrollHeight < inner.clientHeight * 0.78)
+    );
+  });
 }
 
 function paintPages() {
@@ -242,9 +248,17 @@ function paintPages() {
 
 function showStage(name) {
   document.body.dataset.stage = name;
+  const cover = $('coverPage');
   $('binderView').hidden = name !== 'binder';
-  $('coverPage').hidden = name !== 'cover';
-  $('coverPage').classList.toggle('opened', name !== 'cover');
+  if (name === 'cover') {
+    cover.hidden = false;
+    requestAnimationFrame(() => cover.classList.remove('opened'));
+  } else {
+    cover.classList.add('opened');
+    window.setTimeout(() => {
+      if (document.body.dataset.stage !== 'cover') cover.hidden = true;
+    }, 420);
+  }
   $('pagesWrapper').classList.toggle('active', name === 'read');
   $('backCover').classList.toggle('show', name === 'end');
   $('pageNav').hidden = name !== 'read';
@@ -299,7 +313,7 @@ function fillCover(book, { draft }) {
   const face = $('coverFront');
   face.style.setProperty('--cloth', clothColor(book.slug));
   if (book.cover) {
-    face.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)), url("${book.cover}")`;
+    face.style.backgroundImage = `linear-gradient(180deg, rgba(8,7,6,.2) 0%, rgba(8,7,6,.62) 100%), url("${book.cover}")`;
     face.classList.add('has-art');
   } else {
     face.style.backgroundImage = '';
@@ -486,6 +500,8 @@ function volumeEl(book) {
   a.className = 'volume';
   a.href = coverHash(book.slug);
   a.style.setProperty('--cloth', clothColor(book.slug));
+  a.style.setProperty('--cover-jpg', `url("${fileUrl(`books/${book.slug}/media/cover.jpg`)}")`);
+  a.style.setProperty('--cover-png', `url("${fileUrl(`books/${book.slug}/media/cover.png`)}")`);
   const progress = loadProgress(book.slug);
   const last = app.prefs.lastSlug === book.slug;
   a.classList.toggle('is-reading', !!(progress || last));

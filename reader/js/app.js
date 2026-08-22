@@ -341,7 +341,7 @@ function fillCover(book, { draft }) {
   const face = $('coverFront');
   face.style.setProperty('--cloth', clothColor(book.slug));
   if (book.cover) {
-    face.style.backgroundImage = `linear-gradient(180deg, rgba(8,7,6,.2) 0%, rgba(8,7,6,.62) 100%), url("${book.cover}")`;
+    face.style.backgroundImage = `linear-gradient(180deg, rgba(40,18,12,.12) 0%, rgba(20,10,8,.5) 100%), url("${book.cover}")`;
     face.classList.add('has-art');
   } else {
     face.style.backgroundImage = '';

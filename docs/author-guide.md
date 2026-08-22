@@ -124,3 +124,21 @@ To unpublish, reverse both edits.
 
 A GitHub-authed agent can do every step in this guide. It should never edit
 reader JavaScript to put your book on the shelf.
+
+## 10. Proof, print, and the imprint
+
+On a draft cover the reader lists missing or empty chapter files. Opening
+the cover reloads the Markdown, so a push is visible after refresh.
+
+**Copy link** on the cover is the unlisted preview URL. Send that to a
+reviewer.
+
+**Print / PDF** is in Type and tools. The browser print dialog can save a
+PDF. Drafts print with a draft wash so they are not mistaken for a finished
+edition.
+
+Optional rows on the book README — Publisher, Edition, Language, ISBN —
+show on the cover and the back. They are not required to publish.
+
+While reading, Contents includes **Edit this chapter on GitHub**. Select
+text to copy, highlight a note, or share a passage with the page URL.

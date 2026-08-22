@@ -13,6 +13,8 @@
 |---|---|
 | **Authors**   | @your-github-username |
 | **Status**    | Drafting |
+| **Publisher** |  |
+| **Edition**   |  |
 | **Chapters**  | 0 of N drafted |
 
 ## Contents

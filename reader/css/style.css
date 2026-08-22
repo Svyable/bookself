@@ -159,6 +159,8 @@ body {
 .app-header:not(.is-reading) .progress-btn,
 .app-header:not(.is-reading) #bookmarkBtn,
 .app-header:not(.is-reading) #tocBtn,
+.app-header:not(.is-reading) #searchBtn,
+.app-header:not(.is-reading) #shareBtn,
 .app-header:not(.is-reading) #readingTime {
   display: none;
 }
@@ -417,10 +419,28 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
   margin-bottom: 1.5rem;
 }
 
-.cover-author, .cover-year, .cover-kicker {
+.cover-author, .cover-year, .cover-kicker, .cover-imprint, .cover-meta {
   color: var(--text-secondary);
   margin-bottom: 0.35rem;
 }
+
+.cover-imprint {
+  font-family: var(--font-accent);
+  font-style: italic;
+}
+
+.cover-meta { font-size: 0.82rem; }
+
+.proof-list {
+  list-style: none;
+  text-align: left;
+  max-width: 18rem;
+  margin: 0.8rem auto 0;
+  font-size: 0.78rem;
+  color: #e07a5f;
+}
+
+.proof-list li { margin: 0.2rem 0; }
 
 .cover-ornament {
   color: var(--accent);
@@ -515,7 +535,15 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
   flex: 1;
   overflow: hidden;
   font-size: var(--base-font-size);
-  line-height: 1.55;
+  line-height: var(--line-height, 1.55);
+}
+
+[data-font="sans"] {
+  --font-body: "Source Sans 3", "Helvetica Neue", sans-serif;
+}
+[data-font="sans"] body,
+[data-font="sans"] .page-inner {
+  font-family: var(--font-body);
 }
 
 .page-inner > * + * { margin-top: 0.85em; }
@@ -814,6 +842,240 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.35rem 1rem;
+}
+
+.continue-card {
+  margin: 0 0 1.4rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  max-width: 28rem;
+}
+
+.continue-kicker {
+  font-family: var(--font-accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.continue-card a {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  text-decoration: none;
+  font-size: 1.15rem;
+}
+
+.pub-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.pub-filters button, .pill {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  cursor: pointer;
+  font-family: var(--font-accent);
+}
+
+.pub-filters button.active, .pill.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  text-align: left;
+}
+
+.setting-pills { display: flex; gap: 0.3rem; }
+.setting-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 1rem 0;
+}
+
+.settings-card { text-align: left; }
+.settings-card h3 { text-align: center; }
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0007;
+  display: none;
+  place-items: start center;
+  padding-top: 12vh;
+  z-index: 66;
+}
+
+.search-overlay.active { display: grid; }
+
+.search-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: min(32rem, 92vw);
+  padding: 1rem;
+}
+
+.search-card input {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: inherit;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  font: inherit;
+  margin-bottom: 0.7rem;
+}
+
+.search-hits { list-style: none; max-height: 50vh; overflow: auto; }
+.search-hits li { margin: 0; }
+.search-hits a {
+  display: block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.search-hits strong { color: var(--accent); font-weight: 600; }
+.search-hits em { display: block; font-style: normal; color: var(--text-muted); font-size: 0.8rem; }
+
+.sel-pop {
+  position: absolute;
+  z-index: 70;
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+
+.sel-pop button {
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  font-family: var(--font-accent);
+  cursor: pointer;
+  padding: 0.3rem 0.55rem;
+}
+
+.note-quote {
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-bottom: 0.7rem;
+  text-align: left;
+}
+
+#noteBody {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: inherit;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font: inherit;
+  margin-bottom: 0.6rem;
+}
+
+.note-mark {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: inherit;
+  padding: 0 0.05em;
+}
+
+.toc-edit {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.toc-edit a { color: var(--accent); }
+
+#noteList li, #bookmarkList li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+#noteList .toc-link, #bookmarkList .toc-link { flex: 1; }
+
+body.focus-mode .app-header,
+body.focus-mode .progress-bar-container,
+body.focus-mode .page-nav {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+body.focus-mode:hover .app-header,
+body.focus-mode:hover .progress-bar-container,
+body.focus-mode:hover .page-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.volume-imprint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+.print-root { display: none; }
+
+@media print {
+  .paper-grain, .night-light-overlay, .app-header, .progress-bar-container,
+  .page-nav, .toc-overlay, .stats-overlay, .search-overlay, .sel-pop,
+  .loader, .toast, .binder-view, .cover-page, .back-cover, .pages-wrapper,
+  .book-stage { display: none !important; }
+
+  html, body {
+    height: auto;
+    overflow: visible;
+    background: #fff;
+    color: #111;
+  }
+
+  .print-root {
+    display: block;
+  }
+
+  .print-page {
+    break-after: page;
+    page-break-after: always;
+    font-family: Georgia, serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    max-width: 38rem;
+    margin: 0 auto;
+    padding: 1.2rem 0;
+  }
+
+  .print-page h1 { font-size: 18pt; margin-bottom: 1rem; }
+
+  body.is-draft .print-page {
+    background-image: repeating-linear-gradient(
+      -18deg,
+      transparent,
+      transparent 48px,
+      rgba(180, 80, 40, 0.06) 48px,
+      rgba(180, 80, 40, 0.06) 80px
+    );
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

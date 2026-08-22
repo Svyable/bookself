@@ -4,6 +4,8 @@
 |---|---|
 | **Authors**   | @svyable |
 | **Status**    | Published |
+| **Publisher** | Open Book Binder |
+| **Edition**   | First |
 | **Chapters**  | 3 of 3 drafted |
 
 ## Contents

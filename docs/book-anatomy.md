@@ -45,6 +45,8 @@ list:
     |---|---|
     | **Authors**   | @username |
     | **Status**    | Drafting |
+    | **Publisher** |  |
+    | **Edition**   |  |
     | **Chapters**  | 1 of 12 drafted |
 
     ## Contents
@@ -66,6 +68,10 @@ Chapters count when it drifts.
 Optional cover art: `media/cover.png` (or `.jpg` / `.webp`). The reader
 uses it on the generated cover. If it is missing, the reader makes a cloth
 cover from the title.
+
+Optional hub rows the reader understands if present: **Publisher**,
+**Edition**, **Language**, **ISBN**. Empty Publisher is fine. A Publisher
+value appears as an imprint and as a filter on the public shelf.
 
 ## Manuscript
 

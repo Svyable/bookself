@@ -96,6 +96,19 @@ V2 notes attach to `{ chapter, start, end }` offset ranges. Do not store page nu
 
 CommonMark as `marked` parses it: headings, paragraphs, emphasis, links, images, blockquotes, lists, thematic breaks. Images resolve relative to the book folder. Optional `media/cover.png` (or `.jpg` / `.webp`) on the generated cover; otherwise a cloth cover from title + author.
 
+### Author / publisher / reader tools
+
+Still no author-facing build. Optional README rows: Publisher, Edition,
+Language, ISBN. The reader uses them as imprint, colophon, and a shelf
+filter. Draft covers list missing or empty chapter files. Cover open
+refetches Markdown. Print/PDF is the browser print dialog over derived
+pages (draft wash on unpublished books). Copy link shares the current URL.
+
+Readers: in-book search, focus mode, typeface/line-height, text selection
+(copy / note / share), notes stored as `{ chapter, offset, quote, body }`,
+export notes as Markdown, edit-this-chapter GitHub link, continue-reading
+on the shelf.
+
 ### Chrome (v1)
 
 From the Leveraging Luck reader, kept:

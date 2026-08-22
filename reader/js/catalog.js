@@ -52,6 +52,10 @@ export function parseBookReadme(markdown, slug) {
     status,
     authors,
     chaptersCell,
+    publisher: cell(markdown, 'Publisher'),
+    edition: cell(markdown, 'Edition'),
+    language: cell(markdown, 'Language'),
+    isbn: cell(markdown, 'ISBN'),
     contents,
     published: status === 'Published',
   };

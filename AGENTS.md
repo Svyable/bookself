@@ -72,3 +72,6 @@ portal README row.
 
 **Revise a published book.** Edit the Markdown and push. The reader fetches
 live files. Do not bump a version stamp.
+
+Optional book README rows (omit or leave blank if unused): **Publisher**,
+**Edition**, **Language**, **ISBN**. Do not invent a config file for these.

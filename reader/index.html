@@ -7,7 +7,7 @@
   <meta name="description" content="Read books written in public — a Kindle-style binder for open manuscripts.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-stage="binder">
@@ -39,8 +39,17 @@
           <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
+        <button class="header-btn" id="searchBtn" type="button" title="Search this book" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+        </button>
+        <button class="header-btn" id="shareBtn" type="button" title="Copy link to this page" aria-label="Share">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </button>
         <button class="header-btn" id="tocBtn" type="button" title="Contents" aria-label="Table of contents">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        </button>
+        <button class="header-btn" id="settingsBtn" type="button" title="Type and tools" aria-label="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         </button>
         <div class="reading-time" id="readingTime">0m</div>
       </div>
@@ -60,6 +69,11 @@
             <a class="write-link" id="writeLink" href="https://github.com/Svyable/openbookbinder">Write on GitHub</a>
           </p>
         </div>
+        <aside class="continue-card" id="continueCard" hidden>
+          <p class="continue-kicker">Continue reading</p>
+          <a href="#/" id="continueCardLink"><span id="continueCardTitle"></span></a>
+        </aside>
+        <div class="pub-filters" id="pubFilters" hidden></div>
         <p class="shelf-error" id="shelfError" hidden></p>
         <div class="shelf" id="shelf"></div>
         <p class="empty-shelf" id="emptyShelf">No published books yet. Copy <code>books/_TEMPLATE/</code>, write, then set Status to <code>Published</code> and add a row to the portal README.</p>
@@ -73,9 +87,13 @@
             <p class="cover-subtitle" id="coverSubtitle"></p>
             <p class="cover-author" id="coverAuthor"></p>
             <p class="cover-year" id="coverYear"></p>
+            <p class="cover-imprint" id="coverImprint"></p>
+            <p class="cover-meta" id="coverMeta"></p>
+            <ul class="proof-list" id="proofList" hidden></ul>
             <div class="cover-actions">
               <button class="start-btn" id="startBtn" type="button">Begin reading</button>
               <button class="ghost-btn" id="continueBtn" type="button" hidden>Continue</button>
+              <button class="ghost-btn" id="copyPreviewBtn" type="button">Copy link</button>
             </div>
           </div>
         </article>
@@ -98,6 +116,8 @@
             <h2 class="cover-title" id="backTitle"></h2>
             <p class="cover-ornament">❧</p>
             <p class="cover-author" id="backAuthor"></p>
+            <p class="cover-imprint" id="backImprint"></p>
+            <p class="cover-meta" id="backColophon"></p>
             <div class="cover-actions">
               <button class="ghost-btn" id="rereadBtn" type="button">Return to cover</button>
               <button class="start-btn" id="homeFromEnd" type="button">Back to the binder</button>
@@ -135,6 +155,13 @@
       <h3>Bookmarks</h3>
       <ul class="toc-list" id="bookmarkList"></ul>
     </div>
+    <div class="toc-marks" id="tocNotes" hidden>
+      <h3>Notes</h3>
+      <ul class="toc-list" id="noteList"></ul>
+    </div>
+    <p class="toc-edit" id="tocEditWrap" hidden>
+      <a id="editChapterLink" href="#" target="_blank" rel="noopener">Edit this chapter on GitHub</a>
+    </p>
   </aside>
 
   <div class="stats-overlay" id="progressPanel">
@@ -150,11 +177,68 @@
     </div>
   </div>
 
+  <div class="stats-overlay" id="settingsPanel">
+    <div class="stats-card settings-card">
+      <h3>Type and tools</h3>
+      <div class="setting-row">
+        <span>Typeface</span>
+        <div class="setting-pills">
+          <button type="button" class="pill" data-font="serif">Serif</button>
+          <button type="button" class="pill" data-font="sans">Sans</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span>Line height</span>
+        <div class="setting-pills">
+          <button type="button" class="pill" data-leading="1.4">Tight</button>
+          <button type="button" class="pill" data-leading="1.55">Normal</button>
+          <button type="button" class="pill" data-leading="1.8">Loose</button>
+        </div>
+      </div>
+      <div class="setting-actions">
+        <button type="button" class="ghost-btn" id="focusBtn">Focus mode</button>
+        <button type="button" class="ghost-btn" id="printBtn">Print / PDF</button>
+        <button type="button" class="ghost-btn" id="exportNotesBtn">Export notes</button>
+      </div>
+      <button class="stats-close" id="settingsClose" type="button">Close</button>
+    </div>
+  </div>
+
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-card">
+      <div class="toc-header">
+        <h2>Search</h2>
+        <button class="toc-close" id="searchClose" type="button" aria-label="Close">×</button>
+      </div>
+      <input type="search" id="bookSearch" placeholder="Find a passage…" autocomplete="off">
+      <ul class="search-hits" id="searchHits"></ul>
+    </div>
+  </div>
+
+  <div class="sel-pop" id="selPop" hidden>
+    <button type="button" id="selCopy">Copy</button>
+    <button type="button" id="selNote">Note</button>
+    <button type="button" id="selShare">Share</button>
+  </div>
+
+  <div class="stats-overlay" id="noteDialog">
+    <div class="stats-card">
+      <h3>Note</h3>
+      <blockquote class="note-quote" id="noteQuote"></blockquote>
+      <textarea id="noteBody" rows="4" placeholder="Your note (optional)"></textarea>
+      <div class="setting-actions">
+        <button type="button" class="start-btn" id="noteSave">Save</button>
+        <button type="button" class="ghost-btn" id="noteCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <div class="loader" id="loader" hidden>
     <div class="loader-book" aria-hidden="true"></div>
     <p>Opening the book…</p>
   </div>
   <div class="toast" id="toast" hidden></div>
+  <div id="printRoot" class="print-root" hidden></div>
   <div class="page-surface measure" id="pageMeasure" aria-hidden="true">
     <div class="page-inner" id="pageMeasureInner"></div>
   </div>

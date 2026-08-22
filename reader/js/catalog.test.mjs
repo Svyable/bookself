@@ -49,6 +49,15 @@ assert.equal(book.published, true);
 assert.equal(book.contents.length, 2);
 assert.equal(book.contents[0].id, 'front-matter');
 assert.equal(book.contents[1].id, 'ch01-current');
+assert.equal(book.publisher, '');
+
+const pub = parseBookReadme(
+  `# T\n\n| **Status** | Published |\n| **Publisher** | House |\n| **Edition** | Second |\n| **ISBN** | 978-1 |\n`,
+  't'
+);
+assert.equal(pub.publisher, 'House');
+assert.equal(pub.edition, 'Second');
+assert.equal(pub.isbn, '978-1');
 
 const drafting = parseBookReadme(`# T\n\n| **Status** | Drafting |\n`, 't');
 assert.equal(drafting.published, false);

@@ -49,6 +49,11 @@ Do not edit `reader/` to add a book.
 Unpublish by reversing both. Preview without publishing:
 `reader/#/b/<slug>/`.
 
+Publisher, Edition, Language, and ISBN are optional rows on the book
+README. If a Publisher is set, the public shelf can filter by it. Print
+from the reader (Type and tools) for a galley PDF. Drafts print with a
+draft wash.
+
 ## Line-comment reviews
 
 Review the manuscript, not the idea of the book, unless the PR is a new-book

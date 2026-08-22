@@ -18,6 +18,14 @@ import {
   saveStats,
 } from './storage.js';
 import { parseHash, binderHash, coverHash, readHash, go } from './router.js';
+import {
+  loadNotes,
+  addNote,
+  removeNote,
+  notesMarkdown,
+  applyNotes,
+} from './notes.js';
+import { searchBook, wordCount, readingMinutes } from './search.js';
 
 const app = {
   prefs: loadPrefs(),
@@ -32,6 +40,8 @@ const app = {
   statsTimer: null,
   touchStartX: null,
   toastTimer: null,
+  pubFilter: 'All',
+  pendingNote: null,
 };
 
 function $(id) {
@@ -40,10 +50,20 @@ function $(id) {
 
 function applyPrefs() {
   document.documentElement.setAttribute('data-theme', app.prefs.theme);
+  document.documentElement.setAttribute('data-font', app.prefs.fontFamily || 'serif');
   document.documentElement.style.setProperty('--base-font-size', `${app.prefs.fontSize}px`);
+  document.documentElement.style.setProperty('--line-height', app.prefs.lineHeight || '1.55');
+  document.body.classList.toggle('focus-mode', !!app.prefs.focus);
+  document.body.classList.toggle('is-draft', !!(app.book && !app.book.published));
   $('nightLightOverlay').classList.toggle('active', !!app.prefs.nightLight);
   $('nightLightBtn')?.classList.toggle('active', !!app.prefs.nightLight);
   $('viewModeBtn').textContent = app.prefs.viewMode === 'spread' ? 'Single' : 'Spread';
+  document.querySelectorAll('[data-font]').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.font === app.prefs.fontFamily);
+  });
+  document.querySelectorAll('[data-leading]').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.leading === String(app.prefs.lineHeight));
+  });
 }
 
 function spreadOn() {
@@ -74,8 +94,16 @@ async function loadBook(slug) {
   let fm = { title: meta.title, subtitle: '', year: '' };
   const chapters = await Promise.all(
     meta.contents.map(async (c) => {
-      const markdown = await fetchText(`books/${slug}/${c.file}`);
-      return { ...c, markdown };
+      try {
+        const markdown = await fetchText(`books/${slug}/${c.file}`);
+        return { ...c, markdown, missing: false };
+      } catch {
+        return {
+          ...c,
+          markdown: `# ${c.title}\n\nThis chapter file is missing from the repository.\n`,
+          missing: true,
+        };
+      }
     })
   );
   const front = chapters.find((c) => c.id === 'front-matter');
@@ -167,6 +195,7 @@ function fillPage(el, page, num, side, two) {
   const inner = el.querySelector('.page-inner');
   inner.innerHTML = page ? page.html : '';
   inner.classList.toggle('chapter-open', !!(page && isChapterOpen(page.html)));
+  if (page && app.slug) applyNotes(inner, loadNotes(app.slug), page.chapter);
   el.querySelector('.page-num').textContent = page ? String(num) : '';
   el.classList.toggle('left', two && side === 'left');
   el.classList.toggle('right', !two || side === 'right');
@@ -227,7 +256,24 @@ function fillCover(book, { draft }) {
   $('coverSubtitle').textContent = book.subtitle || '';
   $('coverAuthor').textContent = book.authors ? `by ${book.authors.replace(/@/g, '')}` : '';
   $('coverYear').textContent = book.year || '';
+  const imprint = [book.publisher, book.edition].filter(Boolean).join(' · ');
+  $('coverImprint').textContent = imprint;
+  $('backImprint').textContent = imprint;
+  const words = wordCount(book);
+  const mins = readingMinutes(words);
+  const metaBits = [
+    words ? `${words.toLocaleString()} words` : '',
+    words ? `~${mins} min` : '',
+    book.isbn ? `ISBN ${book.isbn}` : '',
+  ].filter(Boolean);
+  $('coverMeta').textContent = metaBits.join(' · ');
+  $('backColophon').textContent = [
+    book.year ? `© ${book.year}` : '',
+    book.publisher || '',
+    book.isbn ? `ISBN ${book.isbn}` : '',
+  ].filter(Boolean).join(' · ');
   $('draftBadge').hidden = !draft;
+  document.body.classList.toggle('is-draft', draft);
   const face = $('coverFront');
   face.style.setProperty('--cloth', clothColor(book.slug));
   if (book.cover) {
@@ -242,7 +288,24 @@ function fillCover(book, { draft }) {
   const prog = loadProgress(book.slug);
   const canContinue = !!(prog && book.contents.some((c) => c.id === prog.chapter));
   $('continueBtn').hidden = !canContinue;
+  fillProof(book);
   setTitle();
+}
+
+function fillProof(book) {
+  const issues = [];
+  for (const ch of book.chapters || []) {
+    if (ch.missing) issues.push(`Missing file: ${ch.file}`);
+    else if (!(ch.markdown || '').replace(/^#.*$/m, '').trim()) issues.push(`Empty: ${ch.title}`);
+  }
+  const list = $('proofList');
+  list.innerHTML = '';
+  list.hidden = issues.length === 0;
+  for (const issue of issues) {
+    const li = document.createElement('li');
+    li.textContent = issue;
+    list.appendChild(li);
+  }
 }
 
 function fillToc(book) {
@@ -286,14 +349,95 @@ function fillToc(book) {
     li.appendChild(a);
     ul.appendChild(li);
   }
+  const notes = loadNotes(book.slug);
+  const notesBox = $('tocNotes');
+  const notesUl = $('noteList');
+  notesUl.innerHTML = '';
+  notesBox.hidden = notes.length === 0;
+  for (const n of notes) {
+    const meta = book.contents.find((c) => c.id === n.chapter);
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'toc-link';
+    a.href = readHash(book.slug, n.chapter, n.offset || 0);
+    a.textContent = n.body || n.quote || (meta ? meta.title : n.chapter);
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      $('tocOverlay').classList.remove('active');
+      go(readHash(book.slug, n.chapter, n.offset || 0));
+    });
+    const del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'toc-close';
+    del.textContent = '×';
+    del.title = 'Remove note';
+    del.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      removeNote(book.slug, n.id);
+      paintPages();
+    });
+    li.appendChild(a);
+    li.appendChild(del);
+    notesUl.appendChild(li);
+  }
+  const edit = $('editChapterLink');
+  const wrap = $('tocEditWrap');
+  const href = githubEditUrl(book, chapterOfPage(app.pageIndex));
+  wrap.hidden = !href;
+  if (href) {
+    edit.href = href;
+    edit.textContent = 'Edit this chapter on GitHub';
+  }
+}
+
+function renderContinue() {
+  const card = $('continueCard');
+  const slug = app.prefs.lastSlug;
+  if (!slug) {
+    card.hidden = true;
+    return;
+  }
+  const book = app.catalog.find((b) => b.slug === slug) || app.books.get(slug);
+  const prog = loadProgress(slug);
+  if (!book || !prog) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  $('continueCardTitle').textContent = book.title;
+  $('continueCardLink').href = readHash(slug, prog.chapter, prog.offset || 0);
+}
+
+function renderPublisherFilters(entries) {
+  const box = $('pubFilters');
+  const pubs = [...new Set(entries.map((b) => b.publisher).filter(Boolean))];
+  box.hidden = pubs.length === 0;
+  if (!pubs.length) return;
+  const labels = ['All', ...pubs];
+  box.innerHTML = '';
+  for (const label of labels) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = label;
+    btn.classList.toggle('active', app.pubFilter === label);
+    btn.addEventListener('click', () => {
+      app.pubFilter = label;
+      renderShelf(app.catalog);
+    });
+    box.appendChild(btn);
+  }
 }
 
 function renderShelf(entries) {
+  renderContinue();
+  renderPublisherFilters(entries);
+  const filtered = entries.filter((b) => app.pubFilter === 'All' || b.publisher === app.pubFilter);
   const shelf = $('shelf');
   const empty = $('emptyShelf');
   shelf.innerHTML = '';
-  empty.hidden = entries.length > 0;
-  for (const book of entries) {
+  empty.hidden = filtered.length > 0;
+  for (const book of filtered) {
     const a = document.createElement('a');
     a.className = 'volume';
     a.href = coverHash(book.slug);
@@ -307,6 +451,7 @@ function renderShelf(entries) {
         ${progress || last ? '<span class="reading-ribbon">Reading</span>' : ''}
         <span class="volume-title">${escapeHtml(book.title)}</span>
         <span class="volume-author">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
+        ${book.publisher ? `<span class="volume-imprint">${escapeHtml(book.publisher)}</span>` : ''}
       </span>`;
     a.addEventListener('click', (e) => {
       e.preventDefault();
@@ -332,9 +477,129 @@ function setLoader(on) {
   $('loader').hidden = !on;
 }
 
+function githubRepo() {
+  const href = $('writeLink')?.getAttribute('href') || '';
+  const m = href.match(/github\.com\/([^/]+)\/([^/#]+)/);
+  return m ? { owner: m[1], repo: m[2].replace(/\.git$/, '') } : { owner: 'Svyable', repo: 'openbookbinder' };
+}
+
+function githubEditUrl(book, chapterId) {
+  if (!book || !chapterId) return '';
+  const ch = book.contents.find((c) => c.id === chapterId);
+  if (!ch) return '';
+  const { owner, repo } = githubRepo();
+  return `https://github.com/${owner}/${repo}/edit/main/books/${book.slug}/${ch.file}`;
+}
+
+function locationUrl() {
+  return `${window.location.origin}${window.location.pathname}${window.location.search}${window.location.hash}`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast('Copied');
+  } catch {
+    toast('Could not copy');
+  }
+}
+
+function printBook() {
+  if (!app.book) {
+    toast('Open a book first');
+    return;
+  }
+  const wasRead = document.body.dataset.stage === 'read';
+  if (!app.pages.length) {
+    $('pagesWrapper').classList.add('active');
+    sizeMeasure();
+    rebuildPages();
+    if (!wasRead) $('pagesWrapper').classList.remove('active');
+  }
+  if (!app.pages.length) {
+    toast('Open a book first');
+    return;
+  }
+  const root = $('printRoot');
+  root.hidden = false;
+  root.innerHTML = app.pages
+    .map((p) => `<section class="print-page">${p.html}</section>`)
+    .join('');
+  const after = () => {
+    root.innerHTML = '';
+    root.hidden = true;
+    window.removeEventListener('afterprint', after);
+  };
+  window.addEventListener('afterprint', after);
+  window.print();
+}
+
+function exportNotes() {
+  if (!app.book) {
+    toast('Open a book first');
+    return;
+  }
+  const notes = loadNotes(app.book.slug);
+  if (!notes.length) {
+    toast('No notes yet');
+    return;
+  }
+  const blob = new Blob([notesMarkdown(app.book, notes)], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${app.book.slug}-notes.md`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function runSearch(query) {
+  const box = $('searchHits');
+  box.innerHTML = '';
+  if (!app.book) return;
+  const hits = searchBook(app.book, query);
+  if (!hits.length && query.trim().length >= 2) {
+    box.innerHTML = '<li>No passages found.</li>';
+    return;
+  }
+  for (const hit of hits) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = readHash(app.book.slug, hit.chapter, hit.offset);
+    a.innerHTML = `<strong>${escapeHtml(hit.title)}</strong><em>${escapeHtml(hit.snippet)}</em>`;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      $('searchOverlay').classList.remove('active');
+      go(readHash(app.book.slug, hit.chapter, hit.offset));
+    });
+    li.appendChild(a);
+    box.appendChild(li);
+  }
+}
+
+function hideSelPop() {
+  $('selPop').hidden = true;
+}
+
+function currentSelection() {
+  const sel = window.getSelection();
+  const text = sel && sel.toString().trim();
+  if (!text) return null;
+  const node = sel.anchorNode;
+  const page = node && node.parentElement && node.parentElement.closest('.page-surface');
+  if (!page) return null;
+  const chapter = page === $('pageRight') && app.pages[app.pageIndex + 1]
+    ? app.pages[app.pageIndex + 1].chapter
+    : chapterOfPage(app.pageIndex);
+  const offset = page === $('pageRight') && app.pages[app.pageIndex + 1]
+    ? app.pages[app.pageIndex + 1].start
+    : currentOffset();
+  return { text, chapter, offset, sel };
+}
+
 async function openCover(slug) {
   setLoader(true);
   try {
+    app.books.delete(slug);
     const book = await loadBook(slug);
     app.slug = slug;
     app.book = book;
@@ -440,6 +705,10 @@ async function onRoute() {
   const route = parseHash();
   $('tocOverlay').classList.remove('active');
   $('progressPanel').classList.remove('active');
+  $('settingsPanel').classList.remove('active');
+  $('searchOverlay').classList.remove('active');
+  $('noteDialog').classList.remove('active');
+  hideSelPop();
   if (route.view === 'binder') {
     showStage('binder');
     app.slug = null;
@@ -578,8 +847,113 @@ function bindUi() {
       item.style.display = item.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
   });
+  $('searchBtn').addEventListener('click', () => {
+    $('searchOverlay').classList.add('active');
+    $('bookSearch').focus();
+  });
+  $('searchClose').addEventListener('click', () => $('searchOverlay').classList.remove('active'));
+  $('bookSearch').addEventListener('input', (e) => runSearch(e.target.value));
+  $('shareBtn').addEventListener('click', () => copyText(locationUrl()));
+  $('copyPreviewBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    copyText(locationUrl());
+  });
+  $('settingsBtn').addEventListener('click', () => {
+    applyPrefs();
+    $('settingsPanel').classList.toggle('active');
+  });
+  $('settingsClose').addEventListener('click', () => $('settingsPanel').classList.remove('active'));
+  document.querySelectorAll('[data-font]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      app.prefs.fontFamily = btn.dataset.font;
+      savePrefs(app.prefs);
+      applyPrefs();
+      if (document.body.dataset.stage === 'read') {
+        const ch = chapterOfPage(app.pageIndex);
+        const off = currentOffset();
+        rebuildPages();
+        app.pageIndex = pageIndexForOffset(app.pages, ch, off);
+        paintPages();
+      }
+    });
+  });
+  document.querySelectorAll('[data-leading]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      app.prefs.lineHeight = btn.dataset.leading;
+      savePrefs(app.prefs);
+      applyPrefs();
+      if (document.body.dataset.stage === 'read') {
+        const ch = chapterOfPage(app.pageIndex);
+        const off = currentOffset();
+        rebuildPages();
+        app.pageIndex = pageIndexForOffset(app.pages, ch, off);
+        paintPages();
+      }
+    });
+  });
+  $('focusBtn').addEventListener('click', () => {
+    app.prefs.focus = !app.prefs.focus;
+    savePrefs(app.prefs);
+    applyPrefs();
+  });
+  $('printBtn').addEventListener('click', () => printBook());
+  $('exportNotesBtn').addEventListener('click', () => exportNotes());
+  $('continueCardLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    go($('continueCardLink').getAttribute('href'));
+  });
+  $('selCopy').addEventListener('click', async () => {
+    const cur = currentSelection();
+    if (cur) await copyText(cur.text);
+    hideSelPop();
+  });
+  $('selShare').addEventListener('click', async () => {
+    const cur = currentSelection();
+    if (cur) await copyText(`“${cur.text}”\n${locationUrl()}`);
+    hideSelPop();
+  });
+  $('selNote').addEventListener('click', () => {
+    const cur = currentSelection();
+    hideSelPop();
+    if (!cur || !app.slug) return;
+    app.pendingNote = cur;
+    $('noteQuote').textContent = cur.text;
+    $('noteBody').value = '';
+    $('noteDialog').classList.add('active');
+    $('noteBody').focus();
+  });
+  $('noteCancel').addEventListener('click', () => $('noteDialog').classList.remove('active'));
+  $('noteSave').addEventListener('click', () => {
+    if (!app.pendingNote || !app.slug) return;
+    addNote(app.slug, {
+      chapter: app.pendingNote.chapter,
+      offset: app.pendingNote.offset,
+      quote: app.pendingNote.text,
+      body: $('noteBody').value.trim(),
+    });
+    $('noteDialog').classList.remove('active');
+    app.pendingNote = null;
+    toast('Note saved');
+    paintPages();
+  });
+  document.addEventListener('mouseup', () => {
+    if (document.body.dataset.stage !== 'read') return;
+    setTimeout(() => {
+      const cur = currentSelection();
+      const pop = $('selPop');
+      if (!cur) {
+        hideSelPop();
+        return;
+      }
+      const rect = cur.sel.getRangeAt(0).getBoundingClientRect();
+      pop.hidden = false;
+      pop.style.left = `${Math.min(rect.left, window.innerWidth - 180)}px`;
+      pop.style.top = `${rect.top + window.scrollY - 40}px`;
+    }, 10);
+  });
   $('pagesWrapper').addEventListener('click', (e) => {
-    if (e.target.closest('a, button')) return;
+    if (e.target.closest('a, button, mark')) return;
+    if (window.getSelection && window.getSelection().toString().trim()) return;
     const rect = $('pagesWrapper').getBoundingClientRect();
     const x = e.clientX - rect.left;
     turn(x < rect.width / 2 ? -1 : 1);
@@ -591,12 +965,28 @@ function bindUi() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.target.matches('input, textarea')) return;
+    if (e.target.matches('input, textarea')) {
+      if (e.key === 'Escape') {
+        $('searchOverlay').classList.remove('active');
+        $('noteDialog').classList.remove('active');
+      }
+      return;
+    }
     const stage = document.body.dataset.stage;
     if (e.key === 'Escape') {
-      if ($('tocOverlay').classList.contains('active') || $('progressPanel').classList.contains('active')) {
+      if (
+        $('tocOverlay').classList.contains('active') ||
+        $('progressPanel').classList.contains('active') ||
+        $('settingsPanel').classList.contains('active') ||
+        $('searchOverlay').classList.contains('active') ||
+        $('noteDialog').classList.contains('active')
+      ) {
         $('tocOverlay').classList.remove('active');
         $('progressPanel').classList.remove('active');
+        $('settingsPanel').classList.remove('active');
+        $('searchOverlay').classList.remove('active');
+        $('noteDialog').classList.remove('active');
+        hideSelPop();
         return;
       }
       if (stage === 'read') go(coverHash(app.slug));
@@ -616,6 +1006,16 @@ function bindUi() {
       turn(1);
     }
     if (e.key === 'b' || e.key === 'B') toggleBookmark();
+    if (e.key === '/' || e.key === 's' || e.key === 'S') {
+      e.preventDefault();
+      $('searchOverlay').classList.add('active');
+      $('bookSearch').focus();
+    }
+    if (e.key === 'f' || e.key === 'F') {
+      app.prefs.focus = !app.prefs.focus;
+      savePrefs(app.prefs);
+      applyPrefs();
+    }
   });
 
   document.addEventListener('touchstart', (e) => {

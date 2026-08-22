@@ -16,8 +16,11 @@ export function loadPrefs() {
   const defaults = {
     theme: systemTheme(),
     fontSize: 18,
+    lineHeight: '1.55',
+    fontFamily: 'serif',
     nightLight: false,
     viewMode: 'spread',
+    focus: false,
     lastSlug: null,
   };
   try {

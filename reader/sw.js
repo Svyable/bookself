@@ -1,4 +1,4 @@
-const CACHE = 'obb-shell-v6';
+const CACHE = 'obb-shell-v7';
 const SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const SHELL = [
   './js/app.js',
   './js/base.js',
   './js/catalog.js',
+  './js/imprint.js',
   './js/markdown.js',
   './js/paginate.js',
   './js/storage.js',

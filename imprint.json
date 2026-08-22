@@ -1,0 +1,17 @@
+{
+  "name": "Open Book Binder",
+  "shortName": "Binder",
+  "description": "Read books written in public — a Kindle-style binder for open manuscripts.",
+  "kicker": "Written on GitHub · Read like a book",
+  "lede": "Manuscripts live as plain Markdown. When an author marks a book Published, it takes a place on this shelf.",
+  "credit": "",
+  "creditHref": "",
+  "writeHref": "https://github.com/Svyable/openbookbinder",
+  "writeLabel": "Write on GitHub",
+  "homeLabel": "Binder",
+  "storagePrefix": "obb",
+  "github": {
+    "owner": "Svyable",
+    "repo": "openbookbinder"
+  }
+}

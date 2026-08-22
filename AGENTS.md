@@ -15,6 +15,23 @@ Rules for AI agents working in this repository.
 - Do not put book prose in `reader/`. The reader fetches Markdown from
   `books/<slug>/`. Authors and agents only edit Markdown and `media/`.
 
+## Reader (this repo + Svyable Shelf)
+
+`reader/` is the Kindle-style GUI. **This repository is the source of
+truth.** The personal imprint (`Svyable/shelf`) copies that folder.
+
+After changing anything under `reader/`:
+
+    scripts/sync-reader.sh
+
+Then commit **both** `openbookbinder` and `shelf`. Do not edit
+`../shelf/reader` directly unless the user asked for a shelf-only
+customization.
+
+Imprint copy (name, GitHub URL, storage prefix) lives in each repo's
+`imprint.json`, not in `reader/`. `scripts/sync-reader.sh` does not
+overwrite `imprint.json`.
+
 ## Voice
 
 - Preserve the author's voice, tense, and rhythm. Match the surrounding

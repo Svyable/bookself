@@ -11,8 +11,9 @@ wiki CMS. Search the library, open a volume, read a spread, export
 Markdown or HTML. Authors still write on GitHub (or with a GitHub-authed
 agent). No WordPress, no database, no lock-in.
 
-A live imprint: [Svyable Press](https://svyable.github.io/press/), the
-author's own shelf running this reader.
+A live imprint: [Svyable Shelf](https://svyable.github.io/shelf/), the
+author's own shelf running this reader. Reader upgrades land here first,
+then copy to the shelf with `scripts/sync-reader.sh`.
 
 ## Why
 

@@ -1,19 +1,26 @@
 # openbookbinder
 
-**Write and edit books with colleagues — natively on GitHub.**
+**Open-source software for a Git-native bookshelf.**
 
-openbookbinder treats GitHub as the home for books. Every book is a folder of
-plain Markdown that anyone can read, edit, and discuss in the browser. No
-special software. No build step. No lock-in.
+Fork this repository, add books as plain Markdown, and GitHub Pages serves a
+Kindle-style reader. No build step. No WordPress. No lock-in.
 
-The public face is a [reader](reader/) — a Git-native bookshelf, not a
-wiki CMS. Search the library, open a volume, read a spread, export
-Markdown or HTML. Authors still write on GitHub (or with a GitHub-authed
-agent). No WordPress, no database, no lock-in.
+Writing happens on GitHub. Reading happens in the [reader](reader/).
 
-A live imprint: [Svyable Shelf](https://svyable.github.io/shelf/), the
-author's own shelf running this reader. Reader upgrades land here first,
-then copy to the shelf with `scripts/sync-reader.sh`.
+## A live shelf
+
+This repo is the software. A real imprint running it:
+
+| | |
+|---|---|
+| **Read** | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
+| **Books** | [github.com/Svyable/shelf](https://github.com/Svyable/shelf) |
+
+Start your own the same way: fork Open Book Binder, copy `books/_TEMPLATE/`,
+set Status to `Published`, add a row under **The books**.
+
+Reader upgrades land here first, then copy to a shelf with
+`scripts/sync-reader.sh`.
 
 ## Why
 
@@ -27,10 +34,10 @@ when, and why — plus a way to try an edit without overwriting the original.
 - **Plain Markdown only.** If you can type, you can write here.
 - **GitHub is the writing desk.** Reviewing and discussing happen with the
   tools on this site.
-- **The reader is the published book.** Open [the binder](reader/). Only books
-  whose Status is `Published` appear on the shelf.
+- **The reader is the published book.** Open [the demo binder](reader/). Only
+  books whose Status is `Published` appear on the shelf.
 
-## The books
+## Demo books in this repo
 
 | Book | Authors |
 |------|---------|
@@ -45,7 +52,8 @@ here. Details are in the [author guide](docs/author-guide.md).
 
 | If you are… | Start here |
 |---|---|
-| Here to read | [The public binder](reader/) |
+| Here to read a real shelf | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
+| Here to try the software | [The demo binder](reader/) |
 | New to GitHub | [Author guide](docs/author-guide.md) — write in the browser |
 | Comfortable with pull requests | [Editor guide](docs/editor-guide.md) and [Contributing](CONTRIBUTING.md) |
 | Starting a new book | [Book anatomy](docs/book-anatomy.md) |

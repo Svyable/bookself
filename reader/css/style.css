@@ -118,15 +118,7 @@ body {
 
 .logo-mark {
   color: var(--accent);
-  font-size: 1.15rem;
-}
-
-.logo-text {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  text-transform: none;
+  font-size: 1.45rem;
 }
 
 .draft-badge {
@@ -219,8 +211,8 @@ body[data-stage="binder"] .progress-bar-container { opacity: 0; }
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 5.5vw, 4rem);
   font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.02;
+  letter-spacing: 0.04em;
+  line-height: 1.12;
   margin-bottom: 0.9rem;
 }
 
@@ -311,8 +303,8 @@ body[data-stage="binder"] .progress-bar-container { opacity: 0; }
   --cloth: #3a2420;
   position: relative;
   display: flex;
-  width: 9.5rem;
-  height: 14.5rem;
+  width: 12.25rem;
+  height: 16.75rem;
   text-decoration: none;
   color: var(--text-primary);
   transform: rotate(-1.5deg);
@@ -335,25 +327,27 @@ body[data-stage="binder"] .progress-bar-container { opacity: 0; }
     linear-gradient(145deg, rgba(255,255,255,0.08), transparent 40%),
     var(--cloth);
   border-radius: 0 4px 4px 0;
-  padding: 1.2rem 0.85rem;
+  padding: 1.35rem 1rem 1.15rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 8px 10px 18px var(--shadow);
+  min-width: 0;
 }
 
 .volume-title {
   font-family: var(--font-display);
-  font-size: 1.05rem;
-  line-height: 1.2;
+  font-size: 1.15rem;
+  line-height: 1.28;
+  letter-spacing: 0.06em;
 }
 
 .volume-author {
   font-family: var(--font-accent);
   font-style: italic;
-  font-size: 0.88rem;
-  letter-spacing: 0;
-  text-transform: none;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--accent);
 }
 
@@ -408,8 +402,8 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(42vw, 420px);
-  height: min(68vh, 640px);
+  width: min(48vw, 520px);
+  height: min(72vh, 700px);
   transform: translate(-50%, -50%);
   z-index: 5;
 }
@@ -455,10 +449,10 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
     inset 0 0 80px #0005;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 2.8rem 2rem 2.2rem;
+  padding: 3rem 2.4rem 2.4rem;
   position: relative;
 }
 
@@ -478,11 +472,11 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
 
 .cover-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4.2vw, 2.85rem);
-  font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.85rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.1rem);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.9rem;
 }
 
 .cover-subtitle {
@@ -496,6 +490,16 @@ body:not([data-stage="binder"]) .binder-view { display: none; }
 .cover-author, .cover-year, .cover-kicker, .cover-imprint, .cover-meta {
   color: var(--text-secondary);
   margin-bottom: 0.35rem;
+}
+
+.cover-author {
+  margin-top: auto;
+  font-family: var(--font-accent);
+  font-style: italic;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 1.05rem;
+  color: var(--accent);
 }
 
 .cover-imprint {
@@ -670,10 +674,10 @@ body[data-stage="cover"] .cover-dock { display: flex; }
 
 .page-inner h1 {
   font-family: var(--font-display);
-  font-size: 1.35em;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  font-size: 1.45em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.28;
   margin-bottom: 1em;
 }
 
@@ -1272,6 +1276,6 @@ body.focus-mode:hover .page-nav {
   .gutter { display: none !important; }
   .page-surface.left, .page-surface { border-radius: 4px; }
   .logo-text { display: none; }
-  .cover-page, .back-cover { width: min(78vw, 340px); height: min(62vh, 520px); top: 44%; }
+  .cover-page, .back-cover { width: min(84vw, 400px); height: min(68vh, 580px); }
   .cover-dock { bottom: 4.2rem; gap: 0.7rem; font-size: 0.65rem; }
 }

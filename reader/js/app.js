@@ -308,7 +308,7 @@ function setTitle() {
 function fillCover(book, { draft }) {
   $('coverTitle').textContent = book.title;
   $('coverSubtitle').textContent = book.subtitle || '';
-  $('coverAuthor').textContent = book.authors ? `by ${book.authors.replace(/@/g, '')}` : '';
+  $('coverAuthor').textContent = book.authors ? book.authors.replace(/@/g, '').trim() : '';
   $('coverYear').textContent = book.year || '';
   const imprint = [book.publisher, book.edition].filter(Boolean).join(' · ');
   $('coverImprint').textContent = imprint;
@@ -539,7 +539,6 @@ function volumeEl(book) {
         ${progress || last ? '<span class="reading-ribbon">Reading</span>' : ''}
         <span class="volume-title">${escapeHtml(book.title)}</span>
         <span class="volume-author">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
-        ${book.publisher ? `<span class="volume-imprint">${escapeHtml(book.publisher)}</span>` : ''}
       </span>`;
   a.addEventListener('click', (e) => {
     e.preventDefault();

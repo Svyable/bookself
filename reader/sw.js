@@ -1,4 +1,4 @@
-const CACHE = 'obb-shell-v1';
+const CACHE = 'obb-shell-v3';
 const SHELL = [
   './',
   './index.html',
@@ -34,17 +34,13 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
-  if (url.pathname.includes('/books/')) {
-    event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-          return res;
-        })
-        .catch(() => caches.match(req))
-    );
-    return;
-  }
-  event.respondWith(caches.match(req).then((hit) => hit || fetch(req)));
+  event.respondWith(
+    fetch(req)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(req, copy));
+        return res;
+      })
+      .catch(() => caches.match(req))
+  );
 });

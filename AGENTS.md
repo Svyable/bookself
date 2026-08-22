@@ -74,4 +74,7 @@ portal README row.
 live files. Do not bump a version stamp.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
-**Edition**, **Language**, **ISBN**. Do not invent a config file for these.
+**Series**, **Tags**, **Edition**, **Language**, **ISBN**. Series groups
+volumes on the public shelf. Tags are comma-separated. Wiki links
+`[[ch03-publishing|label]]` in chapter Markdown become in-reader jumps.
+Do not invent a config file for these.

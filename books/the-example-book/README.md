@@ -5,6 +5,8 @@
 | **Authors**   | @svyable |
 | **Status**    | Published |
 | **Publisher** | Open Book Binder |
+| **Series**    | Field Notes |
+| **Tags**      | guide, git |
 | **Edition**   | First |
 | **Chapters**  | 3 of 3 drafted |
 

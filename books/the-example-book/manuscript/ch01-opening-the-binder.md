@@ -6,7 +6,7 @@ You do not need special software. You do not run a build. You write Markdown the
 
 A chapter is one file. The title is the only heading. Everything after that is the writing — the way you'd speak it if you were sitting across a table.
 
-When you want a new chapter, add another file named like the others: `ch04-something-short.md`. Then add a line for it in the book's README. The README is the cover of the binder and the table of contents. Trust that list, not the file listing. GitHub sorts files alphabetically, so back-matter will not sit at the end.
+When you want a new chapter, add another file named like the others: `ch04-something-short.md`. Then add a line for it in the book's README. The README is the cover of the binder and the table of contents. Trust that list, not the file listing. GitHub sorts files alphabetically, so back-matter will not sit at the end. The two edits that put a book on the shelf are in [[ch03-publishing|Publishing]].
 
 This sample book exists so the public reader has something to hold. Copy `books/_TEMPLATE/` when you start a real title. Overwrite these pages. Change the authors. Keep the Status on Drafting until you mean for strangers to find it on the shelf.
 

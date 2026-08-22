@@ -56,6 +56,11 @@ export function parseBookReadme(markdown, slug) {
     edition: cell(markdown, 'Edition'),
     language: cell(markdown, 'Language'),
     isbn: cell(markdown, 'ISBN'),
+    series: cell(markdown, 'Series'),
+    tags: cell(markdown, 'Tags')
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean),
     contents,
     published: status === 'Published',
   };

@@ -161,7 +161,6 @@ body {
 
 .app-header:not(.is-reading) #bookmarkBtn,
 .app-header:not(.is-reading) #tocBtn,
-.app-header:not(.is-reading) #searchBtn,
 .app-header:not(.is-reading) #readingTime {
   display: none;
 }
@@ -239,6 +238,53 @@ body[data-stage="binder"] .progress-bar-container { opacity: 0; }
 }
 
 .write-link:hover { border-bottom-color: var(--accent); }
+
+.library-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.4rem 0 0.6rem;
+}
+
+.library-bar input {
+  flex: 1;
+  min-width: 12rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+  font: inherit;
+  padding: 0.4rem 0;
+}
+
+.library-bar input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+#libraryHits {
+  max-width: 36rem;
+  margin-bottom: 1.2rem;
+}
+
+.stack { margin-bottom: 1.8rem; }
+
+.stack-title {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.toc-sub .toc-link {
+  padding-left: 0.9rem;
+  font-size: 0.92em;
+  border-bottom-style: dotted;
+}
 
 .shelf {
   display: flex;

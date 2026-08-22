@@ -1,3 +1,35 @@
+export function searchLibrary(books, query) {
+  const q = query.trim();
+  if (q.length < 2) return [];
+  const needle = q.toLowerCase();
+  const hits = [];
+  for (const book of books) {
+    const hay = [book.title, book.authors, book.publisher, book.series, (book.tags || []).join(' ')]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    if (hay.includes(needle)) {
+      hits.push({
+        type: 'book',
+        book,
+        chapter: null,
+        offset: 0,
+        title: book.title,
+        snippet: [book.authors, book.publisher, book.series].filter(Boolean).join(' · '),
+      });
+    }
+    for (const pass of searchBook(book, q)) {
+      hits.push({
+        type: 'passage',
+        book,
+        ...pass,
+      });
+      if (hits.length >= 40) return hits;
+    }
+  }
+  return hits;
+}
+
 export function searchBook(book, query) {
   const q = query.trim();
   if (q.length < 2) return [];

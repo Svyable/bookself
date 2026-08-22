@@ -70,8 +70,11 @@ uses it on the generated cover. If it is missing, the reader makes a cloth
 cover from the title.
 
 Optional hub rows the reader understands if present: **Publisher**,
-**Edition**, **Language**, **ISBN**. Empty Publisher is fine. A Publisher
-value appears as an imprint and as a filter on the public shelf.
+**Series**, **Tags**, **Edition**, **Language**, **ISBN**. Empty Publisher
+is fine. Publisher filters the shelf. Series draws a labelled stack.
+Tags are comma-separated. In chapters, `[[ch03-publishing|Publishing]]`
+jumps inside the reader. Download Markdown or HTML from Type and tools —
+the files, not a database dump.
 
 ## Manuscript
 

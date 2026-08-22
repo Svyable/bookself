@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Instrument+Serif:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0c0b0a">
 </head>
 <body data-stage="binder">
   <div class="night-light-overlay" id="nightLightOverlay"></div>
@@ -54,6 +56,14 @@
           <p class="binder-actions">
             <a class="write-link" id="writeLink" href="https://github.com/Svyable/openbookbinder">Write on GitHub</a>
           </p>
+          <div class="library-bar">
+            <input type="search" id="librarySearch" placeholder="Search the library" autocomplete="off">
+            <div class="setting-pills">
+              <button type="button" class="pill active" data-sort="title">Title</button>
+              <button type="button" class="pill" data-sort="recent">Recent</button>
+            </div>
+          </div>
+          <ul class="search-hits" id="libraryHits" hidden></ul>
         </div>
         <aside class="continue-card" id="continueCard" hidden>
           <p class="continue-kicker">Continue reading</p>
@@ -61,6 +71,7 @@
         </aside>
         <div class="pub-filters" id="pubFilters" hidden></div>
         <p class="shelf-error" id="shelfError" hidden></p>
+        <div id="stacks"></div>
         <div class="shelf" id="shelf"></div>
         <p class="empty-shelf" id="emptyShelf">No published books yet. Copy <code>books/_TEMPLATE/</code>, write, then set Status to <code>Published</code> and add a row to the portal README.</p>
       </section>
@@ -203,6 +214,8 @@
         <button type="button" class="ghost-btn" id="shareBtn">Copy link</button>
         <button type="button" class="ghost-btn" id="focusBtn">Focus mode</button>
         <button type="button" class="ghost-btn" id="printBtn">Print / PDF</button>
+        <button type="button" class="ghost-btn" id="downloadMd">Download Markdown</button>
+        <button type="button" class="ghost-btn" id="downloadHtml">Download HTML</button>
         <button type="button" class="ghost-btn" id="exportNotesBtn">Export notes</button>
         <button type="button" class="ghost-btn" id="helpBtn">Keys</button>
         <button type="button" class="ghost-btn" id="progressBtn">Progress</button>

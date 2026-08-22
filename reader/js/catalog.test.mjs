@@ -59,6 +59,13 @@ assert.equal(pub.publisher, 'House');
 assert.equal(pub.edition, 'Second');
 assert.equal(pub.isbn, '978-1');
 
+const tagged = parseBookReadme(
+  `# T\n\n| **Series** | Field Notes |\n| **Tags** | guide, git |\n`,
+  't'
+);
+assert.equal(tagged.series, 'Field Notes');
+assert.deepEqual(tagged.tags, ['guide', 'git']);
+
 const drafting = parseBookReadme(`# T\n\n| **Status** | Drafting |\n`, 't');
 assert.equal(drafting.published, false);
 

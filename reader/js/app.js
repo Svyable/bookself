@@ -5,7 +5,7 @@ import {
   parseFrontMatterMeta,
   clothColor,
 } from './catalog.js';
-import { blocksFromMarkdown } from './markdown.js';
+import { blocksFromMarkdown, headingOffsets } from './markdown.js';
 import { paginateBlocks, pageIndexForOffset } from './paginate.js';
 import {
   loadPrefs,
@@ -25,7 +25,8 @@ import {
   notesMarkdown,
   applyNotes,
 } from './notes.js';
-import { searchBook, wordCount, readingMinutes } from './search.js';
+import { searchBook, searchLibrary, wordCount, readingMinutes } from './search.js';
+import { bookAsMarkdown, bookAsHtml, downloadText } from './export.js';
 
 const app = {
   prefs: loadPrefs(),
@@ -43,6 +44,7 @@ const app = {
   pubFilter: 'All',
   pendingNote: null,
   routing: false,
+  sortMode: 'title',
 };
 
 function $(id) {
@@ -77,8 +79,9 @@ async function loadCatalog() {
   const entries = [];
   for (const slug of slugs) {
     try {
-      const hub = await fetchText(`books/${slug}/README.md`);
-      const meta = parseBookReadme(hub, slug);
+      const hubDoc = await fetchDocument(`books/${slug}/README.md`);
+      const meta = parseBookReadme(hubDoc.text, slug);
+      meta.modified = hubDoc.modified;
       if (meta.published) entries.push(meta);
     } catch (err) {
       console.warn('Skip catalog slug', slug, err);
@@ -359,6 +362,24 @@ function fillToc(book) {
     });
     li.appendChild(a);
     list.appendChild(li);
+    const loaded = book.chapters?.find((x) => x.id === c.id);
+    if (loaded?.markdown) {
+      for (const h of headingOffsets(loaded.markdown).filter((x) => x.level === 2)) {
+        const sub = document.createElement('li');
+        sub.className = 'toc-item toc-sub';
+        const sa = document.createElement('a');
+        sa.className = 'toc-link';
+        sa.href = readHash(book.slug, c.id, h.offset);
+        sa.textContent = h.title;
+        sa.addEventListener('click', (e) => {
+          e.preventDefault();
+          $('tocOverlay').classList.remove('active');
+          go(readHash(book.slug, c.id, h.offset));
+        });
+        sub.appendChild(sa);
+        list.appendChild(sub);
+      }
+    }
   }
   const marks = loadBookmarks(book.slug);
   const box = $('tocMarks');
@@ -460,23 +481,15 @@ function renderPublisherFilters(entries) {
   }
 }
 
-function renderShelf(entries) {
-  renderContinue();
-  renderPublisherFilters(entries);
-  const filtered = entries.filter((b) => app.pubFilter === 'All' || b.publisher === app.pubFilter);
-  const shelf = $('shelf');
-  const empty = $('emptyShelf');
-  shelf.innerHTML = '';
-  empty.hidden = filtered.length > 0;
-  for (const book of filtered) {
-    const a = document.createElement('a');
-    a.className = 'volume';
-    a.href = coverHash(book.slug);
-    a.style.setProperty('--cloth', clothColor(book.slug));
-    const progress = loadProgress(book.slug);
-    const last = app.prefs.lastSlug === book.slug;
-    a.classList.toggle('is-reading', !!(progress || last));
-    a.innerHTML = `
+function volumeEl(book) {
+  const a = document.createElement('a');
+  a.className = 'volume';
+  a.href = coverHash(book.slug);
+  a.style.setProperty('--cloth', clothColor(book.slug));
+  const progress = loadProgress(book.slug);
+  const last = app.prefs.lastSlug === book.slug;
+  a.classList.toggle('is-reading', !!(progress || last));
+  a.innerHTML = `
       <span class="volume-spine"></span>
       <span class="volume-cover">
         ${progress || last ? '<span class="reading-ribbon">Reading</span>' : ''}
@@ -484,12 +497,57 @@ function renderShelf(entries) {
         <span class="volume-author">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
         ${book.publisher ? `<span class="volume-imprint">${escapeHtml(book.publisher)}</span>` : ''}
       </span>`;
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      go(coverHash(book.slug));
-    });
-    shelf.appendChild(a);
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    go(coverHash(book.slug));
+  });
+  return a;
+}
+
+function sortEntries(list) {
+  const copy = list.slice();
+  if (app.sortMode === 'recent') {
+    copy.sort((a, b) => Date.parse(b.modified || 0) - Date.parse(a.modified || 0));
+  } else {
+    copy.sort((a, b) => a.title.localeCompare(b.title));
   }
+  return copy;
+}
+
+function renderShelf(entries) {
+  renderContinue();
+  renderPublisherFilters(entries);
+  const filtered = sortEntries(
+    entries.filter((b) => app.pubFilter === 'All' || b.publisher === app.pubFilter)
+  );
+  const shelf = $('shelf');
+  const stacks = $('stacks');
+  const empty = $('emptyShelf');
+  stacks.innerHTML = '';
+  shelf.innerHTML = '';
+  empty.hidden = filtered.length > 0;
+  const seriesMap = new Map();
+  const rest = [];
+  for (const book of filtered) {
+    if (book.series) {
+      if (!seriesMap.has(book.series)) seriesMap.set(book.series, []);
+      seriesMap.get(book.series).push(book);
+    } else rest.push(book);
+  }
+  for (const [name, books] of seriesMap) {
+    const block = document.createElement('section');
+    block.className = 'stack';
+    const h = document.createElement('h2');
+    h.className = 'stack-title';
+    h.textContent = name;
+    const row = document.createElement('div');
+    row.className = 'shelf';
+    books.forEach((b) => row.appendChild(volumeEl(b)));
+    block.appendChild(h);
+    block.appendChild(row);
+    stacks.appendChild(block);
+  }
+  rest.forEach((b) => shelf.appendChild(volumeEl(b)));
 }
 
 function escapeHtml(s) {
@@ -611,6 +669,40 @@ function exportNotes() {
   a.download = `${app.book.slug}-notes.md`;
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+async function runLibrarySearch(query) {
+  const box = $('libraryHits');
+  if (!box) return;
+  const q = query.trim();
+  if (q.length < 2) {
+    box.hidden = true;
+    box.innerHTML = '';
+    return;
+  }
+  await Promise.all(app.catalog.map((e) => loadBook(e.slug).catch(() => null)));
+  const books = app.catalog.map((e) => app.books.get(e.slug)).filter(Boolean);
+  const hits = searchLibrary(books, q);
+  box.innerHTML = '';
+  box.hidden = hits.length === 0;
+  if (!hits.length) {
+    box.hidden = false;
+    box.innerHTML = '<li>No titles or passages.</li>';
+    return;
+  }
+  for (const hit of hits) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const slug = hit.book.slug;
+    a.href = hit.chapter ? readHash(slug, hit.chapter, hit.offset) : coverHash(slug);
+    a.innerHTML = `<strong>${escapeHtml(hit.book.title)}</strong><em>${escapeHtml(hit.snippet || hit.title)}</em>`;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      go(hit.chapter ? readHash(slug, hit.chapter, hit.offset) : coverHash(slug));
+    });
+    li.appendChild(a);
+    box.appendChild(li);
+  }
 }
 
 function runSearch(query) {
@@ -915,8 +1007,42 @@ function bindUi() {
     });
   });
   $('searchBtn').addEventListener('click', () => {
+    if (document.body.dataset.stage === 'binder') {
+      $('librarySearch')?.focus();
+      return;
+    }
     $('searchOverlay').classList.add('active');
     $('bookSearch').focus();
+  });
+  $('librarySearch')?.addEventListener('input', (e) => runLibrarySearch(e.target.value));
+  document.querySelectorAll('[data-sort]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      app.sortMode = btn.dataset.sort;
+      document.querySelectorAll('[data-sort]').forEach((b) => {
+        b.classList.toggle('active', b === btn);
+      });
+      renderShelf(app.catalog);
+    });
+  });
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-internal]');
+    if (!a) return;
+    e.preventDefault();
+    go(a.getAttribute('href'));
+  });
+  $('downloadMd')?.addEventListener('click', () => {
+    if (!app.book) {
+      toast('Open a book first');
+      return;
+    }
+    downloadText(`${app.book.slug}.md`, bookAsMarkdown(app.book), 'text/markdown');
+  });
+  $('downloadHtml')?.addEventListener('click', () => {
+    if (!app.book) {
+      toast('Open a book first');
+      return;
+    }
+    downloadText(`${app.book.slug}.html`, bookAsHtml(app.book), 'text/html');
   });
   $('searchClose').addEventListener('click', () => $('searchOverlay').classList.remove('active'));
   $('bookSearch').addEventListener('input', (e) => runSearch(e.target.value));
@@ -1164,6 +1290,9 @@ async function init() {
   window.addEventListener('hashchange', requestRoute);
   window.addEventListener('popstate', requestRoute);
   await onRoute();
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(new URL('../sw.js', import.meta.url)).catch(() => {});
+  }
 }
 
 init();

@@ -6,9 +6,10 @@ openbookbinder treats GitHub as the home for books. Every book is a folder of
 plain Markdown that anyone can read, edit, and discuss in the browser. No
 special software. No build step. No lock-in.
 
-The public face is a Kindle-style [reader](reader/) — a shelf of published
-books, two-page spreads, a lamp. Authors still write on GitHub (or with a
-GitHub-authed agent). The reader only publishes.
+The public face is a [reader](reader/) — a Git-native bookshelf, not a
+wiki CMS. Search the library, open a volume, read a spread, export
+Markdown or HTML. Authors still write on GitHub (or with a GitHub-authed
+agent). No WordPress, no database, no lock-in.
 
 ## Why
 

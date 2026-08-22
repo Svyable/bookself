@@ -14,6 +14,8 @@
 | **Authors**   | @your-github-username |
 | **Status**    | Drafting |
 | **Publisher** |  |
+| **Series**    |  |
+| **Tags**      |  |
 | **Edition**   |  |
 | **Chapters**  | 0 of N drafted |
 

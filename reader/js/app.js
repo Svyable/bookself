@@ -36,11 +36,14 @@ const app = {
   book: null,
   pages: [],
   pageIndex: 0,
-  isMobile: window.innerWidth <= 780,
+  isMobile: !canSpreadViewport(),
   sessionBook: null,
   statsTimer: null,
   touchStartX: null,
+  touchStartY: null,
+  didSwipe: false,
   toastTimer: null,
+  selTimer: null,
   pubFilter: 'All',
   pendingNote: null,
   routing: false,
@@ -60,6 +63,7 @@ function applyPrefs() {
   document.body.classList.toggle('is-draft', !!(app.book && !app.book.published));
   $('nightLightOverlay').classList.toggle('active', !!app.prefs.nightLight);
   $('nightLightBtn')?.classList.toggle('active', !!app.prefs.nightLight);
+  $('viewModeBtn').hidden = !canSpreadViewport();
   $('viewModeBtn').textContent = app.prefs.viewMode === 'spread' ? 'Single' : 'Spread';
   document.querySelectorAll('[data-font]').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.font === app.prefs.fontFamily);
@@ -69,8 +73,25 @@ function applyPrefs() {
   });
 }
 
+function canSpreadViewport() {
+  const w = window.visualViewport?.width || window.innerWidth;
+  const h = window.visualViewport?.height || window.innerHeight;
+  return w >= 900 && h >= 560;
+}
+
 function spreadOn() {
-  return !app.isMobile && app.prefs.viewMode === 'spread';
+  return canSpreadViewport() && app.prefs.viewMode === 'spread';
+}
+
+function overlaysOpen() {
+  return [
+    'tocOverlay',
+    'progressPanel',
+    'settingsPanel',
+    'searchOverlay',
+    'noteDialog',
+    'helpOverlay',
+  ].some((id) => $(id)?.classList.contains('active'));
 }
 
 async function loadCatalog() {
@@ -150,20 +171,29 @@ function sizeMeasure() {
   const sample = $('pageLeft');
   const box = $('pageMeasure');
   const host = $('pagesWrapper');
-  const w = spreadOn() ? Math.floor((host.clientWidth - 10) / 2) : host.clientWidth;
-  const h = host.clientHeight;
-  box.style.width = `${Math.max(w, 200)}px`;
+  const stage = $('bookStage');
+  if (!host || !box) return false;
+  let w = host.clientWidth;
+  let h = host.clientHeight;
+  if (w < 80 || h < 80) {
+    w = stage?.clientWidth || Math.max(window.innerWidth - 24, 200);
+    h = stage?.clientHeight || Math.max(Math.floor(window.innerHeight * 0.62), 240);
+  }
+  if (w < 80 || h < 80) return false;
+  const pageW = spreadOn() ? Math.floor((w - 10) / 2) : w;
+  box.style.width = `${Math.max(pageW, 200)}px`;
   box.style.height = `${Math.max(h, 240)}px`;
   if (sample) {
     const cs = getComputedStyle(sample);
     box.style.padding = cs.padding;
     box.style.fontFamily = cs.fontFamily;
   }
+  return true;
 }
 
 function rebuildPages() {
   if (!app.book) return;
-  sizeMeasure();
+  if (!sizeMeasure()) return;
   const box = $('pageMeasureInner');
   const pages = [];
   for (const ch of app.book.chapters) {
@@ -789,6 +819,20 @@ function hideSelPop() {
   $('selPop').hidden = true;
 }
 
+function positionSelPop(rect) {
+  const pop = $('selPop');
+  pop.hidden = false;
+  const vv = window.visualViewport;
+  const leftOff = vv ? vv.offsetLeft : 0;
+  const topOff = vv ? vv.offsetTop : 0;
+  const vw = vv ? vv.width : window.innerWidth;
+  const popW = Math.min(pop.offsetWidth || 180, vw - 16);
+  const left = Math.min(Math.max(8 + leftOff, rect.left + leftOff), leftOff + vw - popW - 8);
+  const top = Math.max(8 + topOff, rect.top + topOff - 42);
+  pop.style.left = `${left}px`;
+  pop.style.top = `${top}px`;
+}
+
 function currentSelection() {
   const sel = window.getSelection();
   const text = sel && sel.toString().trim();
@@ -834,6 +878,10 @@ async function openRead(slug, chapter, offset) {
     showStage('read');
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     rebuildPages();
+    if (!app.pages.length) {
+      await new Promise((r) => requestAnimationFrame(r));
+      rebuildPages();
+    }
     const ch = chapter && book.contents.some((c) => c.id === chapter)
       ? chapter
       : book.contents[0]?.id;
@@ -1201,22 +1249,31 @@ function bindUi() {
     toast('Note saved');
     paintPages();
   });
-  document.addEventListener('mouseup', () => {
+  const showSelPop = () => {
     if (document.body.dataset.stage !== 'read') return;
-    setTimeout(() => {
-      const cur = currentSelection();
-      const pop = $('selPop');
-      if (!cur) {
-        hideSelPop();
-        return;
-      }
-      const rect = cur.sel.getRangeAt(0).getBoundingClientRect();
-      pop.hidden = false;
-      pop.style.left = `${Math.min(rect.left, window.innerWidth - 180)}px`;
-      pop.style.top = `${rect.top + window.scrollY - 40}px`;
-    }, 10);
+    const cur = currentSelection();
+    if (!cur) {
+      hideSelPop();
+      return;
+    }
+    const range = cur.sel.rangeCount ? cur.sel.getRangeAt(0) : null;
+    if (!range) return;
+    positionSelPop(range.getBoundingClientRect());
+  };
+  document.addEventListener('mouseup', () => {
+    setTimeout(showSelPop, 10);
+  });
+  document.addEventListener('selectionchange', () => {
+    if (!('ontouchstart' in window)) return;
+    clearTimeout(app.selTimer);
+    app.selTimer = setTimeout(showSelPop, 80);
   });
   $('pagesWrapper').addEventListener('click', (e) => {
+    if (app.didSwipe) {
+      app.didSwipe = false;
+      return;
+    }
+    if (overlaysOpen()) return;
     if (e.target.closest('a, button, mark')) return;
     if (window.getSelection && window.getSelection().toString().trim()) return;
     const rect = $('pagesWrapper').getBoundingClientRect();
@@ -1288,17 +1345,31 @@ function bindUi() {
   });
 
   document.addEventListener('touchstart', (e) => {
+    if (overlaysOpen() || e.target.closest('input, textarea, a, button, .toc-overlay, .search-overlay, .stats-overlay, .sel-pop')) {
+      app.touchStartX = null;
+      return;
+    }
     app.touchStartX = e.changedTouches[0].clientX;
+    app.touchStartY = e.changedTouches[0].clientY;
+    app.didSwipe = false;
   }, { passive: true });
   document.addEventListener('touchend', (e) => {
     if (document.body.dataset.stage !== 'read') return;
-    const dx = e.changedTouches[0].clientX - app.touchStartX;
-    if (Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1);
+    if (overlaysOpen()) return;
+    if (app.touchStartX == null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - app.touchStartX;
+    const dy = t.clientY - (app.touchStartY || t.clientY);
+    if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      app.didSwipe = true;
+      turn(dx < 0 ? 1 : -1);
+    }
   }, { passive: true });
 
   let resizeTimer;
-  window.addEventListener('resize', () => {
-    app.isMobile = window.innerWidth <= 780;
+  const onViewport = () => {
+    app.isMobile = !canSpreadViewport();
+    applyPrefs();
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       if (document.body.dataset.stage !== 'read' || !app.book) return;
@@ -1308,7 +1379,10 @@ function bindUi() {
       app.pageIndex = pageIndexForOffset(app.pages, ch, off);
       paintPages();
     }, 150);
-  });
+  };
+  window.addEventListener('resize', onViewport);
+  window.addEventListener('orientationchange', onViewport);
+  window.visualViewport?.addEventListener('resize', onViewport);
 }
 
 function bumpFont(delta) {

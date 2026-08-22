@@ -200,6 +200,11 @@ function fillPage(el, page, num, side, two) {
   inner.classList.toggle('chapter-open', !!(page && isChapterOpen(page.html)));
   if (page && app.slug) applyNotes(inner, loadNotes(app.slug), page.chapter);
   el.querySelector('.page-num').textContent = page ? String(num) : '';
+  const run = el.querySelector('.page-running');
+  if (run) {
+    const meta = app.book?.contents.find((c) => c.id === page?.chapter);
+    run.textContent = meta?.title || '';
+  }
   el.classList.toggle('left', two && side === 'left');
   el.classList.toggle('right', !two || side === 'right');
 }
@@ -301,7 +306,8 @@ function fillCover(book, { draft }) {
   $('backAuthor').textContent = book.authors ? book.authors.replace(/@/g, '') : '';
   const prog = loadProgress(book.slug);
   const canContinue = !!(prog && book.contents.some((c) => c.id === prog.chapter));
-  $('continueBtn').hidden = !canContinue;
+  $('startBtn').textContent = canContinue ? 'Continue' : 'Begin';
+  $('startOverBtn').hidden = !canContinue;
   fillProof(book, draft);
   const src = $('sourceLink');
   if (src) src.href = sourceUrl(book);
@@ -843,13 +849,17 @@ function bindUi() {
   $('logoBtn').addEventListener('click', () => go(binderHash()));
   $('startBtn').addEventListener('click', (e) => {
     e.stopPropagation();
-    const ch = app.book.contents[0]?.id;
-    go(readHash(app.slug, ch, 0));
-  });
-  $('continueBtn').addEventListener('click', (e) => {
-    e.stopPropagation();
+    const first = app.book.contents[0]?.id;
     const prog = loadProgress(app.slug);
-    if (prog?.chapter) go(readHash(app.slug, prog.chapter, prog.offset || 0));
+    if (prog?.chapter && !$('startOverBtn').hidden) {
+      go(readHash(app.slug, prog.chapter, prog.offset || 0));
+    } else {
+      go(readHash(app.slug, first, 0));
+    }
+  });
+  $('startOverBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    go(readHash(app.slug, app.book.contents[0]?.id, 0));
   });
   $('rereadBtn').addEventListener('click', () => go(coverHash(app.slug)));
   $('homeFromEnd').addEventListener('click', () => go(binderHash()));
@@ -1032,8 +1042,7 @@ function bindUi() {
   });
   $('coverPage').addEventListener('click', (e) => {
     if (e.target.closest('button, a')) return;
-    if (!$('continueBtn').hidden) $('continueBtn').click();
-    else $('startBtn').click();
+    $('startBtn').click();
   });
 
   document.addEventListener('keydown', (e) => {
@@ -1069,8 +1078,7 @@ function bindUi() {
     }
     if (stage === 'cover' && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
-      if (!$('continueBtn').hidden) $('continueBtn').click();
-      else $('startBtn').click();
+      $('startBtn').click();
       return;
     }
     if (document.body.dataset.stage !== 'read') return;

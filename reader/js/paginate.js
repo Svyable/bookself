@@ -77,6 +77,10 @@ function makePage(chapterId, parts) {
   };
 }
 
+function isHeading(piece) {
+  return /^\s*<h[1-3]\b/i.test(piece.html || '');
+}
+
 export function paginateBlocks(chapterId, blocks, measureEl) {
   const pages = [];
   let current = [];
@@ -85,6 +89,12 @@ export function paginateBlocks(chapterId, blocks, measureEl) {
 
   const flush = () => {
     if (!current.length) return;
+    if (current.length > 1 && isHeading(current[current.length - 1])) {
+      const heading = current.pop();
+      pages.push(makePage(chapterId, current));
+      current = [heading];
+      return;
+    }
     pages.push(makePage(chapterId, current));
     current = [];
   };

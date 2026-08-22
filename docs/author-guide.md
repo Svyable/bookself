@@ -147,3 +147,6 @@ feedback**, **Cite**, and **Source** (the manuscript folder).
 
 A book URL can be the hash (`reader/#/b/<slug>/`) or the query
 (`reader/?b=<slug>`). Both work. `?` in the reader lists keys.
+
+Cite copies a reference with the latest git revision of that book folder
+when GitHub’s API is reachable. History on the cover opens that commit.

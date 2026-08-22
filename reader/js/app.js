@@ -120,8 +120,30 @@ async function loadBook(slug) {
     )
   );
   const book = { ...meta, title: fm.title || meta.title, subtitle: fm.subtitle, year: fm.year, cover, chapters };
+  book.revision = await fetchRevision(slug);
   app.books.set(slug, book);
   return book;
+}
+
+async function fetchRevision(slug) {
+  try {
+    const { owner, repo } = githubRepo();
+    const res = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/commits?path=books/${encodeURIComponent(slug)}/&per_page=1`,
+      { headers: { Accept: 'application/vnd.github+json' } }
+    );
+    if (!res.ok) return null;
+    const rows = await res.json();
+    const c = rows[0];
+    if (!c?.sha) return null;
+    return {
+      sha: c.sha,
+      date: c.commit?.committer?.date || c.commit?.author?.date || '',
+      url: c.html_url,
+    };
+  } catch {
+    return null;
+  }
 }
 
 function sizeMeasure() {
@@ -252,7 +274,10 @@ function showStage(name) {
   $('binderView').hidden = name !== 'binder';
   if (name === 'cover') {
     cover.hidden = false;
-    requestAnimationFrame(() => cover.classList.remove('opened'));
+    cover.classList.add('opened');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => cover.classList.remove('opened'));
+    });
   } else {
     cover.classList.add('opened');
     window.setTimeout(() => {
@@ -295,7 +320,10 @@ function fillCover(book, { draft }) {
     words ? `~${mins} min` : '',
     book.isbn ? `ISBN ${book.isbn}` : '',
   ].filter(Boolean);
-  if (book.modified) {
+  if (book.revision?.sha) {
+    const day = (book.revision.date || '').slice(0, 10);
+    metaBits.push(day ? `${book.revision.sha.slice(0, 7)} · ${day}` : book.revision.sha.slice(0, 7));
+  } else if (book.modified) {
     const when = new Date(book.modified);
     if (!Number.isNaN(when.getTime())) {
       metaBits.push(`as of ${when.toISOString().slice(0, 10)}`);
@@ -328,6 +356,13 @@ function fillCover(book, { draft }) {
   fillProof(book, draft);
   const src = $('sourceLink');
   if (src) src.href = sourceUrl(book);
+  const hist = $('historyLink');
+  if (hist) {
+    const { owner, repo } = githubRepo();
+    hist.href = book.revision?.url
+      || `https://github.com/${owner}/${repo}/commits/main/books/${book.slug}`;
+    hist.hidden = false;
+  }
   setTitle();
 }
 
@@ -517,6 +552,9 @@ function volumeEl(book) {
     e.preventDefault();
     go(coverHash(book.slug));
   });
+  a.addEventListener('pointerenter', () => {
+    loadBook(book.slug).catch(() => {});
+  }, { once: true });
   return a;
 }
 
@@ -599,7 +637,10 @@ function citeBook(book) {
   const year = book.year || '';
   const pub = book.publisher || '';
   const url = `${window.location.origin}${window.location.pathname}?b=${encodeURIComponent(book.slug)}`;
-  return `${authors}${authors ? '. ' : ''}${book.title}.${pub || year ? ' ' : ''}${[pub, year].filter(Boolean).join(', ')}. ${url}`;
+  const rev = book.revision?.sha
+    ? ` ${book.revision.sha.slice(0, 7)}${book.revision.date ? `, ${(book.revision.date || '').slice(0, 10)}` : ''}.`
+    : '';
+  return `${authors}${authors ? '. ' : ''}${book.title}.${pub || year ? ' ' : ''}${[pub, year].filter(Boolean).join(', ')}. ${url}.${rev}`;
 }
 
 function feedbackUrl(quote) {
@@ -657,7 +698,13 @@ function printBook() {
   }
   const root = $('printRoot');
   root.hidden = false;
-  root.innerHTML = app.pages
+  const titlePage = `<section class="print-page print-title">
+    <h1>${escapeHtml(app.book.title)}</h1>
+    <p>${escapeHtml((app.book.authors || '').replace(/@/g, ''))}</p>
+    <p>${escapeHtml([app.book.publisher, app.book.edition].filter(Boolean).join(' · '))}</p>
+    ${app.book.revision?.sha ? `<p>rev. ${escapeHtml(app.book.revision.sha.slice(0, 7))}</p>` : ''}
+  </section>`;
+  root.innerHTML = titlePage + app.pages
     .map((p) => `<section class="print-page">${p.html}</section>`)
     .join('');
   const after = () => {
@@ -768,7 +815,8 @@ function currentSelection() {
 async function openCover(slug) {
   setLoader(true);
   try {
-    app.books.delete(slug);
+    const cached = app.books.get(slug);
+    if (!cached || !cached.published) app.books.delete(slug);
     const book = await loadBook(slug);
     app.slug = slug;
     app.book = book;

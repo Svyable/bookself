@@ -1151,6 +1151,21 @@ body[data-stage="read"] .page-nav { display: flex; }
   clip: rect(0 0 0 0);
 }
 
+.skip-link {
+  position: absolute;
+  left: 0.8rem;
+  top: -3rem;
+  z-index: 200;
+  padding: 0.4rem 0.7rem;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.skip-link:focus { top: 0.6rem; }
+
 .help-keys {
   list-style: none;
   color: var(--text-secondary);
@@ -1227,6 +1242,16 @@ body.focus-mode:hover .page-nav {
   }
 
   .print-page h1 { font-size: 18pt; margin-bottom: 1rem; }
+
+  .print-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+  }
+
+  .print-title h1 { font-size: 28pt; letter-spacing: -0.03em; }
 
   body.is-draft .print-page {
     background-image: repeating-linear-gradient(

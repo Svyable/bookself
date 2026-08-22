@@ -1,4 +1,4 @@
-import { fetchText, fetchDocument, firstExisting, fileUrl } from './base.js';
+import { fetchText, fetchDocument, firstExisting } from './base.js';
 import {
   parsePortalCatalog,
   parseBookReadme,
@@ -340,13 +340,8 @@ function fillCover(book, { draft }) {
   document.body.classList.toggle('is-draft', draft);
   const face = $('coverFront');
   face.style.setProperty('--cloth', clothColor(book.slug));
-  if (book.cover) {
-    face.style.backgroundImage = `linear-gradient(180deg, rgba(40,18,12,.12) 0%, rgba(20,10,8,.5) 100%), url("${book.cover}")`;
-    face.classList.add('has-art');
-  } else {
-    face.style.backgroundImage = '';
-    face.classList.remove('has-art');
-  }
+  face.style.backgroundImage = '';
+  face.classList.remove('has-art');
   $('backTitle').textContent = book.title;
   $('backAuthor').textContent = book.authors ? book.authors.replace(/@/g, '') : '';
   const prog = loadProgress(book.slug);
@@ -535,8 +530,6 @@ function volumeEl(book) {
   a.className = 'volume';
   a.href = coverHash(book.slug);
   a.style.setProperty('--cloth', clothColor(book.slug));
-  a.style.setProperty('--cover-jpg', `url("${fileUrl(`books/${book.slug}/media/cover.jpg`)}")`);
-  a.style.setProperty('--cover-png', `url("${fileUrl(`books/${book.slug}/media/cover.png`)}")`);
   const progress = loadProgress(book.slug);
   const last = app.prefs.lastSlug === book.slug;
   a.classList.toggle('is-reading', !!(progress || last));

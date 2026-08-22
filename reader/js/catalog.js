@@ -89,7 +89,7 @@ export function clothColor(slug) {
   let h = 0;
   for (let i = 0; i < slug.length; i++) h = (h * 33 + slug.charCodeAt(i)) >>> 0;
   const hue = h % 360;
-  const sat = 32 + (h % 16);
-  const lit = 18 + (h % 10);
+  const sat = 28 + (h % 18);
+  const lit = 16 + (h % 10);
   return `hsl(${hue} ${sat}% ${lit}%)`;
 }

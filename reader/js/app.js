@@ -539,6 +539,7 @@ function volumeEl(book) {
         ${progress || last ? '<span class="reading-ribbon">Reading</span>' : ''}
         <span class="volume-title">${escapeHtml(book.title)}</span>
         <span class="volume-author">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
+        ${book.publisher ? `<span class="volume-imprint">${escapeHtml(book.publisher)}</span>` : ''}
       </span>`;
   a.addEventListener('click', (e) => {
     e.preventDefault();

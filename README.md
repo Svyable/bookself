@@ -11,6 +11,9 @@ wiki CMS. Search the library, open a volume, read a spread, export
 Markdown or HTML. Authors still write on GitHub (or with a GitHub-authed
 agent). No WordPress, no database, no lock-in.
 
+A live imprint: [Svyable Press](https://svyable.github.io/press/), the
+author's own shelf running this reader.
+
 ## Why
 
 Word processors hide history, lose drafts, and turn collaboration into a

@@ -1,13 +1,14 @@
-# The Example Book
+# The Bookself Book
 
 | | |
 |---|---|
 | **Authors**   | @svyable |
 | **Status**    | Published |
-| **Publisher** | Open Book Binder |
+| **Publisher** | Bookself |
 | **Series**    | Field Notes |
-| **Tags**      | guide, git |
+| **Tags**      | bookself, git, publishing |
 | **Edition**   | First |
+| **Format**    | Book |
 | **Chapters**  | 3 of 3 drafted |
 
 ## Contents

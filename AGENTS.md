@@ -49,6 +49,8 @@ URL into shared `reader/` or `desk/` code. Instance identity belongs in
 
 ## Voice
 
+- For book, essay, narrative, or other voice-sensitive prose tasks, read and apply
+  `.agents/skills/human-prose/SKILL.md` before drafting, reviewing, or editing.
 - Preserve the author's voice, tense, and rhythm. Match the surrounding
   sentences, not a house style you brought with you.
 - Do not substitute synonyms "for clarity" unless the author asked for that.

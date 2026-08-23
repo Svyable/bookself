@@ -1,169 +1,257 @@
 # Author guide
 
-You do not need to know git. This place is a binder: each book is a folder,
-each chapter is a page, and GitHub keeps every version.
+You do not need to know Git.
+
+You do not need to know what a repository is, either. If you can edit text in a
+browser, you can start writing here. GitHub will occasionally use a strange
+noun; this guide translates it when it appears.
+
+If you want the shortest possible version first, read **[START HERE](../START-HERE.md)**.
+
+## The useful mental model
+
+This place is a binder with an excellent memory:
+
+- a **book** is a folder
+- a **chapter** is a plain-text file
+- a **commit** is a saved version with a note
+- **history** is all those saved versions in order
+- a **pull request** is a proposed change with a conversation attached
+
+That is enough vocabulary for quite a while.
+
+## Your first writing loop
+
+1. Open your book.
+2. Open a chapter.
+3. Click the pencil icon: **Edit this file**.
+4. Write.
+5. Click **Commit changes** — read that as **Save this version**.
+6. Preview the book in the Reader.
+7. Revise.
+8. Repeat until the chapter stops making faces at you.
+
+That loop is Bookself in miniature.
+
+## If you are starting a new book
+
+Find `books/_TEMPLATE/`. It is a blank book with example chapter files.
+
+Copy it to a new folder named with lowercase words and hyphens, such as:
+
+`books/the-long-way-home/`
+
+The folder name is a computer-friendly label, not the title readers see.
+
+Open the new book's `README.md` and replace **Your Book Title**. Then replace the
+example prose in `manuscript/` one chapter at a time.
+
+Inside the book:
+
+- `README.md` — title, author, status, and reading order
+- `manuscript/` — the writing
+- `media/` — optional cover art and images
+
+Structurally, you now have a book. Whether it is any good remains charmingly
+outside the scope of the file system.
+
+## Making an edit on GitHub
 
 This walkthrough uses the GitHub website on a computer.
 
-## In one minute
-
-1. Copy `books/_TEMPLATE/` to `books/your-title/` (lowercase, hyphens).
-2. Open a chapter, click the pencil, write, and **Commit changes**.
-3. Preview at `reader/#/b/your-title/`. When you are ready, set Status to
-   `Published` and add a row for the book in the root `README.md`.
-
-That is the whole publishing loop **on one repository**. If some books must
-stay secret, use [Bookself](bookself.md): write in a **private** binder,
-then promote a folder to a **public** shelf when it is meant to be read.
-A draft on a public repo is unlisted, not private.
-
-The rest of this guide is the same path, slower.
-
-## 1. What this place is
-
-The repository is a stack of books. Open [`books/`](../books/). The folder
-named `_TEMPLATE` is a blank book you can copy, not a real title. Every other
-folder is a book.
-
-Inside a book:
-
-- `README.md` — the cover and table of contents
-- `manuscript/` — the pages
-- `media/` — pictures, when a book has them
-
-## 2. Reading a book
-
-1. Open the book folder.
-2. Open `README.md`. The **Contents** list is the reading order. Click a
-   chapter name.
-3. Read the page. GitHub turns Markdown into readable text automatically.
-
-The file list inside `manuscript/` is alphabetical, so `back-matter.md` will
-not sit at the end. Trust the README, not the file list.
-
-## 3. Making your first edit
-
 1. Open the chapter you want to change.
-2. Click the pencil icon in the top-right of the file view. GitHub labels
-   it **Edit this file**.
-3. The page becomes a text editor. Change the words. Leave the single `#`
-   title at the top unless you are renaming the chapter.
-4. Do not paste in Word formatting, extra headings, or comments.
+2. Click the pencil icon near the top-right of the file view. GitHub calls it
+   **Edit this file**.
+3. The page becomes a text editor.
+4. Change the words.
+5. Leave the single `#` title at the top unless you are renaming the chapter.
 
-If GitHub asks you to fork the repository, say yes — that is how GitHub lets
-people without write access propose an edit.
+Markdown is just plain text with a few formatting marks. You do not need to
+learn it all first. The main things are:
 
-## 4. Committing (saving a version)
+- `# Chapter title` — chapter heading
+- `## Smaller heading` — section heading
+- `*words*` — italics
+- `**words**` — bold
 
-Scroll to the bottom of the edit page, to **Commit changes**.
+If you pasted from Word or another rich-text editor, give the result a quick
+look for strange formatting. The prose matters more than preserving invisible
+word-processor furniture.
 
-1. In the first box, write a short note in plain language:
-   `Fix the river image caption in chapter 2`.
-2. Choose how to save:
-   - **Commit directly to the `main` branch** — use this only if you are a
-     named author of this book (see the book's README).
-   - **Create a new branch for this commit and start a pull request** — use
-     this otherwise. It is the "propose changes" path.
-3. Click **Commit changes** (or **Propose changes**).
+## Saving a version — GitHub calls this a commit
 
-A commit is a saved version with a note. It is not publishing to a printer.
-It is putting a dated page in the binder.
+When you finish an edit, click **Commit changes**.
 
-## 5. Ticking checkboxes in the table of contents
+GitHub asks for a short message. Write what Future You would want to know:
 
-The book's README has a contents list like this:
+- `Draft the opening scene`
+- `Make chapter 2 less repetitive`
+- `Try the version where the argument starts later`
+- `Fix two typos and an overconfident semicolon`
+
+A commit is not publication. It is simply a named save point in the book's
+history.
+
+If GitHub offers these choices:
+
+- **Commit directly to `main`** — save the change into the current working book.
+  This is fine for a lead author making ordinary edits in their own book.
+- **Create a new branch and start a pull request** — make a safe side copy and
+  propose the change for review. Use this when editing someone else's work or
+  when a change deserves discussion first.
+
+A **branch** is a side path. A **pull request** is “here is the side-path version;
+do we want to keep it?”
+
+## What if I make a mistake?
+
+Version history is the point.
+
+Yesterday's wording is still there. A deleted paragraph is not spiritually
+lost. A failed experiment can be compared with the version before it.
+
+That does not make every mistake effortless to undo, but it makes ordinary
+rewrites much less scary than overwriting one giant document forever.
+
+## The table of contents and checkboxes
+
+The book `README.md` has a Contents list like:
 
     - [ ] [Ch 1 — Opening the Binder](manuscript/ch01-example.md)
 
-The boxes do not toggle by clicking them on the page. To mark a chapter
-done:
+The checkbox is a tiny progress marker. GitHub does not toggle it when you click
+it in the rendered page.
 
-1. Open the book `README.md`.
-2. Click the pencil.
-3. Change `[ ]` to `[x]` on that line.
-4. Update the **Chapters** count in the info table if it has drifted.
-5. Commit as in step 4.
+To mark something drafted:
 
-## 6. Suggesting a change on someone else's line
+1. Edit the book `README.md`.
+2. Change `[ ]` to `[x]`.
+3. Update the **Chapters** count if needed.
+4. Save the version.
 
-Two similar tools, for two situations.
+The Contents list is also the official reading order. Trust it more than the
+alphabetical file list.
 
-**You are reading a file and want to propose a better sentence.** Use the
-pencil as in step 3, change only that passage, and open a pull request
-(step 4, "propose changes"). In the PR description, say which lines you
-touched and why.
+## Read while you write
 
-**You are reviewing a pull request.** On the **Files changed** tab, hover a
-line, click the blue **+**, and choose to add a comment. GitHub can insert a
-suggested replacement the author accepts with one click. Prefer that over a
-vague "please rephrase."
+The Bookself Reader is not only for finished books. It is part of revision.
 
-## 7. Filing feedback without editing
+Open:
 
-If you would rather not touch the text:
+`reader/#/b/<your-book-folder>/`
 
-1. Open the **Issues** tab.
-2. Click **New issue**.
-3. Choose **Chapter feedback**.
-4. Pick the book, say where in the book, pick the kind of feedback, and
-   write what you would change.
+Reading prose in a book-like layout catches different problems than reading it
+inside an editor. Preview early enough to be annoyed usefully.
 
-Use **New book proposal** only when you are pitching a title that does not
-exist yet.
+The Reader needs the repository to be served over HTTP. On a public Shelf that
+usually means GitHub Pages. In a private Binder, the Publishing Desk and Reader
+can be served locally from the checkout.
 
-## 8. Reading the published book
+## The private Binder and public Shelf
 
-The public binder is the [reader](../reader/). It looks like a book: two
-pages, a lamp, a bookmark. It only lists books whose Status is
+Bookself's default model uses two spaces:
+
+- **Binder** — private drafting and working history
+- **Shelf** — public books intended for readers
+
+This is deliberate. A draft hidden from the Shelf list but stored in a public
+repository is still public.
+
+So the normal lifecycle is:
+
+**write in Binder → review → promote to Shelf → publish**
+
+The [Writing lifecycle](writing-lifecycle.md) explains the larger loop.
+
+## Publishing a book
+
+Publishing should answer a simple question:
+
+**Do I mean for strangers to be able to read this version?**
+
+If yes:
+
+1. Promote or copy the finished book folder from the private Binder to the
+   public Shelf.
+2. In the Shelf copy's book `README.md`, set **Status** to exactly `Published`.
+3. Add the book to the Shelf root `README.md` under **The books**.
+4. Save and push those changes.
+
+The public Reader checks both the Shelf catalog and the book Status.
+
+Nothing in `reader/` should be edited to publish a book. Publishing is metadata
+and manuscript state, not a JavaScript ceremony.
+
+To unpublish, remove the catalog row and change the status away from
 `Published`.
 
-You can still look at a draft the same way. After your files are on GitHub,
-open `reader/#/b/<your-slug>/`. That address is unlisted — it will not
-appear on the shelf until you publish. Share it with a reviewer.
+## Getting feedback without learning everything
 
-The reader cannot open from a `file://` page. GitHub Pages (or any static
-server at the repository root) has to serve the files.
+You have several levels of ceremony available.
 
-## 9. Publishing
+**Just read this:** send someone the Reader preview.
 
-If the repo is **public**, this puts the book on the public shelf. If you
-need a closed studio, write in a private binder first ([Bookself](bookself.md)).
+**Please comment on a passage:** use a GitHub issue or the Reader's feedback
+flow when available.
 
-Publishing is two edits, together. Nothing in `reader/` changes.
+**Please propose exact edits:** open a pull request. Reviewers can comment on
+specific lines and suggest replacements.
 
-1. In the book `README.md`, set **Status** to the exact word `Published`.
-2. In the portal README (`README.md` at the root of the repository), add a
-   row under **The books** that links to `books/<your-slug>/`.
+You can adopt those tools gradually. Bookself should still be useful before you
+become fluent in any of them.
 
-The reader lists the portal table, then checks Status. Both must be true.
+## Editing someone else's book
 
-To unpublish, reverse both edits.
+If you have permission to edit but are not the lead author, prefer a pull
+request rather than saving straight into the main version.
 
-A GitHub-authed agent can do every step in this guide. It should never edit
-reader JavaScript to put your book on the shelf.
+Keep editorial changes narrow. Preserve the author's voice. A precise change
+with a reason is much easier to review than a surprise rewrite of half the
+chapter.
 
-## 10. Proof, print, and the imprint
+The [Editor guide](editor-guide.md) goes deeper on review.
 
-On a draft cover the reader lists missing or empty chapter files. Opening
-the cover reloads the Markdown, so a push is visible after refresh.
+## Cover art, metadata, print, and other useful extras
 
-**Copy link** on the cover is the unlisted preview URL. Send that to a
-reviewer.
+Optional book README rows include:
 
-**Print / PDF** is in Type and tools. The browser print dialog can save a
-PDF. Drafts print with a draft wash so they are not mistaken for a finished
-edition.
+- Publisher
+- Series
+- Tags
+- Edition
+- Language
+- ISBN
 
-Optional rows on the book README — Publisher, Edition, Language, ISBN —
-show on the cover and the back. They are not required to publish.
+They are useful but not required to begin writing.
 
-While reading, Contents includes **Edit this chapter on GitHub**. Select
-text to copy, highlight a note, share a passage, or **Report** it as a
-GitHub issue with the chapter and quote filled in. The cover has **Send
-feedback**, **Cite**, and **Source** (the manuscript folder).
+Optional cover art goes in `media/cover.png` (or `.jpg` / `.webp`). If there is
+no cover image, the Reader makes a cloth-style cover automatically.
 
-A book URL can be the hash (`reader/#/b/<slug>/`) or the query
-(`reader/?b=<slug>`). Both work. `?` in the reader lists keys.
+The Reader can print or save a PDF through the browser print dialog. Drafts are
+visually marked so an unfinished proof is less likely to escape into the world
+wearing a fake mustache.
 
-Cite copies a reference with the latest git revision of that book folder
-when GitHub’s API is reachable. History on the cover opens that commit.
+## A tiny dictionary for later
+
+| GitHub word | Plain-English meaning |
+|---|---|
+| repository / repo | project folder with history |
+| commit | named save point |
+| branch | safe side copy / alternate path |
+| pull request | proposed changes + discussion |
+| merge | accept the proposed changes |
+| fork | your own copy of another repository |
+| diff | a before-and-after view of changed lines |
+
+You do not need to memorize this table. It will still be here later.
+
+## Where next?
+
+- [START HERE](../START-HERE.md) — the shortest path
+- [Writing lifecycle](writing-lifecycle.md) — the authorship model
+- [Book anatomy](book-anatomy.md) — what files make up a book
+- [Editor guide](editor-guide.md) — review and proposed changes
+- [Bookself architecture](bookself.md) — Binder, Shelf, and platform details
+
+If your next question is actually about the sentence you are writing, close the
+documentation. That is a good sign.

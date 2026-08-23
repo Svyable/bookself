@@ -1,19 +1,23 @@
 # Opening the Binder
 
-This place is a binder. Each book is a folder. Each chapter is a page. GitHub keeps every version — who changed a sentence, when they changed it, and the note they left.
+This book is sitting inside the system it describes. Its source is a folder in the Bookself repository. The chapters are Markdown files, the figures sit beside them in `media/`, and Git remembers the versions. The Reader does not receive a special exported copy; it reads these files and turns them into pages.
 
-You do not need special software. You do not run a build. You write Markdown the way you would write a letter: a title at the top, then paragraphs.
+That is the smallest useful idea in Bookself: a publication should still look like a publication when all the publishing software is removed.
 
 ![Git-native publishing flow from Markdown and media through Git history into the reader](../media/git-native-publishing.svg)
 
-A chapter is one file. The title is the only heading. Everything after that is the writing — the way you'd speak it if you were sitting across a table.
-
-Images work the same way. Put a PNG, JPG, WebP, or SVG in the book's `media/` folder, then point to it from Markdown. The picture is versioned with the words and served with the reader; there is no separate image host to configure.
+A chapter is one file. Its first line is the title. Images are ordinary relative Markdown links. Put a PNG, JPG, WebP, or SVG in the book's `media/` folder and the image can travel through Git with the sentence that explains it.
 
 ![A media file beside a chapter, referenced with ordinary Markdown and served by the public reader](../media/hosted-media-flow.svg)
 
-When you want a new chapter, add another file named like the others: `ch04-something-short.md`. Then add a line for it in the book's README. The README is the cover of the binder and the table of contents. Trust that list, not the file listing. GitHub sorts files alphabetically, so back-matter will not sit at the end. The two edits that put a book on the shelf are in [[ch03-publishing|Publishing]].
+The book README is the manuscript hub. It carries the metadata the Reader needs and a checked table of contents that says which files belong to the book. That list matters more than an alphabetical directory listing; `back-matter.md`, for example, does not become the ending merely because GitHub happens to sort it somewhere convenient.
 
-This sample book exists so the public reader has something to hold. Copy `books/_TEMPLATE/` when you start a real title. Overwrite these pages. Change the authors. Keep the Status on Drafting until you mean for strangers to find it on the shelf.
+This repository is the **platform demo**, so it contains templates and this practical guide. A real author's working manuscript belongs somewhere else: a private Binder. The public Shelf is another repository again. That separation is not cosmetic. It means a revision can stay private for months while the previous released edition remains unchanged and readable.
 
-The public face of the binder is a Kindle-style reader. It does not replace GitHub. It is how a finished book is read: two pages, a lamp, a bookmark, the progress of an evening. The words it shows are these files, fetched as they stand.
+The shared Reader and Publishing Desk flow outward from the Bookself platform into both instances. Manuscripts move in the other direction only when an author deliberately releases one: Binder to Shelf. There is no live connection between the private and public copies after that release.
+
+You also do not need a build pipeline to make any of this true. Serve a checkout with `python3 -m http.server` and the Reader can open the Markdown directly. The release helper is local Python and Git. GitHub Pages can serve a public Shelf from the repository root without first turning the book into some other artifact.
+
+That plainness is intentional. Bookself borrows Git's memory without asking a book to become software. A person can edit a chapter in GitHub's pencil view. An agent can edit the same file. A researcher can add a figure beside the paper that cites it. At every point the source remains legible without Bookself.
+
+This guide demonstrates the claim while explaining it. Open its folder and you are looking at the book. Open it in the Reader and you are looking at the same book under a better lamp.

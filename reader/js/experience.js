@@ -706,7 +706,17 @@ function bindRoutesAndViewport() {
   stageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-stage'] });
 }
 
+function loadEnhancementStyles() {
+  if (document.querySelector('link[data-reader-experience-scroll]')) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = new URL('../css/experience-scroll.css', import.meta.url).href;
+  link.dataset.readerExperienceScroll = 'true';
+  document.head.appendChild(link);
+}
+
 function initialize() {
+  loadEnhancementStyles();
   prefs = loadPrefs();
   applyPrefs({ save: true, repaginate: false });
   enhanceSettings();

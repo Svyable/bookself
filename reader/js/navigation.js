@@ -259,8 +259,14 @@ function navKey(event) {
 
 function onKeyDown(event) {
   if (!navKey(event)) return;
-  if (event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
   if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+  if (event.target.closest?.('input, textarea, select, button, a, [contenteditable="true"]')) {
+    // Keep native control behavior (including Space-to-activate) while
+    // preventing the older document-level handler from turning the book too.
+    event.stopImmediatePropagation();
+    return;
+  }
 
   // Never turn or scroll the book behind a modal/panel.
   if (overlaysOpen()) {

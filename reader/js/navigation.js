@@ -1,8 +1,5 @@
-import { parseRoute, coverHash, go } from './router.js';
-
 const state = {
   pointerId: null,
-  pointerType: '',
   startX: 0,
   startY: 0,
   startTime: 0,
@@ -45,6 +42,12 @@ function interactiveTarget(target) {
   );
 }
 
+function keyboardInteractiveTarget(target) {
+  return !!target?.closest?.(
+    'a, button, input, textarea, select, [contenteditable="true"]'
+  );
+}
+
 function turnBusy() {
   const el = wrap();
   return !!el && (el.classList.contains('turn-next') || el.classList.contains('turn-prev'));
@@ -70,8 +73,8 @@ function syncNavSemantics() {
   const next = document.getElementById('nextBtn');
   if (!prev || !next || document.body.dataset.stage !== 'read') return;
 
-  // The core reader disables Previous on page 1, but page mechanics already
-  // support turning back to the cover. Expose that behavior in the button too.
+  // The core reader supports turning back to the cover from page one; expose
+  // that same behavior through the visible Previous control.
   prev.disabled = false;
   prev.setAttribute('aria-label', firstPageVisible() ? 'Back to cover' : 'Previous page');
   prev.setAttribute('title', firstPageVisible() ? 'Back to cover' : 'Previous page');
@@ -82,9 +85,10 @@ function syncNavSemantics() {
   next.setAttribute('aria-keyshortcuts', 'ArrowRight PageDown Space');
 }
 
-function backToCover() {
-  const route = parseRoute();
-  if (route.slug) go(coverHash(route.slug));
+function clearQueuedTurn() {
+  state.queuedDirection = 0;
+  const el = wrap();
+  if (el) delete el.dataset.navBuffered;
 }
 
 function requestTurn(direction) {
@@ -98,14 +102,11 @@ function requestTurn(direction) {
     return;
   }
 
-  state.queuedDirection = 0;
-  delete el.dataset.navBuffered;
+  clearQueuedTurn();
 
-  if (direction < 0 && firstPageVisible()) {
-    backToCover();
-    return;
-  }
-
+  // Always travel through the core Previous / Next controls. That keeps page
+  // boundaries, progress persistence, spread stepping, and leaf transitions on
+  // the same path as every other page turn.
   const button = document.getElementById(direction > 0 ? 'nextBtn' : 'prevBtn');
   if (!button) return;
   if (button.disabled) button.disabled = false;
@@ -113,11 +114,15 @@ function requestTurn(direction) {
 }
 
 function flushQueuedTurn() {
-  if (!state.queuedDirection || turnBusy() || !pagedRead()) return;
+  if (!state.queuedDirection) return;
+  if (!pagedRead()) {
+    clearQueuedTurn();
+    return;
+  }
+  if (turnBusy()) return;
+
   const direction = state.queuedDirection;
-  state.queuedDirection = 0;
-  const el = wrap();
-  if (el) delete el.dataset.navBuffered;
+  clearQueuedTurn();
   window.setTimeout(() => requestTurn(direction), 24);
 }
 
@@ -126,7 +131,7 @@ function installQueueObserver() {
   if (!el) return;
   const observer = new MutationObserver(() => {
     syncNavSemantics();
-    if (!turnBusy()) flushQueuedTurn();
+    flushQueuedTurn();
   });
   observer.observe(el, { attributes: true, attributeFilter: ['class'] });
 
@@ -138,7 +143,6 @@ function installQueueObserver() {
 
 function resetGesture() {
   state.pointerId = null;
-  state.pointerType = '';
   state.axis = null;
   const el = wrap();
   if (!el) return;
@@ -163,7 +167,6 @@ function onPointerDown(event) {
   if (!event.target.closest('#pagesWrapper')) return;
 
   state.pointerId = event.pointerId;
-  state.pointerType = event.pointerType;
   state.startX = event.clientX;
   state.startY = event.clientY;
   state.startTime = performance.now();
@@ -201,9 +204,16 @@ function onPointerUp(event) {
   const intentionalDistance = ax >= distanceThreshold;
   const intentionalFlick = elapsed <= 280 && ax >= 24 && velocity >= 0.28;
   const horizontal = ax > ay * 1.15;
+  const meaningfulVerticalDrag = ay > 14 && ay > ax;
 
   resetGesture();
   if (selectionActive()) return;
+  if (meaningfulVerticalDrag) {
+    // Do not reinterpret an abandoned vertical gesture as a forward tap when
+    // the browser subsequently synthesizes a click.
+    state.suppressClickUntil = performance.now() + 360;
+    return;
+  }
   if (horizontal && (intentionalDistance || intentionalFlick)) {
     state.suppressClickUntil = performance.now() + 520;
     requestTurn(dx < 0 ? 1 : -1);
@@ -261,10 +271,8 @@ function onKeyDown(event) {
   if (!navKey(event)) return;
   if (event.metaKey || event.ctrlKey || event.altKey) return;
 
-  if (event.target.closest?.('input, textarea, select, button, a, [contenteditable="true"]')) {
-    // Keep native control behavior (including Space-to-activate) while
-    // preventing the older document-level handler from turning the book too.
-    event.stopImmediatePropagation();
+  if (keyboardInteractiveTarget(event.target)) {
+    // Do not reinterpret keys while a real control owns focus.
     return;
   }
 
@@ -300,6 +308,13 @@ function onKeyDown(event) {
   }
 }
 
+function stopLegacyPageKeysFromControls(event) {
+  if (!navKey(event) || !keyboardInteractiveTarget(event.target)) return;
+  // This runs during bubbling, after the focused control has received the key,
+  // but before the older document-level page-turn handler can reinterpret it.
+  event.stopPropagation();
+}
+
 function suppressLegacyTouch(event) {
   if (!pagedRead()) return;
   if (event.target.closest('#pagesWrapper')) event.stopImmediatePropagation();
@@ -325,6 +340,14 @@ function installGestureIndicators() {
   el.append(prev, next);
 }
 
+function syncContext() {
+  if (!pagedRead()) {
+    clearQueuedTurn();
+    resetGesture();
+  }
+  syncNavSemantics();
+}
+
 function initialize() {
   const el = wrap();
   if (!el || document.documentElement.dataset.navigationEnhanced === 'true') return;
@@ -341,14 +364,16 @@ function initialize() {
   document.addEventListener('pointerup', onPointerUp, true);
   document.addEventListener('pointercancel', onPointerCancel, true);
   document.addEventListener('keydown', onKeyDown, true);
+  document.body.addEventListener('keydown', stopLegacyPageKeysFromControls);
 
   // Prevent the older distance-only swipe listener from double-firing while
   // retaining native touch defaults for selection and zoom.
   document.addEventListener('touchstart', suppressLegacyTouch, true);
   document.addEventListener('touchend', suppressLegacyTouch, true);
 
-  const stageObserver = new MutationObserver(() => syncNavSemantics());
+  const stageObserver = new MutationObserver(syncContext);
   stageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-stage'] });
+  stageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reader-mode'] });
 }
 
 if (document.readyState === 'loading') {

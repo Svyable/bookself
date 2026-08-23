@@ -57,14 +57,21 @@ URL into shared `reader/` or `desk/` code. Instance identity belongs in
 
 ## Markdown
 
-- Chapters are a single `# Title` heading, then paragraphs. No YAML front
-  matter. No HTML comments in chapter files.
-- Book READMEs are an info table plus a checkbox table of contents. No YAML
-  front matter.
+- Book chapters use one `# Title` heading, then prose. Whitepapers and research
+  notes may also use `##` section headings inside their manuscript file so the
+  reader can expose Abstract, Methods, Results, Discussion, and References in
+  the table of contents. No YAML front matter. No HTML comments in manuscript
+  files.
+- Book READMEs are an info table plus a checkbox table of contents. A
+  publication may add `Format: Whitepaper` and optional `Venue` / `DOI` rows.
 - Follow existing naming: `books/<slug>/`, `chNN-slug.md`, `front-matter.md`,
-  `back-matter.md`.
-- Images live in that book's `media/` folder and are referenced with relative
-  links (`![alt](../media/figure-1.png)`).
+  `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
+- Images live in that publication's `media/` folder and are referenced with
+  relative links (`![alt](../media/figure-1.png)`). PNG, JPG, WebP, and SVG are
+  all appropriate reader assets.
+- External creations do not need a publication folder. Put ordinary Markdown
+  links under root `## The stand`; the reader renders those as magazine-stand
+  cards that open the source site.
 
 ## Do not
 
@@ -89,6 +96,14 @@ platform-style repositories when that template is present. In a private
 binder, also list the manuscript under root **The books** so the local Desk can
 discover it.
 
+**Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
+authors, optional venue / DOI, and keep `Status: Drafting` while the work is in
+progress. The same Git history, review, media, preview, and publish flow applies.
+
+**Add to the stand.** Under root `## The stand`, add one Markdown link such as
+`- [Project name](https://example.com/) — a short optional note`. The linked
+site remains the source of truth; Bookself is the curated doorway.
+
 **Write / edit.** One chapter file per change. If you add, rename, or remove a
 chapter, update that book's README TOC and Chapters count in the same change.
 
@@ -111,7 +126,7 @@ remove the root catalog row.
 live files. Do not bump a version stamp.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
-**Series**, **Tags**, **Edition**, **Language**, **ISBN**. Series groups volumes
-on the public shelf. Tags are comma-separated. Wiki links
-`[[ch03-publishing|label]]` in chapter Markdown become in-reader jumps. Do not
-invent another config file for these.
+**Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,
+**DOI**. Series groups volumes on the public shelf. Tags are comma-separated.
+Wiki links `[[ch03-publishing|label]]` in chapter Markdown become in-reader
+jumps. Do not invent another config file for these.

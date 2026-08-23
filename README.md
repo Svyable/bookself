@@ -30,7 +30,7 @@ Bookself gives that lifecycle memory.
 | I want to try a risky rewrite | A side copy that cannot hurt the original |
 | I want to proof it | A real reader view, not just a file editor |
 | I am ready | A deliberate move from private binder to public shelf |
-| I found a typo three months later | Change it. Publications are allowed to keep living. |
+| I found a typo three months later | Revise it in Binder and release the replacement. |
 
 If software gets a development lifecycle, books and papers can have one too.
 Preferably with fewer status meetings. See **[Books have a lifecycle too](docs/writing-lifecycle.md)**.
@@ -59,8 +59,13 @@ Bookself separates the writing room from the shop window:
 | Place | Plain-English job |
 |---|---|
 | **Bookself platform** | the reusable software; most authors can happily ignore its internals |
-| **Binder** | the private writing room: drafts, experiments, embarrassing chapter-seven detours |
-| **Shelf** | the public bookcase: work you actually mean to let people read |
+| **Binder** | the private writing room: drafts, experiments, and the next edition |
+| **Shelf** | the public bookcase: released snapshots you actually mean to let people read |
+
+Binder and Shelf are separate Git repositories. The public Shelf does not point
+into the private Binder. Releasing a book **copies a committed snapshot** from
+Binder into Shelf, verifies the copied publication, and leaves the two copies
+independent until the next release.
 
 The **Reader** makes Markdown feel like a publication. The **Publishing Desk**
 shows what is drafted, what needs attention, and what is ready to move forward.
@@ -138,6 +143,16 @@ scripts/sync-ui.sh
 Only `reader/` and `desk/` are replaced. Your publications and instance
 identity are left alone.
 
+For a normal publication or new edition, commit the Binder manuscript and
+prepare the Shelf release with:
+
+```bash
+scripts/release-book.sh your-title ../shelf
+```
+
+The command verifies the committed Binder snapshot and stops before commit or
+push so the public change can be reviewed.
+
 For the complete architecture and publishing workflow, see
 **[docs/bookself.md](docs/bookself.md)**.
 
@@ -191,6 +206,7 @@ should feel like an issue, feature, or quick doorway.
 | “I want to publish a paper, figures, or link another creation.” | [Publication formats](docs/publication-formats.md) |
 | “Please explain this without assuming I know GitHub.” | [Author guide](docs/author-guide.md) |
 | “How does the writing lifecycle map to all this?” | [Writing lifecycle](docs/writing-lifecycle.md) |
+| “How do revisions and releases stay safe?” | [Revisions and releases](docs/revisions.md) |
 | “What files make up a book?” | [Book anatomy](docs/book-anatomy.md) |
 | “I edit or review other people's work.” | [Editor guide](docs/editor-guide.md) |
 | “I want the full private-binder/public-shelf architecture.” | [Bookself architecture](docs/bookself.md) |

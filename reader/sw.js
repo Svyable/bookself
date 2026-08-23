@@ -1,4 +1,4 @@
-const CACHE = 'obb-shell-v19';
+const CACHE = 'obb-shell-v20';
 const SHELL = [
   './',
   './index.html',

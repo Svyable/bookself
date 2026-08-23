@@ -24,7 +24,7 @@
     </div>
     <nav class="desk-header-actions" aria-label="Desk links">
       <a id="readerLink" class="quiet-link" href="../reader/">Reader</a>
-      <a id="repoLink" class="quiet-link" href="https://github.com/Svyable/bookself" target="_blank" rel="noopener">Repository</a>
+      <a id="repoLink" class="quiet-link" href="../" target="_blank" rel="noopener">Repository</a>
     </nav>
   </header>
 
@@ -33,16 +33,16 @@
       <div class="desk-hero-copy">
         <p class="eyebrow">Author & editor workspace</p>
         <h2 id="deskTitle">Know what is ready before you publish.</h2>
-        <p class="desk-lede">The desk reads the same Markdown your shelf already uses. It does not create a second CMS, rewrite manuscripts, or hide Git history.</p>
+        <p class="desk-lede">The desk reads the same Markdown your Bookself instance already uses. It does not create a second CMS, rewrite manuscripts, or hide Git history.</p>
       </div>
 
       <form class="repo-switcher" id="repoForm">
-        <label for="repoInput">Public repository</label>
+        <label for="repoInput">Inspect another public repository</label>
         <div class="repo-input-row">
           <input id="repoInput" name="repo" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="owner/repository" aria-describedby="repoHelp">
           <button class="primary-button" type="submit">Open desk</button>
         </div>
-        <p class="field-help" id="repoHelp">Inspect any public Bookself shelf. Private binders stay private and are not accessed by this browser tool.</p>
+        <p class="field-help" id="repoHelp">The current instance loads directly. Remote switching is available for public Bookself repositories.</p>
       </form>
     </section>
 
@@ -50,7 +50,7 @@
       <div class="status-spinner" aria-hidden="true"></div>
       <div>
         <strong>Opening the publishing desk…</strong>
-        <span>Reading repository metadata and manuscript hubs.</span>
+        <span>Reading instance metadata and manuscript hubs.</span>
       </div>
     </section>
 
@@ -136,7 +136,6 @@
 
         <p class="book-next-step"></p>
         <ul class="issue-list"></ul>
-
         <div class="book-meta"></div>
 
         <div class="book-actions">
@@ -158,6 +157,6 @@
     <p>Bookself Publishing Desk reads repository content only. Manuscript edits still happen through normal Git commits and pull requests.</p>
   </footer>
 
-  <script type="module" src="desk.js?v=1"></script>
+  <script type="module" src="desk.js?v=2"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ const OVERLAYS = [
 ];
 
 const openers = new Map();
+let lastExternalFocus = null;
 let idleTimer = null;
 
 function $(id) {
@@ -61,10 +62,11 @@ function focusOverlay(overlay, closeId) {
 function restoreFocus(overlay) {
   const opener = openers.get(overlay.id);
   openers.delete(overlay.id);
-  if (activeOverlays().length) return;
-  if (opener?.isConnected && typeof opener.focus === 'function') {
-    requestAnimationFrame(() => opener.focus({ preventScroll: true }));
-  }
+  if (!opener?.isConnected || typeof opener.focus !== 'function') return;
+
+  const remaining = activeOverlays();
+  if (remaining.length && !remaining.some((item) => item.contains(opener))) return;
+  requestAnimationFrame(() => opener.focus({ preventScroll: true }));
 }
 
 function onOverlayMutation(overlay, config) {
@@ -75,8 +77,11 @@ function onOverlayMutation(overlay, config) {
 
   if (isActive) {
     const active = document.activeElement;
-    if (active && active !== document.body && !overlay.contains(active)) {
-      openers.set(overlay.id, active);
+    const opener = active && active !== document.body && !overlay.contains(active)
+      ? active
+      : lastExternalFocus;
+    if (opener?.isConnected && !overlay.contains(opener)) {
+      openers.set(overlay.id, opener);
     }
     focusOverlay(overlay, config.close);
   } else {
@@ -99,6 +104,12 @@ function installOverlayPolish() {
   tocScrim.setAttribute('aria-hidden', 'true');
   document.body.appendChild(tocScrim);
   tocScrim.addEventListener('click', () => closeOverlay(OVERLAYS[0]));
+
+  document.addEventListener('focusin', (event) => {
+    if (!activeOverlays().length && event.target !== document.body) {
+      lastExternalFocus = event.target;
+    }
+  });
 
   OVERLAYS.forEach((config) => {
     const overlay = $(config.id);
@@ -201,7 +212,7 @@ function installCalmChrome() {
   ['pointermove', 'pointerdown', 'touchstart', 'keydown'].forEach((type) => {
     document.addEventListener(type, wakeChrome, { passive: type !== 'keydown' });
   });
-  $('scrollReader')?.addEventListener('scroll', wakeChrome, { passive: true });
+  document.addEventListener('scroll', wakeChrome, { capture: true, passive: true });
   document.addEventListener('focusin', wakeChrome);
   document.addEventListener('visibilitychange', scheduleIdle);
 

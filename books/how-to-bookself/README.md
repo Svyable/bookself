@@ -1,4 +1,4 @@
-# The Bookself Book
+# How to Bookself
 
 | | |
 |---|---|

@@ -477,7 +477,7 @@
 
   .experience-preview p {
     font-size: clamp(0.92rem, var(--reader-font-size), 1.12rem);
-    line-height: min(var(--reader-leading), 1.7);
+    line-height: var(--reader-leading);
   }
 
   .experience-control {
@@ -574,6 +574,23 @@
     padding: 0.3rem 0.62rem;
     font-size: 0.76rem;
   }
+
+  .experience-card [data-paper="dark"]::before,
+  .experience-card [data-paper="sepia"]::before,
+  .experience-card [data-paper="light"]::before {
+    content: "";
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.3rem;
+    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+    border-radius: 50%;
+    vertical-align: 0.02rem;
+  }
+
+  .experience-card [data-paper="dark"]::before { background: #1c1a17; }
+  .experience-card [data-paper="sepia"]::before { background: #e7dcc3; }
+  .experience-card [data-paper="light"]::before { background: #f4f0e8; }
 
   .experience-card .setting-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));

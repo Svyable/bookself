@@ -2,6 +2,7 @@ import { fetchText } from './base.js';
 import { parseBookReadme } from './catalog.js';
 import { blocksFromMarkdown } from './markdown.js';
 import { parseRoute, readHash } from './router.js';
+import { loadNotes, addNote, applyNotes } from './notes.js';
 
 const DEFAULTS = Object.freeze({
   fontSize: 18,
@@ -20,6 +21,9 @@ let scrollRaf = null;
 let scrollSyncTimer = null;
 let ignoreNextRouteSync = false;
 let programmaticScroll = false;
+let selectionTimer = null;
+let lastScrollSelection = null;
+let pendingScrollNote = null;
 
 const scrollState = {
   slug: null,
@@ -490,6 +494,7 @@ async function buildScrollBook(slug) {
           start: block.start,
         });
       });
+      applyNotes(section, loadNotes(slug), chapter.id);
       doc.appendChild(section);
     }
 
@@ -551,6 +556,7 @@ function syncPagedStateFromScroll() {
     if (prefs.mode !== 'scroll' || overlaysOpen()) return;
     ignoreNextRouteSync = true;
     window.dispatchEvent(new HashChangeEvent('hashchange'));
+    window.setTimeout(updateScrollPosition, 30);
   }, 260);
 }
 
@@ -608,7 +614,10 @@ async function syncReaderMode({ followRoute = true } = {}) {
   const route = parseRoute();
   const active = prefs.mode === 'scroll' && document.body.dataset.stage === 'read' && route.view === 'read';
   reader.hidden = !active;
-  if (!active) return;
+  if (!active) {
+    setScrollSelectionActions(false);
+    return;
+  }
 
   try {
     await buildScrollBook(route.slug);
@@ -628,6 +637,162 @@ function handleRouteChange() {
     return;
   }
   syncReaderMode({ followRoute: true });
+}
+
+function setScrollSelectionActions(active) {
+  const card = document.getElementById('selCard');
+  const report = document.getElementById('selReport');
+  if (card) card.hidden = active;
+  if (report) report.hidden = active;
+}
+
+function scrollSelection() {
+  if (prefs.mode !== 'scroll' || document.body.dataset.stage !== 'read') return null;
+  const sel = window.getSelection();
+  const text = sel?.toString().trim();
+  if (!text || !sel.anchorNode) return null;
+  const anchor = sel.anchorNode.nodeType === Node.ELEMENT_NODE
+    ? sel.anchorNode
+    : sel.anchorNode.parentElement;
+  const block = anchor?.closest?.('.scroll-block');
+  if (!block) return null;
+  const range = sel.rangeCount ? sel.getRangeAt(0) : null;
+  if (!range) return null;
+  return {
+    text,
+    chapter: block.dataset.chapter,
+    offset: Number(block.dataset.offset) || 0,
+    range,
+  };
+}
+
+function positionScrollSelection() {
+  const cur = scrollSelection();
+  const pop = document.getElementById('selPop');
+  if (!pop) return;
+  if (!cur) {
+    pop.hidden = true;
+    lastScrollSelection = null;
+    setScrollSelectionActions(false);
+    return;
+  }
+
+  lastScrollSelection = cur;
+  setScrollSelectionActions(true);
+  pop.hidden = false;
+  const rect = cur.range.getBoundingClientRect();
+  const vv = window.visualViewport;
+  const leftOff = vv ? vv.offsetLeft : 0;
+  const topOff = vv ? vv.offsetTop : 0;
+  const vw = vv ? vv.width : window.innerWidth;
+  const popW = Math.min(pop.offsetWidth || 180, vw - 16);
+  const left = Math.min(
+    Math.max(8 + leftOff, rect.left + leftOff),
+    leftOff + vw - popW - 8
+  );
+  const top = Math.max(8 + topOff, rect.top + topOff - 42);
+  pop.style.left = `${left}px`;
+  pop.style.top = `${top}px`;
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.hidden = false;
+  window.setTimeout(() => {
+    if (toast.textContent === message) toast.hidden = true;
+  }, 1800);
+}
+
+async function copyScrollText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Copied');
+  } catch {
+    showToast('Could not copy');
+  }
+}
+
+function refreshScrollNotes(chapter) {
+  const route = parseRoute();
+  if (!route.slug) return;
+  const section = document.querySelector(`.scroll-chapter[data-chapter="${CSS.escape(chapter)}"]`);
+  if (section) applyNotes(section, loadNotes(route.slug), chapter);
+}
+
+function syncAfterScrollNote() {
+  ignoreNextRouteSync = true;
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
+  window.setTimeout(updateScrollPosition, 30);
+}
+
+function bindScrollSelection() {
+  document.addEventListener('mouseup', () => {
+    if (prefs.mode !== 'scroll') return;
+    clearTimeout(selectionTimer);
+    selectionTimer = window.setTimeout(positionScrollSelection, 24);
+  });
+
+  document.addEventListener('selectionchange', () => {
+    if (prefs.mode !== 'scroll' || !('ontouchstart' in window)) return;
+    clearTimeout(selectionTimer);
+    selectionTimer = window.setTimeout(positionScrollSelection, 110);
+  });
+
+  document.getElementById('selCopy')?.addEventListener('click', (event) => {
+    if (prefs.mode !== 'scroll' || !lastScrollSelection) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    copyScrollText(lastScrollSelection.text);
+    document.getElementById('selPop').hidden = true;
+  }, true);
+
+  document.getElementById('selShare')?.addEventListener('click', (event) => {
+    if (prefs.mode !== 'scroll' || !lastScrollSelection) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    copyScrollText(`“${lastScrollSelection.text}”\n${window.location.href}`);
+    document.getElementById('selPop').hidden = true;
+  }, true);
+
+  document.getElementById('selNote')?.addEventListener('click', (event) => {
+    if (prefs.mode !== 'scroll' || !lastScrollSelection) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    pendingScrollNote = { ...lastScrollSelection };
+    document.getElementById('selPop').hidden = true;
+    const quote = document.getElementById('noteQuote');
+    const body = document.getElementById('noteBody');
+    if (quote) quote.textContent = pendingScrollNote.text;
+    if (body) body.value = '';
+    document.getElementById('noteDialog')?.classList.add('active');
+    body?.focus();
+  }, true);
+
+  document.getElementById('noteSave')?.addEventListener('click', (event) => {
+    if (prefs.mode !== 'scroll' || !pendingScrollNote) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const route = parseRoute();
+    if (!route.slug) return;
+    addNote(route.slug, {
+      chapter: pendingScrollNote.chapter,
+      offset: pendingScrollNote.offset,
+      quote: pendingScrollNote.text,
+      body: document.getElementById('noteBody')?.value.trim() || '',
+    });
+    document.getElementById('noteDialog')?.classList.remove('active');
+    const chapter = pendingScrollNote.chapter;
+    pendingScrollNote = null;
+    refreshScrollNotes(chapter);
+    showToast('Note saved');
+    syncAfterScrollNote();
+  }, true);
+
+  document.getElementById('noteCancel')?.addEventListener('click', () => {
+    pendingScrollNote = null;
+  }, true);
 }
 
 function nudgeSize(delta) {
@@ -722,6 +887,7 @@ function initialize() {
   enhanceSettings();
   ensureScrollReader();
   bindKeyboard();
+  bindScrollSelection();
   bindRoutesAndViewport();
   syncReaderMode({ followRoute: true });
 }

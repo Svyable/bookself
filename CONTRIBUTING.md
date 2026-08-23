@@ -1,58 +1,102 @@
 # Contributing
 
-Thank you for helping. There are two ways in. Pick the one that matches how
-you like to work.
+Thanks for helping make a book, a tool, or a sentence better.
 
-## Two ways to contribute
+You do not need to know GitHub's vocabulary before you are useful here. If you
+spot something worth changing, there is a path for that.
 
-### 1. Propose an edit (pull request)
+If the words **branch** and **pull request** mean nothing to you, start with the
+[Author guide](docs/author-guide.md). Nobody will make you take a quiz afterward.
 
-Change the Markdown, then open a pull request. This is the path for editors
-and co-authors. See [the editor guide](docs/editor-guide.md) for the
-branch → edit → PR walkthrough.
+## Two easy ways in
 
-If you have never used GitHub, you can still propose an edit from the
-browser. See [the author guide](docs/author-guide.md).
+### 1. Propose an edit
 
-### 2. File an issue
+Change the Markdown and ask for the change to be reviewed.
 
-If you spotted something and do not want to touch the text yourself, open an
-issue. Use **Chapter feedback** for a specific passage, or **New book
-proposal** to pitch a book before anyone scaffolds it.
+GitHub calls that review package a **pull request (PR)**. Think: “here is my
+proposed version; do we want to keep it?”
 
-## One chapter per pull request
+This is a good path for editors, co-authors, typo hunters with commitment, and
+anyone who has replacement words rather than only a complaint.
 
-A pull request should touch one chapter file (or front/back matter), plus the
-book README only when the table of contents or status needs to match.
+See the [Editor guide](docs/editor-guide.md) for the branch → edit → review
+walkthrough.
 
-Do not bundle unrelated chapters, repo-wide reformats, or tooling changes
-into a chapter PR. Changes to `reader/` are framework work, not a chapter
-PR — keep them separate.
+### 2. Point something out
 
-## Direct-to-main for lead authors
+If you spotted a problem and do not want to edit the text yourself, open an
+**issue**. An issue is simply a tracked note or conversation.
 
-The people named as authors on a book's README may commit directly to `main`
-for that book — small fixes should not need ceremony. Everyone else uses a
-pull request.
+Use **Chapter feedback** for a specific passage. Use **New book proposal** when
+you are pitching a title that does not exist yet.
 
-If you are a lead author editing someone else's book, still open a PR.
+A useful issue says where the problem is and what you noticed. It does not need
+to arrive wearing project-management language.
 
-## Review expectations
+## Keep manuscript changes pleasantly small
 
-- Reviews happen as line comments on the manuscript, not as a separate essay.
-- Preserve the author's voice. Fix what was asked; do not rewrite the page.
-- The lead author of that book merges.
-- Check that the book README's contents list and status still match reality
-  before merging.
+For editorial work, prefer one chapter per pull request.
 
-## Keeping the issue dropdown current
+A chapter PR may also update that book's `README.md` when the table of contents,
+chapter count, or status needs to stay in sync.
 
-`.github/ISSUE_TEMPLATE/chapter-feedback.yml` has a **Book** dropdown. When
-you add a book, add its slug as a new option on that list in the same PR that
-introduces `books/<slug>/`. Details are in [the editor guide](docs/editor-guide.md).
+Please do not bundle unrelated chapters, repo-wide formatting changes, or
+platform code into the same editorial change. Small changes are easier for an
+author to understand, discuss, accept, reject, or steal one excellent sentence
+from.
 
-## Private and public shelves
+Changes to `reader/`, `desk/`, or platform tooling are software work rather than
+chapter editing. Keep those separate from manuscript PRs.
 
-Unlisted drafts on a public repository are not private. Authors and
-publishers who need a closed studio run [Bookself](docs/bookself.md): a
-private binder and a public shelf, both using this software.
+## Lead authors can save directly
+
+People named as authors on a book's README may commit directly to `main` for
+ordinary changes to their own book. Small prose fixes should not require a
+ceremony with robes.
+
+If you are editing someone else's book, even if you have repository access,
+prefer a pull request so the author gets to review the change before it becomes
+the main version.
+
+## Review like an editor, not a replacement author
+
+- Comment on the exact passage when possible.
+- Say why something is not working, especially when the fix is subjective.
+- Use a suggested replacement when you have one.
+- Preserve the author's voice unless changing the voice is the actual brief.
+- Prefer a precise change over “rewrite this.”
+- The lead author of the book decides what gets merged.
+
+The goal is not to win the comment thread. The goal is a better book with an
+understandable history.
+
+## Publishing changes deserve one coherent moment
+
+On a public Shelf, publication means both:
+
+1. the book README says `Status: Published`
+2. the Shelf root README lists the book under **The books**
+
+Make those two changes together so the catalog and manuscript do not tell two
+different stories.
+
+For private drafting, use the Bookself [Binder → Shelf workflow](docs/bookself.md).
+An unlisted file in a public repository is still public.
+
+## Keeping issue forms current
+
+`.github/ISSUE_TEMPLATE/chapter-feedback.yml` contains a **Book** dropdown.
+When adding or retiring a book, keep that list in sync in the same change.
+Details are in the [Editor guide](docs/editor-guide.md).
+
+## If you are here to change the platform
+
+Welcome to the plumbing.
+
+Before changing shared Reader or Desk behavior, read the boundary in
+[Bookself architecture](docs/bookself.md): `reader/` and `desk/` are shared
+platform software; books and instance identity belong to each Binder or Shelf.
+
+If you are here to change a sentence in chapter 3, you can safely ignore that
+entire paragraph.

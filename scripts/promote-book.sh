@@ -1,10 +1,10 @@
 #!/bin/sh
-# Promote a book from this binder into your public shelf (Bookself).
+# Lower-level copy: Binder publication -> Shelf checkout.
 # Usage: scripts/promote-book.sh <slug> [path-to-shelf]
 # Default shelf: ../shelf
-# Does not set Status or edit the shelf README — those two edits are
-# Publish, done on the shelf after this copy.
-set -e
+# For normal releases, prefer scripts/release-book.sh.
+set -eu
+
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 SLUG=${1:-}
 DEST=${2:-"$ROOT/../shelf"}
@@ -13,10 +13,20 @@ if [ -z "$SLUG" ] || [ "$SLUG" = "-h" ] || [ "$SLUG" = "--help" ]; then
   echo "usage: scripts/promote-book.sh <slug> [path-to-shelf]" >&2
   exit 1
 fi
-if [ "$SLUG" = "_TEMPLATE" ]; then
-  echo "refusing to promote _TEMPLATE" >&2
-  exit 1
-fi
+
+case "$SLUG" in
+  [a-z0-9]*) ;;
+  *)
+    echo "invalid slug: use lowercase letters, numbers, and hyphens" >&2
+    exit 1
+    ;;
+esac
+case "$SLUG" in
+  *[!a-z0-9-]*|_TEMPLATE)
+    echo "invalid slug: use lowercase letters, numbers, and hyphens" >&2
+    exit 1
+    ;;
+esac
 
 SRC="$ROOT/books/$SLUG"
 if [ ! -d "$SRC" ]; then
@@ -34,5 +44,5 @@ rsync -a --delete \
   "$SRC/" "$DEST/books/$SLUG/"
 
 echo "Copied $SLUG → $DEST/books/$SLUG"
-echo "On the shelf: set Status to Published, add a README row, commit, push."
-echo "See docs/bookself.md"
+echo "This is only a file copy; it does not publish or link Binder to Shelf."
+echo "For normal releases, use scripts/release-book.sh instead."

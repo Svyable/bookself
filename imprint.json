@@ -15,8 +15,8 @@
   "storagePrefix": "bookself-demo",
   "steps": [
     { "n": "1", "title": "Stamp", "body": "Create a private binder and a public shelf from this platform" },
-    { "n": "2", "title": "Write", "body": "Keep drafts and manuscript history in the private binder" },
-    { "n": "3", "title": "Promote", "body": "Copy finished books from binder to shelf" },
+    { "n": "2", "title": "Write", "body": "Keep drafts and the next edition in the private binder" },
+    { "n": "3", "title": "Release", "body": "Prepare a verified committed snapshot from binder to shelf" },
     { "n": "4", "title": "Sync", "body": "Reader and desk upgrades flow from Bookself into both instances" }
   ],
   "github": {

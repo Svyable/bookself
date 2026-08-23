@@ -1,8 +1,8 @@
-# The Bookself Book
+# How to Bookself
 
-A small book about the publishing system that contains it.
+A practical guide to writing, previewing, revising, and publishing with Bookself.
 
-This manuscript lives inside the Bookself platform repository. The same Markdown you can inspect in Git is what the Reader turns into pages, which makes the book both an explanation of Bookself and a working specimen of it.
+This guide lives inside the Bookself platform repository, so the examples are real: the same Markdown you can inspect in Git is what the Reader turns into pages.
 
 © 2026 Svyable. All rights reserved.
 

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Git-native publishing flow</title>
+  <desc id="desc">A calm diagram showing Markdown and media moving through Git history into the Bookself reader.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17130f"/>
+      <stop offset="1" stop-color="#2c241b"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf4e8"/>
+      <stop offset="1" stop-color="#eadfcf"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" rx="34" fill="url(#bg)"/>
+  <circle cx="1010" cy="86" r="210" fill="#b98545" opacity=".08"/>
+  <circle cx="160" cy="620" r="230" fill="#8ea28b" opacity=".07"/>
+
+  <text x="74" y="82" fill="#d7ad70" font-family="Georgia, serif" font-size="22" letter-spacing="4">BOOKSELF</text>
+  <text x="74" y="132" fill="#f0e5d5" font-family="Georgia, serif" font-size="42">A publication is just files with memory.</text>
+  <text x="74" y="172" fill="#bcb0a0" font-family="Arial, sans-serif" font-size="20">Write in Markdown · keep images beside it · let Git remember · publish as a calm reader</text>
+
+  <g transform="translate(75 235)" filter="url(#shadow)">
+    <rect width="270" height="270" rx="24" fill="#211b16" stroke="#5b4936"/>
+    <text x="26" y="42" fill="#d7ad70" font-family="Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="2">01 · AUTHOR</text>
+    <rect x="28" y="72" width="214" height="142" rx="10" fill="#f6efe3"/>
+    <rect x="48" y="95" width="112" height="12" rx="6" fill="#3c3128"/>
+    <rect x="48" y="122" width="171" height="7" rx="3.5" fill="#9a8a78"/>
+    <rect x="48" y="143" width="158" height="7" rx="3.5" fill="#b1a18d"/>
+    <rect x="48" y="164" width="142" height="7" rx="3.5" fill="#b1a18d"/>
+    <rect x="48" y="185" width="74" height="10" rx="5" fill="#b77d43"/>
+    <text x="28" y="244" fill="#e9dfd0" font-family="Georgia, serif" font-size="20">Markdown + media</text>
+  </g>
+
+  <g transform="translate(465 235)" filter="url(#shadow)">
+    <rect width="270" height="270" rx="24" fill="#211b16" stroke="#5b4936"/>
+    <text x="26" y="42" fill="#d7ad70" font-family="Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="2">02 · GIT</text>
+    <circle cx="68" cy="107" r="14" fill="#d7ad70"/>
+    <circle cx="136" cy="153" r="14" fill="#9eae91"/>
+    <circle cx="204" cy="107" r="14" fill="#87a7c2"/>
+    <path d="M82 107H190M78 115L124 145M148 145L194 115" stroke="#8f7d68" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <rect x="41" y="184" width="188" height="30" rx="15" fill="#30271f" stroke="#6e5a43"/>
+    <text x="135" y="205" text-anchor="middle" fill="#cfc1af" font-family="Arial, sans-serif" font-size="14">every revision stays visible</text>
+    <text x="28" y="244" fill="#e9dfd0" font-family="Georgia, serif" font-size="20">History without a CMS</text>
+  </g>
+
+  <g transform="translate(855 235)" filter="url(#shadow)">
+    <rect width="270" height="270" rx="24" fill="#211b16" stroke="#5b4936"/>
+    <text x="26" y="42" fill="#d7ad70" font-family="Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="2">03 · READER</text>
+    <rect x="31" y="68" width="208" height="147" rx="12" fill="url(#paper)"/>
+    <line x1="135" y1="68" x2="135" y2="215" stroke="#d1c3ae" stroke-width="2"/>
+    <rect x="54" y="92" width="58" height="8" rx="4" fill="#3a3027"/>
+    <rect x="54" y="115" width="61" height="5" rx="2.5" fill="#978875"/>
+    <rect x="54" y="131" width="53" height="5" rx="2.5" fill="#aa9a86"/>
+    <rect x="154" y="92" width="58" height="8" rx="4" fill="#3a3027"/>
+    <rect x="154" y="115" width="61" height="5" rx="2.5" fill="#978875"/>
+    <rect x="154" y="131" width="53" height="5" rx="2.5" fill="#aa9a86"/>
+    <rect x="154" y="153" width="59" height="38" rx="5" fill="#9bb09a"/>
+    <text x="28" y="244" fill="#e9dfd0" font-family="Georgia, serif" font-size="20">Read like publication</text>
+  </g>
+
+  <path d="M358 370H448" stroke="#d7ad70" stroke-width="4" stroke-linecap="round"/>
+  <path d="M435 358L449 370L435 382" fill="none" stroke="#d7ad70" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M748 370H838" stroke="#d7ad70" stroke-width="4" stroke-linecap="round"/>
+  <path d="M825 358L839 370L825 382" fill="none" stroke="#d7ad70" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="75" y="552" width="1050" height="58" rx="29" fill="#211b16" stroke="#4e4031"/>
+  <text x="600" y="589" text-anchor="middle" fill="#ded2c1" font-family="Arial, sans-serif" font-size="18">No database · no asset server · no build step · the repository is the publication</text>
+</svg>

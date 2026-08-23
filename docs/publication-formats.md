@@ -40,9 +40,25 @@ That is the whole hosting workflow. The image is committed with the publication,
 
 The reader keeps images within the page, repaginates once dimensions are known, and lets readers open figures at a larger size. Good alt text remains important because it is used by assistive technology and as the expanded-image label.
 
+## Web volumes
+
+A website, app, documentation site, interactive essay, lab, or other web-native work can occupy a physical-looking volume on the Bookself shelf without being copied into the repository.
+
+Add one ordinary link to the root README:
+
+```md
+## The web shelf
+
+- [Project name](https://example.com/) — A short optional note
+```
+
+The reader binds that link visually as a book: it gets a deterministic cloth color, spine, paper block, WEB badge, title, domain, and optional note. Selecting the volume opens the original site in a new tab. The URL remains the source of truth.
+
+Use this treatment when an external creation should feel like a durable object in the collection. It requires no publication folder, screenshot service, favicon fetch, metadata API, or build step.
+
 ## The stand
 
-Not everything should be copied into Bookself. A website, tool, interactive experiment, app, or other independent creation can stay at its own URL and still appear on the public shelf as a curated magazine-style card.
+The stand is the lighter magazine treatment for external creations. It is useful for issues, features, experiments, timely links, and work that should feel more like something picked up from a newsstand than something bound on the shelf.
 
 Add a section to the root README:
 
@@ -53,14 +69,15 @@ Add a section to the root README:
 - [Another creation](https://another.example/)
 ```
 
-The reader turns those lines into cards that show the title and domain and open the original site in a new tab. The external site remains the source of truth.
+The reader turns those lines into magazine-style cards that show the title and domain and open the original site in a new tab. The external site remains the source of truth.
 
-## Why one system works for all three
+## Why one system works for all four
 
 | Format | Source of truth | Reader behavior |
 |---|---|---|
 | Book | Markdown + media in a publication folder | Opens in Bookself reader |
 | Whitepaper | Markdown + media in a publication folder | Opens in Bookself reader with paper labeling and citation metadata |
+| Web volume | External website | Appears as a bound volume on the shelf and opens the source |
 | Stand link | External website | Appears as a magazine-style card and opens the source |
 
 The format changes, but the publishing model does not: plain files when Bookself owns the work, ordinary links when it does not.

@@ -78,9 +78,10 @@ URL into shared `reader/` or `desk/` code. Instance identity belongs in
 - The current math layer is not a full `.tex` compiler. Do not introduce
   document classes, package installation, BibTeX/Biber, TikZ, or a build step
   unless the task explicitly advances the full-TeX workflow.
-- External creations do not need a publication folder. Put ordinary Markdown
-  links under root `## The stand`; the reader renders those as magazine-stand
-  cards that open the source site.
+- External creations do not need a publication folder. Put durable sites/apps
+  under root `## The web shelf` to render them as bound shelf volumes. Put
+  lighter links under root `## The stand` to render magazine-style cards.
+  Both forms open the external source and keep that URL as the source of truth.
 
 ## Do not
 
@@ -110,9 +111,15 @@ authors, optional venue / DOI, and keep `Status: Drafting` while the work is in
 progress. The same Git history, review, media, preview, and publish flow applies.
 Use [docs/latex.md](docs/latex.md) when the paper contains mathematical notation.
 
+**Add a web volume.** Under root `## The web shelf`, add one Markdown link such
+as `- [Project name](https://example.com/) — a short optional note`. The Reader
+binds the link visually as a book while the linked website remains the source
+of truth.
+
 **Add to the stand.** Under root `## The stand`, add one Markdown link such as
 `- [Project name](https://example.com/) — a short optional note`. The linked
-site remains the source of truth; Bookself is the curated doorway.
+site remains the source of truth; Bookself presents it as a magazine-style
+curated doorway.
 
 **Write / edit.** One chapter file per change. If you add, rename, or remove a
 chapter, update that book's README TOC and Chapters count in the same change.

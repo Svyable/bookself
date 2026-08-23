@@ -1,4 +1,4 @@
-const CACHE = 'obb-shell-v20';
+const CACHE = 'obb-shell-v21';
 const SHELL = [
   './',
   './index.html',
@@ -6,9 +6,11 @@ const SHELL = [
   './css/experience.css',
   './css/experience-scroll.css',
   './css/atmosphere.css',
+  './css/navigation.css',
   './manifest.webmanifest',
   './vendor/marked.min.js',
   './js/atmosphere.js',
+  './js/navigation.js',
   './js/app.js',
   './js/experience.js',
   './js/base.js',

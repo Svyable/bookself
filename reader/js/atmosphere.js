@@ -260,7 +260,4 @@ function watchTheme() {
 installPicker();
 bindPresetBridge();
 watchTheme();
-window.addEventListener('load', () => {
-  syncThemeUi();
-  initializeWarmth();
-}, { once: true });
+window.addEventListener('load', syncThemeUi, { once: true });

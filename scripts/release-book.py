@@ -235,7 +235,8 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
 
     source_book = binder / "books" / slug
     source_readme = source_book / "README.md"
-    shelf_book = shelf / "books" / slug
+    shelf_books = shelf / "books"
+    shelf_book = shelf_books / slug
     shelf_root = shelf / "README.md"
     if not source_readme.is_file():
         fail(f"book README not found: {source_readme}")
@@ -244,6 +245,14 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
 
     require_clean_paths(binder, "Binder", [f"books/{slug}"])
     require_clean_paths(shelf, "Shelf", ["README.md", f"books/{slug}"])
+
+    leftovers = sorted(shelf_books.glob(f".{slug}.bookself-*")) if shelf_books.exists() else []
+    if leftovers:
+        names = ", ".join(path.name for path in leftovers)
+        fail(
+            "Shelf contains leftover Bookself release transaction paths: "
+            f"{names}. Inspect and remove them before retrying."
+        )
 
     book_md = source_readme.read_text(encoding="utf-8")
     source_status = cell(book_md, "Status")
@@ -271,20 +280,23 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
     source_commit = run_git(binder, "rev-parse", "HEAD")
     shelf_branch = run_git(shelf, "branch", "--show-current") or "(detached HEAD)"
 
-    shelf_books = shelf / "books"
     shelf_books.mkdir(parents=True, exist_ok=True)
     token = uuid.uuid4().hex[:10]
     stage_book = shelf_books / f".{slug}.bookself-stage-{token}"
     backup_book = shelf_books / f".{slug}.bookself-backup-{token}"
 
-    shutil.copytree(
-        source_book, stage_book, ignore=shutil.ignore_patterns(".DS_Store")
-    )
-    (stage_book / "README.md").write_text(next_book_md, encoding="utf-8")
-
-    if file_manifest(stage_book, exclude_readme=True) != source_manifest:
+    try:
+        shutil.copytree(
+            source_book, stage_book, ignore=shutil.ignore_patterns(".DS_Store")
+        )
+        (stage_book / "README.md").write_text(next_book_md, encoding="utf-8")
+        if file_manifest(stage_book, exclude_readme=True) != source_manifest:
+            fail("staged publication does not byte-match the committed Binder content")
+        if (stage_book / "README.md").read_text(encoding="utf-8") != next_book_md:
+            fail("staged publication README does not match the expected published form")
+    except Exception:
         shutil.rmtree(stage_book, ignore_errors=True)
-        fail("staged publication does not byte-match the committed Binder content")
+        raise
 
     original_root = root_md
     moved_old = False
@@ -300,8 +312,10 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
         if file_manifest(shelf_book, exclude_readme=True) != source_manifest:
             fail("post-copy verification failed: Shelf content differs from Binder content")
         shelf_book_md = (shelf_book / "README.md").read_text(encoding="utf-8")
-        if cell(shelf_book_md, "Status").lower() != "published":
-            fail("post-copy verification failed: Shelf Status is not Published")
+        if shelf_book_md != next_book_md:
+            fail("post-copy verification failed: Shelf book README differs from the prepared release")
+        if shelf_root.read_text(encoding="utf-8") != next_root:
+            fail("post-copy verification failed: Shelf catalog differs from the prepared release")
     except Exception:
         try:
             if installed_new and shelf_book.exists():
@@ -348,7 +362,8 @@ def main(argv: list[str]) -> int:
     print(f"Shelf branch: {result['shelf_branch']}")
     print(f"Catalog: {result['catalog_action']}")
     print(
-        "Verified: Shelf publication files byte-match the committed Binder snapshot."
+        "Verified: Shelf content matches the committed Binder snapshot, with "
+        "only the prepared Published README/catalog transformation."
     )
     print("Nothing was committed or pushed.")
     print()

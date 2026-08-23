@@ -5,10 +5,12 @@ This is the first layer of the scientific-authoring path: equations belong in
 the same plain-text manuscript as the prose, Git keeps the history, and the
 Reader renders the math in both Pages and Scroll.
 
-This is **not yet a full `.tex` project compiler**. Full TeX projects, `.bib`
-workflows, packages, classes, `\input`, TikZ, and canonical PDF compilation are
-a later layer. The current feature is intentionally useful without adding a
-build step to every Bookself publication.
+This is **not a full `.tex` project compiler**. Bookself now has simple
+Markdown-native citations, bibliography entries, footnotes, figure captions,
+and equation references; see [Academic writing in Bookself](academic-writing.md).
+Full TeX projects, BibTeX/Biber, packages, classes, `\input`, TikZ, and canonical
+TeX compilation remain a later optional Binder layer rather than a requirement
+for ordinary Bookself publications.
 
 ## Write math in Markdown
 
@@ -54,6 +56,36 @@ T &= 15\text{ minutes}.
 Put literal examples in Markdown code spans or fenced code blocks when you want
 readers to see the TeX source rather than a rendered equation.
 
+## Labels and equation references
+
+Add a LaTeX-style `\label{...}` to a display block when the equation should be
+numbered and referenced:
+
+```latex
+$$
+T = \frac{W}{r}
+\label{eq:reading-time}
+$$
+```
+
+Refer to it later in the same chapter with:
+
+```latex
+Equation \eqref{eq:reading-time} estimates the reading time.
+```
+
+Bookself numbers labeled display equations sequentially within each chapter.
+Unlabeled display equations remain unnumbered. Use one label per display block.
+The label is removed before the expression is sent to KaTeX; Bookself keeps the
+label, number, and source offset on the surrounding Reader element instead.
+That lets `\eqref{...}` use the same source-offset navigation as the rest of the
+Reader in both Pages and Scroll.
+
+A missing equation reference is displayed as `(?)` rather than silently linking
+to an incorrect location. Cross-chapter equation references are outside this
+first layer; keeping the registry chapter-local avoids introducing a hidden
+book-wide compilation database.
+
 ## What the Reader does
 
 The math tokenizer runs as part of the Markdown pipeline, before pagination.
@@ -80,10 +112,12 @@ network request in order to open a publication.
 If the parser is unavailable, the equation stays visible as readable TeX source
 instead of disappearing or blocking the Reader. When KaTeX arrives later, the
 Reader upgrades those placeholders in place and triggers a normal repagination.
+Equation labels and numbers live on the wrapper, so they survive that hydration.
 
 The service worker caches the exact pinned KaTeX runtime after the first
 successful online load, so later controlled visits can reuse it offline. The
-local Bookself math code and styles are part of the normal offline shell.
+local Bookself math and academic code and styles are part of the normal offline
+shell.
 
 ## Security boundary
 
@@ -106,17 +140,25 @@ scientific reading. It exercises inline math, both display delimiters, an
 `align` environment, a deliberately long expression, code examples, and text
 containing dollar amounts.
 
+`books/bookself-101/` exercises the broader academic-textbook path, including
+numbered equations and the Markdown-native scholarly apparatus described in
+[Academic writing in Bookself](academic-writing.md).
+
 Serve the repository root with `python3 -m http.server`, then open:
 
 `reader/?b=the-example-paper`
 
-Because the example stays `Status: Drafting`, it is directly previewable but is
-not placed on the normal public catalog.
+Because the example paper stays `Status: Drafting`, it is directly previewable
+but is not placed on the normal public catalog.
 
-## What comes next
+## Optional full-TeX boundary
 
-The next scientific layer should preserve this Markdown path and add **optional
-full TeX projects**, not replace it. A full project needs an explicit compile
-contract for `.tex`, `.bib`, packages/classes, figures, diagnostics, and a
-canonical PDF artifact. Binder can then provide source/preview composability
-while Reader continues to consume safe publication output.
+A future full-TeX workflow should preserve this Markdown path rather than
+replace it. The appropriate boundary is the **private Binder**: an author who
+needs a real TeX project could opt into local compilation of `.tex`, `.bib`,
+packages/classes, figures, diagnostics, and a canonical PDF artifact.
+
+That compiler must not become a prerequisite for writing, previewing, releasing,
+or reading an ordinary Bookself publication. Core Reader math and academic
+Markdown remain no-build; full TeX is an additional authoring/output path for
+work that genuinely needs TeX project semantics.

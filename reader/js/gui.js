@@ -2,10 +2,6 @@ import('./media.js').catch((error) => {
   console.warn('Media enhancements could not be loaded', error);
 });
 
-import('./formats.js').catch((error) => {
-  console.warn('Publication format enhancements could not be loaded', error);
-});
-
 const OVERLAYS = [
   { id: 'tocOverlay', close: 'tocClose', label: 'Contents' },
   { id: 'progressPanel', close: 'statsClose', label: 'Reading progress' },

@@ -1,15 +1,25 @@
 <!--
-  Start a book: copy this folder to books/<slug>/ (lowercase, hyphens).
-  Fill in the table, replace the title, and tick boxes as chapters land.
-  The manuscript files are example prose — overwrite them.
-  Front matter uses a worked title ("The Example Book"); the hub title
-  below this comment is the fill-in-the-blank you replace first.
+  Hello, author.
 
-  Preview: reader/#/b/<slug>/
-  Publish: Status → Published, then add a row in the root README
-  under "## The books" linking to books/<slug>/.
+  This folder is a blank Bookself book. It may currently contain more
+  scaffolding than literature. That is normal.
 
-  Delete this comment when you are ready.
+  Start here:
+  1. Copy this folder to books/<your-book-name>/ using lowercase + hyphens.
+  2. Replace "Your Book Title" below.
+  3. Replace the example chapter prose in manuscript/.
+  4. Change [ ] to [x] as chapters become drafted.
+  5. Preview in reader/#/b/<your-book-name>/.
+
+  GitHub may call saving a version a "commit". It just means: save this
+  version and attach a short note about what changed.
+
+  In a private Binder, keep drafting here. When the book is actually meant
+  for strangers, promote it to the public Shelf, set Status to Published in
+  the Shelf copy, and add it to the Shelf's root README catalog.
+
+  Delete this comment whenever it stops being useful. The comment has no
+  emotional attachment to remaining in your book.
 -->
 
 # Your Book Title

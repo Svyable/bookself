@@ -118,6 +118,44 @@ The goal is not to make authors or researchers behave like programmers. The
 goal is to borrow the parts of software development that make creative and
 technical work easier to remember, review, recover, and publish.
 
+## See other solutions
+
+Bookself is not the only thoughtful attempt to make long-form, technical, or
+scholarly writing less fragile. If you are an author, professor, student,
+researcher, or technical writer comparing **open-source book publishing**,
+**collaborative academic writing**, **Markdown publishing**, **Git-based
+writing**, **open textbooks**, or **version-controlled publishing**, these
+projects are worth knowing about.
+
+Different tools have different centers of gravity. Some are close relatives;
+some solve one part of the problem exceptionally well.
+
+| Project | Especially good at | Where Bookself takes a different path |
+|---|---|---|
+| [Overleaf](https://www.overleaf.com/) | Real-time collaborative LaTeX writing and typesetting; Overleaf Community Edition can be self-hosted | Bookself starts with ordinary Markdown files and Git history, with a publication lifecycle rather than a LaTeX-first editor |
+| [Manubot](https://manubot.org/) | Open, GitHub-based scholarly manuscripts with citations, versioning, automated builds, and collaborative review | Probably Bookself's closest conceptual relative; Bookself broadens the pattern to books and papers, adds a Reader and Publishing Desk, and keeps normal publishing local-first rather than CI-dependent |
+| [Quarto](https://quarto.org/) | Reproducible scientific and technical publishing from Markdown, notebooks, code, citations, and data to many output formats | Quarto is an excellent publishing engine; Bookself focuses more on the human lifecycle around drafts, reviews, editions, release boundaries, and reading |
+| [Jupyter Book](https://jupyterbook.org/) | Interactive and reproducible computational books built from notebooks and Markdown | Bookself is aimed at general prose and research publications even when there is no executable computation at all |
+| [bookdown](https://bookdown.org/) | Books and long-form reports from R Markdown with HTML, PDF, EPUB, Word, citations, and cross-references | Bookself is less about a rendering toolchain and more about making the repository itself the durable writing and revision record |
+| [Pressbooks](https://pressbooks.org/) | Open-source web book publishing, especially textbooks and multi-format exports such as web, EPUB, and PDF | Pressbooks is a book CMS built on WordPress; Bookself deliberately keeps publications as plain files in ordinary Git repositories |
+| [PubPub](https://www.pubpub.org/) | Open-source, community-led publishing with real-time editing, peer review, discussions, DOIs, metadata, and rich media | PubPub provides an end-to-end community platform; Bookself emphasizes portable folders, Git-native review, and a separate private Binder / public Shelf release model |
+| [Leanpub](https://leanpub.com/) | Writing in Markdown, syncing with GitHub or Dropbox, publishing early and often, and selling evolving ebooks | Leanpub adds distribution and commerce; Bookself stays self-owned and open, with the public Shelf remaining an ordinary repository and static reading surface |
+| [GitBook](https://www.gitbook.com/) | Collaborative documentation with Markdown, GitHub/GitLab sync, branching, review, and polished hosted docs | GitBook is optimized for product and technical documentation; Bookself treats books, papers, editions, and publication release as first-class concepts |
+| [mdBook](https://rust-lang.github.io/mdBook/) | Turning a directory of Markdown chapters into a clean, searchable web book for documentation, tutorials, and courses | mdBook is a focused renderer; Bookself adds authoring lifecycle, review semantics, publication state, private/public separation, and a reader |
+| [Pandoc](https://pandoc.org/) | Converting between Markdown, LaTeX, Word, EPUB, HTML, JATS, and many other formats, with powerful citation support | Pandoc is foundational infrastructure rather than a collaboration or release workflow; it can complement Bookself rather than compete with it |
+
+**Manubot is probably the closest conceptual neighbor.** Both projects recognize
+that Markdown plus Git can be surprisingly natural infrastructure for scholarly
+writing. Bookself's distinctive bet is to make that repository lifecycle feel
+safe and understandable to people who do not already think like software
+developers, while making the boundary between private work-in-progress and an
+intentional public release explicit.
+
+Bookself is also happy to coexist with these tools. A publication can use
+Pandoc or Quarto for specialized output, start life in another editor, or link
+to an external web volume. The aim is not to own every step. It is to give the
+work a durable memory and a calm path from draft to publication to revision.
+
 ## What belongs where
 
 The shared platform software is:
@@ -227,6 +265,7 @@ should feel like an issue, feature, or quick doorway.
 | “How does the writing lifecycle map to all this?” | [Writing lifecycle](docs/writing-lifecycle.md) |
 | “How do revisions and releases stay safe?” | [Revisions and releases](docs/revisions.md) |
 | “What files make up a book?” | [Book anatomy](docs/book-anatomy.md) |
+| “What other writing and publishing tools should I compare?” | [See other solutions](#see-other-solutions) |
 | “I edit or review other people's work.” | [Editor guide](docs/editor-guide.md) |
 | “I want the full private-binder/public-shelf architecture.” | [Bookself architecture](docs/bookself.md) |
 | “I am contributing to the software itself.” | [Contributing](CONTRIBUTING.md) |

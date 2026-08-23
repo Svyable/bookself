@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Hosted media workflow</title>
+  <desc id="desc">A diagram showing an image file in a media folder referenced from Markdown and served directly by the reader.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4eee4"/>
+      <stop offset="1" stop-color="#e2d7c8"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d1915"/>
+      <stop offset="1" stop-color="#30271f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#4b3925" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" rx="34" fill="url(#bg)"/>
+  <text x="74" y="82" fill="#75522f" font-family="Georgia, serif" font-size="22" letter-spacing="3">ONE SMALL RULE</text>
+  <text x="74" y="132" fill="#2e2822" font-family="Georgia, serif" font-size="42">Put the picture beside the publication.</text>
+  <text x="74" y="170" fill="#6d6257" font-family="Arial, sans-serif" font-size="20">Then reference it with ordinary Markdown. GitHub Pages does the hosting.</text>
+
+  <g transform="translate(76 244)" filter="url(#shadow)">
+    <rect width="285" height="260" rx="24" fill="#fffaf2" stroke="#cdbda9"/>
+    <rect x="28" y="28" width="229" height="44" rx="10" fill="#efe4d4"/>
+    <path d="M49 42h22l8 9h157v12H49z" fill="#8e6b46"/>
+    <text x="43" y="105" fill="#4c4035" font-family="monospace" font-size="18">media/</text>
+    <rect x="43" y="124" width="199" height="85" rx="10" fill="#dfe7dc" stroke="#a7b59f"/>
+    <circle cx="84" cy="154" r="18" fill="#d6a766"/>
+    <path d="M58 194l42-35 33 24 29-20 54 31z" fill="#708d70"/>
+    <text x="43" y="236" fill="#75522f" font-family="Arial, sans-serif" font-size="15" font-weight="700">figure-1.svg</text>
+  </g>
+
+  <g transform="translate(455 244)" filter="url(#shadow)">
+    <rect width="290" height="260" rx="24" fill="#fffaf2" stroke="#cdbda9"/>
+    <text x="28" y="42" fill="#75522f" font-family="Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.6">CHAPTER.MD</text>
+    <rect x="28" y="71" width="234" height="130" rx="12" fill="#29221c"/>
+    <text x="47" y="107" fill="#d5c2aa" font-family="monospace" font-size="15">A useful diagram:</text>
+    <text x="47" y="143" fill="#f0d29e" font-family="monospace" font-size="13">![How it works](</text>
+    <text x="47" y="166" fill="#9fc1a2" font-family="monospace" font-size="13">  ../media/figure-1.svg</text>
+    <text x="47" y="189" fill="#f0d29e" font-family="monospace" font-size="13">)</text>
+    <text x="28" y="236" fill="#4c4035" font-family="Georgia, serif" font-size="20">No special syntax</text>
+  </g>
+
+  <g transform="translate(839 244)" filter="url(#shadow)">
+    <rect width="285" height="260" rx="24" fill="url(#screen)" stroke="#5d4c3c"/>
+    <text x="28" y="42" fill="#d6ac70" font-family="Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.6">PUBLIC READER</text>
+    <rect x="35" y="67" width="215" height="149" rx="12" fill="#f5eee2"/>
+    <rect x="57" y="89" width="171" height="92" rx="8" fill="#dfe7dc" stroke="#a7b59f"/>
+    <circle cx="93" cy="118" r="14" fill="#d6a766"/>
+    <path d="M70 167l34-29 27 20 25-17 49 26z" fill="#708d70"/>
+    <rect x="57" y="193" width="107" height="6" rx="3" fill="#968875"/>
+    <text x="28" y="236" fill="#eadfce" font-family="Georgia, serif" font-size="20">Hosted with the work</text>
+  </g>
+
+  <path d="M374 374H438" stroke="#8d633a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M425 362l14 12-14 12" fill="none" stroke="#8d633a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M758 374H822" stroke="#8d633a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M809 362l14 12-14 12" fill="none" stroke="#8d633a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="76" y="552" width="1048" height="58" rx="29" fill="#fff8ee" stroke="#cdbda9"/>
+  <text x="600" y="589" text-anchor="middle" fill="#5f5144" font-family="Arial, sans-serif" font-size="18">PNG · JPG · WebP · SVG — committed like any other file, versioned with the publication</text>
+</svg>

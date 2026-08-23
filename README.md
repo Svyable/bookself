@@ -187,14 +187,13 @@ Those are examples, not identities baked into the shared software.
 
 | Publication | Format |
 |---|---|
-| [The Example Book](books/the-example-book/) | Book |
+| [How to Bookself](books/how-to-bookself/) | Book |
 
-The platform reader uses this tiny catalog as its working demo. The example
-book is deliberately a book **about Bookself itself**: its own files demonstrate
-the folder, Reader, Binder/Shelf, and release ideas it describes. Real shelves
-can list books and whitepapers together; a publication with
-`Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives
-paper labeling in the reader.
+The platform reader uses this short practical guide as its working demo. Its
+own files demonstrate the folder, Reader, Binder/Shelf, and release ideas it
+describes. Real shelves can list books and whitepapers together; a publication
+with `Format: Whitepaper` keeps the same folder-and-Markdown workflow and
+receives paper labeling in the reader.
 
 ## The web shelf
 

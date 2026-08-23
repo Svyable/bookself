@@ -9,6 +9,9 @@ strategy, or a strong opinion about tabs versus spaces.
 
 You need a book, a chapter, and somewhere to put the next sentence.
 
+If you do not have a GitHub account yet, or you want the basic connection steps
+for ChatGPT, Claude, Claude Code, or OpenCode, start with **[Getting Set Up](books/how-to-bookself/manuscript/ch00-getting-set-up.md)** in *How to Bookself*. The local/direct paths described there do not require private-repository GitHub Actions.
+
 ## The five-minute version
 
 A Bookself book is just a folder containing plain-text chapter files.

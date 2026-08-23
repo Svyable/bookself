@@ -29,6 +29,12 @@ GitHub Pages / Reader
 
 Git may assign the same blob SHA to byte-identical files in Binder and Shelf. That proves those file contents match; it does not link the repositories. Either copy can change later without changing the other.
 
+## No CI/CD dependency
+
+The release transaction is local. `scripts/release-book.sh` calls the Python standard-library release helper and local Git; it does not call the GitHub API, start GitHub Actions, upload a build artifact, or require a hosted runner.
+
+That is an architectural requirement, not merely the current implementation. A private Binder must remain fully writable, previewable, and releasable with zero GitHub Actions minutes. CI and pull-request checks may be useful optional review tools, but exhausting or disabling them must not block publication.
+
 ## Normal revision workflow
 
 1. Edit the private Binder copy under `books/<slug>/`.
@@ -58,7 +64,7 @@ It then:
 - prints the Binder commit SHA used for the release
 - stops before commit or push
 
-Review the resulting Shelf diff. Commit it through the normal Shelf branch / pull-request workflow when it is correct.
+Review the resulting Shelf diff. Commit and push it with the Shelf's normal Git workflow when it is correct. A pull request is a useful review boundary but is not required by Bookself itself.
 
 ## Why Shelf should stay stable
 
@@ -77,6 +83,8 @@ An unlisted public proof can be useful, but it is not a privacy boundary.
 ## Recovery and rollback
 
 Shelf Git history is the release history. A previous published edition can be restored from its historical Shelf tree and blobs without reconstructing it from Binder. This keeps rollback deterministic even after Binder has moved on to a newer draft.
+
+Rollback also does not require a CI pipeline: restore the historical Shelf files into a branch or working tree, review the diff, and commit the public recovery.
 
 ## Lower-level copy command
 

@@ -71,6 +71,13 @@ URL into shared `reader/` or `desk/` code. Instance identity belongs in
 - Images live in that publication's `media/` folder and are referenced with
   relative links (`![alt](../media/figure-1.png)`). PNG, JPG, WebP, and SVG are
   all appropriate reader assets.
+- LaTeX-style math may be embedded directly in Markdown. Use `$...$` or
+  `\(...\)` for inline math; use `$$...$$`, `\[...\]`, or the display
+  environments `equation`, `align`, `alignat`, and `gather` (including starred
+  forms) for display math. Put literal TeX examples in code spans/fences.
+- The current math layer is not a full `.tex` compiler. Do not introduce
+  document classes, package installation, BibTeX/Biber, TikZ, or a build step
+  unless the task explicitly advances the full-TeX workflow.
 - External creations do not need a publication folder. Put ordinary Markdown
   links under root `## The stand`; the reader renders those as magazine-stand
   cards that open the source site.
@@ -101,6 +108,7 @@ discover it.
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, optional venue / DOI, and keep `Status: Drafting` while the work is in
 progress. The same Git history, review, media, preview, and publish flow applies.
+Use [docs/latex.md](docs/latex.md) when the paper contains mathematical notation.
 
 **Add to the stand.** Under root `## The stand`, add one Markdown link such as
 `- [Project name](https://example.com/) — a short optional note`. The linked

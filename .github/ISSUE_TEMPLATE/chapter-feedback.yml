@@ -16,6 +16,7 @@ body:
       description: Which book is this about?
       options:
         - the-example-book
+        - the-example-paper
         - _TEMPLATE
     validations:
       required: true

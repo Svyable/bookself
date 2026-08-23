@@ -166,14 +166,22 @@ shelves can list books and whitepapers together; a publication with
 `Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives
 paper labeling in the reader.
 
-## The stand
+## The web shelf
 
 - [QNTLab](https://qntlab.app/) — Build + Test = Run
+
+A web volume is only a link. Bookself binds it visually like a book on the
+shelf, but the website stays at its original URL and remains its own source of
+truth. This is useful for apps, documentation sites, interactive essays, labs,
+and other work that deserves shelf presence without being copied into Git.
+
+## The stand
+
 - [Geek to Me](https://geektome.lovable.app/)
 
-The stand is deliberately just links. External apps, experiments, magazines,
-and other creations stay at their original websites while Bookself provides a
-curated doorway.
+The stand is the lighter magazine treatment for external creations. Use the web
+shelf when something should feel like a durable volume; use the stand when it
+should feel like an issue, feature, or quick doorway.
 
 ## Pick your doorway
 

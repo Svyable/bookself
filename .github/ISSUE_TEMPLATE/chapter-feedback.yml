@@ -15,7 +15,7 @@ body:
       label: Book
       description: Which book is this about?
       options:
-        - the-example-book
+        - how-to-bookself
         - the-example-paper
         - _TEMPLATE
     validations:

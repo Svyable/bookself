@@ -4,13 +4,17 @@ import { blocksFromMarkdown } from './markdown.js';
 import { parseRoute, readHash } from './router.js';
 import { loadNotes, addNote, applyNotes } from './notes.js';
 
+const FONTS = ['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'system'];
 const DEFAULTS = Object.freeze({
   fontSize: 18,
   font: 'book',
+  fontWeight: 400,
+  tracking: 0,
   leading: 1.55,
   measure: 'balanced',
   align: 'justify',
   paragraph: 'normal',
+  indent: 'none',
   mode: 'paged',
   hyphens: 'auto',
 });
@@ -46,6 +50,10 @@ function experienceKey() {
   return `${storagePrefix()}:reader-experience`;
 }
 
+function myPresetKey() {
+  return `${storagePrefix()}:reader-experience:preset`;
+}
+
 function legacyPrefs() {
   try {
     return JSON.parse(localStorage.getItem(`${storagePrefix()}:prefs`) || '{}');
@@ -55,19 +63,24 @@ function legacyPrefs() {
 }
 
 function normalize(raw = {}) {
-  const font = ['book', 'classic', 'modern', 'clear'].includes(raw.font) ? raw.font : DEFAULTS.font;
+  const font = FONTS.includes(raw.font) ? raw.font : DEFAULTS.font;
   const measure = ['narrow', 'balanced', 'wide'].includes(raw.measure) ? raw.measure : DEFAULTS.measure;
   const align = ['left', 'justify'].includes(raw.align) ? raw.align : DEFAULTS.align;
   const paragraph = ['compact', 'normal', 'airy'].includes(raw.paragraph) ? raw.paragraph : DEFAULTS.paragraph;
+  const indent = ['none', 'gentle', 'classic'].includes(raw.indent) ? raw.indent : DEFAULTS.indent;
   const mode = ['paged', 'scroll'].includes(raw.mode) ? raw.mode : DEFAULTS.mode;
   const hyphens = ['auto', 'off'].includes(raw.hyphens) ? raw.hyphens : DEFAULTS.hyphens;
+  const weight = [400, 500, 600].includes(Number(raw.fontWeight)) ? Number(raw.fontWeight) : DEFAULTS.fontWeight;
   return {
-    fontSize: Math.round(clamp(Number(raw.fontSize) || DEFAULTS.fontSize, 14, 30)),
+    fontSize: Math.round(clamp(Number(raw.fontSize) || DEFAULTS.fontSize, 14, 32)),
     font,
-    leading: Number(clamp(Number(raw.leading) || DEFAULTS.leading, 1.35, 1.9).toFixed(2)),
+    fontWeight: weight,
+    tracking: Number(clamp(Number(raw.tracking) || 0, -0.02, 0.08).toFixed(2)),
+    leading: Number(clamp(Number(raw.leading) || DEFAULTS.leading, 1.3, 2).toFixed(2)),
     measure,
     align,
     paragraph,
+    indent,
     mode,
     hyphens,
   };
@@ -96,6 +109,25 @@ function savePrefs() {
   }
 }
 
+function loadMyPreset() {
+  try {
+    const raw = localStorage.getItem(myPresetKey());
+    return raw ? normalize(JSON.parse(raw)) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveMyPreset() {
+  try {
+    localStorage.setItem(myPresetKey(), JSON.stringify(normalize(prefs)));
+    updateMyPresetUi();
+    showToast('My preset saved');
+  } catch {
+    showToast('Could not save preset');
+  }
+}
+
 function scheduleRepaginate() {
   clearTimeout(repaginateTimer);
   repaginateTimer = window.setTimeout(() => {
@@ -105,10 +137,28 @@ function scheduleRepaginate() {
 
 function setPressed(selector, value, attr) {
   document.querySelectorAll(selector).forEach((button) => {
-    const active = button.getAttribute(attr) === value;
+    const active = button.getAttribute(attr) === String(value);
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
   });
+}
+
+function trackingLabel(value) {
+  if (Math.abs(value) < 0.005) return '0';
+  return `${value > 0 ? '+' : '−'}${Math.abs(value).toFixed(2)}em`;
+}
+
+function updateMyPresetUi() {
+  const mine = document.querySelector('[data-reader-preset="mine"]');
+  const save = document.getElementById('readerSavePreset');
+  const exists = !!loadMyPreset();
+  if (mine) {
+    mine.disabled = !exists;
+    mine.setAttribute('aria-disabled', String(!exists));
+    const small = mine.querySelector('small');
+    if (small) small.textContent = exists ? 'Your saved setup' : 'Save one below';
+  }
+  if (save) save.textContent = exists ? 'Update My preset' : 'Save current as My preset';
 }
 
 function updateUi() {
@@ -116,16 +166,23 @@ function updateUi() {
   const sizeOut = document.getElementById('readerFontSizeValue');
   const leading = document.getElementById('readerLeading');
   const leadingOut = document.getElementById('readerLeadingValue');
+  const tracking = document.getElementById('readerTracking');
+  const trackingOut = document.getElementById('readerTrackingValue');
   if (size) size.value = String(prefs.fontSize);
   if (sizeOut) sizeOut.textContent = `${prefs.fontSize}px`;
   if (leading) leading.value = String(prefs.leading);
   if (leadingOut) leadingOut.textContent = prefs.leading.toFixed(2);
+  if (tracking) tracking.value = String(prefs.tracking);
+  if (trackingOut) trackingOut.textContent = trackingLabel(prefs.tracking);
   setPressed('[data-reader-mode-value]', prefs.mode, 'data-reader-mode-value');
   setPressed('[data-reader-font-value]', prefs.font, 'data-reader-font-value');
+  setPressed('[data-reader-weight-value]', prefs.fontWeight, 'data-reader-weight-value');
   setPressed('[data-reader-measure-value]', prefs.measure, 'data-reader-measure-value');
   setPressed('[data-reader-align-value]', prefs.align, 'data-reader-align-value');
   setPressed('[data-reader-paragraph-value]', prefs.paragraph, 'data-reader-paragraph-value');
+  setPressed('[data-reader-indent-value]', prefs.indent, 'data-reader-indent-value');
   setPressed('[data-reader-hyphens-value]', prefs.hyphens, 'data-reader-hyphens-value');
+  updateMyPresetUi();
 }
 
 function applyPrefs({ save = true, repaginate = true } = {}) {
@@ -136,10 +193,13 @@ function applyPrefs({ save = true, repaginate = true } = {}) {
   root.dataset.readerMeasure = prefs.measure;
   root.dataset.readerAlign = prefs.align;
   root.dataset.readerParagraph = prefs.paragraph;
+  root.dataset.readerIndent = prefs.indent;
   root.dataset.readerMode = prefs.mode;
   root.dataset.readerHyphens = prefs.hyphens;
   root.style.setProperty('--reader-font-size', `${prefs.fontSize}px`);
   root.style.setProperty('--reader-leading', String(prefs.leading));
+  root.style.setProperty('--reader-font-weight', String(prefs.fontWeight));
+  root.style.setProperty('--reader-tracking', `${prefs.tracking}em`);
   updateUi();
   if (save) savePrefs();
   if (repaginate) scheduleRepaginate();
@@ -149,31 +209,46 @@ function applyPrefs({ save = true, repaginate = true } = {}) {
 
 function preset(name) {
   const mode = prefs.mode;
-  const hyphens = prefs.hyphens;
+  if (name === 'mine') {
+    const saved = loadMyPreset();
+    if (!saved) return;
+    prefs = saved;
+    applyPrefs();
+    showToast('My preset applied');
+    return;
+  }
   if (name === 'comfort') {
     prefs = {
+      ...DEFAULTS,
       fontSize: 20,
       font: 'clear',
-      leading: 1.7,
+      fontWeight: 400,
+      tracking: 0.01,
+      leading: 1.72,
       measure: 'narrow',
       align: 'left',
       paragraph: 'airy',
+      indent: 'none',
       mode,
       hyphens: 'off',
     };
   } else if (name === 'large') {
     prefs = {
-      fontSize: 24,
+      ...DEFAULTS,
+      fontSize: 25,
       font: 'clear',
-      leading: 1.8,
+      fontWeight: 500,
+      tracking: 0.01,
+      leading: 1.82,
       measure: 'narrow',
       align: 'left',
       paragraph: 'airy',
+      indent: 'none',
       mode,
       hyphens: 'off',
     };
   } else {
-    prefs = { ...DEFAULTS, mode, hyphens };
+    prefs = { ...DEFAULTS, mode };
   }
   applyPrefs();
 }
@@ -208,7 +283,8 @@ function markup() {
         </div>
 
         <div class="experience-preview" aria-label="Reading settings preview">
-          <p>Good reading disappears into the story. Tune the page until the words feel effortless.</p>
+          <div class="experience-preview-title">A quiet chapter</div>
+          <p class="experience-preview-sample">Good reading disappears into the story. Tune the page until the words feel effortless and entirely your own.</p>
         </div>
 
         <div class="experience-control">
@@ -216,18 +292,39 @@ function markup() {
             <label for="readerFontSize">Text size</label>
             <output id="readerFontSizeValue" for="readerFontSize">18px</output>
           </div>
-          <input class="experience-range" id="readerFontSize" type="range" min="14" max="30" step="1" value="18">
+          <input class="experience-range" id="readerFontSize" type="range" min="14" max="32" step="1" value="18">
           <div class="experience-range-scale" aria-hidden="true"><span>A</span><span>A</span></div>
         </div>
 
         <div class="experience-control">
-          <div class="experience-label-row"><span>Typeface</span><span>4 choices</span></div>
+          <div class="experience-label-row"><span>Typeface</span><span>8 curated choices</span></div>
           <div class="experience-fonts" role="group" aria-label="Typeface">
-            <button class="experience-font" type="button" data-reader-font-value="book" aria-pressed="false"><strong>Aa</strong><small>Book</small></button>
-            <button class="experience-font" type="button" data-reader-font-value="classic" aria-pressed="false"><strong>Aa</strong><small>Classic</small></button>
-            <button class="experience-font" type="button" data-reader-font-value="modern" aria-pressed="false"><strong>Aa</strong><small>Modern</small></button>
-            <button class="experience-font" type="button" data-reader-font-value="clear" aria-pressed="false"><strong>Aa</strong><small>Clear</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="book" aria-pressed="false" title="Source Serif 4"><strong>Aa</strong><small>Book</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="literary" aria-pressed="false" title="Literata"><strong>Aa</strong><small>Literata</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="warm" aria-pressed="false" title="Lora"><strong>Aa</strong><small>Lora</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="classic" aria-pressed="false" title="Georgia"><strong>Aa</strong><small>Classic</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="modern" aria-pressed="false" title="IBM Plex Sans"><strong>Aa</strong><small>Plex</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="clear" aria-pressed="false" title="Atkinson Hyperlegible"><strong>Aa</strong><small>Clear</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="humanist" aria-pressed="false" title="Humanist system sans"><strong>Aa</strong><small>Humanist</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="system" aria-pressed="false" title="Your device system font"><strong>Aa</strong><small>System</small></button>
           </div>
+        </div>
+
+        <div class="experience-control">
+          <div class="experience-label-row"><span>Text weight</span><span>Ink density</span></div>
+          <div class="experience-choice-row" role="group" aria-label="Text weight">
+            <button class="experience-choice" type="button" data-reader-weight-value="400" aria-pressed="false">Regular</button>
+            <button class="experience-choice" type="button" data-reader-weight-value="500" aria-pressed="false">Medium</button>
+            <button class="experience-choice" type="button" data-reader-weight-value="600" aria-pressed="false">Strong</button>
+          </div>
+        </div>
+
+        <div class="experience-control">
+          <div class="experience-label-row">
+            <label for="readerTracking">Letter spacing</label>
+            <output id="readerTrackingValue" for="readerTracking">0</output>
+          </div>
+          <input class="experience-range" id="readerTracking" type="range" min="-0.02" max="0.08" step="0.01" value="0">
         </div>
 
         <div class="experience-control">
@@ -235,7 +332,7 @@ function markup() {
             <label for="readerLeading">Line spacing</label>
             <output id="readerLeadingValue" for="readerLeading">1.55</output>
           </div>
-          <input class="experience-range" id="readerLeading" type="range" min="1.35" max="1.9" step="0.05" value="1.55">
+          <input class="experience-range" id="readerLeading" type="range" min="1.3" max="2" step="0.05" value="1.55">
         </div>
 
         <div class="experience-divider"></div>
@@ -266,6 +363,15 @@ function markup() {
         </div>
 
         <div class="experience-control">
+          <div class="experience-label-row"><span>First-line indent</span><span>Paragraph shape</span></div>
+          <div class="experience-choice-row" role="group" aria-label="First-line paragraph indent">
+            <button class="experience-choice" type="button" data-reader-indent-value="none" aria-pressed="false">None</button>
+            <button class="experience-choice" type="button" data-reader-indent-value="gentle" aria-pressed="false">Gentle</button>
+            <button class="experience-choice" type="button" data-reader-indent-value="classic" aria-pressed="false">Classic</button>
+          </div>
+        </div>
+
+        <div class="experience-control">
           <div class="experience-label-row"><span>Paragraph rhythm</span><span>Space between thoughts</span></div>
           <div class="experience-choice-row" role="group" aria-label="Paragraph spacing">
             <button class="experience-choice" type="button" data-reader-paragraph-value="compact" aria-pressed="false">Compact</button>
@@ -277,11 +383,13 @@ function markup() {
         <div class="experience-divider"></div>
         <div class="experience-control">
           <div class="experience-label-row"><span>Quick starts</span><span>Fine-tune anything after</span></div>
-          <div class="experience-presets" role="group" aria-label="Reading presets">
+          <div class="experience-presets experience-presets-expanded" role="group" aria-label="Reading presets">
             <button class="experience-preset" type="button" data-reader-preset="book">Book<small>Classic page</small></button>
             <button class="experience-preset" type="button" data-reader-preset="comfort">Comfort<small>Clear + airy</small></button>
-            <button class="experience-preset" type="button" data-reader-preset="large">Large print<small>24px + clear</small></button>
+            <button class="experience-preset" type="button" data-reader-preset="large">Large print<small>25px + clear</small></button>
+            <button class="experience-preset experience-preset-mine" type="button" data-reader-preset="mine" disabled>My preset<small>Save one below</small></button>
           </div>
+          <button class="experience-save-preset" id="readerSavePreset" type="button">Save current as My preset</button>
         </div>
       </section>
     </div>`;
@@ -334,7 +442,12 @@ function enhanceSettings() {
     prefs.leading = Number(event.target.value);
     applyPrefs();
   });
+  document.getElementById('readerTracking')?.addEventListener('input', (event) => {
+    prefs.tracking = Number(event.target.value);
+    applyPrefs();
+  });
   document.getElementById('readerReset')?.addEventListener('click', resetExperience);
+  document.getElementById('readerSavePreset')?.addEventListener('click', saveMyPreset);
 
   document.querySelectorAll('[data-reader-mode-value]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -345,6 +458,12 @@ function enhanceSettings() {
   document.querySelectorAll('[data-reader-font-value]').forEach((button) => {
     button.addEventListener('click', () => {
       prefs.font = button.dataset.readerFontValue;
+      applyPrefs();
+    });
+  });
+  document.querySelectorAll('[data-reader-weight-value]').forEach((button) => {
+    button.addEventListener('click', () => {
+      prefs.fontWeight = Number(button.dataset.readerWeightValue);
       applyPrefs();
     });
   });
@@ -363,6 +482,12 @@ function enhanceSettings() {
   document.querySelectorAll('[data-reader-hyphens-value]').forEach((button) => {
     button.addEventListener('click', () => {
       prefs.hyphens = button.dataset.readerHyphensValue;
+      applyPrefs();
+    });
+  });
+  document.querySelectorAll('[data-reader-indent-value]').forEach((button) => {
+    button.addEventListener('click', () => {
+      prefs.indent = button.dataset.readerIndentValue;
       applyPrefs();
     });
   });
@@ -796,7 +921,7 @@ function bindScrollSelection() {
 }
 
 function nudgeSize(delta) {
-  const next = clamp(prefs.fontSize + delta, 14, 30);
+  const next = clamp(prefs.fontSize + delta, 14, 32);
   if (next === prefs.fontSize) return;
   prefs.fontSize = next;
   applyPrefs();
@@ -872,12 +997,61 @@ function bindRoutesAndViewport() {
 }
 
 function loadEnhancementStyles() {
-  if (document.querySelector('link[data-reader-experience-scroll]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = new URL('../css/experience-scroll.css', import.meta.url).href;
-  link.dataset.readerExperienceScroll = 'true';
-  document.head.appendChild(link);
+  if (!document.querySelector('link[data-reader-experience-scroll]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = new URL('../css/experience-scroll.css', import.meta.url).href;
+    link.dataset.readerExperienceScroll = 'true';
+    document.head.appendChild(link);
+  }
+
+  if (!document.querySelector('link[data-reader-font-library]')) {
+    const fonts = document.createElement('link');
+    fonts.rel = 'stylesheet';
+    fonts.href = 'https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&family=Lora:wght@400;500;600&display=swap';
+    fonts.dataset.readerFontLibrary = 'true';
+    document.head.appendChild(fonts);
+  }
+
+  if (document.getElementById('readerCustomizationStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'readerCustomizationStyles';
+  style.textContent = `
+    :root { --reader-font-weight: 400; --reader-tracking: 0em; }
+    [data-reader-font="book"] .page-inner, [data-reader-font="book"] .scroll-document, [data-reader-font="book"] .experience-preview-sample { font-family: "Source Serif 4", Georgia, serif !important; }
+    [data-reader-font="literary"] .page-inner, [data-reader-font="literary"] .scroll-document, [data-reader-font="literary"] .experience-preview-sample { font-family: "Literata", Georgia, serif !important; }
+    [data-reader-font="warm"] .page-inner, [data-reader-font="warm"] .scroll-document, [data-reader-font="warm"] .experience-preview-sample { font-family: "Lora", Georgia, serif !important; }
+    [data-reader-font="classic"] .page-inner, [data-reader-font="classic"] .scroll-document, [data-reader-font="classic"] .experience-preview-sample { font-family: Georgia, "Times New Roman", serif !important; }
+    [data-reader-font="modern"] .page-inner, [data-reader-font="modern"] .scroll-document, [data-reader-font="modern"] .experience-preview-sample { font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important; }
+    [data-reader-font="clear"] .page-inner, [data-reader-font="clear"] .scroll-document, [data-reader-font="clear"] .experience-preview-sample { font-family: "Atkinson Hyperlegible", Verdana, sans-serif !important; }
+    [data-reader-font="humanist"] .page-inner, [data-reader-font="humanist"] .scroll-document, [data-reader-font="humanist"] .experience-preview-sample { font-family: "Trebuchet MS", "Segoe UI", sans-serif !important; }
+    [data-reader-font="system"] .page-inner, [data-reader-font="system"] .scroll-document, [data-reader-font="system"] .experience-preview-sample { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
+    .page-inner, .scroll-document, .experience-preview-sample { font-weight: var(--reader-font-weight); letter-spacing: var(--reader-tracking); }
+    [data-reader-indent="gentle"] .page-inner p + p, [data-reader-indent="gentle"] .scroll-document p + p, [data-reader-indent="gentle"] .experience-preview-sample { text-indent: .85em; }
+    [data-reader-indent="classic"] .page-inner p + p, [data-reader-indent="classic"] .scroll-document p + p, [data-reader-indent="classic"] .experience-preview-sample { text-indent: 1.45em; }
+    .experience-preview-title { max-width: var(--reader-preview-measure); margin: 0 auto .32rem; color: var(--accent); font: 600 .64rem/1.1 "IBM Plex Sans", sans-serif; letter-spacing: .11em; text-transform: uppercase; }
+    .experience-font[data-reader-font-value="literary"] strong { font-family: "Literata", Georgia, serif; }
+    .experience-font[data-reader-font-value="warm"] strong { font-family: "Lora", Georgia, serif; }
+    .experience-font[data-reader-font-value="humanist"] strong { font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+    .experience-font[data-reader-font-value="system"] strong { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .experience-presets-expanded { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .experience-save-preset { width: 100%; min-height: 2.5rem; margin-top: .48rem; border: 1px dashed color-mix(in srgb, var(--accent) 60%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--accent-glow) 42%, transparent); color: var(--accent); cursor: pointer; font: 500 .72rem/1.2 "IBM Plex Sans", sans-serif; }
+    .experience-save-preset:hover, .experience-save-preset:focus-visible { border-style: solid; background: var(--accent-glow); }
+    .experience-preset:disabled { cursor: default; opacity: .48; }
+    @media (max-width: 700px) {
+      .experience-fonts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .experience-font { min-height: 3.45rem; }
+      .experience-presets-expanded { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .experience-preview-title { font-size: .57rem; }
+      .experience-save-preset { min-height: 2.65rem; border-radius: 10px; }
+    }
+    @media (max-width: 360px) {
+      .experience-font { min-height: 3.2rem; }
+      .experience-font strong { font-size: 1rem; }
+      .experience-font small { font-size: .51rem; }
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 function initialize() {

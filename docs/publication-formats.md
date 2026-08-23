@@ -20,11 +20,18 @@ The manuscript normally lives in one `manuscript/paper.md` file. Use `##` headin
 
 A paper is still plain Markdown, so it remains readable without Bookself and reviewable line by line on GitHub.
 
+### Academic apparatus
+
+Books and papers can keep footnotes, simple citations and bibliography entries,
+figure captions, and numbered equation references in ordinary Markdown. See
+[Academic writing in Bookself](academic-writing.md) for the source conventions
+and their deliberate first-layer limits.
+
 ### Mathematical notation
 
 Papers and books may include LaTeX-style mathematics directly in Markdown. Inline `$...$` / `\(...\)`, display `$$...$$` / `\[...\]`, and common equation environments are rendered in Pages and Scroll while the TeX remains part of the source file.
 
-See [LaTeX math in Bookself](latex.md) for supported delimiters, security/fallback behavior, offline caching, the working example paper, and the boundary between build-free Markdown math and future full `.tex` compilation.
+See [LaTeX math in Bookself](latex.md) for supported delimiters, equation labels/references, security/fallback behavior, offline caching, the working example paper, and the boundary between build-free Markdown math and optional full `.tex` compilation.
 
 ## Images and figures
 
@@ -34,6 +41,13 @@ Reference them from a manuscript with ordinary Markdown:
 
 ```md
 ![A concise description of the figure](../media/figure-1.png)
+```
+
+Add a quoted Markdown image title when the image should have a visible figure
+caption:
+
+```md
+![A concise description](../media/figure-1.png "Figure 1. A concise caption.")
 ```
 
 That is the whole hosting workflow. The image is committed with the publication, versioned by Git, and served by the same GitHub Pages site as the reader. There is no separate image account or asset database.

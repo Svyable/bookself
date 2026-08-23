@@ -114,6 +114,13 @@ function installPicker() {
   const card = document.querySelector('#settingsPanel .settings-card');
   if (!card || document.getElementById('readerAtmosphere')) return;
 
+  if (!document.getElementById('atmosphereCompatibilityStyles')) {
+    const style = document.createElement('style');
+    style.id = 'atmosphereCompatibilityStyles';
+    style.textContent = '.atmosphere-option[data-paper]::before{content:none!important;display:none!important}';
+    document.head.appendChild(style);
+  }
+
   const rows = [...card.querySelectorAll('.setting-row')];
   const paperRow = rows.find((row) => row.querySelector(':scope > span')?.textContent?.trim() === 'Paper');
   const lampRow = rows.find((row) => row.querySelector(':scope > span')?.textContent?.trim() === 'Lamp');

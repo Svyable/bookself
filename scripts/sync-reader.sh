@@ -1,16 +1,7 @@
 #!/bin/sh
-# Copy reader/ from this repo (source of truth) into the personal shelf.
-# Usage: scripts/sync-reader.sh [path-to-shelf]
+# Backward-compatible wrapper. Bookself now syncs the shared reader + desk
+# together so binder and shelf instances stay on one UI revision.
 set -e
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
-DEST=${1:-"$ROOT/../shelf"}
-if [ ! -d "$DEST" ]; then
-  echo "shelf not found at $DEST" >&2
-  exit 1
-fi
-mkdir -p "$DEST/reader"
-rsync -a --delete \
-  --exclude '.DS_Store' \
-  "$ROOT/reader/" "$DEST/reader/"
-echo "Synced reader → $DEST/reader"
-echo "Commit the shelf repo separately. imprint.json is not copied."
+echo "sync-reader.sh is now an alias for sync-ui.sh (reader/ + desk/)." >&2
+exec "$ROOT/scripts/sync-ui.sh" "$@"

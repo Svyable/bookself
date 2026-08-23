@@ -4,110 +4,128 @@ description: >-
   Bootstrap and maintain Bookself — a private binder and a public shelf for
   authors. Use when the user wants to set up Bookself, create binder and
   shelf GitHub repos, promote a book from binder to shelf, unpublish, sync
-  the reader, configure imprint.json, start a bookshelf, or runs /bookself.
+  shared UI, configure imprint.json, start a bookshelf, or runs /bookself.
 ---
 
 # Bookself
 
 Product docs: `docs/bookself.md` in this repository. Writing loop:
-`docs/author-guide.md`. Do not invent a third config format.
+`docs/author-guide.md`. Do not invent a second metadata system.
 
-Bookself is one software tree. GitHub visibility is per repository, so
-authors get two repos: **binder** (private, Pages off) and **shelf**
-(public, Pages on). Unlisted on a public repo is not private.
+Bookself has three roles:
 
-This product repository is the stamp source. Never copy real manuscripts
-out of it. Never copy `books/_TEMPLATE` as a published title. Never
-enable Pages on binder.
+- **platform** — the portable upstream software checkout
+- **binder** — private authoring instance, Pages off
+- **shelf** — public publishing instance, Pages on
+
+The shared product UI is `reader/` + `desk/`. Those directories should be
+identical in platform, binder, and shelf after a sync. Instance identity and
+content are not shared: `books/`, root `README.md`, and `imprint.json` belong
+to each binder/shelf.
+
+GitHub visibility is per repository. Unlisted on a public repo is not private.
+Never enable public Pages on a binder containing unpublished work.
 
 ## bootstrap
 
-Always create both repos. Default names: `binder` and `shelf`. If either
-name exists on the owner, ask. Confirm `gh auth status` can create
-private repos.
+Always create both repos. Default names: `binder` and `shelf`. If either name
+exists on the owner, choose another name with the user.
 
-1. Clone or open `https://github.com/Svyable/bookself` (this tree).
+1. Clone or open the Bookself checkout the user intends to use as upstream.
+   Do not assume its GitHub owner is `Svyable`; forks are valid upstreams.
 2. Pick local siblings, e.g. `../binder` and `../shelf`.
-3. Stamp the software (no `.git`, no example book):
+3. Stamp both instances and pass the actual GitHub owner when known:
 
    ```bash
-   scripts/stamp-instance.sh ../binder binder
-   scripts/stamp-instance.sh ../shelf shelf
+   scripts/stamp-instance.sh ../binder binder OWNER binder
+   scripts/stamp-instance.sh ../shelf shelf OWNER shelf
    ```
 
-4. Write each `imprint.json`: `name`, `github.owner`, `github.repo`,
-   distinct `storagePrefix` (`bnd` / `slf` unless taken). Binder
-   `writeHref` is the binder GitHub URL. Shelf `writeHref` is the shelf
-   GitHub URL. Shelf `forkHref` may point at this product.
-5. In each stamped tree: `git init -b main`, first commit, then:
+   The stamp includes both `reader/` and `desk/` and creates a role-aware
+   `imprint.json`. If owner/repo is not known yet, omit those arguments and
+   edit the generated imprint later.
+4. In each stamped tree: `git init -b main`, first commit, then create repos:
 
    ```bash
    gh repo create OWNER/binder --private --source ../binder --remote origin --push
    gh repo create OWNER/shelf --public --source ../shelf --remote origin --push
    ```
 
-6. Enable Pages on **shelf** only, repo root (not `/docs`):
+5. Enable Pages on **shelf** only, repo root (not `/docs`).
+6. Hand back the three surfaces:
+   - private writing repo: `github.com/OWNER/binder`
+   - public reader: `https://OWNER.github.io/shelf/reader/`
+   - author desk: local binder `/desk/`, public shelf `/desk/`
 
-   ```bash
-   gh api -X POST repos/OWNER/shelf/pages \
-     -f build_type=legacy \
-     -F source[branch]=main \
-     -F source[path]=/
-   ```
+Do not stamp `books/the-example-book`. Do not copy anyone else’s manuscripts.
 
-7. Hand back: write at `github.com/OWNER/binder`, read at
-   `https://OWNER.github.io/shelf/reader/` (org pages:
-   `https://ORG.github.io/shelf/reader/`).
+## write
 
-Do not stamp `books/the-example-book`. Do not copy anyone’s manuscripts.
-Do not turn on Pages for binder.
+On binder, use the same verbs as `AGENTS.md`: start a book from `_TEMPLATE`,
+one chapter per change, and keep every private manuscript listed under the
+binder root **The books** table so the local Desk can discover it.
+
+Preview locally:
+
+```bash
+python3 -m http.server
+```
+
+Then use `/reader/#/b/<slug>/` and `/desk/`. The local Desk reads the private
+instance directly and does not require a GitHub token.
 
 ## promote
 
 Copy one book from binder to shelf, then publish on the shelf.
 
 1. Require a slug. Refuse `_TEMPLATE`.
-2. Say that `OWNER/shelf` is public and the files will be world-readable.
-   Wait for a yes.
+2. State clearly that the shelf is public and the promoted files will be
+   world-readable; require user approval before copying.
 3. From the binder clone:
 
    ```bash
    scripts/promote-book.sh <slug> ../shelf
    ```
 
-4. On the **shelf** copy: set the book README Status to exactly
-   `Published`. Add one row under **The books** in the shelf root
-   README linking `books/<slug>/`. Both are required.
-5. Commit and push the shelf. Confirm Pages will list it after the
-   build. Leave the binder copy in place.
+4. On the shelf copy, set book README Status to exactly `Published` and add
+   one row under **The books** in the shelf root README. Both are required.
+5. Commit and push the shelf. Leave the binder copy in place.
 
-Do not edit `reader/` to add a book.
+Do not edit `reader/` or `desk/` to add a book.
 
 ## unpublish
 
-On the shelf: set Status to anything except `Published`, remove the
-portal README row, commit, push. Deleting the folder is optional and
-separate. Do not delete the binder copy unless asked.
+On the shelf: set Status to anything except `Published`, remove the root
+catalog row, commit, push. Deleting the shelf folder is optional and separate.
+Do not delete the binder copy unless asked.
 
-## sync-reader
+## sync-ui
 
-This product’s `reader/` is the source of truth.
+The platform checkout is source of truth for both shared UI directories:
 
 ```bash
-scripts/sync-reader.sh
+scripts/sync-ui.sh
 ```
 
-Default: shelf, plus binder if `../binder/reader` exists. Then commit
-each updated repo. Do not overwrite `imprint.json`. Do not edit
-`../shelf/reader` directly unless asked for a shelf-only customization.
+With no arguments, sibling `../binder` and `../shelf` are synced when they
+exist. Explicit paths are also supported:
+
+```bash
+scripts/sync-ui.sh /path/to/binder /path/to/shelf
+```
+
+This replaces **only** `reader/` and `desk/`. Never overwrite an instance’s
+`books/`, root `README.md`, or `imprint.json`. Commit each updated instance
+separately. `scripts/sync-reader.sh` is a backward-compatible alias.
 
 ## imprint
 
-Edit that repo’s `imprint.json` only: name, lede, GitHub URL, storage
-prefix, steps. Never put imprint strings into `reader/` JavaScript.
+All instance identity belongs in that repo’s `imprint.json`: role, name,
+lede, GitHub owner/repo, storage prefix, and optional links. Shared
+`reader/` or `desk/` code must not contain a person’s account, shelf URL, or
+private/public instance name.
 
-## write
-
-On binder, same verbs as `AGENTS.md`: start a book from `_TEMPLATE`,
-one chapter per change, preview at `reader/#/b/<slug>/`. Do not add the
-book to a catalog until promote.
+Use `github.owner: "auto"` / `github.repo: "auto"` only when Pages location
+can infer the repository. Private binders should normally store their real
+owner/repo so GitHub edit/history links work while local content remains
+same-origin.

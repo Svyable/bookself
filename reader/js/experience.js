@@ -188,7 +188,15 @@ function updateUi() {
 function applyPrefs({ save = true, repaginate = true } = {}) {
   prefs = normalize(prefs);
   const root = document.documentElement;
-  const modeChanged = root.dataset.readerMode !== prefs.mode;
+  const previousMode = root.dataset.readerMode;
+  const modeChanged = previousMode !== prefs.mode;
+  const leavingScroll = previousMode === 'scroll' && prefs.mode === 'paged';
+
+  if (leavingScroll) {
+    clearTimeout(scrollSyncTimer);
+    updateScrollPosition({ force: true });
+  }
+
   root.dataset.readerFont = prefs.font;
   root.dataset.readerMeasure = prefs.measure;
   root.dataset.readerAlign = prefs.align;
@@ -205,6 +213,13 @@ function applyPrefs({ save = true, repaginate = true } = {}) {
   if (repaginate) scheduleRepaginate();
   refreshScrollMetrics();
   syncReaderMode({ followRoute: modeChanged || !scrollState.blocks.length });
+
+  if (leavingScroll && document.body.dataset.stage === 'read') {
+    // The URL already tracks the visible Scroll block. Re-run the canonical
+    // route once Pages becomes active so the hidden paginated engine lands on
+    // that exact chapter/source offset instead of its last delayed sync point.
+    queueMicrotask(() => window.dispatchEvent(new HashChangeEvent('hashchange')));
+  }
 }
 
 function preset(name) {
@@ -590,41 +605,44 @@ async function buildScrollBook(slug) {
   scrollState.loading = (async () => {
     reader.setAttribute('aria-busy', 'true');
     doc.innerHTML = '<p class="scroll-loading">Preparing continuous view…</p>';
-    const book = await loadScrollBook(slug);
-    scrollState.slug = slug;
-    scrollState.title = book.title || slug;
-    scrollState.blocks = [];
-    scrollState.tops = [];
-    scrollState.activeIndex = -1;
-    doc.innerHTML = '';
+    try {
+      const book = await loadScrollBook(slug);
+      scrollState.slug = slug;
+      scrollState.title = book.title || slug;
+      scrollState.blocks = [];
+      scrollState.tops = [];
+      scrollState.activeIndex = -1;
+      doc.innerHTML = '';
 
-    for (const chapter of book.chapters) {
-      const section = document.createElement('section');
-      section.className = 'scroll-chapter';
-      section.dataset.chapter = chapter.id;
-      section.setAttribute('aria-label', chapter.title);
+      for (const chapter of book.chapters) {
+        const section = document.createElement('section');
+        section.className = 'scroll-chapter';
+        section.dataset.chapter = chapter.id;
+        section.setAttribute('aria-label', chapter.title);
 
-      const blocks = blocksFromMarkdown(chapter.markdown, slug);
-      blocks.forEach((block) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'scroll-block';
-        wrap.dataset.chapter = chapter.id;
-        wrap.dataset.offset = String(block.start);
-        wrap.innerHTML = block.html;
-        section.appendChild(wrap);
-        scrollState.blocks.push({
-          el: wrap,
-          chapter: chapter.id,
-          title: chapter.title,
-          start: block.start,
+        const blocks = blocksFromMarkdown(chapter.markdown, slug);
+        blocks.forEach((block) => {
+          const wrap = document.createElement('div');
+          wrap.className = 'scroll-block';
+          wrap.dataset.chapter = chapter.id;
+          wrap.dataset.offset = String(block.start);
+          wrap.innerHTML = block.html;
+          section.appendChild(wrap);
+          scrollState.blocks.push({
+            el: wrap,
+            chapter: chapter.id,
+            title: chapter.title,
+            start: block.start,
+          });
         });
-      });
-      applyNotes(section, loadNotes(slug), chapter.id);
-      doc.appendChild(section);
-    }
+        applyNotes(section, loadNotes(slug), chapter.id);
+        doc.appendChild(section);
+      }
 
-    reader.removeAttribute('aria-busy');
-    refreshScrollMetrics();
+      refreshScrollMetrics();
+    } finally {
+      reader.removeAttribute('aria-busy');
+    }
   })();
 
   try {
@@ -685,9 +703,9 @@ function syncPagedStateFromScroll() {
   }, 260);
 }
 
-function updateScrollPosition() {
+function updateScrollPosition({ force = false } = {}) {
   const reader = document.getElementById('scrollReader');
-  if (!reader || prefs.mode !== 'scroll' || !scrollState.blocks.length) return;
+  if (!reader || (!force && prefs.mode !== 'scroll') || !scrollState.blocks.length) return;
 
   if (!scrollState.tops.length) refreshScrollMetrics();
   const probe = reader.scrollTop + Math.min(reader.clientHeight * 0.3, 220);
@@ -721,7 +739,7 @@ function updateScrollPosition() {
   const here = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (nextUrl !== here && !programmaticScroll) {
     history.replaceState(null, '', nextUrl);
-    syncPagedStateFromScroll();
+    if (!force) syncPagedStateFromScroll();
   }
 }
 
@@ -740,6 +758,9 @@ async function syncReaderMode({ followRoute = true } = {}) {
   const active = prefs.mode === 'scroll' && document.body.dataset.stage === 'read' && route.view === 'read';
   reader.hidden = !active;
   if (!active) {
+    const pop = document.getElementById('selPop');
+    if (pop) pop.hidden = true;
+    lastScrollSelection = null;
     setScrollSelectionActions(false);
     return;
   }
@@ -751,6 +772,7 @@ async function syncReaderMode({ followRoute = true } = {}) {
   } catch (error) {
     console.error('Could not prepare continuous reading view', error);
     reader.hidden = false;
+    reader.removeAttribute('aria-busy');
     const doc = document.getElementById('scrollDocument');
     if (doc) doc.innerHTML = '<p class="scroll-loading">Continuous view could not be prepared. Switch back to Pages to keep reading.</p>';
   }
@@ -941,10 +963,14 @@ function scrollByReadingStep(direction) {
   });
 }
 
+function keyboardControl(target) {
+  return !!target?.closest?.('input, textarea, select, button, a, [contenteditable="true"]');
+}
+
 function bindKeyboard() {
   document.addEventListener('keydown', (event) => {
-    if (event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
-    if (document.body.dataset.stage !== 'read') return;
+    if (keyboardControl(event.target)) return;
+    if (document.body.dataset.stage !== 'read' || overlaysOpen()) return;
 
     if (event.key === '+' || event.key === '=') {
       event.preventDefault();
@@ -964,7 +990,7 @@ function bindKeyboard() {
 
   document.addEventListener('keydown', (event) => {
     if (prefs.mode !== 'scroll' || document.body.dataset.stage !== 'read') return;
-    if (event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
+    if (keyboardControl(event.target) || overlaysOpen()) return;
 
     if (['ArrowLeft', 'ArrowRight'].includes(event.key)) {
       event.preventDefault();
@@ -1067,7 +1093,7 @@ function initialize() {
 }
 
 function waitForImprint(attempt = 0) {
-  if (window.__IMPRINT || attempt >= 20) {
+  if (window.__IMPRINT || attempt >= 100) {
     initialize();
     return;
   }

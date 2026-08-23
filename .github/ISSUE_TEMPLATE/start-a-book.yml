@@ -1,0 +1,97 @@
+name: Start a book
+description: Begin a Bookself manuscript — no Git or folder-copy knowledge required
+title: "[Start a book]: "
+labels: ["proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You bring the book. We can help with the computer-shaped parts.
+
+        This form is enough to scaffold a new Bookself book for a human or
+        connected agent to finish setting up. You do not need to invent a
+        folder name, know Markdown, or know what a branch is.
+
+        **Privacy note:** issues have the visibility of this repository. If
+        this is a public repo, this form is public. Do not paste private
+        manuscript text here. A private Binder is the right place for drafts
+        that must stay private.
+
+  - type: input
+    id: title
+    attributes:
+      label: Working title
+      description: It can change later. Books are famously inconsiderate about titles.
+      placeholder: e.g. The Long Way Home
+    validations:
+      required: true
+
+  - type: input
+    id: authors
+    attributes:
+      label: Author or authors
+      description: Names or GitHub usernames are both fine.
+      placeholder: e.g. Ada Writer
+    validations:
+      required: true
+
+  - type: textarea
+    id: premise
+    attributes:
+      label: What is this book trying to do?
+      description: One paragraph is plenty. A messy paragraph is still a paragraph.
+      placeholder: This book is about…
+    validations:
+      required: true
+
+  - type: textarea
+    id: audience
+    attributes:
+      label: Who do you imagine reading it?
+      description: No market-analysis costume required. Just describe the reader you have in mind.
+      placeholder: Someone who…
+    validations:
+      required: false
+
+  - type: textarea
+    id: chapters
+    attributes:
+      label: Any chapter ideas yet?
+      description: Optional. A rough list, fragments, or “absolutely no idea yet” are all acceptable.
+      placeholder: |
+        Opening
+        The part where everything goes wrong
+        A surprisingly useful appendix
+    validations:
+      required: false
+
+  - type: input
+    id: slug
+    attributes:
+      label: Preferred folder name, if you care
+      description: Optional. Leave blank and a tidy lowercase-hyphen name can be made from the title.
+      placeholder: the-long-way-home
+    validations:
+      required: false
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where are you in the writing lifecycle?
+      description: This helps the setup meet you where you are.
+      options:
+        - I have an idea and need a place to begin
+        - I have notes or an outline
+        - I already have draft chapters elsewhere
+        - I am revising an existing manuscript
+        - I am preparing something for publication
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: understanding
+    attributes:
+      label: Tiny expectations check
+      options:
+        - label: I understand this form starts the setup; the actual manuscript lives in book files, not in this issue.
+          required: true

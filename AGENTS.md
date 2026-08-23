@@ -12,25 +12,40 @@ Rules for AI agents working in this repository.
   table of contents and the Chapters count in the same change.
 - When you add a book, add its slug to the Book dropdown in
   `.github/ISSUE_TEMPLATE/chapter-feedback.yml` in the same change.
-- Do not put book prose in `reader/`. The reader fetches Markdown from
-  `books/<slug>/`. Authors and agents only edit Markdown and `media/`.
+- Do not put book prose in `reader/` or `desk/`. Authors and agents edit
+  Markdown under `books/<slug>/`.
 
-## Reader (this repo + Svyable Shelf)
+## Architecture: platform, binder, shelf
 
-`reader/` is the Kindle-style GUI. **This repository is the source of
-truth.** The personal imprint (`Svyable/shelf`) copies that folder.
+Bookself deliberately separates portable software from user instances:
 
-After changing anything under `reader/`:
+- **platform** — this repository; source of truth for shared software,
+  templates, docs, and setup tooling
+- **binder** — private authoring instance; unpublished manuscripts live here
+- **shelf** — public publishing instance; published manuscripts live here
 
-    scripts/sync-reader.sh
+Shared UI consists of **both** `reader/` and `desk/`. Those directories must
+remain byte-for-byte aligned across platform, binder, and shelf after sync.
 
-Then commit **both** `bookself` and `shelf`. Do not edit
-`../shelf/reader` directly unless the user asked for a shelf-only
-customization.
+Instance-owned files are never overwritten by UI sync:
+- `books/`
+- root `README.md`
+- `imprint.json`
+- instance-specific collaboration/configuration files
 
-Imprint copy (name, GitHub URL, storage prefix) lives in each repo's
-`imprint.json`, not in `reader/`. `scripts/sync-reader.sh` does not
-overwrite `imprint.json`.
+After changing anything under `reader/` or `desk/`:
+
+```bash
+scripts/sync-ui.sh
+```
+
+With no arguments, sibling `../binder` and `../shelf` are synced when present.
+Explicit destination paths are also accepted. Commit each instance separately.
+`scripts/sync-reader.sh` is only a compatibility alias for `sync-ui.sh`.
+
+Do not hard-code a person, organization, repository name, shelf URL, or binder
+URL into shared `reader/` or `desk/` code. Instance identity belongs in
+`imprint.json`. Platform defaults must remain portable.
 
 ## Voice
 
@@ -48,15 +63,14 @@ overwrite `imprint.json`.
   front matter.
 - Follow existing naming: `books/<slug>/`, `chNN-slug.md`, `front-matter.md`,
   `back-matter.md`.
-- Images live in that book's `media/` folder and are referenced with
-  relative links (`![alt](../media/figure-1.png)`).
+- Images live in that book's `media/` folder and are referenced with relative
+  links (`![alt](../media/figure-1.png)`).
 
 ## Do not
 
 - Do not touch `LICENSE` or change licensing without the repository owner's
   explicit approval.
-- Do not reformat a file wholesale (line wrapping, heading levels, quote
-  style) as a drive-by.
+- Do not reformat a file wholesale as a drive-by.
 - Do not add a build step, CODEOWNERS, or branch protection unless a human
   asked for that by name.
 - Do not change GitHub Pages source away from the repository root, or add a
@@ -66,39 +80,38 @@ overwrite `imprint.json`.
 
 ## Verbs (author and agent)
 
-These are the whole public lifecycle. Each is Markdown (and maybe `media/`).
+These are the public lifecycle. Each manuscript change is Markdown (and maybe
+`media/`).
 
 **Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
-authors, `Status: Drafting`. Add the slug to the chapter-feedback dropdown.
-Do not add the book to the portal README catalog yet.
+authors, `Status: Drafting`. Add the slug to the chapter-feedback dropdown in
+platform-style repositories when that template is present. In a private
+binder, also list the manuscript under root **The books** so the local Desk can
+discover it.
 
-**Write / edit.** One chapter file per change. If you add, rename, or remove
-a chapter, update that book's README TOC and Chapters count in the same
-change.
+**Write / edit.** One chapter file per change. If you add, rename, or remove a
+chapter, update that book's README TOC and Chapters count in the same change.
 
-**Preview.** After a push, the unlisted reader URL is
-`reader/#/b/<slug>/`. It works while Drafting. It does not appear on the
-shelf.
+**Preview.** In a private binder, serve locally (`python3 -m http.server`) and
+open `reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not make a
+private binder public just to preview it.
 
-**Publish.** In one change set: set the book README Status to the exact
-string `Published`, and add one row to the portal README table under
-“The books” linking `books/<slug>/`. Both are required. Lead author merges.
-Do this on the **public shelf** repo. Unpublished manuscripts belong in
-a **private binder** — see `docs/bookself.md`. Do not copy secret books
-into a public repo to “preview” them.
+**Publish.** On the public shelf, in one change set: set the book README Status
+to the exact string `Published`, and add one row to the shelf root README under
+**The books** linking `books/<slug>/`. Both are required.
 
-**Promote (Bookself).** Copy `books/<slug>/` from the private binder into
-the public shelf (`scripts/promote-book.sh <slug> [path-to-shelf]`),
-then Publish on the shelf. Do not edit `reader/` to add a book.
+**Promote.** Copy `books/<slug>/` from the private binder into the public shelf
+(`scripts/promote-book.sh <slug> [path-to-shelf]`), then Publish on the shelf.
+Do not edit shared UI to add a book.
 
-**Unpublish.** Set Status to anything except `Published` and remove the
-portal README row.
+**Unpublish.** On the shelf, set Status to anything except `Published` and
+remove the root catalog row.
 
 **Revise a published book.** Edit the Markdown and push. The reader fetches
 live files. Do not bump a version stamp.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
-**Series**, **Tags**, **Edition**, **Language**, **ISBN**. Series groups
-volumes on the public shelf. Tags are comma-separated. Wiki links
-`[[ch03-publishing|label]]` in chapter Markdown become in-reader jumps.
-Do not invent a config file for these.
+**Series**, **Tags**, **Edition**, **Language**, **ISBN**. Series groups volumes
+on the public shelf. Tags are comma-separated. Wiki links
+`[[ch03-publishing|label]]` in chapter Markdown become in-reader jumps. Do not
+invent another config file for these.

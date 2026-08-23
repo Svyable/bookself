@@ -279,7 +279,39 @@
   }
 
   .experience-mode {
-    min-height: 3.6rem;
+    min-height: 3rem;
+    border-radius: 10px;
+  }
+
+  .experience-mode strong {
+    font-size: 0.74rem;
+  }
+
+  .experience-mode small {
+    font-size: 0.56rem;
+  }
+
+  /* Keep the primary sheet action reachable while its body scrolls. The DOM
+     keeps the accessible label “Close”; phones present the friendlier “Done”. */
+  .settings-card.experience-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .experience-card .stats-close {
+    order: -2;
+    position: sticky;
+    top: 0.72rem;
+    align-self: flex-end;
+    flex: 0 0 auto;
+    margin: 0 0 -2.25rem auto;
+    font-size: 0;
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--bg-primary) 32%, transparent);
+  }
+
+  .experience-card .stats-close::after {
+    content: "Done";
+    font: 600 0.72rem/1 "IBM Plex Sans", sans-serif;
   }
 
   .scroll-document {

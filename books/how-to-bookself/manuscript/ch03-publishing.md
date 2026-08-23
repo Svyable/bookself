@@ -1,15 +1,23 @@
 # Publishing
 
-Drafting books stay off the public shelf. They are still in the repository — anyone who can open GitHub can read the Markdown — but the reader will not list them. You can still open a book by its address: `/reader/#/b/your-slug/`. That is preview. Share it with a friend. It will not appear next to published volumes.
+A published Bookself book is not a private draft with a visibility switch flipped. It is a separate public snapshot.
 
-Publishing is two edits, together.
+That distinction is the reason Bookself has both a Binder and a Shelf. The Binder can contain the awkward middle of a book: abandoned paragraphs, half-rewritten chapters, notes that only make sense this week. The Shelf should be calmer. It holds the edition that readers are meant to encounter while the next one is still being worked out somewhere private.
 
-First, in the book README, set Status to the exact word Published. Not Done. Not Live. Published.
+The repositories do not point at each other. Shelf does not mount Binder, fetch from it in the browser, or hold a magic reference to private files. When an edition is ready, Bookself copies the committed publication from Binder into a local Shelf checkout. After that, the public copy has its own Git history and can remain unchanged for as long as the next revision takes.
 
-Second, add a row to the portal README under The books, linking `books/your-slug/`. The reader enumerates that list, then double-checks Status. A leftover catalog line cannot leak a draft. A Status flip with no catalog line cannot put a book on the shelf.
+The normal release begins with a commit in Binder. That matters because “whatever happens to be on this laptop right now” is a poor definition of an edition. The release command refuses uncommitted publication changes, so the source of a public release is an actual Git snapshot that can be found again.
 
-The lead author named on the book merges. Then you wait for the public site to catch the push. There is no export button. The reader fetches the Markdown on each visit, so a later typo fix is a later visit.
+Then run `scripts/release-book.sh your-slug ../shelf` from Binder. The command verifies that it is moving in the right direction, from a Binder to a Shelf. It checks that the Shelf files it is about to replace are clean. It stages the new publication, changes only the Shelf copy's status to `Published`, adds or updates the public catalog row, and verifies that the publication files match the committed Binder snapshot. If something goes wrong during replacement, it restores the previous Shelf files rather than leaving half an edition behind.
 
-To take a book off the shelf, reverse the two edits. The files can stay. Unlisted preview still works. Deleting the folder is a different, larger decision.
+And then it stops.
 
-That is the next-generation part, if there is one: the manuscript is the book. The GUI is a lamp you set it under.
+There is no automatic push hidden at the end and no CI job required to finish the thought. You inspect the Shelf diff. You can put that diff through a pull request, commit it with a desktop Git client, or use the command line. Bookself's concern is that the public change is explicit and reviewable, not which Git interface you prefer.
+
+Once that Shelf commit reaches the branch GitHub Pages is serving, the Reader fetches the repository files directly. There is no book export artifact and no private-repository Actions build that has to succeed first. The Markdown, media, Reader, and Git history are already the publication system.
+
+Revisions follow the same path. Leave the released Shelf edition alone, return to Binder, and work on the next version privately. When it is ready, release another committed snapshot. A public proof can exist when you deliberately want one, but an unlisted route in a public repository is still public; obscurity is not privacy.
+
+Recovery is pleasantly ordinary too. Because Shelf has its own history, an earlier public edition can be restored from the exact tree and blobs that were previously checked in. The book you released does not depend on the current state of Binder, a vanished build artifact, or an automation service remembering what happened.
+
+That is the useful reduction: write privately, release deliberately, and let the public repository mean what it says.

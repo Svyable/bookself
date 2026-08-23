@@ -30,6 +30,24 @@ That is enough to start.
 
 ## If there is no book yet
 
+There are two friendly paths.
+
+### Easiest: ask to start one
+
+Open **Issues → New issue → Start a book**.
+
+The form asks for the working title, author, premise, and whatever chapter ideas
+you already have. You may leave the computer-shaped details, such as the folder
+name, to whoever or whatever is helping scaffold the book.
+
+This is especially useful in a shared Binder or when a connected agent is doing
+the setup work.
+
+**Privacy note:** an issue has the same visibility as its repository. Do not put
+private manuscript text in a public issue.
+
+### Hands-on: use the blank book
+
 Find `books/_TEMPLATE/`. That folder is the blank book.
 
 Copy it to a new folder with a simple name such as:

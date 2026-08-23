@@ -188,12 +188,17 @@ Those are examples, not identities baked into the shared software.
 | Publication | Format |
 |---|---|
 | [How to Bookself](books/how-to-bookself/) | Book |
+| [Bookself 101](books/bookself-101/) | Academic textbook example |
 
-The platform reader uses this short practical guide as its working demo. Its
-own files demonstrate the folder, Reader, Binder/Shelf, and release ideas it
-describes. Real shelves can list books and whitepapers together; a publication
-with `Format: Whitepaper` keeps the same folder-and-Markdown workflow and
-receives paper labeling in the reader.
+**How to Bookself** is the short practical guide. **Bookself 101** demonstrates
+how a professor might structure a course text with learning objectives, key
+terms, discussion questions, labs, semester editions, and a stable public
+reading surface. Both are ordinary Bookself publications rather than special
+Reader fixtures.
+
+Real shelves can list books and whitepapers together; a publication with
+`Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives
+paper labeling in the reader.
 
 ## The web shelf
 

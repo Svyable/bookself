@@ -16,6 +16,7 @@ body:
       description: Which book is this about?
       options:
         - how-to-bookself
+        - bookself-101
         - the-example-paper
         - _TEMPLATE
     validations:

@@ -187,7 +187,7 @@ Those are examples, not identities baked into the shared software.
 
 | Publication | Format |
 |---|---|
-| [The Example Book](books/the-example-book/) | Book |
+| [The Bookself Book](books/the-example-book/) | Book |
 
 The platform reader uses this tiny catalog as its working demo. The example
 book is deliberately a book **about Bookself itself**: its own files demonstrate

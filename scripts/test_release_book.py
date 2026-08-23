@@ -93,19 +93,23 @@ class ReleaseTests(unittest.TestCase):
 
     def test_release_replaces_snapshot_and_preserves_binder(self):
         source_before = (self.binder / "books" / "my-book" / "README.md").read_text()
+        expected_shelf_readme = release_book.set_status_published(source_before)
         result = release_book.prepare_release(self.binder, self.shelf, "my-book")
         self.assertEqual(result["catalog_action"], "unchanged")
         self.assertEqual(
             (self.binder / "books" / "my-book" / "README.md").read_text(),
             source_before,
         )
-        shelf_readme = (self.shelf / "books" / "my-book" / "README.md").read_text()
-        self.assertIn("| **Status** | Published |", shelf_readme)
+        self.assertEqual(
+            (self.shelf / "books" / "my-book" / "README.md").read_text(),
+            expected_shelf_readme,
+        )
         self.assertEqual(
             (self.shelf / "books" / "my-book" / "manuscript" / "ch01.md").read_text(),
             "# Chapter 1\n\nnew edition\n",
         )
         self.assertFalse((self.shelf / "books" / "my-book" / "old-only.txt").exists())
+        self.assertFalse(list((self.shelf / "books").glob(".my-book.bookself-*")))
 
     def test_dirty_binder_refused(self):
         path = self.binder / "books" / "my-book" / "manuscript" / "ch01.md"
@@ -136,6 +140,24 @@ class ReleaseTests(unittest.TestCase):
             release_book.ReleaseError, "slug must use lowercase"
         ):
             release_book.prepare_release(self.binder, self.shelf, "../my-book")
+
+    def test_published_binder_refused(self):
+        path = self.binder / "books" / "my-book" / "README.md"
+        path.write_text(path.read_text().replace("Revision in progress", "Published"))
+        commit_all(self.binder, "published binder state")
+        with self.assertRaisesRegex(
+            release_book.ReleaseError, "Binder copy is already marked Published"
+        ):
+            release_book.prepare_release(self.binder, self.shelf, "my-book")
+
+    def test_leftover_transaction_refused(self):
+        leftover = self.shelf / "books" / ".my-book.bookself-stage-interrupted"
+        leftover.mkdir()
+        (leftover / "README.md").write_text("partial")
+        with self.assertRaisesRegex(
+            release_book.ReleaseError, "leftover Bookself release transaction paths"
+        ):
+            release_book.prepare_release(self.binder, self.shelf, "my-book")
 
     def test_catalog_row_added(self):
         (self.shelf / "README.md").write_text(

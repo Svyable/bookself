@@ -268,3 +268,7 @@ installPicker();
 bindPresetBridge();
 watchTheme();
 window.addEventListener('load', syncThemeUi, { once: true });
+
+import('./navigation.js').catch((error) => {
+  console.warn('Navigation enhancements could not be loaded', error);
+});

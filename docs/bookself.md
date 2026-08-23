@@ -8,7 +8,7 @@ The separation is intentional:
 |---|---|---|---|
 | **Purpose** | Software source of truth | Private writing | Public publishing |
 | **Visibility** | Public upstream/fork | Private | Public |
-| **Pages** | Optional demo | Off for unpublished work | On from repo root |
+| **Pages** | Optional demo | Off for unpublished work | On from repo root, no build required |
 | **Shared UI** | `reader/` + `desk/` | synced copy | synced copy |
 | **Books** | examples/templates only | drafts and working manuscripts | released manuscripts |
 | **Identity** | neutral/demo `imprint.json` | binder `imprint.json` | shelf `imprint.json` |
@@ -48,6 +48,38 @@ The easy lifecycle rule is:
 > **Write the next edition in Binder. Keep the current edition on Shelf until the replacement is ready.**
 
 See [revisions.md](revisions.md) for the release and rollback model.
+
+## Local-first publishing contract
+
+Bookself's complete authoring and publishing lifecycle must work **without CI/CD**. In particular, a private Binder must remain fully usable with zero GitHub Actions minutes.
+
+The required path is intentionally ordinary:
+
+```text
+Markdown + media
+      |
+      v
+local Git commits
+      |
+      v
+local Reader / Desk
+      |
+      | python3 scripts/release-book.py
+      v
+local Shelf checkout
+      |
+      v
+reviewable Git diff / commit / push
+      |
+      v
+GitHub Pages serves the public Shelf files directly
+```
+
+The release helper uses Python's standard library and local Git. It does not call the GitHub API, start a hosted runner, produce a build artifact, or require a GitHub Actions workflow.
+
+Pull requests, CI checks, hosted automation, and Actions can still be useful around the platform project or an individual publisher's process. They are **optional conveniences**, not part of Bookself's publishing contract. A publication must still be writable, previewable, releasable, recoverable, and readable when those services are absent or their budget is exhausted.
+
+GitHub Pages is the public static delivery surface for a Shelf. Bookself should keep that path no-build by default rather than introducing an Actions-based Pages build merely to deploy Markdown and the shared Reader.
 
 ## What is shared and what is not
 
@@ -94,7 +126,7 @@ Without an agent:
 4. Create the shelf repository as **public** and enable GitHub Pages from the repository root.
 5. Customize each generated `imprint.json`. The stamp already supplies role, safe defaults, and GitHub repo identity when owner/repo arguments are given.
 
-A stamped instance already includes both the Reader and Publishing Desk.
+A stamped instance already includes both the Reader and Publishing Desk. No CI workflow is required to make either one work.
 
 ## Shared UI upgrades
 
@@ -131,7 +163,7 @@ Commit the binder and shelf updates separately so each instance has its own clea
    - `/reader/#/b/your-title/` for reading
    - `/desk/` for readiness and chapter structure
 
-The Desk reads the local binder directly. It does not need a GitHub token to inspect private manuscripts when served from the binder checkout.
+The Desk reads the local binder directly. It does not need a GitHub token to inspect private manuscripts when served from the binder checkout. It also does not need a private-repository Actions run.
 
 ## Release (binder → shelf)
 
@@ -141,11 +173,11 @@ When a manuscript is meant to become public, commit the Binder publication first
 scripts/release-book.sh your-title ../shelf
 ```
 
-The release command refuses to proceed if the publication has uncommitted Binder changes, if the destination Shelf release paths are dirty, or if the source/destination roles are wrong.
+The release command runs locally. It refuses to proceed if the publication has uncommitted Binder changes, if the destination Shelf release paths are dirty, or if the source/destination roles are wrong.
 
 It prepares a replacement Shelf snapshot, sets the Shelf copy to `Status: Published`, adds or updates the root **The books** row, verifies the copied publication files against the committed Binder snapshot, and stops before commit or push.
 
-Review the Shelf diff and land it through the normal Shelf branch / pull-request workflow. Until that Shelf change lands, readers keep seeing the previous released edition.
+Review the Shelf diff and commit/push it with your normal Git workflow. A pull request is a useful review boundary, but Bookself itself does not require one. Until the Shelf change lands on the deployed branch, readers keep seeing the previous released edition.
 
 `scripts/promote-book.sh` remains a lower-level copy-only command. It does not publish, verify a release transaction, or create a live relationship between Binder and Shelf.
 
@@ -189,6 +221,7 @@ GitHub Pages instances may use `"auto"` owner/repo values and let the browser in
 ## What not to expect
 
 - The public Shelf does not need access to the private Binder.
+- Private Binder publishing does not require GitHub Actions or CI minutes.
 - The reader does not password-gate public repositories.
 - The browser Desk never asks for a GitHub token.
 - Remote Desk inspection works for public repositories; private binders use same-origin local instance mode.

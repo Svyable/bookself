@@ -10,4 +10,4 @@ This sample exists so authors and agents can see the whole loop — write, previ
 
 ## About the Author
 
-Svyable maintains openbookbinder. Real books in this binder remain copyright of their authors.
+Svyable maintains bookself. Real books in this binder remain copyright of their authors.

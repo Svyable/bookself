@@ -24,7 +24,7 @@ After changing anything under `reader/`:
 
     scripts/sync-reader.sh
 
-Then commit **both** `openbookbinder` and `shelf`. Do not edit
+Then commit **both** `bookself` and `shelf`. Do not edit
 `../shelf/reader` directly unless the user asked for a shelf-only
 customization.
 
@@ -83,13 +83,13 @@ shelf.
 **Publish.** In one change set: set the book README Status to the exact
 string `Published`, and add one row to the portal README table under
 “The books” linking `books/<slug>/`. Both are required. Lead author merges.
-Do this on the **public library** repo. Unpublished manuscripts belong in
-a **private workshop** — see `docs/bookself.md`. Do not copy secret books
+Do this on the **public shelf** repo. Unpublished manuscripts belong in
+a **private binder** — see `docs/bookself.md`. Do not copy secret books
 into a public repo to “preview” them.
 
-**Promote (Bookself).** Copy `books/<slug>/` from the private workshop into
-the public library (`scripts/promote-book.sh <slug> [path-to-library]`),
-then Publish on the library. Do not edit `reader/` to add a book.
+**Promote (Bookself).** Copy `books/<slug>/` from the private binder into
+the public shelf (`scripts/promote-book.sh <slug> [path-to-shelf]`),
+then Publish on the shelf. Do not edit `reader/` to add a book.
 
 **Unpublish.** Set Status to anything except `Published` and remove the
 portal README row.

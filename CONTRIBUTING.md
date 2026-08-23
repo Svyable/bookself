@@ -55,4 +55,4 @@ introduces `books/<slug>/`. Details are in [the editor guide](docs/editor-guide.
 
 Unlisted drafts on a public repository are not private. Authors and
 publishers who need a closed studio run [Bookself](docs/bookself.md): a
-private workshop and a public library, both using this software.
+private binder and a public shelf, both using this software.

@@ -1,16 +1,16 @@
 #!/bin/sh
-# Promote a book from this repo into a public library (Bookself).
-# Usage: scripts/promote-book.sh <slug> [path-to-library]
-# Default library: ../shelf
-# Does not set Status or edit the library README — those two edits are
-# Publish, done on the library after this copy.
+# Promote a book from this binder into your public shelf (Bookself).
+# Usage: scripts/promote-book.sh <slug> [path-to-shelf]
+# Default shelf: ../shelf
+# Does not set Status or edit the shelf README — those two edits are
+# Publish, done on the shelf after this copy.
 set -e
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 SLUG=${1:-}
 DEST=${2:-"$ROOT/../shelf"}
 
 if [ -z "$SLUG" ] || [ "$SLUG" = "-h" ] || [ "$SLUG" = "--help" ]; then
-  echo "usage: scripts/promote-book.sh <slug> [path-to-library]" >&2
+  echo "usage: scripts/promote-book.sh <slug> [path-to-shelf]" >&2
   exit 1
 fi
 if [ "$SLUG" = "_TEMPLATE" ]; then
@@ -24,7 +24,7 @@ if [ ! -d "$SRC" ]; then
   exit 1
 fi
 if [ ! -d "$DEST" ]; then
-  echo "library not found at $DEST" >&2
+  echo "shelf not found at $DEST" >&2
   exit 1
 fi
 
@@ -34,5 +34,5 @@ rsync -a --delete \
   "$SRC/" "$DEST/books/$SLUG/"
 
 echo "Copied $SLUG → $DEST/books/$SLUG"
-echo "On the library: set Status to Published, add a README row, commit, push."
+echo "On the shelf: set Status to Published, add a README row, commit, push."
 echo "See docs/bookself.md"

@@ -1,4 +1,4 @@
-# openbookbinder
+# bookself
 
 **Open-source software for a Git-native bookshelf.**
 
@@ -8,7 +8,7 @@ Kindle-style reader. No build step. No WordPress. No lock-in.
 Writing happens on GitHub. Reading happens in the [reader](reader/).
 
 **[Bookself](docs/bookself.md)** is the full author and publisher workflow:
-a **private workshop** for drafts and a **public library** for what the
+a **private binder** for drafts and a **public shelf** for what the
 street may read. This repo is only the engine. Unlisted files on a public
 repo are not secret — privacy is a private GitHub repository.
 
@@ -17,9 +17,9 @@ repo are not secret — privacy is a private GitHub repository.
 | Role | Where |
 |---|---|
 | **Software** | this repository |
-| **Read (library)** | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
+| **Read (shelf)** | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
 | **Public books** | [github.com/Svyable/shelf](https://github.com/Svyable/shelf) |
-| **Private workshop** | a private binder, not this repo |
+| **Private drafts (binder)** | a private repo stamped from here, not this one |
 
 Start your own: follow [Bookself](docs/bookself.md), or fork this repo for a
 single public shelf. Copy `books/_TEMPLATE/`, set Status to `Published`, add

@@ -39,8 +39,8 @@ folder.
 ## Publishing and the public catalog
 
 For a house that keeps drafts off the street, see [Bookself](bookself.md):
-private workshop, public library. Promoting a book is copy-the-folder, then
-the two edits below **on the library**.
+private binder, public shelf. Promoting a book is copy-the-folder, then
+the two edits below **on the shelf**.
 
 The public reader lists a book only when **both** are true:
 

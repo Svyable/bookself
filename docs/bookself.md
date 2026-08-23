@@ -1,89 +1,92 @@
 # Bookself
 
-**A full workflow for authors and publishers: a private workshop and a
-public library, both running [Open Book Binder](https://github.com/Svyable/openbookbinder).**
+**Bookself gives you a binder and a shelf.**
 
-Open Book Binder is the software (Markdown books + a Kindle-style reader).
-Bookself is how you *use* it when some work is secret and some work is
-for the street.
+This repository is the software: Markdown books and a Kindle-style reader.
+An agent running the [Bookself skill](../skills/bookself/SKILL.md) stamps
+that software onto two GitHub repositories:
 
-Unlisted drafts on a **public** repo are not private. Anyone with the
-files — or `reader/#/b/your-slug/` — can open them. Real privacy is a
-**private GitHub repository**.
-
-## The two shelves
-
-| | Workshop | Library |
+| | Binder | Shelf |
 |---|---|---|
 | **What it is** | Where you write | Where the public reads |
-| **GitHub** | Private repo | Public repo |
-| **Pages** | Off, or only for invited people | On — the reader URL |
+| **GitHub** | Private repo, default name `binder` | Public repo, default name `shelf` |
+| **Pages** | Off | On, from the repo root — the reader URL |
 | **Status** | `Drafting` until you promote | `Published` + a row in the root README |
 | **Who sees the files** | You and people you invite | Anyone |
 
-You can run only a workshop (closed studio), only a library (write in
-public), or **both** — that is Bookself.
+Visibility is per repository. Unlisted drafts on a **public** repo are not
+private. Anyone with the files — or `reader/#/b/your-slug/` — can open them.
 
-Svyable’s pair:
+Do not write your manuscripts in *this* repository. It is the product, plus
+one example book so the software demo has something to show.
 
-| Role | Repo | Reader |
-|---|---|---|
-| Software | [openbookbinder](https://github.com/Svyable/openbookbinder) | demo only |
-| Workshop | [binder](https://github.com/Svyable/binder) (private) | none required |
-| Library | [shelf](https://github.com/Svyable/shelf) | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
+## A live Bookself
+
+| Role | Where |
+|---|---|
+| Software | [Svyable/bookself](https://github.com/Svyable/bookself) |
+| Software demo | [svyable.github.io/bookself/reader](https://svyable.github.io/bookself/reader/) |
+| Binder (private) | `Svyable/binder` |
+| Shelf (public) | [Svyable/shelf](https://github.com/Svyable/shelf) |
+| Books demo | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
 
 ## Start
 
-1. Fork or copy [Open Book Binder](https://github.com/Svyable/openbookbinder) **twice** (or once, if you only need one mode).
-2. Name them however you like. The idea is *workshop* and *library*.
-3. Make the workshop **private**. Invite co-authors there.
-4. Keep the library **public**. Enable GitHub Pages from the repo root
+Give this repository to an agent and say **set up Bookself**. The skill
+always creates both repos. If `binder` or `shelf` is taken on that
+account, it asks for a name.
+
+Without an agent:
+
+1. Copy this tree twice (`scripts/stamp-instance.sh`).
+2. Name them `binder` and `shelf`.
+3. Make the binder **private**. Invite co-authors there.
+4. Keep the shelf **public**. Enable GitHub Pages from the repo root
    (not `/docs`) so `/reader/` works.
 5. In each repo, set `imprint.json` (the name on the reader, the GitHub
    URL, a storage prefix so prefs do not collide).
 
-The reader GUI stays identical. Pull upgrades from Open Book Binder with
-`scripts/sync-reader.sh` into each shelf you maintain.
+The reader GUI stays identical. Pull upgrades from this product repo with
+`scripts/sync-reader.sh`.
 
-## Write (workshop)
+## Write (binder)
 
 Same as the [author guide](author-guide.md), on the private repo:
 
 1. Copy `books/_TEMPLATE/` to `books/your-title/`.
 2. Pencil, write, commit. One chapter at a time.
-3. Optional: turn on Pages later, or preview locally
-   (`python3 -m http.server` → `/reader/#/b/your-title/`).
+3. Preview locally (`python3 -m http.server` →
+   `/reader/#/b/your-title/`). Do not turn on Pages for the binder.
 
-Do **not** put unpublished manuscripts in the public library repo.
+Do **not** put unpublished manuscripts in the public shelf repo.
 
-## Promote (workshop → library)
+## Promote (binder → shelf)
 
 When a book is meant to be read:
 
-1. Copy the book folder into the library:
+1. Say out loud that the destination is public, then copy the folder:
 
    ```bash
-   scripts/promote-book.sh your-title ../library
-   # or: cp -R books/your-title ../library/books/your-title
+   scripts/promote-book.sh your-title ../shelf
    ```
 
-2. In the library copy, set **Status** to exactly `Published`.
-3. Add a row under **The books** in the library’s root `README.md`
+2. In the shelf copy, set **Status** to exactly `Published`.
+3. Add a row under **The books** in the shelf’s root `README.md`
    linking `books/your-title/`.
-4. Commit and push the library. After Pages builds, the volume is on
+4. Commit and push the shelf. After Pages builds, the volume is on
    the public shelf.
 
-Leave the workshop copy in place. That is still your working draft
+Leave the binder copy in place. That is still your working draft
 history if you want it.
 
-To take a book down, unpublish on the **library** (Status not
+To take a book down, unpublish on the **shelf** (Status not
 `Published`, remove the README row). Deleting the folder is optional.
 
 ## Revise
 
-- **Quiet draft:** keep writing in the workshop. Promote again when the
+- **Quiet draft:** keep writing in the binder. Promote again when the
   new text should replace the public folder.
-- **Live edition:** edit the library copy and push. The reader fetches
+- **Live edition:** edit the shelf copy and push. The reader fetches
   Markdown on the next refresh. No version stamp required.
 
 Pick one per book so the two folders do not silently drift. The lead
@@ -91,12 +94,12 @@ author owns that choice.
 
 ## Publishers
 
-A house can run one workshop (many authors, private) and one library
-(the imprint’s public shelf). Optional **Publisher** and **Series** rows
+A house can run one binder (many authors, private) and one shelf
+(the imprint’s public catalog). Optional **Publisher** and **Series** rows
 on each book README group volumes on the reader. The software does not
 need a second config file.
 
-Invite editors to the workshop. The library can stay “open to read,
+Invite editors to the binder. The shelf can stay “open to read,
 invite to write,” or accept public pull requests — your call.
 
 ## What not to expect
@@ -105,9 +108,11 @@ invite to write,” or accept public pull requests — your call.
 - GitHub Pages on a public repo publishes whatever is in that repo.
 - `_TEMPLATE` is never a catalog entry.
 - Do not edit `reader/` JavaScript to “add a book.” Add Markdown.
+- This product repo is not a place to keep real manuscripts.
 
 ## Next
 
+- Agents: [skills/bookself/SKILL.md](../skills/bookself/SKILL.md)
 - Authors: [author-guide.md](author-guide.md)
 - Editors: [editor-guide.md](editor-guide.md)
 - Anatomy of a book folder: [book-anatomy.md](book-anatomy.md)

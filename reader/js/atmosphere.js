@@ -128,7 +128,7 @@ function installPicker() {
   paperRow.querySelectorAll('[data-paper]').forEach((button) => button.removeAttribute('data-paper'));
 
   document.querySelectorAll('[data-reader-warmth]').forEach((button) => {
-    button.addEventListener('click', () => setWarmth(button.dataset.readerWarmth, { persist: true }));
+    button.addEventListener('click', () => setWarmth(button.dataset.readerWarmth, { persist: true, syncLegacy: true }));
   });
 
   syncThemeUi();
@@ -158,12 +158,20 @@ function warmthExists(value) {
   return WARMTHS.some((item) => item.id === value);
 }
 
-function setWarmth(value, { persist = false } = {}) {
+function syncLegacyLamp(active) {
+  const button = document.getElementById('nightLightBtn');
+  if (!button) return;
+  const legacyOn = button.classList.contains('active');
+  if (legacyOn !== active) button.click();
+}
+
+function setWarmth(value, { persist = false, syncLegacy = false } = {}) {
   currentWarmth = warmthExists(value) ? value : 'off';
   const root = document.documentElement;
   root.dataset.readerWarmth = currentWarmth;
 
   const active = currentWarmth !== 'off';
+  if (syncLegacy) syncLegacyLamp(active);
   document.getElementById('nightLightOverlay')?.classList.toggle('active', active);
   document.getElementById('lampPool')?.classList.toggle('active', active);
 
@@ -190,7 +198,7 @@ function initializeWarmth() {
   warmthInitialized = true;
   const legacyOn = document.getElementById('nightLightBtn')?.classList.contains('active');
   currentWarmth = loadWarmth() || (legacyOn ? 'golden' : 'off');
-  setWarmth(currentWarmth);
+  setWarmth(currentWarmth, { syncLegacy: true });
 
   const overlay = document.getElementById('nightLightOverlay');
   const lamp = document.getElementById('lampPool');
@@ -219,7 +227,7 @@ function applyAppearancePreset() {
     const saved = JSON.parse(raw);
     const themeButton = document.querySelector(`.atmosphere-option[data-paper="${CSS.escape(saved.theme || '')}"]`);
     themeButton?.click();
-    if (warmthExists(saved.warmth)) setWarmth(saved.warmth, { persist: true });
+    if (warmthExists(saved.warmth)) setWarmth(saved.warmth, { persist: true, syncLegacy: true });
   } catch {
     // Keep the typography preset usable even if this snapshot is malformed.
   }

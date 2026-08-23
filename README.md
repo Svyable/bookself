@@ -59,6 +59,7 @@ here. Details are in the [author guide](docs/author-guide.md).
 | If you are… | Start here |
 |---|---|
 | Here to read a real shelf | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
+| Managing a public Bookself shelf | [Publishing Desk](desk/) — status, readiness, chapters, and publish checks |
 | Here to run private + public shelves | [Bookself](docs/bookself.md) |
 | Here to try the software | [The demo binder](reader/) |
 | New to GitHub | [Author guide](docs/author-guide.md) — write in the browser |

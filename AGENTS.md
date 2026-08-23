@@ -21,8 +21,16 @@ Bookself deliberately separates portable software from user instances:
 
 - **platform** — this repository; source of truth for shared software,
   templates, docs, and setup tooling
-- **binder** — private authoring instance; unpublished manuscripts live here
-- **shelf** — public publishing instance; published manuscripts live here
+- **binder** — private authoring instance; unpublished manuscripts and the next
+  revision of published books live here
+- **shelf** — public publishing instance; the currently released manuscript
+  snapshots live here
+
+Binder and Shelf are separate Git repositories with separate histories. A
+release copies a publication snapshot from Binder to Shelf. It is not a live
+reference, submodule, symlink, shared branch, or runtime dependency on the
+private repository. After release, the two copies are independent until the
+next release.
 
 Shared UI consists of **both** `reader/` and `desk/`. Those directories must
 remain byte-for-byte aligned across platform, binder, and shelf after sync.
@@ -94,6 +102,9 @@ URL into shared `reader/` or `desk/` code. Instance identity belongs in
   custom domain, unless a human asked.
 - Do not commit secrets, credentials, or unpublished manuscripts copied from
   outside this repository.
+- Do not revise the next edition of a published book in the public Shelf by
+  default. Keep the released Shelf snapshot stable and revise the Binder copy.
+  A live public hotfix or public proof requires explicit human intent.
 
 ## Verbs (author and agent)
 
@@ -108,7 +119,7 @@ discover it.
 
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, optional venue / DOI, and keep `Status: Drafting` while the work is in
-progress. The same Git history, review, media, preview, and publish flow applies.
+progress. The same Git history, review, media, preview, and release flow applies.
 Use [docs/latex.md](docs/latex.md) when the paper contains mathematical notation.
 
 **Add a web volume.** Under root `## The web shelf`, add one Markdown link such
@@ -128,19 +139,31 @@ chapter, update that book's README TOC and Chapters count in the same change.
 open `reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not make a
 private binder public just to preview it.
 
-**Publish.** On the public shelf, in one change set: set the book README Status
-to the exact string `Published`, and add one row to the shelf root README under
-**The books** linking `books/<slug>/`. Both are required.
+**Release.** Normal Binder → Shelf publication. Commit the Binder publication,
+then run `scripts/release-book.sh <slug> [path-to-shelf]`. The command refuses
+uncommitted release-path changes, verifies Binder/Shelf roles, prepares an exact
+replacement Shelf snapshot, sets the Shelf copy to `Published`, updates the
+Shelf catalog row, verifies copied publication files against the committed
+Binder snapshot, and stops before commit or push. Review and land the Shelf
+change through its normal branch / pull-request workflow.
 
-**Promote.** Copy `books/<slug>/` from the private binder into the public shelf
-(`scripts/promote-book.sh <slug> [path-to-shelf]`), then Publish on the shelf.
-Do not edit shared UI to add a book.
+**Promote / copy only.** `scripts/promote-book.sh <slug> [path-to-shelf]` is the
+lower-level file-copy operation. It does not publish, verify a release
+transaction, or create a live relationship between Binder and Shelf. Prefer
+**Release** for normal publishing.
+
+**Publish.** On a public shelf, a released book has the exact Status
+`Published` and one root README row under **The books**. Normally the Release
+command prepares both together; do not change only one side.
 
 **Unpublish.** On the shelf, set Status to anything except `Published` and
-remove the root catalog row.
+remove the root catalog row. Remember that removing current files does not make
+content already pushed to public Git history private.
 
-**Revise a published book.** Edit the Markdown and push. The reader fetches
-live files. Do not bump a version stamp.
+**Revise a published book.** Leave the current Shelf edition unchanged. Revise
+and commit the private Binder copy, then Release the replacement when ready.
+Do not change the public Shelf copy to `Drafting` or `Revision in progress` just
+to work on the next edition.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,

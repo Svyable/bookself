@@ -73,6 +73,18 @@ shows what is drafted, what needs attention, and what is ready to move forward.
 The binder should be private. The shelf should be public. An unlisted draft in
 a public repository is still public; “hard to find” is not a privacy feature.
 
+## Local first, not pipeline first
+
+Bookself does not require CI/CD to write, preview, release, or read a book. A
+private Binder must work with **zero GitHub Actions minutes**. The normal release
+helper runs locally with Git and Python's standard library, prepares a Shelf
+diff, and stops before commit or push.
+
+GitHub Actions and other hosted automation can be useful optional checks, but
+they are not part of the publishing contract. GitHub Pages serves the public
+Shelf directly from repository files; Bookself does not need an Actions-based
+build just to publish Markdown.
+
 ## If you just want to write
 
 You can ignore almost everything else in this README.
@@ -150,8 +162,9 @@ prepare the Shelf release with:
 scripts/release-book.sh your-title ../shelf
 ```
 
-The command verifies the committed Binder snapshot and stops before commit or
-push so the public change can be reviewed.
+The command runs locally, verifies the committed Binder snapshot, and stops
+before commit or push so the public change can be reviewed. No GitHub Actions
+run is required.
 
 For the complete architecture and publishing workflow, see
 **[docs/bookself.md](docs/bookself.md)**.
@@ -176,8 +189,10 @@ Those are examples, not identities baked into the shared software.
 |---|---|
 | [The Example Book](books/the-example-book/) | Book |
 
-The local platform reader uses this tiny catalog as its working demo. Real
-shelves can list books and whitepapers together; a publication with
+The platform reader uses this tiny catalog as its working demo. The example
+book is deliberately a book **about Bookself itself**: its own files demonstrate
+the folder, Reader, Binder/Shelf, and release ideas it describes. Real shelves
+can list books and whitepapers together; a publication with
 `Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives
 paper labeling in the reader.
 

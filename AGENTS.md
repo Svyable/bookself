@@ -55,6 +55,21 @@ Do not hard-code a person, organization, repository name, shelf URL, or binder
 URL into shared `reader/` or `desk/` code. Instance identity belongs in
 `imprint.json`. Platform defaults must remain portable.
 
+## Local-first publishing invariant
+
+Bookself must not require CI/CD to write, preview, release, or read a
+publication. The complete private-Binder workflow must work with zero GitHub
+Actions minutes.
+
+The required publishing path is deliberately small: Git + Markdown + a browser,
+with Python's standard library for the release helper. GitHub Actions, hosted
+runners, PR checks, and other automation may be added as optional conveniences,
+but they must never become a prerequisite for the Binder → Shelf release path.
+
+GitHub Pages is a static public delivery surface for Shelf, not a required
+Actions-based build pipeline. Do not replace the no-build Reader with a hosted
+build step unless a human explicitly asks to change that architecture.
+
 ## Voice
 
 - For book, essay, narrative, or other voice-sensitive prose tasks, read and apply
@@ -98,6 +113,9 @@ URL into shared `reader/` or `desk/` code. Instance identity belongs in
 - Do not reformat a file wholesale as a drive-by.
 - Do not add a build step, CODEOWNERS, or branch protection unless a human
   asked for that by name.
+- Do not make private-Binder publishing depend on GitHub Actions, CI runners,
+  hosted build artifacts, or paid automation minutes. Optional CI must remain
+  optional to the complete authoring and release lifecycle.
 - Do not change GitHub Pages source away from the repository root, or add a
   custom domain, unless a human asked.
 - Do not commit secrets, credentials, or unpublished manuscripts copied from
@@ -140,12 +158,14 @@ open `reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not make a
 private binder public just to preview it.
 
 **Release.** Normal Binder → Shelf publication. Commit the Binder publication,
-then run `scripts/release-book.sh <slug> [path-to-shelf]`. The command refuses
+then run `scripts/release-book.sh <slug> [path-to-shelf]`. The command runs
+locally; it does not require GitHub Actions or a hosted build. It refuses
 uncommitted release-path changes, verifies Binder/Shelf roles, prepares an exact
 replacement Shelf snapshot, sets the Shelf copy to `Published`, updates the
 Shelf catalog row, verifies copied publication files against the committed
 Binder snapshot, and stops before commit or push. Review and land the Shelf
-change through its normal branch / pull-request workflow.
+change through its normal Git workflow; a pull request is useful but not
+required by Bookself itself.
 
 **Promote / copy only.** `scripts/promote-book.sh <slug> [path-to-shelf]` is the
 lower-level file-copy operation. It does not publish, verify a release

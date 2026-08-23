@@ -27,12 +27,18 @@ function focusables(container) {
   )].filter((element) => !element.hidden && element.getClientRects().length > 0);
 }
 
+function syncOverlayAccessibility(overlay, active) {
+  overlay.inert = !active;
+  overlay.setAttribute('aria-hidden', String(!active));
+}
+
 function setOverlaySemantics(overlay, label) {
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
   if (!overlay.hasAttribute('aria-label') && !overlay.hasAttribute('aria-labelledby')) {
     overlay.setAttribute('aria-label', label);
   }
+  syncOverlayAccessibility(overlay, overlay.classList.contains('active'));
 }
 
 function syncBodyOverlayState() {
@@ -66,7 +72,7 @@ function restoreFocus(overlay) {
 
   const remaining = activeOverlays();
   if (remaining.length && !remaining.some((item) => item.contains(opener))) return;
-  requestAnimationFrame(() => opener.focus({ preventScroll: true }));
+  opener.focus({ preventScroll: true });
 }
 
 function onOverlayMutation(overlay, config) {
@@ -76,6 +82,7 @@ function onOverlayMutation(overlay, config) {
   overlay.dataset.guiActive = String(isActive);
 
   if (isActive) {
+    syncOverlayAccessibility(overlay, true);
     const active = document.activeElement;
     const opener = active && active !== document.body && !overlay.contains(active)
       ? active
@@ -86,6 +93,7 @@ function onOverlayMutation(overlay, config) {
     focusOverlay(overlay, config.close);
   } else {
     restoreFocus(overlay);
+    syncOverlayAccessibility(overlay, false);
   }
   syncBodyOverlayState();
 }

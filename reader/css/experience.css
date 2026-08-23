@@ -3,10 +3,12 @@
 :root {
   --reader-font-size: 18px;
   --reader-leading: 1.55;
-  --reader-measure: 88%;
+  --reader-page-pad: 2.6rem;
+  --reader-preview-measure: 88%;
   --reader-paragraph-gap: 0.85em;
 }
 
+/* Reading faces: keep display headings literary, let body copy be personal. */
 [data-reader-font="book"] .page-surface {
   font-family: "Source Serif 4", Georgia, serif;
 }
@@ -23,18 +25,33 @@
   font-family: "Atkinson Hyperlegible", Verdana, sans-serif;
 }
 
-[data-reader-measure="narrow"] { --reader-measure: 76%; }
-[data-reader-measure="balanced"] { --reader-measure: 88%; }
-[data-reader-measure="wide"] { --reader-measure: 100%; }
+/* Reading measure is expressed as page padding so app.js measures the same
+   geometry it renders. That keeps pagination correct as readers customize. */
+[data-reader-measure="narrow"] {
+  --reader-page-pad: 4.4rem;
+  --reader-preview-measure: 76%;
+}
+
+[data-reader-measure="balanced"] {
+  --reader-page-pad: 2.6rem;
+  --reader-preview-measure: 88%;
+}
+
+[data-reader-measure="wide"] {
+  --reader-page-pad: 1.45rem;
+  --reader-preview-measure: 100%;
+}
 
 [data-reader-paragraph="compact"] { --reader-paragraph-gap: 0.58em; }
 [data-reader-paragraph="normal"] { --reader-paragraph-gap: 0.85em; }
 [data-reader-paragraph="airy"] { --reader-paragraph-gap: 1.12em; }
 
+.page-surface {
+  padding-left: var(--reader-page-pad);
+  padding-right: var(--reader-page-pad);
+}
+
 .page-inner {
-  width: var(--reader-measure);
-  max-width: 100%;
-  margin-inline: auto;
   font-size: var(--reader-font-size);
   line-height: var(--reader-leading);
 }
@@ -53,7 +70,7 @@
   hyphens: auto;
 }
 
-/* The existing controls remain in the DOM for backwards-compatible app wiring. */
+/* Keep legacy controls available for app.js wiring while replacing them in UI. */
 .settings-card.experience-card > .experience-legacy-hidden {
   display: none;
 }
@@ -138,7 +155,7 @@
 }
 
 .experience-preview p {
-  max-width: var(--reader-measure);
+  max-width: var(--reader-preview-measure);
   margin: 0 auto;
   color: var(--text-primary);
   font-size: var(--reader-font-size);
@@ -310,10 +327,27 @@
   min-height: 2.5rem;
 }
 
+@media (max-width: 1100px) {
+  [data-reader-measure="narrow"] { --reader-page-pad: 3.1rem; }
+  [data-reader-measure="balanced"] { --reader-page-pad: 2rem; }
+  [data-reader-measure="wide"] { --reader-page-pad: 1.2rem; }
+}
+
 @media (max-width: 700px) {
-  [data-reader-measure="narrow"] { --reader-measure: 88%; }
-  [data-reader-measure="balanced"] { --reader-measure: 96%; }
-  [data-reader-measure="wide"] { --reader-measure: 100%; }
+  [data-reader-measure="narrow"] {
+    --reader-page-pad: 2.15rem;
+    --reader-preview-measure: 88%;
+  }
+
+  [data-reader-measure="balanced"] {
+    --reader-page-pad: 1.25rem;
+    --reader-preview-measure: 96%;
+  }
+
+  [data-reader-measure="wide"] {
+    --reader-page-pad: 0.7rem;
+    --reader-preview-measure: 100%;
+  }
 
   .settings-card.experience-card {
     width: min(96vw, 35rem);

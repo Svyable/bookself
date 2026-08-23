@@ -1,3 +1,7 @@
+import('./navigation.js').catch((error) => {
+  console.warn('Navigation enhancements could not be loaded', error);
+});
+
 const THEMES = [
   { id: 'light', name: 'Paper', note: 'Neutral & bright', group: 'Day', page: '#F7F3EC', ink: '#2B2621', accent: '#8F623A' },
   { id: 'linen', name: 'Linen', note: 'Cool & quiet', group: 'Day', page: '#EEF1EC', ink: '#253029', accent: '#4F725D' },
@@ -165,6 +169,14 @@ function warmthExists(value) {
   return WARMTHS.some((item) => item.id === value);
 }
 
+function systemThemeId() {
+  try {
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  } catch {
+    return 'dark';
+  }
+}
+
 function syncLegacyLamp(active) {
   const button = document.getElementById('nightLightBtn');
   if (!button) return;
@@ -240,8 +252,18 @@ function applyAppearancePreset() {
   }
 }
 
+function resetAppearance() {
+  const theme = systemThemeId();
+  document.querySelector(`.atmosphere-option[data-paper="${theme}"]`)?.click();
+  setWarmth('off', { persist: true, syncLegacy: true });
+}
+
 function bindPresetBridge() {
   document.addEventListener('click', (event) => {
+    if (event.target.closest('#readerReset')) {
+      window.setTimeout(resetAppearance, 0);
+      return;
+    }
     if (event.target.closest('#readerSavePreset')) {
       saveAppearancePreset();
       return;
@@ -268,7 +290,3 @@ installPicker();
 bindPresetBridge();
 watchTheme();
 window.addEventListener('load', syncThemeUi, { once: true });
-
-import('./navigation.js').catch((error) => {
-  console.warn('Navigation enhancements could not be loaded', error);
-});

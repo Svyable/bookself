@@ -1,9 +1,10 @@
 #!/bin/sh
-# Promote a book from this binder into your public shelf (Bookself).
+# Copy a book from this binder into a public shelf checkout (Bookself).
 # Usage: scripts/promote-book.sh <slug> [path-to-shelf]
 # Default shelf: ../shelf
-# Does not set Status or edit the shelf README — those two edits are
-# Publish, done on the shelf after this copy.
+# This is the lower-level copy operation. For a normal release, prefer
+# scripts/release-book.sh, which also marks the Shelf copy Published and
+# ensures it is cataloged before you review/commit the release.
 set -e
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 SLUG=${1:-}
@@ -34,5 +35,5 @@ rsync -a --delete \
   "$SRC/" "$DEST/books/$SLUG/"
 
 echo "Copied $SLUG → $DEST/books/$SLUG"
-echo "On the shelf: set Status to Published, add a README row, commit, push."
-echo "See docs/bookself.md"
+echo "This copy is not published automatically."
+echo "For normal releases, run scripts/release-book.sh instead."

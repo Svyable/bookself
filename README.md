@@ -1,10 +1,10 @@
 # Bookself
 
-**Write a book like software — without needing to be a software person.**
+**Write a publication like software — without needing to be a software person.**
 
-A manuscript is a folder. A chapter is a plain-text file. Every save can have
-a note, every edit can be compared, and every published book can become a calm
-browser reader.
+A publication is a folder. A chapter or paper is a plain-text file. Every save
+can have a note, every edit can be compared, and every published work can
+become a calm browser reader.
 
 No mysterious publishing database. No `final-final-really-final.docx`. No
 requirement that you already know what a repository is.
@@ -23,17 +23,17 @@ Bookself gives that lifecycle memory.
 
 | Writing moment | What Bookself gives you |
 |---|---|
-| I have an idea | A book folder to begin in |
+| I have an idea | A publication folder to begin in |
 | I wrote something | A saved version with a short note |
 | I changed my mind | The old version is still there |
 | I want feedback | A clean way to comment on exact lines |
 | I want to try a risky rewrite | A side copy that cannot hurt the original |
 | I want to proof it | A real reader view, not just a file editor |
 | I am ready | A deliberate move from private binder to public shelf |
-| I found a typo three months later | Change it. Books are allowed to keep living. |
+| I found a typo three months later | Change it. Publications are allowed to keep living. |
 
-If software gets a development lifecycle, books can have one too. Preferably
-with fewer status meetings. See **[Books have a lifecycle too](docs/writing-lifecycle.md)**.
+If software gets a development lifecycle, books and papers can have one too.
+Preferably with fewer status meetings. See **[Books have a lifecycle too](docs/writing-lifecycle.md)**.
 
 ## GitHub words, translated into human
 
@@ -62,8 +62,8 @@ Bookself separates the writing room from the shop window:
 | **Binder** | the private writing room: drafts, experiments, embarrassing chapter-seven detours |
 | **Shelf** | the public bookcase: work you actually mean to let people read |
 
-The **Reader** makes Markdown feel like a book. The **Publishing Desk** shows
-what is drafted, what needs attention, and what is ready to move forward.
+The **Reader** makes Markdown feel like a publication. The **Publishing Desk**
+shows what is drafted, what needs attention, and what is ready to move forward.
 
 The binder should be private. The shelf should be public. An unlisted draft in
 a public repository is still public; “hard to find” is not a privacy feature.
@@ -73,32 +73,33 @@ a public repository is still public; “hard to find” is not a privacy feature
 You can ignore almost everything else in this README.
 
 1. Open **[START HERE](START-HERE.md)**.
-2. Make a book from `books/_TEMPLATE/`.
-3. Write one chapter.
+2. Make a book from `books/_TEMPLATE/`, or a paper from `books/_PAPER_TEMPLATE/`.
+3. Write one chapter or paper section.
 4. Save it — GitHub calls that a **commit**.
-5. Open the Reader and see whether the prose still works when it looks like a book.
-6. Repeat until the book is less wrong than yesterday.
+5. Open the Reader and see whether the work still works when it looks published.
+6. Repeat until it is less wrong than yesterday.
 
 That is a legitimate workflow. You do not need a branching strategy for your
 first paragraph.
 
-## Why this is strangely good for books
+## Why this is strangely good for books and papers
 
 Word processors are excellent at showing a page and surprisingly bad at
 remembering the life of a sentence. Git was built for code, but several of its
-habits are wonderful for prose:
+habits are wonderful for prose and research writing:
 
 - **Time travel.** You can see what a paragraph used to say.
-- **Small, named saves.** “Tighten opening scene” is more useful than “v27”.
-- **Line-level conversation.** Editors can point at the exact sentence.
+- **Small, named saves.** “Tighten opening scene” or “Correct sample size” is more useful than “v27”.
+- **Line-level conversation.** Editors and collaborators can point at the exact sentence.
 - **Safe experiments.** Try the wild rewrite without deleting the sane one.
 - **Clear authorship.** The history shows who changed what and when.
-- **Plain files.** Your manuscript is still readable without Bookself.
-- **A real reading surface.** Proof the work in a book-like Reader, not only in an editor.
+- **Plain files.** Your publication is still readable without Bookself.
+- **A real reading surface.** Proof the work in a reader, not only in an editor.
+- **Media beside the source.** Figures and images can be versioned with the text that explains them.
 
-The goal is not to make authors behave like programmers. The goal is to borrow
-the parts of software development that make creative work easier to remember,
-review, recover, and publish.
+The goal is not to make authors or researchers behave like programmers. The
+goal is to borrow the parts of software development that make creative and
+technical work easier to remember, review, recover, and publish.
 
 ## What belongs where
 
@@ -134,8 +135,8 @@ After changing Bookself's shared UI, update both instances with:
 scripts/sync-ui.sh
 ```
 
-Only `reader/` and `desk/` are replaced. Your books and instance identity are
-left alone.
+Only `reader/` and `desk/` are replaced. Your publications and instance
+identity are left alone.
 
 For the complete architecture and publishing workflow, see
 **[docs/bookself.md](docs/bookself.md)**.
@@ -143,7 +144,7 @@ For the complete architecture and publishing workflow, see
 ## A real implementation
 
 Bookself is developed against a real deployment so the platform has to survive
-contact with actual books:
+contact with actual publications:
 
 | Role | Reference |
 |---|---|
@@ -154,11 +155,32 @@ contact with actual books:
 
 Those are examples, not identities baked into the shared software.
 
+## The books
+
+| Publication | Format |
+|---|---|
+| [The Example Book](books/the-example-book/) | Book |
+
+The local platform reader uses this tiny catalog as its working demo. Real
+shelves can list books and whitepapers together; a publication with
+`Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives
+paper labeling in the reader.
+
+## The stand
+
+- [QNTLab](https://qntlab.app/) — Build + Test = Run
+- [Geek to Me](https://geektome.lovable.app/)
+
+The stand is deliberately just links. External apps, experiments, magazines,
+and other creations stay at their original websites while Bookself provides a
+curated doorway.
+
 ## Pick your doorway
 
 | You are thinking… | Go here |
 |---|---|
 | “I just want to write a book.” | **[START HERE](START-HERE.md)** |
+| “I want to publish a paper, figures, or link another creation.” | [Publication formats](docs/publication-formats.md) |
 | “Please explain this without assuming I know GitHub.” | [Author guide](docs/author-guide.md) |
 | “How does the writing lifecycle map to all this?” | [Writing lifecycle](docs/writing-lifecycle.md) |
 | “What files make up a book?” | [Book anatomy](docs/book-anatomy.md) |
@@ -185,5 +207,5 @@ If that sentence made you wonder what a terminal is, skip it. The
 
 ## License
 
-The framework (everything outside `books/`) is MIT. Book manuscripts remain
-copyright of their authors. See [LICENSE](LICENSE).
+The framework (everything outside `books/`) is MIT. Book and paper manuscripts
+remain copyright of their authors. See [LICENSE](LICENSE).

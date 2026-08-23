@@ -2,31 +2,66 @@
 
 **Open-source software for a Git-native bookshelf.**
 
-Fork this repository, add books as plain Markdown, and GitHub Pages serves a
-Kindle-style reader. No build step. No WordPress. No lock-in.
+Bookself separates the platform from each author's actual books:
 
-Writing happens on GitHub. Reading happens in the [reader](reader/).
+- **platform** — this repository or a fork; source of truth for shared UI and setup tooling
+- **binder** — private repository where drafts and working manuscripts live
+- **shelf** — public repository where published manuscripts live
 
-**[Bookself](docs/bookself.md)** is the full author and publisher workflow:
-a **private binder** for drafts and a **public shelf** for what the
-street may read. This repo is only the engine. Unlisted files on a public
-repo are not secret — privacy is a private GitHub repository.
+Books stay plain Markdown. The shared browser UI is a Kindle-style
+[Reader](reader/) plus an author/editor [Publishing Desk](desk/). No build step,
+no WordPress, no proprietary manuscript database.
 
-## A live Bookself
+See **[Bookself](docs/bookself.md)** for the complete workflow and architecture.
 
-| Role | Where |
+## The important boundary
+
+`reader/` and `desk/` are portable platform software. They are synced into both
+binder and shelf instances.
+
+Each instance owns its own:
+
+- `books/`
+- root `README.md`
+- `imprint.json`
+
+Shared UI must not contain an author's account name, repository name, private
+binder URL, or public shelf URL. Those belong in `imprint.json` or the
+instance's own README.
+
+## Start a binder + shelf
+
+```bash
+scripts/stamp-instance.sh ../binder binder YOUR_GITHUB_OWNER binder
+scripts/stamp-instance.sh ../shelf shelf YOUR_GITHUB_OWNER shelf
+```
+
+The binder should be private. The shelf should be public with GitHub Pages
+served from the repository root.
+
+After changing shared UI in Bookself, update both instances with:
+
+```bash
+scripts/sync-ui.sh
+```
+
+With the conventional sibling layout, that syncs `../binder` and `../shelf`.
+You can also pass explicit instance paths. Only `reader/` and `desk/` are
+replaced.
+
+## Reference implementation
+
+While Bookself is being built, the upstream repository also maintains a first
+real deployment for validation:
+
+| Role | Reference |
 |---|---|
-| **Software** | this repository |
-| **Read (shelf)** | [svyable.github.io/shelf/reader](https://svyable.github.io/shelf/reader/) |
-| **Public books** | [github.com/Svyable/shelf](https://github.com/Svyable/shelf) |
-| **Private drafts (binder)** | a private repo stamped from here, not this one |
+| Platform | this repository (`Svyable/bookself`) |
+| Private binder | `Svyable/binder` |
+| Public shelf | [Svyable/shelf](https://github.com/Svyable/shelf) |
+| Public reader | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
 
-Start your own: follow [Bookself](docs/bookself.md), or fork this repo for a
-single public shelf. Copy `books/_TEMPLATE/`, set Status to `Published`, add
-a row under **The books**.
-
-Reader upgrades land here first, then copy to each shelf with
-`scripts/sync-reader.sh`.
+Those are examples of the platform, not defaults baked into shared code.
 
 ## Why
 
@@ -38,36 +73,32 @@ when, and why — plus a way to try an edit without overwriting the original.
 
 - **One book, one folder.** Everything a book needs lives in `books/<slug>/`.
 - **Plain Markdown only.** If you can type, you can write here.
-- **GitHub is the writing desk.** Reviewing and discussing happen with the
-  tools on this site.
-- **The reader is the published book.** Open [the demo binder](reader/). Only
-  books whose Status is `Published` appear on the shelf.
+- **GitHub is the durable history.** Reviewing and discussing happen with normal Git tools.
+- **The Reader is the book.** Public shelves show books whose Status is `Published`.
+- **The Desk is the workflow view.** In a private binder it reads the local manuscript inventory; in a public shelf it checks publication consistency.
 
-## Demo books in this repo
+## Demo book in this platform repo
 
 | Book | Authors |
 |------|---------|
 | [The Example Book](books/the-example-book/) | @svyable |
 
-To start one, copy [`books/_TEMPLATE/`](books/_TEMPLATE/) to `books/<your-slug>/`
-and fill in that book's README. Keep Status as `Drafting` until you mean to
-publish. Publishing is two edits: set Status to `Published`, and add a row
-here. Details are in the [author guide](docs/author-guide.md).
+The example exists only so the platform Reader and Desk have realistic data to
+exercise. Real unpublished manuscripts belong in a private binder.
 
 ## How to take part
 
 | If you are… | Start here |
 |---|---|
-| Here to read a real shelf | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
-| Managing a public Bookself shelf | [Publishing Desk](desk/) — status, readiness, chapters, and publish checks |
-| Here to run private + public shelves | [Bookself](docs/bookself.md) |
-| Here to try the software | [The demo binder](reader/) |
-| New to GitHub | [Author guide](docs/author-guide.md) — write in the browser |
+| Setting up private + public Bookself repos | [Bookself architecture and workflow](docs/bookself.md) |
+| Managing manuscripts | [Publishing Desk](desk/) |
+| Trying the reader | [Reader demo](reader/) |
+| New to GitHub | [Author guide](docs/author-guide.md) |
 | Comfortable with pull requests | [Editor guide](docs/editor-guide.md) and [Contributing](CONTRIBUTING.md) |
 | Starting a new book | [Book anatomy](docs/book-anatomy.md) |
 | An AI agent | [AGENTS.md](AGENTS.md) |
 
-## Local reader
+## Local platform demo
 
 From this folder:
 
@@ -75,9 +106,12 @@ From this folder:
 python3 -m http.server
 ```
 
-Then open [http://127.0.0.1:8000/reader/](http://127.0.0.1:8000/reader/). GitHub
-Pages should serve the same thing from the repository root (not `/docs`).
-`file://` will not work — the reader fetches Markdown.
+Then open:
+
+- `http://127.0.0.1:8000/reader/`
+- `http://127.0.0.1:8000/desk/`
+
+`file://` will not work because the UI fetches Markdown and instance config.
 
 ## License
 

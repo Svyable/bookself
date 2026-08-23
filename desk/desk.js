@@ -51,6 +51,10 @@ function rawUrl(path) {
 }
 
 function pagesBase() {
+  const userPagesRepo = `${state.owner}.github.io`.toLowerCase();
+  if (state.repo.toLowerCase() === userPagesRepo) {
+    return `https://${state.owner}.github.io/`;
+  }
   return `https://${state.owner}.github.io/${state.repo}/`;
 }
 
@@ -345,7 +349,7 @@ function configureRepoLinks(meta) {
   $('repoLink').href = meta.html_url || githubUrl();
   $('readerLink').href = `${pagesBase()}reader/`;
   $('startBookLink').href = githubUrl(`/tree/${branch}/books/_TEMPLATE`);
-  $('authorGuideLink').href = githubUrl(`/blob/${branch}/docs/author-guide.md`);
+  $('authorGuideLink').href = 'https://github.com/Svyable/bookself/blob/main/docs/author-guide.md';
   $('rootEditLink').href = githubUrl(`/edit/${branch}/README.md`);
 }
 

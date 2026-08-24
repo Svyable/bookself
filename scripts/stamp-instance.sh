@@ -38,8 +38,7 @@ rsync -a \
   --exclude '.DS_Store' \
   --exclude '.github/workflows/' \
   --include 'books/' \
-  --include 'books/_TEMPLATE/***' \
-  --include 'books/_PAPER_TEMPLATE/***' \
+  --include 'books/_*TEMPLATE/***' \
   --exclude 'books/*' \
   --exclude 'docs/superpowers/' \
   --exclude 'docs/instances/' \
@@ -47,10 +46,10 @@ rsync -a \
   --exclude 'README.md' \
   "$ROOT/" "$DEST/"
 
-# Binder keeps the blank authoring starters. Shelf starts with no publication
+# Binder keeps every blank authoring starter. Shelf starts with no publication
 # content; the first intentional release creates books/<slug>/.
 if [ "$ROLE" = "shelf" ]; then
-  rm -rf "$DEST/books/_TEMPLATE" "$DEST/books/_PAPER_TEMPLATE"
+  rm -rf "$DEST"/books/_*TEMPLATE
 fi
 
 cp "$ROOT/docs/instances/${ROLE}-README.md" "$DEST/README.md"
@@ -105,7 +104,7 @@ if [ "$ROLE" = "shelf" ]; then
   echo "Publication content starts empty; the first release creates books/<slug>/."
   echo "Enable GitHub Pages for the public shelf."
 else
-  echo "Blank starters included: books/_TEMPLATE + books/_PAPER_TEMPLATE"
+  echo "Blank publication starters included from books/_*TEMPLATE."
   echo "Keep the binder private. Do not enable public Pages for unpublished manuscripts."
 fi
 if [ "$OWNER" = "auto" ]; then

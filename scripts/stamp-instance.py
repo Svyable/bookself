@@ -1,58 +1,111 @@
 #!/usr/bin/env python3
-"""Stamp a Bookself checkout as a Binder or Shelf instance."""
+"""Copy Bookself into an empty destination and stamp Binder/Shelf identity."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 from pathlib import Path
 
 
+def storage_prefix(role: str, repo: str) -> str:
+    value = f"{role}-{repo}".lower().replace("_", " ")
+    value = value.replace(" ", "-")
+    return re.sub(r"[^a-z0-9-]", "", value)
+
+
+def copy_platform(root: Path, destination: Path) -> None:
+    def ignore(directory: str, names: list[str]) -> set[str]:
+        current = Path(directory).resolve()
+        rel = current.relative_to(root)
+        skipped = {".DS_Store"}
+        if rel == Path("."):
+            skipped.update({".git", "imprint.json", "README.md"})
+        elif rel == Path("books"):
+            skipped.add("the-example-book")
+        elif rel == Path("docs"):
+            skipped.update({"superpowers", "instances"})
+        return skipped.intersection(names)
+
+    shutil.copytree(root, destination, dirs_exist_ok=True, ignore=ignore)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Copy the Bookself platform into a new Binder or Shelf instance and stamp its identity."
+        description="Copy this Bookself tree into an empty destination and stamp instance identity."
     )
-    parser.add_argument("destination", help="directory to create or update")
-    parser.add_argument("role", choices=("binder", "shelf"), help="instance role")
-    parser.add_argument("owner", help="GitHub owner or organization")
-    parser.add_argument("repository", help="GitHub repository name")
+    parser.add_argument("destination", help="empty directory to create or populate")
+    parser.add_argument("role", choices=("binder", "shelf"))
+    parser.add_argument("owner", nargs="?", default="auto", help="GitHub owner; defaults to auto")
+    parser.add_argument("repository", nargs="?", help="repository name; defaults to destination name")
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parent.parent
     destination = Path(args.destination).expanduser().resolve()
+
+    if destination == root or root in destination.parents:
+        parser.error("destination must be outside the Bookself platform checkout")
+    if destination.exists() and any(destination.iterdir()):
+        parser.error(f"destination is not empty: {destination}")
+
+    repository = args.repository or destination.name
     destination.mkdir(parents=True, exist_ok=True)
+    copy_platform(root, destination)
 
-    for directory in ("reader", "desk"):
-        source = root / directory
-        target = destination / directory
-        if target.exists():
-            shutil.rmtree(target)
-        shutil.copytree(source, target, ignore=shutil.ignore_patterns(".DS_Store"))
+    shutil.copy2(root / "docs" / "instances" / f"{args.role}-README.md", destination / "README.md")
 
-    for directory in ("books",):
-        source = root / directory
-        target = destination / directory
-        if not target.exists():
-            shutil.copytree(source, target, ignore=shutil.ignore_patterns(".DS_Store"))
+    if args.role == "binder":
+        values = {
+            "name": "Private Binder",
+            "shortName": "Binder",
+            "description": "Private Bookself workspace for drafts and manuscripts.",
+            "kicker": "Private manuscripts · Git-native writing",
+            "lede": "Draft and revise here. The same reader and publishing desk are shared with your public shelf.",
+            "homeLabel": "Binder",
+        }
+    else:
+        values = {
+            "name": "Public Shelf",
+            "shortName": "Shelf",
+            "description": "Public Bookself shelf for published Markdown books.",
+            "kicker": "Published on Git · Read like a book",
+            "lede": "Published books live here. Drafts stay in the private binder.",
+            "homeLabel": "Shelf",
+        }
 
-    for filename in ("AGENTS.md", ".nojekyll"):
-        source = root / filename
-        target = destination / filename
-        if source.exists() and not target.exists():
-            shutil.copy2(source, target)
-
-    imprint_source = root / "imprint.json"
-    imprint = json.loads(imprint_source.read_text(encoding="utf-8"))
-    imprint["role"] = args.role
-    imprint["repository"] = f"{args.owner}/{args.repository}"
-    imprint["repositoryUrl"] = f"https://github.com/{args.owner}/{args.repository}"
+    imprint = {
+        "role": args.role,
+        **values,
+        "credit": "",
+        "creditHref": "",
+        "writeHref": "../desk/",
+        "writeLabel": "Publishing desk",
+        "forkHref": "",
+        "forkLabel": "",
+        "storagePrefix": storage_prefix(args.role, repository),
+        "steps": [],
+        "github": {
+            "owner": args.owner,
+            "repo": repository,
+            "branch": "main",
+        },
+    }
     (destination / "imprint.json").write_text(
         json.dumps(imprint, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 
-    print(f"Stamped {destination} as Bookself {args.role}: {args.owner}/{args.repository}")
+    print(f"Stamped {args.role} -> {destination}")
+    print("Shared UI included: reader/ + desk/")
+    print("Instance-owned files: books/, README.md, imprint.json")
+    if args.role == "shelf":
+        print("Enable GitHub Pages for the public shelf.")
+    else:
+        print("Keep the binder private. Do not enable public Pages for unpublished manuscripts.")
+    if args.owner == "auto":
+        print("Optional: edit imprint.json and set github.owner for repository edit/history links.")
     return 0
 
 

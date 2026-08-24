@@ -1,0 +1,34 @@
+{
+  "@context": "https://w3id.org/codemeta/3.1",
+  "type": "SoftwareSourceCode",
+  "name": "Bookself",
+  "description": "Open-source, Git-native publishing software for books, papers, course texts, and other long-form work. Bookself keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from intentional public releases, and includes a browser Reader plus a Publishing Desk.",
+  "codeRepository": "https://github.com/Svyable/bookself",
+  "issueTracker": "https://github.com/Svyable/bookself/issues",
+  "url": "https://github.com/Svyable/bookself",
+  "license": "https://spdx.org/licenses/MIT.html",
+  "applicationCategory": "Publishing software",
+  "isAccessibleForFree": true,
+  "author": {
+    "type": "Person",
+    "name": "Sven Benson",
+    "url": "https://github.com/Svyable"
+  },
+  "maintainer": {
+    "type": "Person",
+    "name": "Sven Benson",
+    "url": "https://github.com/Svyable"
+  },
+  "keywords": [
+    "publishing",
+    "scholarly writing",
+    "academic writing",
+    "Markdown",
+    "Git",
+    "books",
+    "open textbooks",
+    "version control",
+    "research software"
+  ],
+  "citation": "https://github.com/Svyable/bookself/blob/main/CITATION.cff"
+}

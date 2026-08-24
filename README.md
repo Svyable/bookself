@@ -11,21 +11,33 @@ requirement that you already know what a repository is.
 
 ## Experience Bookself
 
-**The fastest way to understand Bookself is to read something in it.**
+**The fastest way to understand Bookself is to see the same Reader do two different jobs.**
 
-### [📖 Open the live Bookself Reader →](https://svyable.github.io/bookself/reader/)
+| Stage | What the Reader is doing | Open it |
+|---|---|---|
+| **Binder Reader — working proof** | Read an unfinished manuscript, see Draft/Proof state, inspect source/history, leave notes, and review what should change | [Read *Making Bookself* in proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/) |
+| **Shelf Reader — released publication** | Read snapshots the author deliberately chose to make public | [Browse the public Shelf →](https://svyable.github.io/shelf/reader/) |
 
-That is the actual no-build Reader running from this repository on GitHub Pages —
-not a screenshot, mockup, or separate demo app.
+A real Binder should be **private**. The *Making Bookself* proof above is a
+deliberately public teaching specimen so students, authors, professors,
+maintainers, and AI agents can inspect the writing loop without being invited
+into somebody's actual private drafts.
 
-| Try it now | Open in Reader |
-|---|---|
-| **How to Bookself** — the practical guide | [Read it →](https://svyable.github.io/bookself/reader/#/b/how-to-bookself/) |
-| **Bookself 101** — the academic textbook example | [Read it →](https://svyable.github.io/bookself/reader/#/b/bookself-101/) |
-| **Public Shelf** — a real released collection | [Browse it →](https://svyable.github.io/shelf/reader/) |
+The specimen is recursive: Bookself is being used to write a book about making
+books, and the friction discovered while writing it becomes input for improving
+Bookself itself. You can [read its review notes](books/making-bookself/REVIEW.md),
+[join the live review thread](https://github.com/Svyable/bookself/issues/35), or
+[inspect its source](books/making-bookself/).
 
-The books above are ordinary Markdown publications in this repository. The
-Reader is the same shared `reader/` software that a Binder and Shelf use.
+You can also try completed examples in the platform Reader:
+
+- [**How to Bookself** — practical guide →](https://svyable.github.io/bookself/reader/#/b/how-to-bookself/)
+- [**Bookself 101** — academic textbook example →](https://svyable.github.io/bookself/reader/#/b/bookself-101/)
+- [**Open the Bookself Reader home →**](https://svyable.github.io/bookself/reader/)
+
+These are ordinary Markdown publications. Binder and Shelf use the same shared
+`reader/` software; the repository role and publication state give that Reader
+its job.
 
 > New here? Good. You are allowed to not know GitHub.
 > Start with **[START HERE](START-HERE.md)** and ignore the machinery until it
@@ -250,12 +262,14 @@ Those are examples, not identities baked into the shared software.
 |---|---|
 | [How to Bookself](books/how-to-bookself/) | Book |
 | [Bookself 101](books/bookself-101/) | Academic textbook example |
+| [Making Bookself](books/making-bookself/) | Living draft / public Binder-style specimen |
 
 **How to Bookself** is the short practical guide. **Bookself 101** demonstrates
 how a professor might structure a course text with learning objectives, key
 terms, discussion questions, labs, semester editions, and a stable public
-reading surface. Both are ordinary Bookself publications rather than special
-Reader fixtures.
+reading surface. **Making Bookself** is intentionally unfinished: it dogfoods
+Bookself's own draft → proof → review → revision loop in public so the workflow
+can be inspected and improved.
 
 Real shelves can list books and whitepapers together; a publication with
 `Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives
@@ -283,6 +297,7 @@ should feel like an issue, feature, or quick doorway.
 | You are thinking… | Go here |
 |---|---|
 | “I just want to write a book.” | **[START HERE](START-HERE.md)** |
+| “Show me a draft being read, reviewed, and improved.” | [Making Bookself](books/making-bookself/) |
 | “I have a practical question about Git, Markdown, textbooks, papers, or publishing.” | [FAQ](docs/faq.md) |
 | “I want to publish a paper, figures, or link another creation.” | [Publication formats](docs/publication-formats.md) |
 | “Please explain this without assuming I know GitHub.” | [Author guide](docs/author-guide.md) |

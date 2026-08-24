@@ -71,10 +71,15 @@ title:
 ![Revision loop](../media/revision-loop.svg "Figure 1. A private revision loop ending in a deliberate public release.")
 ```
 
-Bookself renders that standalone image as a `<figure>` with a `<figcaption>`.
-The image still lives beside the publication in `media/`, travels through Git
-with the prose that explains it, and uses the existing responsive image and
-zoom behavior.
+The text inside `![...]` is the image's alternative text. Write it so a reader
+who cannot see the figure still gets the visual information needed to follow
+the surrounding argument. The quoted title is the visible caption, so it may
+identify or contextualize the figure without merely repeating the alt text.
+
+Bookself preserves that Markdown alt text on the rendered `<img>` and renders
+the quoted title as a `<figcaption>`. The image still lives beside the
+publication in `media/`, travels through Git with the prose that explains it,
+and uses the existing responsive image and zoom behavior.
 
 Caption numbering is author-controlled in this first layer. That is deliberate:
 a figure can be called `Figure 1`, `Figure 3.2`, or left unnumbered without a

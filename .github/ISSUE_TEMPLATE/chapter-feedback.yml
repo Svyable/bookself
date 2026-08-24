@@ -9,17 +9,12 @@ body:
         Thanks for reading. Tell us which part and what you would change.
         If you know the exact line, you can also open a pull request and
         propose the new sentence there.
-  - type: dropdown
+  - type: input
     id: book
     attributes:
       label: Book
-      description: Which book is this about?
-      options:
-        - how-to-bookself
-        - bookself-101
-        - making-bookself
-        - the-example-paper
-        - _TEMPLATE
+      description: Which book is this about? Use the folder slug when you know it.
+      placeholder: e.g. my-book
     validations:
       required: true
   - type: input

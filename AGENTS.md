@@ -10,8 +10,6 @@ Rules for AI agents working in this repository.
   split the work.
 - When you add, rename, or remove a chapter, update that book's README
   table of contents and the Chapters count in the same change.
-- When you add a book, add its slug to the Book dropdown in
-  `.github/ISSUE_TEMPLATE/chapter-feedback.yml` in the same change.
 - Do not put book prose in `reader/` or `desk/`. Authors and agents edit
   Markdown under `books/<slug>/`.
 
@@ -146,10 +144,8 @@ These are the public lifecycle. Each manuscript change is Markdown (and maybe
 `media/`).
 
 **Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
-authors, `Status: Drafting`. Add the slug to the chapter-feedback dropdown in
-platform-style repositories when that template is present. In a private
-binder, also list the manuscript under root **The books** so the local Desk can
-discover it.
+authors, `Status: Drafting`. In a private binder, also list the manuscript under
+root **The books** so the local Desk can discover it.
 
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, optional venue / DOI, and keep `Status: Drafting` while the work is in

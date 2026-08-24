@@ -20,21 +20,16 @@ instead.
 
 Keep the pull request to one chapter. A second chapter is a second PR.
 
-## Keeping the chapter-feedback book list current
+## Chapter feedback
 
-`.github/ISSUE_TEMPLATE/chapter-feedback.yml` has a dropdown of books.
-GitHub will not update it for you.
+The chapter-feedback issue form accepts the publication slug as text rather
+than keeping a platform-maintained dropdown. That keeps the form usable in
+stamped Binder/Shelf repositories without carrying Bookself's own example-book
+list into another author's collaboration workflow.
 
-When you add a book:
-
-1. Copy `books/_TEMPLATE/` to `books/<slug>/`.
-2. In the same PR, add a new option under the `book` dropdown in
-   `chapter-feedback.yml`. The option text is the slug, for example
-   `leveraging-luck`.
-3. Put `_TEMPLATE` last, so real books sit above the example.
-
-When you retire a book, remove its option in the same PR that removes the
-folder.
+When reporting feedback, use the folder slug when you know it, for example
+`leveraging-luck`. Readers who do not know the slug can still identify the book
+by name and point to the chapter or passage in the next field.
 
 ## Publishing and the public catalog
 

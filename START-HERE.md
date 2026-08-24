@@ -163,7 +163,9 @@ Bookself can use two spaces:
 - the **Shelf** — public bookcase
 
 Draft privately in the Binder. When the work is actually meant for readers,
-move the book to the Shelf and publish it there.
+release a committed snapshot to the Shelf and publish that copy there. The
+Binder stays private and keeps its own history; the Shelf copy is independent
+until you deliberately release another snapshot.
 
 A public repository is public even when a draft is not linked from the shelf.
 “Unlisted” is not the same thing as private.

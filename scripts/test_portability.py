@@ -13,6 +13,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def is_publication_template(path: Path) -> bool:
+    name = path.name
+    return path.is_dir() and (name == "_TEMPLATE" or (name.startswith("_") and name.endswith("_TEMPLATE")))
+
+
 class PortabilityTests(unittest.TestCase):
     def test_python_helpers_avoid_common_third_party_imports(self) -> None:
         helpers = (
@@ -62,10 +67,12 @@ class PortabilityTests(unittest.TestCase):
             binder = self.stamp_instance(root, "binder")
             shelf = self.stamp_instance(root, "shelf")
 
+            platform_templates = {path.name for path in (ROOT / "books").iterdir() if is_publication_template(path)}
             binder_books = {path.name for path in (binder / "books").iterdir()}
             shelf_books = {path.name for path in (shelf / "books").iterdir()}
 
-            self.assertEqual(binder_books, {"_TEMPLATE", "_PAPER_TEMPLATE"})
+            self.assertGreaterEqual(len(platform_templates), 2)
+            self.assertEqual(binder_books, platform_templates)
             self.assertEqual(shelf_books, set())
             self.assertFalse((binder / ".github" / "workflows").exists())
             self.assertFalse((shelf / ".github" / "workflows").exists())

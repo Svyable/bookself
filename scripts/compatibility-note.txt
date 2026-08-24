@@ -1,0 +1,3 @@
+Canonical local automation: Python 3 standard library.
+Supported desktop OS: macOS, Windows, Linux.
+Shell helpers are optional conveniences only.

@@ -37,6 +37,7 @@ Use the checks that apply to this PR; leave unrelated ones unchecked.
 - [ ] Relevant zero-install parser or Python tests pass, or I explained why they do not apply
 - [ ] I manually checked the visible Reader / Desk behavior when this changes UI
 - [ ] If I maintain local instances, I synced shared `reader/` / `desk/` changes with `scripts/sync-ui.sh`
+- [ ] If this PR was stacked, I re-checked its base branch after the parent landed and verified the intended files on `main`
 - [ ] This change does not make hosted CI, GitHub Actions, or a build step mandatory for the normal Bookself lifecycle
 
 See `docs/contributor-map.md` if you are not sure which checks apply.

@@ -42,8 +42,11 @@ exists on the owner, choose another name with the user.
    ```
 
    The stamp includes both `reader/` and `desk/` and creates a role-aware
-   `imprint.json`. If owner/repo is not known yet, omit those arguments and
-   edit the generated imprint later.
+   `imprint.json`. The Binder keeps only the blank book and paper templates;
+   the Shelf starts with no publication folders at all. Platform example
+   manuscripts and platform GitHub Actions workflows stay upstream. If
+   owner/repo is not known yet, omit those arguments and edit the generated
+   imprint later.
 4. In each stamped tree: `git init -b main`, first commit, then create repos:
 
    ```bash
@@ -57,7 +60,8 @@ exists on the owner, choose another name with the user.
    - public reader: `https://OWNER.github.io/shelf/reader/`
    - author desk: local binder `/desk/`, public shelf `/desk/`
 
-Do not stamp `books/the-example-book`. Do not copy anyone else’s manuscripts.
+Do not copy platform teaching/example manuscripts or upstream Actions workflows
+into either user instance.
 
 ## write
 

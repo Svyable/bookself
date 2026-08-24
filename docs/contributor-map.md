@@ -94,6 +94,19 @@ A strong platform PR is usually easy to answer in five questions:
 
 Screenshots are useful for visual changes. Small reproduction snippets are useful for parser bugs. A failing example is often more valuable than a long architectural essay.
 
+## Stacked PRs: verify where the merge lands
+
+Sometimes one review genuinely depends on another. If you stack PRs, the child PR may temporarily use the parent branch as its base. That is useful for keeping the child diff small, but it creates one easy-to-miss trap: GitHub can report the child as **merged** even when it merged only into the old review branch rather than into `main`.
+
+When the parent lands:
+
+1. re-check the child PR's **base branch**;
+2. retarget it to `main` if the parent change is now on `main`;
+3. re-check the child diff;
+4. after merging, verify the intended files on `main` directly.
+
+Do not treat the green “Merged” badge as proof that the default branch received the change. The destination branch is part of the review.
+
 ## What not to bundle
 
 Please split changes when review would otherwise require unrelated decisions. In particular, avoid combining:

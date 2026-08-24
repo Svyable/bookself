@@ -36,7 +36,11 @@ mkdir -p "$DEST"
 rsync -a \
   --exclude '.git/' \
   --exclude '.DS_Store' \
-  --exclude 'books/the-example-book/' \
+  --exclude '.github/workflows/' \
+  --include 'books/' \
+  --include 'books/_TEMPLATE/***' \
+  --include 'books/_PAPER_TEMPLATE/***' \
+  --exclude 'books/*' \
   --exclude 'docs/superpowers/' \
   --exclude 'docs/instances/' \
   --exclude 'imprint.json' \

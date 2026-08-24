@@ -3,6 +3,9 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -35,6 +38,26 @@ class PortabilityTests(unittest.TestCase):
         self.assertIn("Git + Python 3", text)
         self.assertIn("macOS, Windows, and Linux", text)
         self.assertIn("no application dependencies", text.lower())
+
+    def test_stamp_instance_keeps_only_instance_safe_content(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            destination = Path(tmp) / "binder"
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "stamp-instance.py"),
+                    str(destination),
+                    "binder",
+                    "example-owner",
+                    "binder",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            book_entries = {path.name for path in (destination / "books").iterdir()}
+            self.assertEqual(book_entries, {"_TEMPLATE", "_PAPER_TEMPLATE"})
+            self.assertFalse((destination / ".github" / "workflows").exists())
 
 
 if __name__ == "__main__":

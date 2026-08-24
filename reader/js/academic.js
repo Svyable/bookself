@@ -89,6 +89,7 @@ export function tokenizeFootnoteRef(src) {
     number: item?.number || 1,
     offset: duplicate ? undefined : item?.offset,
     duplicate,
+    missing: !item,
   };
 }
 
@@ -198,7 +199,7 @@ export function installMarkedAcademic(marked = globalThis.window?.marked) {
             href: `#fn-${safeId(token.key)}`,
             className: 'reader-footnote-ref',
             key: token.key,
-            label: token.duplicate ? '?' : String(token.number),
+            label: token.duplicate || token.missing ? '?' : String(token.number),
             offset: token.offset,
             dataName: 'data-footnote-ref',
             duplicate: token.duplicate,

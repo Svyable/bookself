@@ -1,6 +1,6 @@
 # Start here
 
-If you came here to write a book, paper, or course text and GitHub is currently
+If you came here to write a book, paper, course text, magazine, journal, newsletter, report, comic, or another long-form publication and GitHub is currently
 giving you the same feeling as the cockpit of a small aircraft, this page is
 for you.
 
@@ -16,12 +16,12 @@ for ChatGPT, Claude, Claude Code, or OpenCode, start with **[Getting Set Up](boo
 
 ## The five-minute version
 
-A Bookself book is just a folder containing plain-text chapter files.
+A Bookself publication is just a folder containing plain-text manuscript files.
 
 Your first loop is:
 
-1. **Open your book.**
-2. **Open a chapter.**
+1. **Open your publication.**
+2. **Open a chapter or manuscript file.**
 3. Click the little **pencil** to edit it.
 4. Write something.
 5. Click **Commit changes**.
@@ -33,17 +33,18 @@ GitHub calls step 5 a **commit**. We call it **saving a version**.
 
 That is enough to start.
 
-## If there is no book yet
+## If there is no publication yet
 
 There are two friendly paths.
 
 ### Easiest: ask to start one
 
-Open **Issues → New issue → Start a book**.
+Open **Issues → New issue → Start a publication**.
 
-The form asks for the working title, author, premise, and whatever chapter ideas
-you already have. You may leave the computer-shaped details, such as the folder
-name, to whoever or whatever is helping scaffold the book.
+The form asks what kind of publication you are making, plus the working title,
+author, premise, and whatever structure you already have in mind. You may leave
+the computer-shaped details, such as the folder name, to whoever or whatever is
+helping scaffold it.
 
 This is especially useful in a shared Binder or when a connected agent is doing
 the setup work.
@@ -51,48 +52,68 @@ the setup work.
 **Privacy note:** an issue has the same visibility as its repository. Do not put
 private manuscript text in a public issue.
 
-### Hands-on: use the blank book
+### Hands-on: use a blank starter
 
-Find `books/_TEMPLATE/`. That folder is the blank book.
+A private Binder includes a small library of blank publication templates under
+`books/`. Choose the one closest to what you are making, copy it to a new folder,
+and edit the copy rather than the template itself.
 
-Copy it to a new folder with a simple name such as:
+Common starters include:
+
+- `books/_TEMPLATE/` — books, novels, course texts, and general chaptered work
+- `books/_PAPER_TEMPLATE/` — papers, whitepapers, theses, and research notes
+- `books/_MAGAZINE_TEMPLATE/` — magazines and zines
+- `books/_NEWSPAPER_TEMPLATE/` — newspapers and gazettes
+- `books/_JOURNAL_TEMPLATE/` — journals and proceedings
+- `books/_NEWSLETTER_TEMPLATE/` — newsletters and bulletins
+- `books/_ANTHOLOGY_TEMPLATE/` — anthologies, chapbooks, and collections
+- `books/_REPORT_TEMPLATE/` — reports and evidence-heavy publications
+- `books/_MANUAL_TEMPLATE/` — manuals, handbooks, and guides
+- `books/_COMIC_TEMPLATE/` — comics and graphic narratives
+
+If none is a perfect match, choose the nearest shape. The templates are starter
+structures, not rigid schemas. The [publication formats guide](docs/publication-formats.md)
+explains the supported format families and metadata.
+
+Copy your chosen starter to a new folder with a simple name such as:
 
 - `the-long-way-home`
-- `notes-from-a-small-planet`
-- `my-suspiciously-ambitious-first-novel`
+- `fall-2026-course-reader`
+- `quarterly-field-report`
 
-The folder name is not the book title. It is just the tidy label computers use
-to find the book. Lowercase letters and hyphens keep everyone calm.
+The folder name is not the publication title. It is just the tidy label
+computers use to find it. Lowercase letters and hyphens keep everyone calm.
 
-Then open the new book's `README.md` and replace **Your Book Title** with the
-actual title.
+Then open the new publication's `README.md` and replace the placeholder title
+with the actual title.
 
-Congratulations: structurally, that is now a book. Literature may take a bit
-longer.
+Congratulations: structurally, that is now a publication. Literature, scholarship,
+or journalism may take a bit longer.
 
-## Starting a paper or course text
+## Papers and course texts
 
 You do not need a different publishing system.
 
-- **Research paper or whitepaper:** copy `books/_PAPER_TEMPLATE/`. The
+- **Research paper or whitepaper:** start from `books/_PAPER_TEMPLATE/`. The
   [academic writing guide](docs/academic-writing.md) covers citations,
   footnotes, figures, references, and the supported math conventions.
 - **Course text or textbook:** start from `books/_TEMPLATE/` like any other
-  book. Keep the next semester's revision private in Binder and release a
-  deliberate public Shelf snapshot when students should receive it. See
-  [Revisions and releases](docs/revisions.md) for the edition model.
+  chaptered book. Keep the next semester's revision private in Binder and
+  release a deliberate public Shelf snapshot when students should receive it.
+  See [Revisions and releases](docs/revisions.md) for the edition model.
 
 Both paths keep the same plain Markdown, Git history, Reader, Desk, and
 Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.
 
 ## What am I looking at?
 
-Inside a book you will usually see:
+Inside a publication you will usually see:
 
-- **`README.md`** — the book's little control card: title, author, status, and
-  table of contents.
-- **`manuscript/`** — the actual writing, one file per chapter.
-- **`media/`** — optional cover art and images.
+- **`README.md`** — the publication's little control card: title, author, status,
+  format, and contents.
+- **`manuscript/`** — the actual writing. A book may use one file per chapter;
+  a paper or issue may use one longer manuscript file.
+- **`media/`** — optional cover art, figures, page art, and other images.
 
 The `.md` ending means **Markdown**. Markdown is plain text with a few tiny
 formatting conventions. A line starting with `#` is a heading. `*this*` makes
@@ -129,7 +150,7 @@ Less useful:
 
 There is no grading. The note is for humans.
 
-## Can I break the book?
+## Can I break the publication?
 
 Probably, briefly. That is one reason Bookself uses version history.
 
@@ -141,9 +162,9 @@ The safest beginner rule is simple: **change prose, not plumbing**.
 
 Stay mostly inside:
 
-- `books/<your-book>/README.md`
-- `books/<your-book>/manuscript/`
-- `books/<your-book>/media/`
+- `books/<your-publication>/README.md`
+- `books/<your-publication>/manuscript/`
+- `books/<your-publication>/media/`
 
 You can ignore `reader/`, `desk/`, `scripts/`, and most of the rest of the
 repository while writing.
@@ -164,7 +185,7 @@ Read the fuller version in **[Books have a lifecycle too](docs/writing-lifecycle
 ## How do I get feedback?
 
 For informal feedback, send someone the Reader preview and let them read the
-book like a book.
+publication like a publication.
 
 For precise editorial feedback, GitHub can attach a comment to an exact line.
 If someone proposes an edit, GitHub may call it a **pull request**. Think of a
@@ -172,7 +193,7 @@ pull request as a review copy with a conversation attached.
 
 You do not have to use that on day one.
 
-## When does a book become public?
+## When does a publication become public?
 
 Bookself can use two spaces:
 
@@ -195,4 +216,4 @@ read the **[Author guide](docs/author-guide.md)**.
 If you are curious about the machinery, read **[Bookself architecture](docs/bookself.md)**.
 
 If you are currently writing, you have permission to stop reading documentation
-and go write the chapter.
+and go write the next paragraph.

@@ -30,6 +30,10 @@ This public **Making Bookself** copy is a teaching exception. Real private draft
 
 A useful proof is not a dead preview.
 
+This proof carries its seams with it. From here you can inspect [the exact Markdown source](https://github.com/Svyable/bookself/blob/main/books/making-bookself/manuscript/ch01-the-innermost-loop.md), follow [the publication history](https://github.com/Svyable/bookself/commits/main/books/making-bookself), read [the current review map](https://github.com/Svyable/bookself/blob/main/books/making-bookself/REVIEW.md), or join [the public review thread](https://github.com/Svyable/bookself/issues/35). If you want to look at the released side of the model instead, open [the public Shelf](https://svyable.github.io/shelf/reader/).
+
+Use a Reader note for a thought you want to keep to yourself. Use the review thread when the thought should survive as shared context. Use a pull request when you know the source change you want to propose. The point is not to collect more links. It is to shorten the distance between noticing something in the book and reaching the evidence that can improve it.
+
 When a sentence feels wrong, the reader should be able to move toward the artifact that can change it. Bookself already treats the manuscript source, Git history, and feedback path as part of the reading experience. The cover can show a revision. The Reader can link to source and history. A reviewer can comment on exact lines in GitHub. A reader can make personal notes against source positions without changing the manuscript.
 
 Those are different kinds of notes, and keeping the distinction matters:

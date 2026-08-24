@@ -16,7 +16,7 @@ def storage_prefix(role: str, repo: str) -> str:
     return re.sub(r"[^a-z0-9-]", "", value)
 
 
-def copy_platform(root: Path, destination: Path) -> None:
+def copy_platform(root: Path, destination: Path, role: str) -> None:
     def ignore(directory: str, names: list[str]) -> set[str]:
         current = Path(directory).resolve()
         rel = current.relative_to(root)
@@ -26,8 +26,8 @@ def copy_platform(root: Path, destination: Path) -> None:
         elif rel == Path(".github"):
             skipped.add("workflows")
         elif rel == Path("books"):
-            templates = {"_TEMPLATE", "_PAPER_TEMPLATE"}
-            skipped.update(name for name in names if name not in templates)
+            allowed = {"_TEMPLATE", "_PAPER_TEMPLATE"} if role == "binder" else set()
+            skipped.update(name for name in names if name not in allowed)
         elif rel == Path("docs"):
             skipped.update({"superpowers", "instances"})
         return skipped.intersection(names)
@@ -55,7 +55,7 @@ def main() -> int:
 
     repository = args.repository or destination.name
     destination.mkdir(parents=True, exist_ok=True)
-    copy_platform(root, destination)
+    copy_platform(root, destination, args.role)
 
     shutil.copy2(root / "docs" / "instances" / f"{args.role}-README.md", destination / "README.md")
 
@@ -104,8 +104,10 @@ def main() -> int:
     print("Shared UI included: reader/ + desk/")
     print("Instance-owned files: books/, README.md, imprint.json")
     if args.role == "shelf":
+        print("Publication content starts empty; the first release creates books/<slug>/.")
         print("Enable GitHub Pages for the public shelf.")
     else:
+        print("Blank starters included: books/_TEMPLATE + books/_PAPER_TEMPLATE")
         print("Keep the binder private. Do not enable public Pages for unpublished manuscripts.")
     if args.owner == "auto":
         print("Optional: edit imprint.json and set github.owner for repository edit/history links.")

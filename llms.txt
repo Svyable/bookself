@@ -23,6 +23,14 @@ A Binder release copies a committed snapshot into the Shelf. Binder and Shelf ar
 - [Revisions and releases](https://github.com/Svyable/bookself/blob/main/docs/revisions.md): safe revision and edition workflow.
 - [Editor guide](https://github.com/Svyable/bookself/blob/main/docs/editor-guide.md): review and editing workflow.
 
+## Academic and course-text writing
+
+- [Academic writing](https://github.com/Svyable/bookself/blob/main/docs/academic-writing.md): the supported plain-Markdown conventions for footnotes, citations and bibliography entries, semantic figure captions, numbered equations, and chapter-local references.
+- [LaTeX math](https://github.com/Svyable/bookself/blob/main/docs/latex.md): supported math delimiters and display environments for mathematical notation inside Markdown manuscripts.
+- [Blank paper template](https://github.com/Svyable/bookself/tree/main/books/_PAPER_TEMPLATE): starter structure for a Markdown-first paper or research note.
+
+The scholarly layer stays intentionally local-first: core Bookself does not require BibTeX/Biber, CSL, TeX packages, a hosted compiler, or CI. Agents should not invent those dependencies or claim book-wide reference semantics that the Reader does not provide.
+
 ## Compare alternatives
 
 - [Bookself alternatives and neighboring tools](https://github.com/Svyable/bookself/blob/main/docs/alternatives.md): practical comparisons with Overleaf, Manubot, Quarto, Jupyter Book, MyST Markdown, bookdown, Pressbooks, PubPub, Leanpub, GitBook, mdBook, Antora, Typst, Zettlr, HedgeDoc, and Pandoc.

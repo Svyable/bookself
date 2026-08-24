@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">Course-text edition loop</title>
+  <desc id="desc">A private Binder revision moves through review to a released Shelf edition, while the released edition remains stable during the next revision.</desc>
+  <rect width="960" height="360" rx="28" fill="#f3eee4"/>
+  <g font-family="Georgia, 'Times New Roman', serif" fill="#2f2923">
+    <text x="480" y="54" text-anchor="middle" font-size="27" font-weight="700">A course-text edition loop</text>
+    <g>
+      <rect x="70" y="118" width="220" height="112" rx="18" fill="#fffaf1" stroke="#8f7657" stroke-width="2"/>
+      <text x="180" y="158" text-anchor="middle" font-size="22" font-weight="700">Binder</text>
+      <text x="180" y="190" text-anchor="middle" font-size="16">private revision</text>
+      <text x="180" y="214" text-anchor="middle" font-size="16">next edition</text>
+    </g>
+    <g>
+      <rect x="370" y="118" width="220" height="112" rx="18" fill="#fffaf1" stroke="#8f7657" stroke-width="2"/>
+      <text x="480" y="158" text-anchor="middle" font-size="22" font-weight="700">Review</text>
+      <text x="480" y="190" text-anchor="middle" font-size="16">claims + figures</text>
+      <text x="480" y="214" text-anchor="middle" font-size="16">references + changes</text>
+    </g>
+    <g>
+      <rect x="670" y="118" width="220" height="112" rx="18" fill="#fffaf1" stroke="#8f7657" stroke-width="2"/>
+      <text x="780" y="158" text-anchor="middle" font-size="22" font-weight="700">Shelf</text>
+      <text x="780" y="190" text-anchor="middle" font-size="16">released snapshot</text>
+      <text x="780" y="214" text-anchor="middle" font-size="16">stable for readers</text>
+    </g>
+    <path d="M295 174h64" fill="none" stroke="#9c6a33" stroke-width="4" stroke-linecap="round"/>
+    <path d="M349 164l14 10-14 10" fill="none" stroke="#9c6a33" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M595 174h64" fill="none" stroke="#9c6a33" stroke-width="4" stroke-linecap="round"/>
+    <path d="M649 164l14 10-14 10" fill="none" stroke="#9c6a33" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M780 245c0 66-600 66-600 0" fill="none" stroke="#8f7657" stroke-width="2.5" stroke-dasharray="7 8"/>
+    <path d="M190 263l-12-16-7 18" fill="#f3eee4" stroke="#8f7657" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="480" y="318" text-anchor="middle" font-size="15" fill="#6c6258">The released edition stays readable while the next revision begins privately.</text>
+  </g>
+</svg>

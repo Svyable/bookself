@@ -66,6 +66,12 @@ It then:
 
 Review the resulting Shelf diff. Commit and push it with the Shelf's normal Git workflow when it is correct. A pull request is a useful review boundary but is not required by Bookself itself.
 
+## Course texts and semester editions
+
+For a course text, treat the public Shelf copy as the edition students were actually assigned. Keep next-term rewrites in the private Binder, and release the replacement only when the new semester edition is ready. An intentional public hotfix can correct the current edition without turning the Shelf into the normal drafting workspace.
+
+For a worked teaching example—including semester stability, hotfixes, rollback, and exact-version citation—see [Bookself 101: Semester Editions and Release](../books/bookself-101/manuscript/ch04-semester-editions.md).
+
 ## Why Shelf should stay stable
 
 A public Git repository is public even when the Reader hides a publication. Changing a Shelf book from `Published` to `Revision in progress` can remove it from the visible bookshelf, but its raw Markdown and Git history remain public.

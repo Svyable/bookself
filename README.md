@@ -158,7 +158,8 @@ work a durable memory and a calm path from draft to publication to revision.
 
 For a longer chooser-style guide — including MyST Markdown, Antora, Typst,
 Zettlr, and HedgeDoc — see **[Bookself alternatives and neighboring
-tools](docs/alternatives.md)**.
+tools](docs/alternatives.md)**. For direct answers to common workflow questions,
+see the **[Bookself FAQ](docs/faq.md)**.
 
 ## What belongs where
 
@@ -264,6 +265,7 @@ should feel like an issue, feature, or quick doorway.
 | You are thinking… | Go here |
 |---|---|
 | “I just want to write a book.” | **[START HERE](START-HERE.md)** |
+| “I have a practical question about Git, Markdown, textbooks, papers, or publishing.” | [FAQ](docs/faq.md) |
 | “I want to publish a paper, figures, or link another creation.” | [Publication formats](docs/publication-formats.md) |
 | “Please explain this without assuming I know GitHub.” | [Author guide](docs/author-guide.md) |
 | “How does the writing lifecycle map to all this?” | [Writing lifecycle](docs/writing-lifecycle.md) |
@@ -272,6 +274,7 @@ should feel like an issue, feature, or quick doorway.
 | “What other writing and publishing tools should I compare?” | [Alternatives and neighboring tools](docs/alternatives.md) |
 | “I edit or review other people's work.” | [Editor guide](docs/editor-guide.md) |
 | “I want the full private-binder/public-shelf architecture.” | [Bookself architecture](docs/bookself.md) |
+| “How should I cite Bookself?” | [CITATION.cff](CITATION.cff) |
 | “I am contributing to the software itself.” | [Contributing](CONTRIBUTING.md) |
 | “I am an AI agent trying to understand Bookself.” | [llms.txt](llms.txt) |
 | “I am an AI agent modifying this repository.” | [AGENTS.md](AGENTS.md) |
@@ -291,6 +294,13 @@ Then open:
 
 If that sentence made you wonder what a terminal is, skip it. The
 [Author guide](docs/author-guide.md) starts in the GitHub website instead.
+
+## Citation
+
+If Bookself is part of research, teaching, publishing, or software work, use the
+metadata in **[CITATION.cff](CITATION.cff)**. GitHub can render that metadata as
+common citation formats from the repository page. When exact reproducibility
+matters, also record the specific commit used.
 
 ## License
 

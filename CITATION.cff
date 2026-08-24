@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use Bookself in research, teaching, publishing, or software work, please cite the software using this metadata."
+type: software
+title: "Bookself"
+authors:
+  - family-names: "Benson"
+    given-names: "Sven"
+abstract: "Bookself is open-source, Git-native publishing software for books, papers, course texts, and other long-form work. It keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from intentional public releases, and includes a browser Reader plus a Publishing Desk."
+license: MIT
+repository-code: "https://github.com/Svyable/bookself"
+url: "https://github.com/Svyable/bookself"
+keywords:
+  - publishing
+  - scholarly-writing
+  - academic-writing
+  - markdown
+  - git
+  - books
+  - open-textbooks
+  - version-control
+  - research-software

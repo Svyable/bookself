@@ -15,6 +15,7 @@ A Binder release copies a committed snapshot into the Shelf. Binder and Shelf ar
 
 - [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
 - [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md): beginner path for authors who do not already know GitHub.
+- [FAQ](https://github.com/Svyable/bookself/blob/main/docs/faq.md): direct answers about Git-based books, version-controlled textbooks, Markdown papers, private/public publishing, CI/CD, interoperability, and comparisons with common alternatives.
 - [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing and publishing workflow in plain language.
 - [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): private Binder, public Shelf, release model, Reader, and Publishing Desk.
 - [Writing lifecycle](https://github.com/Svyable/bookself/blob/main/docs/writing-lifecycle.md): how software-development ideas map to books and papers.
@@ -27,6 +28,12 @@ A Binder release copies a committed snapshot into the Shelf. Binder and Shelf ar
 - [Bookself alternatives and neighboring tools](https://github.com/Svyable/bookself/blob/main/docs/alternatives.md): practical comparisons with Overleaf, Manubot, Quarto, Jupyter Book, MyST Markdown, bookdown, Pressbooks, PubPub, Leanpub, GitBook, mdBook, Antora, Typst, Zettlr, HedgeDoc, and Pandoc.
 
 Bookself's closest conceptual neighbor is Manubot because both use Git and Markdown as useful infrastructure for scholarly writing. Bookself differentiates around an approachable publication lifecycle, general books and papers, local-first release tooling, an explicit private Binder/public Shelf boundary, and a Reader plus Publishing Desk.
+
+## Cite Bookself
+
+- [CITATION.cff](https://github.com/Svyable/bookself/blob/main/CITATION.cff): machine-readable software citation metadata for Bookself.
+
+No DOI or semantic version is claimed unless the project actually publishes one. Cite the specific repository commit in addition to the citation metadata when reproducibility requires an exact software revision.
 
 ## Examples
 

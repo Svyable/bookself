@@ -39,4 +39,4 @@ Use the checks that apply to this PR; leave unrelated ones unchecked.
 - [ ] If I maintain local instances, I synced shared `reader/` / `desk/` changes with `scripts/sync-ui.sh`
 - [ ] This change does not make hosted CI, GitHub Actions, or a build step mandatory for the normal Bookself lifecycle
 
-See [Contributor map](../docs/contributor-map.md) if you are not sure which checks apply.
+See `docs/contributor-map.md` if you are not sure which checks apply.

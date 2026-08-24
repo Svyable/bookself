@@ -1,13 +1,15 @@
 # Start here
 
-If you came here to write a book and GitHub is currently giving you the same
-feeling as the cockpit of a small aircraft, this page is for you.
+If you came here to write a book, paper, or course text and GitHub is currently
+giving you the same feeling as the cockpit of a small aircraft, this page is
+for you.
 
 You do **not** need to learn Git before you begin. You do not need to know what
 a repository is. You do not need a terminal, a command line, a branching
 strategy, or a strong opinion about tabs versus spaces.
 
-You need a book, a chapter, and somewhere to put the next sentence.
+You need a publication, a piece of writing, and somewhere to put the next
+sentence.
 
 If you do not have a GitHub account yet, or you want the basic connection steps
 for ChatGPT, Claude, Claude Code, or OpenCode, start with **[Getting Set Up](books/how-to-bookself/manuscript/ch00-getting-set-up.md)** in *How to Bookself*. The local/direct paths described there do not require private-repository GitHub Actions.
@@ -67,6 +69,21 @@ actual title.
 
 Congratulations: structurally, that is now a book. Literature may take a bit
 longer.
+
+## Starting a paper or course text
+
+You do not need a different publishing system.
+
+- **Research paper or whitepaper:** copy `books/_PAPER_TEMPLATE/`. The
+  [academic writing guide](docs/academic-writing.md) covers citations,
+  footnotes, figures, references, and the supported math conventions.
+- **Course text or textbook:** start from `books/_TEMPLATE/` like any other
+  book. Keep the next semester's revision private in Binder and release a
+  deliberate public Shelf snapshot when students should receive it. See
+  [Revisions and releases](docs/revisions.md) for the edition model.
+
+Both paths keep the same plain Markdown, Git history, Reader, Desk, and
+Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.
 
 ## What am I looking at?
 

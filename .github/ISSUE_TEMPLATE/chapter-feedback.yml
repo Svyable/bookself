@@ -17,6 +17,7 @@ body:
       options:
         - how-to-bookself
         - bookself-101
+        - making-bookself
         - the-example-paper
         - _TEMPLATE
     validations:

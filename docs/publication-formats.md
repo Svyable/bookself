@@ -94,7 +94,7 @@ You can also link a publisher catalog, an independent bookstore, a university li
 
 Bookself can derive two conservative discovery links from standard identifiers:
 
-- A syntactically valid 10- or 13-digit `ISBN` adds an **Open Library** link using Open Library's documented stable `/isbn/<ISBN>` route.
+- A checksum-valid 10- or 13-digit `ISBN` adds an **Open Library** link using Open Library's documented stable `/isbn/<ISBN>` route.
 - A syntactically valid `DOI` adds a canonical **DOI** link at `https://doi.org/<DOI>`.
 
 If `Find elsewhere` / `Links` already contains a link labeled `Open Library` or `DOI`, that explicit author-supplied destination wins and the fallback is not added.

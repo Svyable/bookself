@@ -39,7 +39,7 @@ class PortabilityTests(unittest.TestCase):
         self.assertIn("macOS, Windows, and Linux", text)
         self.assertIn("no application dependencies", text.lower())
 
-    def test_stamp_instance_keeps_only_blank_publication_templates(self) -> None:
+    def test_stamp_instance_keeps_only_instance_safe_content(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             destination = Path(tmp) / "binder"
             subprocess.run(
@@ -57,6 +57,7 @@ class PortabilityTests(unittest.TestCase):
             )
             book_entries = {path.name for path in (destination / "books").iterdir()}
             self.assertEqual(book_entries, {"_TEMPLATE", "_PAPER_TEMPLATE"})
+            self.assertFalse((destination / ".github" / "workflows").exists())
 
 
 if __name__ == "__main__":

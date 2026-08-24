@@ -35,6 +35,14 @@ Do not hard-code a repository owner, private URL, publication identity, or Svyab
 
 Bookself should remain useful with Git, a browser, and Python's standard library. You do not need a Node package install, container, cloud project, or GitHub Actions run just to contribute.
 
+For a dependency-free repository health check, start with:
+
+```bash
+python3 scripts/doctor.py
+```
+
+The doctor is read-only. It checks the repository role, Git worktree state, Reader and Desk presence, catalog/publication consistency, and other structural invariants so you can spot a baseline problem before attributing it to your change.
+
 Serve a checkout from its root:
 
 ```bash

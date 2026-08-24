@@ -56,7 +56,15 @@ assert.equal(refs.get('eq:sum').number, 1);
 assert.ok(refs.get('eq:sum').offset > 0);
 assert.ok(renderEquationRef('eq:sum').includes('(1)'));
 assert.ok(renderEquationRef('eq:sum').includes('data-academic-offset='));
-assert.ok(renderEquationRef('missing').includes('reader-academic-missing'));
+const missingRef = renderEquationRef('missing');
+assert.ok(missingRef.includes('reader-academic-missing'));
+assert.ok(missingRef.includes('aria-label="Unresolved equation label missing"'));
+
+setMathReferenceContext(`$$\na=1\\label{eq:dup}\n$$\n\n$$\nb=2\\label{eq:dup}\n$$\n`);
+const duplicateRef = renderEquationRef('eq:dup');
+assert.ok(duplicateRef.includes('reader-academic-ambiguous'));
+assert.ok(duplicateRef.includes('aria-label="Ambiguous equation label eq:dup: duplicate definitions"'));
+assert.equal(duplicateRef.includes('<a '), false);
 
 const fallback = renderMath('x < y', false);
 assert.ok(fallback.includes('reader-math-pending'));
@@ -73,6 +81,14 @@ assert.equal(installMarkedMath(fakeMarked), true);
 assert.equal(extensionConfig.extensions.length, 2);
 assert.equal(extensionConfig.extensions[0].tokenizer('$$x+y$$\n').tex, 'x+y');
 assert.equal(extensionConfig.extensions[1].tokenizer('$x+y$ rest').tex, 'x+y');
+
+const duplicateBlockHtml = extensionConfig.extensions[0].renderer(
+  extensionConfig.extensions[0].tokenizer('$$a=1\\label{eq:dup}$$\n')
+);
+assert.ok(duplicateBlockHtml.includes('data-equation-label-duplicate="eq:dup"'));
+assert.ok(duplicateBlockHtml.includes('reader-academic-ambiguous'));
+assert.equal(duplicateBlockHtml.includes('id="eq-eq:dup"'), false);
+assert.equal(duplicateBlockHtml.includes('data-equation-number='), false);
 
 globalThis.katex = {
   renderToString(tex, options) {

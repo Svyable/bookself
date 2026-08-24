@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800" role="img" aria-labelledby="title desc">
+  <title id="title">Comic page placeholder</title>
+  <desc id="desc">A portrait comic page with three empty panels labeled one, two, and three.</desc>
+  <rect width="1200" height="1800" fill="#f4efe6"/>
+  <rect x="70" y="70" width="1060" height="650" rx="18" fill="#ffffff" stroke="#2b2621" stroke-width="12"/>
+  <rect x="70" y="770" width="500" height="820" rx="18" fill="#ffffff" stroke="#2b2621" stroke-width="12"/>
+  <rect x="630" y="770" width="500" height="820" rx="18" fill="#ffffff" stroke="#2b2621" stroke-width="12"/>
+  <g fill="#2b2621" font-family="Georgia, serif" text-anchor="middle">
+    <text x="600" y="365" font-size="72">PANEL 1</text>
+    <text x="320" y="1150" font-size="72">PANEL 2</text>
+    <text x="880" y="1150" font-size="72">PANEL 3</text>
+    <text x="600" y="1695" font-size="44">Replace this SVG with finished page art.</text>
+  </g>
+</svg>

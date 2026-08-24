@@ -1,0 +1,63 @@
+name: Platform idea
+description: Propose a Reader, Desk, publishing, research, or contributor-experience improvement
+title: "[Idea]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start with the problem, not the subsystem. Bookself tries to stay small enough that plain Markdown remains a complete publishing path.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should Bookself solve better?
+      description: Describe the author, reader, researcher, editor, teacher, or contributor experience that feels harder than it should.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Who benefits most?
+      options:
+        - Authors / editors
+        - Readers
+        - Researchers / academics
+        - Professors / students
+        - Open-source contributors
+        - Publishers / maintainers
+        - More than one of these
+    validations:
+      required: true
+
+  - type: textarea
+    id: smallest
+    attributes:
+      label: What is the smallest useful version?
+      description: A narrow first version is easier to understand, test, and grow than a platform-sized proposal.
+      placeholder: The smallest useful behavior would…
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: Show a short Markdown example, workflow, sketch, or public reference if one would make the idea concrete.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or neighboring tools
+      description: Optional. If another project already solves this well, say so. Bookself is happy to integrate or coexist rather than own every step.
+
+  - type: checkboxes
+    id: architecture
+    attributes:
+      label: Bookself defaults
+      description: These are constraints on the default publishing path, not a ban on optional advanced integrations.
+      options:
+        - label: I understand ordinary Markdown publications should remain readable without a mandatory hosted build or CI job.
+          required: true
+        - label: I understand private Binder publishing should continue to work locally with Git + Python and zero required GitHub Actions minutes.
+          required: true

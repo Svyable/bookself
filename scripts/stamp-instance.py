@@ -23,6 +23,8 @@ def copy_platform(root: Path, destination: Path) -> None:
         skipped = {".DS_Store"}
         if rel == Path("."):
             skipped.update({".git", "imprint.json", "README.md"})
+        elif rel == Path(".github"):
+            skipped.add("workflows")
         elif rel == Path("books"):
             templates = {"_TEMPLATE", "_PAPER_TEMPLATE"}
             skipped.update(name for name in names if name not in templates)

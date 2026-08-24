@@ -1,0 +1,81 @@
+name: Platform bug
+description: Report a Reader, Desk, publishing, accessibility, or academic-rendering problem
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping make Bookself sturdier. You do not need to know which file is responsible.
+        Describe what you saw and how someone else can reproduce it.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Where did the problem show up?
+      options:
+        - Reader / shelf
+        - Publishing Desk
+        - Binder → Shelf release
+        - Math / citations / academic rendering
+        - Accessibility
+        - Templates / onboarding / docs
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
+      description: Describe the visible problem. A screenshot is welcome for visual issues.
+      placeholder: I expected… but instead…
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we reproduce it?
+      description: Give the smallest sequence of steps, Markdown snippet, or publication shape that triggers the problem.
+      placeholder: |
+        1. Serve the repository root
+        2. Open reader/…
+        3. …
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where were you using Bookself?
+      options:
+        - Public GitHub Pages Reader
+        - Local checkout served with python3 -m http.server
+        - Private Binder
+        - Public Shelf repository
+        - GitHub website only
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser / device / environment
+      description: Optional, but especially useful for layout, touch, print, or accessibility bugs.
+      placeholder: e.g. Safari 18 on iPadOS, Firefox on Linux, VoiceOver on macOS
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Logs, screenshots, source snippets, or links to a public reproduction. Please remove credentials and unpublished manuscript text.
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I have removed secrets, tokens, private repository URLs, and unpublished manuscript content from this report.
+          required: true

@@ -39,16 +39,29 @@ folder.
 ## Publishing and the public catalog
 
 For a house that keeps drafts off the street, see [Bookself](bookself.md):
-private binder, public shelf. Promoting a book is copy-the-folder, then
-the two edits below **on the shelf**.
+private binder, public shelf. For a normal Binder → Shelf release, commit the
+Binder publication and run:
+
+```bash
+scripts/release-book.sh <slug> [path-to-shelf]
+```
+
+The local release helper verifies the Binder and Shelf roles, refuses
+uncommitted release-path changes, prepares an exact replacement snapshot, sets
+the Shelf copy to `Published`, updates the public catalog row, verifies the
+copied files, and stops before commit or push. Review the prepared Shelf change
+and land it through that repository's normal Git workflow.
+
+`scripts/promote-book.sh` remains available as the lower-level copy operation,
+but it does not perform the full release transaction or publish the book.
 
 The public reader lists a book only when **both** are true:
 
 1. The book README Status is exactly `Published`.
 2. The portal `README.md` table under **The books** links `books/<slug>/`.
 
-Do that in one pull request (or one commit, if you are the lead author).
-Do not edit `reader/` to add a book.
+The release helper normally prepares both together. Do not edit `reader/` to
+add a book.
 
 Unpublish by reversing both. Preview without publishing:
 `reader/#/b/<slug>/`.

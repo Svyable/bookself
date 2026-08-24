@@ -8,7 +8,23 @@ spot something worth changing, there is a path for that.
 If the words **branch** and **pull request** mean nothing to you, start with the
 [Author guide](docs/author-guide.md). Nobody will make you take a quiz afterward.
 
-## Two easy ways in
+If you are changing Bookself itself, keep the
+[Contributor map](docs/contributor-map.md) nearby. It explains which directory
+owns which kind of change and the smallest local checks that go with it.
+
+## Pick the kind of contribution you are making
+
+| You want to… | Best starting point |
+|---|---|
+| Improve a sentence or chapter | Edit that publication under `books/` |
+| Report a Reader, Desk, release, accessibility, or academic-rendering bug | Open **Platform bug** |
+| Propose a platform or research feature | Open **Platform idea** and start with the problem |
+| Change Reader / Desk behavior | Read the [Contributor map](docs/contributor-map.md) |
+| Improve docs, examples, templates, or onboarding | Make the smallest docs/community PR that makes the path clearer |
+
+A good report is already a contribution. You do not have to arrive with a patch.
+
+## Two easy ways in for book and paper work
 
 ### 1. Propose an edit
 
@@ -71,6 +87,37 @@ the main version.
 The goal is not to win the comment thread. The goal is a better book with an
 understandable history.
 
+## Platform changes do not require a cloud ceremony
+
+Bookself's normal development path is intentionally local. Serve the repository
+root with:
+
+```bash
+python3 -m http.server
+```
+
+Then inspect `reader/` or `desk/` in a browser.
+
+For parser work, run the focused zero-install Node tests that match the change
+when Node is available. For release-tooling work, run:
+
+```bash
+python3 scripts/test_release_book.py
+```
+
+You do not need access to the reference private Binder in order to contribute a
+Reader or Desk improvement. The platform repository is the source of truth for
+shared UI; maintainers can sync the final shared files into reference instances
+when the change lands.
+
+Please do not introduce a required GitHub Actions job, hosted build, package
+manager, or external service merely to make a normal Bookself contribution
+possible. Optional advanced integrations are welcome when the plain local path
+remains complete.
+
+See the [Contributor map](docs/contributor-map.md) for Reader/Desk sync rules,
+academic-feature boundaries, focused test commands, and PR-shaping guidance.
+
 ## Publishing changes deserve one coherent moment
 
 On a public Shelf, publication means both:
@@ -90,6 +137,9 @@ An unlisted file in a public repository is still public.
 When adding or retiring a book, keep that list in sync in the same change.
 Details are in the [Editor guide](docs/editor-guide.md).
 
+The platform bug and idea forms intentionally do not require contributors to
+know which file owns a problem. Triage can happen after the report exists.
+
 ## If you are here to change the platform
 
 Welcome to the plumbing.
@@ -97,6 +147,7 @@ Welcome to the plumbing.
 Before changing shared Reader or Desk behavior, read the boundary in
 [Bookself architecture](docs/bookself.md): `reader/` and `desk/` are shared
 platform software; books and instance identity belong to each Binder or Shelf.
+Then use the [Contributor map](docs/contributor-map.md) for the practical path.
 
 If you are here to change a sentence in chapter 3, you can safely ignore that
 entire paragraph.

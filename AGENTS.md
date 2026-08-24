@@ -93,14 +93,30 @@ build step unless a human explicitly asks to change that architecture.
   `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
 - Images live in that publication's `media/` folder and are referenced with
   relative links (`![alt](../media/figure-1.png)`). PNG, JPG, WebP, and SVG are
-  all appropriate reader assets.
+  all appropriate reader assets. A quoted Markdown image title on a standalone
+  image becomes its figure caption, for example
+  `![alt](../media/figure-1.png "Figure 1. Caption.")`.
+- Footnotes use a marker such as `[^method]` and a same-chapter definition such
+  as `[^method]: Note text.`. Keep first-layer footnote definitions to one
+  Markdown paragraph.
+- Simple citations use `[@source|Visible author-year label]` with a same-chapter
+  bibliography definition such as `[@source]: Full reference.`. The visible
+  label and bibliography style are author-controlled; core Bookself does not
+  pretend to be a CSL or BibTeX style engine.
 - LaTeX-style math may be embedded directly in Markdown. Use `$...$` or
   `\(...\)` for inline math; use `$$...$$`, `\[...\]`, or the display
   environments `equation`, `align`, `alignat`, and `gather` (including starred
   forms) for display math. Put literal TeX examples in code spans/fences.
-- The current math layer is not a full `.tex` compiler. Do not introduce
-  document classes, package installation, BibTeX/Biber, TikZ, or a build step
-  unless the task explicitly advances the full-TeX workflow.
+- A display equation with one `\label{...}` is numbered chapter-locally and can
+  be referenced later in that same chapter with `\eqref{...}`. Do not claim
+  book-wide TeX reference semantics unless the Reader actually gains a
+  book-wide reference registry.
+- See `docs/academic-writing.md` for the scholarly Markdown conventions and
+  `docs/latex.md` for mathematical notation.
+- The current academic/math layer is not a full `.tex` compiler. Do not
+  introduce document classes, package installation, `.bib` parsing,
+  BibTeX/Biber, CSL, TikZ, or a required build step unless the task explicitly
+  advances the optional full-TeX workflow.
 - External creations do not need a publication folder. Put durable sites/apps
   under root `## The web shelf` to render them as bound shelf volumes. Put
   lighter links under root `## The stand` to render magazine-style cards.
@@ -138,7 +154,9 @@ discover it.
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, optional venue / DOI, and keep `Status: Drafting` while the work is in
 progress. The same Git history, review, media, preview, and release flow applies.
-Use [docs/latex.md](docs/latex.md) when the paper contains mathematical notation.
+Use [docs/academic-writing.md](docs/academic-writing.md) for citations,
+footnotes, figures, and references, and [docs/latex.md](docs/latex.md) when the
+paper contains mathematical notation.
 
 **Add a web volume.** Under root `## The web shelf`, add one Markdown link such
 as `- [Project name](https://example.com/) — a short optional note`. The Reader

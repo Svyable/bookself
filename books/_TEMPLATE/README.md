@@ -26,13 +26,29 @@
 
 | | |
 |---|---|
-| **Authors**   | @your-github-username |
-| **Status**    | Drafting |
-| **Publisher** |  |
-| **Series**    |  |
-| **Tags**      |  |
-| **Edition**   |  |
-| **Chapters**  | 0 of N drafted |
+| **Authors**        | @your-github-username |
+| **Status**         | Drafting |
+| **Format**         | Book |
+| **Publisher**      |  |
+| **Series**         |  |
+| **Tags**           |  |
+| **Edition**        |  |
+| **Language**       |  |
+| **ISBN**           |  |
+| **Author Links**   |  |
+| **Find elsewhere** |  |
+| **Chapters**       | 0 of N drafted |
+
+Use `Author Links` for author-controlled profiles such as a personal site, Goodreads author page, or ORCID. Use `Find elsewhere` for real pages where readers can locate this work outside Bookself—for example a publisher catalog, bookstore listing, WorldCat record, Open Library record, or library catalog.
+
+Both fields accept ordinary Markdown links separated by a middle dot:
+
+```md
+| **Author Links**   | [Website](https://example.com/author) · [Goodreads](https://www.goodreads.com/author/example) |
+| **Find elsewhere** | [Publisher](https://example.com/book) · [WorldCat](https://search.worldcat.org/example) |
+```
+
+Leave them blank until the real destination pages exist.
 
 ## Contents
 

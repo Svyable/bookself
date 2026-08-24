@@ -7,7 +7,8 @@ public **shelf**.
 The same Bookself `reader/` and `desk/` live in both binder and shelf. They
 are shared software; your manuscripts and `imprint.json` are instance-owned.
 
-A fresh Binder contains only the blank book and paper starters under `books/`.
+A fresh Binder contains Bookself's blank publication starters under `books/`:
+`_TEMPLATE` plus every `_*_TEMPLATE` format starter present in the platform.
 Bookself's platform examples are not copied into your private writing repo.
 
 Do not enable public GitHub Pages on a binder that contains unpublished work.

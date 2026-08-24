@@ -42,11 +42,11 @@ exists on the owner, choose another name with the user.
    ```
 
    The stamp includes both `reader/` and `desk/` and creates a role-aware
-   `imprint.json`. The Binder keeps only the blank book and paper templates;
-   the Shelf starts with no publication folders at all. Platform example
-   manuscripts and platform GitHub Actions workflows stay upstream. If
-   owner/repo is not known yet, omit those arguments and edit the generated
-   imprint later.
+   `imprint.json`. The Binder keeps every blank publication starter matching
+   `books/_TEMPLATE` or `books/_*TEMPLATE`; the Shelf starts with no publication
+   folders at all. Platform example manuscripts and platform GitHub Actions
+   workflows stay upstream. If owner/repo is not known yet, omit those arguments
+   and edit the generated imprint later.
 4. In each stamped tree: `git init -b main`, first commit, then create repos:
 
    ```bash
@@ -65,9 +65,11 @@ into either user instance.
 
 ## write
 
-On binder, use the same verbs as `AGENTS.md`: start a book from `_TEMPLATE`,
-one chapter per change, and keep every private manuscript listed under the
-binder root **The books** table so the local Desk can discover it.
+On binder, start from the publication starter that matches the work (`_TEMPLATE`
+for a conventional book, `_PAPER_TEMPLATE` for a paper, or another
+`_*_TEMPLATE` format starter when present). Keep the one-chapter-per-change rule
+from `AGENTS.md`, and keep every private manuscript listed under the binder root
+**The books** table so the local Desk can discover it.
 
 Preview locally:
 

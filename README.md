@@ -9,6 +9,24 @@ become a calm browser reader.
 No mysterious publishing database. No `final-final-really-final.docx`. No
 requirement that you already know what a repository is.
 
+## Experience Bookself
+
+**The fastest way to understand Bookself is to read something in it.**
+
+### [📖 Open the live Bookself Reader →](https://svyable.github.io/bookself/reader/)
+
+That is the actual no-build Reader running from this repository on GitHub Pages —
+not a screenshot, mockup, or separate demo app.
+
+| Try it now | Open in Reader |
+|---|---|
+| **How to Bookself** — the practical guide | [Read it →](https://svyable.github.io/bookself/reader/#/b/how-to-bookself/) |
+| **Bookself 101** — the academic textbook example | [Read it →](https://svyable.github.io/bookself/reader/#/b/bookself-101/) |
+| **Public Shelf** — a real released collection | [Browse it →](https://svyable.github.io/shelf/reader/) |
+
+The books above are ordinary Markdown publications in this repository. The
+Reader is the same shared `reader/` software that a Binder and Shelf use.
+
 > New here? Good. You are allowed to not know GitHub.
 > Start with **[START HERE](START-HERE.md)** and ignore the machinery until it
 > becomes useful.

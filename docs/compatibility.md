@@ -38,6 +38,25 @@ Bookself's Python tools use the Python standard library. There is no `pip instal
 
 GitHub CLI (`gh`) is useful for authentication and repository work from a terminal, but Bookself does not require it.
 
+## Python command names on different systems
+
+Bookself documentation often writes `python3` to make the Python 3 requirement explicit. The command name can differ by installation:
+
+- **macOS / Linux:** usually `python3`
+- **Windows:** commonly `python` or `py -3`
+
+Use whichever command on your machine starts Python 3. For example, these are equivalent local preview commands:
+
+```text
+python3 -m http.server
+python -m http.server
+py -3 -m http.server
+```
+
+Likewise, if a guide says `python3 scripts/doctor.py`, Windows users can run `python scripts/doctor.py` or `py -3 scripts/doctor.py` when that is how Python 3 is installed.
+
+You can confirm the interpreter before continuing with `python3 --version`, `python --version`, or `py -3 --version`. Bookself does not require a particular launcher name; it requires Python 3.
+
 ## Operating-system policy
 
 Canonical Bookself automation should run through Python and use cross-platform standard-library APIs such as `pathlib`, `shutil`, and `subprocess`.

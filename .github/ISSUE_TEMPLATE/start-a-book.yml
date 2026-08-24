@@ -1,27 +1,40 @@
-name: Start a book
-description: Begin a Bookself manuscript — no Git or folder-copy knowledge required
-title: "[Start a book]: "
+name: Start a publication
+description: Begin a Bookself book, paper, or course text — no Git or folder-copy knowledge required
+title: "[Start a publication]: "
 labels: ["proposal"]
 body:
   - type: markdown
     attributes:
       value: |
-        You bring the book. We can help with the computer-shaped parts.
+        You bring the publication. We can help with the computer-shaped parts.
 
-        This form is enough to scaffold a new Bookself book for a human or
-        connected agent to finish setting up. You do not need to invent a
-        folder name, know Markdown, or know what a branch is.
+        This form is enough to scaffold a new Bookself book, paper, or course
+        text for a human or connected agent to finish setting up. You do not
+        need to invent a folder name, know Markdown, or know what a branch is.
 
         **Privacy note:** issues have the visibility of this repository. If
         this is a public repo, this form is public. Do not paste private
         manuscript text here. A private Binder is the right place for drafts
         that must stay private.
 
+  - type: dropdown
+    id: format
+    attributes:
+      label: What are you starting?
+      description: Pick the closest shape. This chooses a starter, not a permanent publishing category.
+      options:
+        - Book
+        - Course text / textbook
+        - Research paper / whitepaper
+        - Other long-form publication
+    validations:
+      required: true
+
   - type: input
     id: title
     attributes:
       label: Working title
-      description: It can change later. Books are famously inconsiderate about titles.
+      description: It can change later. Publications are famously inconsiderate about titles.
       placeholder: e.g. The Long Way Home
     validations:
       required: true
@@ -38,9 +51,9 @@ body:
   - type: textarea
     id: premise
     attributes:
-      label: What is this book trying to do?
+      label: What is this publication trying to do?
       description: One paragraph is plenty. A messy paragraph is still a paragraph.
-      placeholder: This book is about…
+      placeholder: This publication is about…
     validations:
       required: true
 
@@ -56,12 +69,12 @@ body:
   - type: textarea
     id: chapters
     attributes:
-      label: Any chapter ideas yet?
-      description: Optional. A rough list, fragments, or “absolutely no idea yet” are all acceptable.
+      label: Any structure ideas yet?
+      description: Optional. Chapters, sections, fragments, or “absolutely no idea yet” are all acceptable.
       placeholder: |
-        Opening
-        The part where everything goes wrong
-        A surprisingly useful appendix
+        Opening or abstract
+        The part where everything gets interesting
+        A surprisingly useful appendix or references section
     validations:
       required: false
 
@@ -82,7 +95,7 @@ body:
       options:
         - I have an idea and need a place to begin
         - I have notes or an outline
-        - I already have draft chapters elsewhere
+        - I already have draft material elsewhere
         - I am revising an existing manuscript
         - I am preparing something for publication
     validations:
@@ -93,5 +106,5 @@ body:
     attributes:
       label: Tiny expectations check
       options:
-        - label: I understand this form starts the setup; the actual manuscript lives in book files, not in this issue.
+        - label: I understand this form starts the setup; the actual manuscript lives in publication files, not in this issue.
           required: true

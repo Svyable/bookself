@@ -72,6 +72,17 @@ For a course text, treat the public Shelf copy as the edition students were actu
 
 For a worked teaching example—including semester stability, hotfixes, rollback, and exact-version citation—see [Bookself 101: Semester Editions and Release](../books/bookself-101/manuscript/ch04-semester-editions.md).
 
+### Record the assigned edition
+
+A syllabus or LMS can keep the convenient current Reader link for students and also record the public Shelf commit that defined the assigned edition. That gives the class a simple two-part reference:
+
+- **Read:** the Shelf Reader URL students normally open.
+- **Provenance:** the public Shelf commit SHA (and optionally its date) for the edition assigned at the start of the course or after an intentional hotfix.
+
+Record the **Shelf** commit after the release has been reviewed, committed, and pushed. Do not use the private Binder commit as a student-facing provenance link: the release helper prints that SHA to verify the source snapshot, but a real Binder is private and should stay that way.
+
+This does not require tags, GitHub Releases, a DOI, or CI. Those can be added when a course or institution already uses them, but an ordinary public Shelf commit is enough to identify the exact files students were assigned.
+
 ## Why Shelf should stay stable
 
 A public Git repository is public even when the Reader hides a publication. Changing a Shelf book from `Published` to `Revision in progress` can remove it from the visible bookshelf, but its raw Markdown and Git history remain public.

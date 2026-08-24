@@ -31,6 +31,9 @@ room; this specimen exists so the workflow itself can be inspected by anyone.
    first reverse-engineering the whole repository?
 6. Does the recursive framing stay practical: use Bookself to improve the book,
    then use what the book reveals to improve Bookself?
+7. Do chapter openings feel intentionally typeset as book pages—with enough
+   placement, hierarchy, and breathing room to mark a new chapter—rather than
+   generic web content starting at the top edge of the reading surface?
 
 ## For a human reviewer
 

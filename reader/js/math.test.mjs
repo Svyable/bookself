@@ -60,7 +60,10 @@ const missingRef = renderEquationRef('missing');
 assert.ok(missingRef.includes('reader-academic-missing'));
 assert.ok(missingRef.includes('aria-label="Unresolved equation label missing"'));
 
-setMathReferenceContext(`$$\na=1\\label{eq:dup}\n$$\n\n$$\nb=2\\label{eq:dup}\n$$\n`);
+const mixedRefs = setMathReferenceContext(`$$\na=1\\label{eq:dup}\n$$\n\n$$\nb=2\\label{eq:dup}\n$$\n\n$$\nc=3\\label{eq:unique}\n$$\n`);
+assert.equal(mixedRefs.has('eq:dup'), false);
+assert.equal(mixedRefs.get('eq:unique').number, 1);
+assert.ok(renderEquationRef('eq:unique').includes('(1)'));
 const duplicateRef = renderEquationRef('eq:dup');
 assert.ok(duplicateRef.includes('reader-academic-ambiguous'));
 assert.ok(duplicateRef.includes('aria-label="Ambiguous equation label eq:dup: duplicate definitions"'));

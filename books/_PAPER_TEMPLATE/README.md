@@ -6,11 +6,13 @@
 | **Status**    | Drafting |
 | **Format**    | Whitepaper |
 | **Publisher** | Your lab, studio, or organization |
-| **Venue**     | Optional venue or working-paper series |
-| **DOI**       | Optional DOI |
+| **Venue**     | |
+| **DOI**       | |
 | **Tags**      | research, topic |
 | **Language**  | English |
 | **Chapters**  | 1 of 1 drafted |
+
+Fill **Venue** and **DOI** only when they are real publication metadata; leave those cells blank otherwise.
 
 ## Contents
 

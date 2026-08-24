@@ -1,10 +1,14 @@
 # binder
 
 Your **private binder** in a [Bookself](docs/bookself.md) setup. Write here.
-When a book is meant to be read publicly, promote it to your public **shelf**.
+When a book is meant to be read publicly, release a committed snapshot to your
+public **shelf**.
 
 The same Bookself `reader/` and `desk/` live in both binder and shelf. They
 are shared software; your manuscripts and `imprint.json` are instance-owned.
+
+A fresh Binder contains only the blank book and paper starters under `books/`.
+Bookself's platform examples are not copied into your private writing repo.
 
 Do not enable public GitHub Pages on a binder that contains unpublished work.
 For local reader/desk access:

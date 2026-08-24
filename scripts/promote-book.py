@@ -32,6 +32,7 @@ def main() -> int:
         parser.error(f"shelf not found: {shelf}")
 
     destination = shelf / "books" / args.slug
+    destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists():
         shutil.rmtree(destination)
     shutil.copytree(source, destination, ignore=shutil.ignore_patterns(".DS_Store"))

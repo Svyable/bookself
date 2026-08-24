@@ -47,6 +47,12 @@ rsync -a \
   --exclude 'README.md' \
   "$ROOT/" "$DEST/"
 
+# Binder keeps the blank authoring starters. Shelf starts with no publication
+# content; the first intentional release creates books/<slug>/.
+if [ "$ROLE" = "shelf" ]; then
+  rm -rf "$DEST/books/_TEMPLATE" "$DEST/books/_PAPER_TEMPLATE"
+fi
+
 cp "$ROOT/docs/instances/${ROLE}-README.md" "$DEST/README.md"
 
 if [ "$ROLE" = "binder" ]; then
@@ -96,8 +102,10 @@ echo "Stamped $ROLE → $DEST"
 echo "Shared UI included: reader/ + desk/"
 echo "Instance-owned files: books/, README.md, imprint.json"
 if [ "$ROLE" = "shelf" ]; then
+  echo "Publication content starts empty; the first release creates books/<slug>/."
   echo "Enable GitHub Pages for the public shelf."
 else
+  echo "Blank starters included: books/_TEMPLATE + books/_PAPER_TEMPLATE"
   echo "Keep the binder private. Do not enable public Pages for unpublished manuscripts."
 fi
 if [ "$OWNER" = "auto" ]; then

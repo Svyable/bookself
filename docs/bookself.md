@@ -126,6 +126,12 @@ Without an agent:
 4. Create the shelf repository as **public** and enable GitHub Pages from the repository root.
 5. Customize each generated `imprint.json`. The stamp already supplies role, safe defaults, and GitHub repo identity when owner/repo arguments are given.
 
+The generated starting state is intentionally role-specific:
+
+- **Binder:** Reader + Desk, local publishing tooling, and only the blank book and paper templates under `books/`. No platform example manuscripts are copied.
+- **Shelf:** Reader + Desk and local publishing tooling, but no publication folders at all. The first deliberate release creates `books/<slug>/`.
+- **Both:** no platform GitHub Actions workflows are copied into the user-owned repositories.
+
 A stamped instance already includes both the Reader and Publishing Desk. No CI workflow is required to make either one work.
 
 ## Shared UI upgrades
@@ -225,7 +231,7 @@ GitHub Pages instances may use `"auto"` owner/repo values and let the browser in
 - The reader does not password-gate public repositories.
 - The browser Desk never asks for a GitHub token.
 - Remote Desk inspection works for public repositories; private binders use same-origin local instance mode.
-- `_TEMPLATE` is never a published catalog entry.
+- Blank publication templates belong in Binder; a freshly stamped Shelf has no publication folders until the first release.
 - Do not edit shared UI to add a book. Add Markdown.
 - Do not store real unpublished manuscripts in the platform repository.
 - Removing a manuscript from the current public Shelf branch does not erase copies already present in public Git history, clones, forks, or caches.

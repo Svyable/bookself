@@ -30,6 +30,7 @@ assert.deepEqual(tokenizeFootnoteRef('[^note] rest'), {
   number: 1,
   offset: ctx.footnotes.get('note').offset,
   duplicate: false,
+  missing: false,
 });
 assert.equal(
   tokenizeFootnoteDefinition('[^note]: A footnote with context.\n').body,
@@ -64,11 +65,19 @@ const duplicateCtx = setAcademicContext(duplicateMd);
 assert.equal(duplicateCtx.duplicateFootnotes.has('same'), true);
 assert.equal(duplicateCtx.duplicateCitations.has('same'), true);
 assert.equal(tokenizeFootnoteRef('[^same]').duplicate, true);
+assert.equal(tokenizeFootnoteRef('[^same]').missing, false);
 assert.equal(tokenizeFootnoteRef('[^same]').offset, undefined);
 assert.equal(tokenizeCitationRef('[@same|One]').duplicate, true);
 assert.equal(tokenizeCitationRef('[@same|One]').offset, undefined);
 assert.equal(tokenizeFootnoteDefinition('[^same]: First footnote.\n').duplicate, true);
 assert.equal(tokenizeCitationDefinition('[@same]: First citation.\n').duplicate, true);
+
+setAcademicContext('A missing note[^gone] and [@gone|Unknown].');
+const missingFootnote = tokenizeFootnoteRef('[^gone]');
+assert.equal(missingFootnote.missing, true);
+assert.equal(missingFootnote.offset, undefined);
+const missingCitation = tokenizeCitationRef('[@gone|Unknown]');
+assert.equal(missingCitation.offset, undefined);
 
 let config = null;
 const fakeMarked = {
@@ -106,5 +115,25 @@ const duplicateRefHtml = byName.bookselfCitationRef.renderer({
 });
 assert.ok(duplicateRefHtml.includes('aria-label="Ambiguous citation key same: duplicate definitions"'));
 assert.equal(duplicateRefHtml.includes('<a '), false);
+
+const missingFootnoteHtml = byName.bookselfFootnoteRef.renderer({
+  key: 'gone',
+  number: 1,
+  offset: undefined,
+  duplicate: false,
+  missing: true,
+});
+assert.ok(missingFootnoteHtml.includes('>?</span>'));
+assert.ok(missingFootnoteHtml.includes('aria-label="Unresolved footnote key gone"'));
+assert.equal(missingFootnoteHtml.includes('<a '), false);
+
+const missingCitationHtml = byName.bookselfCitationRef.renderer({
+  key: 'gone',
+  label: 'Unknown',
+  offset: undefined,
+  duplicate: false,
+});
+assert.ok(missingCitationHtml.includes('aria-label="Unresolved citation key gone"'));
+assert.equal(missingCitationHtml.includes('<a '), false);
 
 console.log('academic tests ok');

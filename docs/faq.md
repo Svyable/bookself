@@ -35,6 +35,18 @@ Git repository.
 See [Bookself 101](../books/bookself-101/) and the
 [publication formats guide](publication-formats.md).
 
+## Can students take private notes without sending them to the author or class?
+
+Yes. Reader notes are browser-local to that Bookself site. They are not committed
+to the publication, posted to GitHub, or shared with the author, instructor, or
+other students. Use Reader notes for private study thoughts; use the publication's
+feedback flow or GitHub review tools when an observation should be shared.
+
+Because browser-local notes do not automatically follow a student to another
+device or browser profile, notes worth keeping should be exported before
+clearing site data or switching devices. In the Reader, open **Type and tools**
+and choose **Export notes** to download a Markdown copy.
+
 ## Can I use Markdown for an academic paper?
 
 Yes. Bookself supports paper-shaped publications as well as books. A paper can

@@ -20,6 +20,8 @@ The manuscript normally lives in one `manuscript/paper.md` file. Use `##` headin
 
 A paper is still plain Markdown, so it remains readable without Bookself and reviewable line by line on GitHub.
 
+`Thesis` and `Dissertation` use the same paper treatment. They keep their exact format label on the cover while reusing the scholarly Reader behavior rather than introducing another rendering engine.
+
 ### Academic apparatus
 
 Books and papers can keep footnotes, simple citations and bibliography entries,
@@ -32,6 +34,74 @@ and their deliberate first-layer limits.
 Papers and books may include LaTeX-style mathematics directly in Markdown. Inline `$...$` / `\(...\)`, display `$$...$$` / `\[...\]`, and common equation environments are rendered in Pages and Scroll while the TeX remains part of the source file.
 
 See [LaTeX math in Bookself](latex.md) for supported delimiters, equation labels/references, security/fallback behavior, offline caching, the working example paper, and the boundary between build-free Markdown math and optional full `.tex` compilation.
+
+## Magazines, newspapers, journals, newsletters, and other editions
+
+A publication folder can represent more than a conventional book. Set the `Format` row in that publication's README and the Reader will label the object appropriately while keeping the same Markdown source and reading tools.
+
+Recognized format families include:
+
+- `Magazine`, `Periodical`, or `Zine`
+- `Newspaper` or `Gazette`
+- `Journal`, `Proceedings`, or `Conference Proceedings`
+- `Newsletter` or `Bulletin`
+- `Comic` or `Graphic Novel`
+- `Anthology`, `Collection`, `Chapbook`, `Poetry Collection`, or `Story Collection`
+- `Report`, `Annual Report`, `Field Report`, `Manual`, `Handbook`, `Guide`, `Catalog` / `Catalogue`, `Pamphlet`, or `Brochure`
+- `Thesis` or `Dissertation` using the paper treatment
+
+These are format families, not rigid schemas. Bookself keeps the author's exact `Format` label for display and maps related forms onto a small number of Reader treatments so the platform does not grow a separate application for every publishing noun.
+
+Periodical-style publications can add issue metadata without introducing a second configuration file:
+
+```md
+| **Format**           | Magazine |
+| **Volume**           | 4 |
+| **Issue**            | 2 |
+| **Publication date** | 2026-08-24 |
+| **Frequency**        | Quarterly |
+| **ISSN**             | 1234-5678 |
+```
+
+The same fields also work for newspapers, journals, newsletters, and other serial publications. Omit anything that does not apply. Bookself deliberately does not require a periodical database or build pipeline just to publish an issue.
+
+## Author profiles and finding a publication elsewhere
+
+A Bookself publication can link its authors and the work itself to the rest of the publishing ecosystem. These are ordinary HTTPS links stored in the publication README, so the author stays in control of the destination.
+
+To make an author name linkable, use a normal Markdown link in `Authors`:
+
+```md
+| **Authors** | [Author Name](https://author.example/) |
+```
+
+Additional author identities can go in `Author Links`:
+
+```md
+| **Author Links** | [Goodreads](https://www.goodreads.com/author/example) · [ORCID](https://orcid.org/example) |
+```
+
+To help readers find a physical, ebook, audiobook, library, or retailer edition outside Bookself, add `Links` or `Find elsewhere`:
+
+```md
+| **ISBN** | 978-0-000000-00-0 |
+| **Links** | [Goodreads](https://www.goodreads.com/book/example) · [Amazon](https://www.amazon.com/example) · [WorldCat](https://search.worldcat.org/example) · [Open Library](https://openlibrary.org/example) |
+```
+
+You can also link a publisher catalog, an independent bookstore, a university library, the Library of Congress, an Internet Archive item, a DOI landing page, or another lawful source. Bookself does not generate affiliate links, scrape those services, or assume that one retailer or library is authoritative. It simply gives the publication a native place to expose author-selected destinations.
+
+### Identifier fallbacks
+
+Bookself can derive two conservative discovery links from standard identifiers:
+
+- A checksum-valid 10- or 13-digit `ISBN` adds an **Open Library** link using Open Library's documented stable `/isbn/<ISBN>` route.
+- A syntactically valid `DOI` adds a canonical **DOI** link at `https://doi.org/<DOI>`.
+
+If `Find elsewhere` / `Links` already contains a link labeled `Open Library` or `DOI`, that explicit author-supplied destination wins and the fallback is not added.
+
+Bookself intentionally does **not** synthesize Amazon product pages, Goodreads records, WorldCat records, Library of Congress records, or local-library holdings from an identifier. Those services can have multiple editions, changing URLs, regional availability, or no exact record at all. Put the real destination in `Find elsewhere` when you know it.
+
+The Reader shows outbound destinations on the publication cover. Links open the original service in a new tab; Bookself remains the source of the Markdown edition it is hosting.
 
 ## Images and figures
 
@@ -85,12 +155,14 @@ Add a section to the root README:
 
 The reader turns those lines into magazine-style cards that show the title and domain and open the original site in a new tab. The external site remains the source of truth.
 
-## Why one system works for all four
+## Why one system works for all of them
 
 | Format | Source of truth | Reader behavior |
 |---|---|---|
 | Book | Markdown + media in a publication folder | Opens in Bookself reader |
-| Whitepaper | Markdown + media in a publication folder | Opens in Bookself reader with paper labeling and citation metadata |
+| Whitepaper / thesis / dissertation | Markdown + media in a publication folder | Opens in Bookself reader with paper labeling and citation metadata |
+| Magazine / newspaper / journal / newsletter | Markdown + media in a publication folder | Opens in Bookself reader with format and issue labeling |
+| Comic / anthology / report / manual / catalog | Markdown + media in a publication folder | Opens in Bookself reader with format labeling |
 | Web volume | External website | Appears as a bound volume on the shelf and opens the source |
 | Stand link | External website | Appears as a magazine-style card and opens the source |
 

@@ -147,6 +147,18 @@ The Reader needs the repository to be served over HTTP. On a public Shelf that
 usually means GitHub Pages. In a private Binder, the Publishing Desk and Reader
 can be served locally from the checkout.
 
+## Personal Reader notes stay personal
+
+Reader notes are stored in your browser for that Bookself site. They are not
+committed to the manuscript, posted to GitHub, or shared with the author. Use a
+Reader note for a private thought; use the feedback flow when the author or
+reviewers should see it.
+
+Browser-local also means the note does not automatically follow you to another
+device or browser profile, and clearing site data can remove it. For notes you
+want to keep, open **Type and tools** and choose **Export notes**. The Reader
+downloads them as a Markdown file you can save wherever you keep your own work.
+
 ## The private Binder and public Shelf
 
 Bookself's default model uses two spaces:

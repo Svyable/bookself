@@ -171,7 +171,7 @@ repository is still public.
 
 So the normal lifecycle is:
 
-**write in Binder → review → promote to Shelf → publish**
+**write in Binder → review → release to Shelf → publish**
 
 The [Writing lifecycle](writing-lifecycle.md) explains the larger loop.
 
@@ -181,21 +181,35 @@ Publishing should answer a simple question:
 
 **Do I mean for strangers to be able to read this version?**
 
-If yes:
+If yes, first save the finished Binder version as a commit. Then, from the
+Binder checkout, run:
 
-1. Promote or copy the finished book folder from the private Binder to the
-   public Shelf.
-2. In the Shelf copy's book `README.md`, set **Status** to exactly `Published`.
-3. Add the book to the Shelf root `README.md` under **The books**.
-4. Save and push those changes.
+```bash
+scripts/release-book.sh <your-book-folder> ../shelf
+```
 
-The public Reader checks both the Shelf catalog and the book Status.
+The release helper works locally. It checks that the Binder copy you are
+releasing is committed, verifies that the source is a Binder and the destination
+is a Shelf, copies that exact publication snapshot, sets the Shelf copy to
+`Published`, and adds or updates the Shelf catalog row.
 
-Nothing in `reader/` should be edited to publish a book. Publishing is metadata
-and manuscript state, not a JavaScript ceremony.
+It **stops before commit or push**. That pause is intentional: review the Shelf
+diff and make sure you really mean for those files to become public. When it
+looks right, commit and push the Shelf change through your normal Git workflow.
+A pull request is useful when you want another person to review the release,
+but Bookself does not require one.
 
-To unpublish, remove the catalog row and change the status away from
-`Published`.
+The Binder copy stays in place as your private working history and the home of
+the next revision. The Shelf copy is an independent public snapshot; it does
+not point back into the private Binder.
+
+Nothing in `reader/` should be edited to publish a book. Publishing is manuscript
+and catalog state, not a JavaScript ceremony, and the normal release path does
+not require GitHub Actions or a hosted build.
+
+To unpublish, remove the Shelf catalog row and change the public copy's status
+away from `Published`. Remember that content already pushed to public Git
+history may still exist in that history, clones, forks, or caches.
 
 ## Getting feedback without learning everything
 

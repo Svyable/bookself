@@ -39,25 +39,53 @@ class PortabilityTests(unittest.TestCase):
         self.assertIn("macOS, Windows, and Linux", text)
         self.assertIn("no application dependencies", text.lower())
 
-    def test_stamp_instance_keeps_only_instance_safe_content(self) -> None:
+    def stamp_instance(self, root: Path, role: str) -> Path:
+        destination = root / role
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "stamp-instance.py"),
+                str(destination),
+                role,
+                "example-owner",
+                role,
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return destination
+
+    def test_stamp_instance_keeps_role_specific_publication_content(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            destination = Path(tmp) / "binder"
+            root = Path(tmp)
+            binder = self.stamp_instance(root, "binder")
+            shelf = self.stamp_instance(root, "shelf")
+
+            binder_books = {path.name for path in (binder / "books").iterdir()}
+            shelf_books = {path.name for path in (shelf / "books").iterdir()}
+
+            self.assertEqual(binder_books, {"_TEMPLATE", "_PAPER_TEMPLATE"})
+            self.assertEqual(shelf_books, set())
+            self.assertFalse((binder / ".github" / "workflows").exists())
+            self.assertFalse((shelf / ".github" / "workflows").exists())
+
+    def test_promote_book_handles_shelf_without_books_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            shelf = Path(tmp) / "shelf"
+            shelf.mkdir()
             subprocess.run(
                 [
                     sys.executable,
-                    str(ROOT / "scripts" / "stamp-instance.py"),
-                    str(destination),
-                    "binder",
-                    "example-owner",
-                    "binder",
+                    str(ROOT / "scripts" / "promote-book.py"),
+                    "how-to-bookself",
+                    str(shelf),
                 ],
                 check=True,
                 capture_output=True,
                 text=True,
             )
-            book_entries = {path.name for path in (destination / "books").iterdir()}
-            self.assertEqual(book_entries, {"_TEMPLATE", "_PAPER_TEMPLATE"})
-            self.assertFalse((destination / ".github" / "workflows").exists())
+            self.assertTrue((shelf / "books" / "how-to-bookself" / "README.md").is_file())
 
 
 if __name__ == "__main__":

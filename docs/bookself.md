@@ -128,7 +128,7 @@ Without an agent:
 
 The generated starting state is intentionally role-specific:
 
-- **Binder:** Reader + Desk, local publishing tooling, and only the blank book and paper templates under `books/`. No platform example manuscripts are copied.
+- **Binder:** Reader + Desk, local publishing tooling, and every blank publication starter present under `books/` (`_TEMPLATE` plus `_*_TEMPLATE` format starters). Platform example manuscripts are not copied.
 - **Shelf:** Reader + Desk and local publishing tooling, but no publication folders at all. The first deliberate release creates `books/<slug>/`.
 - **Both:** no platform GitHub Actions workflows are copied into the user-owned repositories.
 
@@ -156,8 +156,8 @@ Commit the binder and shelf updates separately so each instance has its own clea
 
 ## Write (binder)
 
-1. Copy `books/_TEMPLATE/` to `books/your-title/`.
-2. Fill in the book README and write one chapter at a time.
+1. Copy the starter that matches the work to `books/your-title/`: use `books/_TEMPLATE/` for a conventional book, `books/_PAPER_TEMPLATE/` for a paper, or another `books/_*TEMPLATE/` format starter when present.
+2. Fill in the publication README and write one chapter or manuscript file at a time.
 3. Add the private manuscript to the binder root **The books** table. In a binder, that table is an inventory, not a publication declaration.
 4. Preview locally:
 

@@ -9,6 +9,12 @@
   "license": "https://spdx.org/licenses/MIT.html",
   "applicationCategory": "Publishing software",
   "isAccessibleForFree": true,
+  "operatingSystem": [
+    "macOS",
+    "Windows",
+    "Linux"
+  ],
+  "runtimePlatform": "Modern web browser; Git + Python 3 for local tooling",
   "author": {
     "type": "Person",
     "name": "Sven Benson",
@@ -28,7 +34,11 @@
     "books",
     "open textbooks",
     "version control",
-    "research software"
+    "research software",
+    "cross-platform",
+    "macOS",
+    "Windows",
+    "Linux"
   ],
   "citation": "https://github.com/Svyable/bookself/blob/main/CITATION.cff"
 }

@@ -10,7 +10,7 @@
 | **Edition**   | First |
 | **Language**  | English |
 | **Format**    | Book |
-| **Chapters**  | 4 of 4 drafted |
+| **Chapters**  | 5 of 5 drafted |
 
 ## Contents
 
@@ -19,4 +19,5 @@
 - [x] [Ch 2 — Teaching with Reviewable Change](manuscript/ch02-reviewable-change.md)
 - [x] [Ch 3 — Scholarship, Media, and Evidence](manuscript/ch03-scholarship-and-evidence.md)
 - [x] [Ch 4 — Semester Editions and Release](manuscript/ch04-semester-editions.md)
+- [x] [Ch 5 — Academic Apparatus in Plain Markdown](manuscript/ch05-academic-apparatus.md)
 - [x] [Back Matter](manuscript/back-matter.md)

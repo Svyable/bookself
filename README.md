@@ -156,6 +156,10 @@ Pandoc or Quarto for specialized output, start life in another editor, or link
 to an external web volume. The aim is not to own every step. It is to give the
 work a durable memory and a calm path from draft to publication to revision.
 
+For a longer chooser-style guide — including MyST Markdown, Antora, Typst,
+Zettlr, and HedgeDoc — see **[Bookself alternatives and neighboring
+tools](docs/alternatives.md)**.
+
 ## What belongs where
 
 The shared platform software is:
@@ -265,11 +269,12 @@ should feel like an issue, feature, or quick doorway.
 | “How does the writing lifecycle map to all this?” | [Writing lifecycle](docs/writing-lifecycle.md) |
 | “How do revisions and releases stay safe?” | [Revisions and releases](docs/revisions.md) |
 | “What files make up a book?” | [Book anatomy](docs/book-anatomy.md) |
-| “What other writing and publishing tools should I compare?” | [See other solutions](#see-other-solutions) |
+| “What other writing and publishing tools should I compare?” | [Alternatives and neighboring tools](docs/alternatives.md) |
 | “I edit or review other people's work.” | [Editor guide](docs/editor-guide.md) |
 | “I want the full private-binder/public-shelf architecture.” | [Bookself architecture](docs/bookself.md) |
 | “I am contributing to the software itself.” | [Contributing](CONTRIBUTING.md) |
-| “I am an AI agent and have somehow ended up here.” | [AGENTS.md](AGENTS.md) |
+| “I am an AI agent trying to understand Bookself.” | [llms.txt](llms.txt) |
+| “I am an AI agent modifying this repository.” | [AGENTS.md](AGENTS.md) |
 
 ## Local platform demo
 

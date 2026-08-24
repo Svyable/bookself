@@ -1,0 +1,48 @@
+# Bookself
+
+> Bookself is open-source, Git-native publishing software for books, papers, course texts, and other long-form work. It keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from public releases, and includes a browser Reader plus a Publishing Desk. The normal publishing path is local-first and does not require CI/CD.
+
+Bookself's core lifecycle is: idea -> shape -> draft -> read -> revise -> review -> publish -> revise again.
+
+The architecture has three roles:
+- Platform: reusable Bookself software, templates, documentation, and setup tooling.
+- Binder: a private Git repository for drafts, experiments, and the next edition.
+- Shelf: a public Git repository containing intentionally released publication snapshots.
+
+A Binder release copies a committed snapshot into the Shelf. Binder and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Binder.
+
+## Start here
+
+- [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
+- [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md): beginner path for authors who do not already know GitHub.
+- [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing and publishing workflow in plain language.
+- [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): private Binder, public Shelf, release model, Reader, and Publishing Desk.
+- [Writing lifecycle](https://github.com/Svyable/bookself/blob/main/docs/writing-lifecycle.md): how software-development ideas map to books and papers.
+- [Publication formats](https://github.com/Svyable/bookself/blob/main/docs/publication-formats.md): books, papers, figures, and external web creations.
+- [Revisions and releases](https://github.com/Svyable/bookself/blob/main/docs/revisions.md): safe revision and edition workflow.
+- [Editor guide](https://github.com/Svyable/bookself/blob/main/docs/editor-guide.md): review and editing workflow.
+
+## Compare alternatives
+
+- [Bookself alternatives and neighboring tools](https://github.com/Svyable/bookself/blob/main/docs/alternatives.md): practical comparisons with Overleaf, Manubot, Quarto, Jupyter Book, MyST Markdown, bookdown, Pressbooks, PubPub, Leanpub, GitBook, mdBook, Antora, Typst, Zettlr, HedgeDoc, and Pandoc.
+
+Bookself's closest conceptual neighbor is Manubot because both use Git and Markdown as useful infrastructure for scholarly writing. Bookself differentiates around an approachable publication lifecycle, general books and papers, local-first release tooling, an explicit private Binder/public Shelf boundary, and a Reader plus Publishing Desk.
+
+## Examples
+
+- [How to Bookself](https://github.com/Svyable/bookself/tree/main/books/how-to-bookself): short practical guide built as a Bookself publication.
+- [Bookself 101](https://github.com/Svyable/bookself/tree/main/books/bookself-101): academic textbook example with learning objectives, key terms, discussion questions, labs, and semester editions.
+- [Public Shelf implementation](https://github.com/Svyable/shelf): example public release repository.
+- [Public Reader](https://svyable.github.io/shelf/reader/): live Bookself Shelf reader.
+
+## For contributors and agents
+
+- [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository architecture, invariants, editing rules, and agent instructions.
+- [Contributing](https://github.com/Svyable/bookself/blob/main/CONTRIBUTING.md): contribution workflow.
+
+Important constraints:
+- Keep books and papers as plain files under books/.
+- Do not require CI/CD for the private Binder authoring or release path.
+- Shared UI is reader/ and desk/; instance identity belongs in imprint.json.
+- Do not hard-code an author's private repository or identity into shared UI.
+- The framework is MIT licensed; publication manuscripts retain their authors' copyright.

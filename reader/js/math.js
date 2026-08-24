@@ -123,10 +123,9 @@ function inlineStart(src) {
 
 export function setMathReferenceContext(markdown) {
   const source = String(markdown || '');
-  const refs = new Map();
-  const duplicates = new Set();
+  const occurrences = [];
+  const counts = new Map();
   let cursor = 0;
-  let number = 1;
   while (cursor < source.length) {
     const next = blockStart(source.slice(cursor));
     if (next == null) break;
@@ -137,15 +136,27 @@ export function setMathReferenceContext(markdown) {
       continue;
     }
     if (token.label) {
-      if (refs.has(token.label)) {
-        duplicates.add(token.label);
-      } else {
-        refs.set(token.label, { label: token.label, number, offset: start });
-        number += 1;
-      }
+      occurrences.push({ label: token.label, offset: start });
+      counts.set(token.label, (counts.get(token.label) || 0) + 1);
     }
     cursor = start + Math.max(token.raw.length, 1);
   }
+
+  const duplicates = new Set(
+    [...counts.entries()].filter(([, count]) => count > 1).map(([label]) => label)
+  );
+  const refs = new Map();
+  let number = 1;
+  for (const occurrence of occurrences) {
+    if (duplicates.has(occurrence.label) || refs.has(occurrence.label)) continue;
+    refs.set(occurrence.label, {
+      label: occurrence.label,
+      number,
+      offset: occurrence.offset,
+    });
+    number += 1;
+  }
+
   referenceContext = refs;
   duplicateReferenceLabels = duplicates;
   return refs;

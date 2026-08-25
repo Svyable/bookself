@@ -26,7 +26,46 @@ The publication can suggest. The reader decides.
 
 A reader changing Literata to Atkinson Hyperlegible, increasing text to 26px, switching from parchment to high contrast, or choosing Scroll changes only that browser profile. It does not change the repository and cannot change another person's reading experience.
 
-## Example
+## Start with a named preset
+
+For most publications, a named preset is the fastest authoring tool. Presets are ordinary Reader defaults, not locked themes. A reader can still change every setting.
+
+```json
+{
+  "version": 1,
+  "preset": "literary"
+}
+```
+
+Available presets:
+
+| Preset | Intended feel | Starting point |
+|---|---|---|
+| `book` | classic general book | ivory, Source Serif 4, paged, balanced measure |
+| `literary` | warm literary fiction/nonfiction | parchment, Literata, generous leading, classic indent |
+| `modern-essay` | crisp essay / web-native longform | porcelain, IBM Plex Sans, wide left-aligned scroll |
+| `editorial` | magazine/report voice | linen, humanist sans, compact editorial rhythm |
+| `poetry` | open poetic page | ivory, Georgia, airy wide scroll, no hyphenation |
+| `night-story` | low-light narrative | midnight, Lora, narrow paged reading |
+| `accessible` | clarity-first reading | high contrast, Atkinson Hyperlegible, 22px, narrow left-aligned scroll |
+| `quiet-study` | calm study / course text | sage, Literata, narrow left-aligned scroll |
+
+A preset can be fine-tuned with explicit values. Explicit values win over the preset:
+
+```json
+{
+  "version": 1,
+  "preset": "night-story",
+  "typography": {
+    "fontSize": 21,
+    "measure": "balanced"
+  }
+}
+```
+
+This makes `reader.json` useful as both a quick authoring tool and a precise styling contract.
+
+## Fully specified example
 
 ```json
 {
@@ -151,6 +190,8 @@ The presentation layer adds only a small ownership marker that records whether t
 
 That marker is local to the browser. It is not synchronized through Git, included in exported books, visible to authors, or sent to other readers.
 
+Author defaults themselves are not persisted as reader choices. Bookself may drive the existing Reader controls to realize a publication recommendation, but it snapshots and restores the relevant browser-storage values while doing so. This prevents one book's recommended typeface, size, or atmosphere from leaking into a later session as though the reader had personally selected it.
+
 Returning readers who already had saved appearance or typography before publication defaults existed are treated as having made personal choices, so an upgrade does not suddenly replace their familiar setup with an author's defaults.
 
 If browser site data is cleared, the local personalization disappears and the publication recommendation becomes the starting point again.
@@ -161,12 +202,12 @@ The Reading experience panel exposes a **Use this book's design** action when th
 
 That action clears the local ownership markers and reapplies the current publication's recommendation. It does not edit the book and does not affect any other browser.
 
-The settings panel also labels the current source of the experience, for example:
+The settings panel also labels the current source of the experience. With named presets it can show the recommendation more specifically, for example:
 
-- `Following this book's design`
-- `Your browser controls the page`
-- `Your colors · book typography`
-- `Book colors · your typography`
+- `Following Literary`
+- `Your browser settings · book suggests Literary`
+- `Your colors · Literary typography`
+- `Literary colors · your typography`
 
 This makes the author/reader boundary visible instead of implicit.
 
@@ -185,7 +226,7 @@ Do not use custom CSS to fight Reader accessibility controls. In particular, avo
 
 The current publication presentation schema is version `1`.
 
-Unknown values are ignored and out-of-range numeric values are clamped. A malformed or absent `reader.json` simply falls back to Bookself/reader defaults; it never prevents the book from opening.
+Unknown presets and values are ignored and out-of-range numeric values are clamped. A malformed or absent `reader.json` simply falls back to Bookself/reader defaults; it never prevents the book from opening.
 
 ## Offline behavior
 

@@ -154,6 +154,16 @@ Use [docs/academic-writing.md](docs/academic-writing.md) for citations,
 footnotes, figures, and references, and [docs/latex.md](docs/latex.md) when the
 paper contains mathematical notation.
 
+**Start another publication format.** Choose the closest blank starter under
+`books/`: `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`,
+`_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`,
+`_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`. Copy it to a normal lowercase,
+hyphenated `books/<slug>/` folder in the private Binder, replace the placeholder
+metadata, and keep `Status: Drafting` until a deliberate Binder → Shelf release.
+Use [docs/publication-formats.md](docs/publication-formats.md) when choosing
+between format families. Do not publish or edit the underscore-prefixed starter
+itself.
+
 **Add a web volume.** Under root `## The web shelf`, add one Markdown link such
 as `- [Project name](https://example.com/) — a short optional note`. The Reader
 binds the link visually as a book while the linked website remains the source

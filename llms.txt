@@ -48,6 +48,8 @@ No DOI or semantic version is claimed unless the project actually publishes one.
 
 - [How to Bookself](https://github.com/Svyable/bookself/tree/main/books/how-to-bookself): short practical guide built as a Bookself publication.
 - [Bookself 101](https://github.com/Svyable/bookself/tree/main/books/bookself-101): academic textbook example with learning objectives, key terms, discussion questions, labs, and semester editions.
+- [The Bookself Review](https://github.com/Svyable/bookself/tree/main/books/bookself-review): published illustrated magazine specimen showing a non-book serial in the same Reader and repository model.
+- [Bookself Format Gallery](https://github.com/Svyable/bookself/tree/main/books/bookself-format-gallery): illustrated guide to the magazine, newspaper, journal, newsletter, anthology, report, manual, and comic publication starters.
 - [Making Bookself](https://github.com/Svyable/bookself/tree/main/books/making-bookself): intentionally unfinished public Binder-style teaching specimen that dogfoods the Bookself improvement loop.
 - [Public Shelf implementation](https://github.com/Svyable/shelf): example public release repository.
 - [Public Reader](https://svyable.github.io/shelf/reader/): live Bookself Shelf reader.

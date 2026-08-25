@@ -24,6 +24,73 @@ export const READER_PRESENTATION_OPTIONS = Object.freeze({
   }),
 });
 
+export const READER_PRESENTATION_PRESETS = Object.freeze({
+  book: Object.freeze({
+    appearance: Object.freeze({ theme: 'ivory', warmth: 'off' }),
+    typography: Object.freeze({
+      fontSize: 18, font: 'book', fontWeight: 400, tracking: 0,
+      leading: 1.55, measure: 'balanced', align: 'justify', paragraph: 'normal',
+      indent: 'gentle', mode: 'paged', hyphens: 'auto',
+    }),
+  }),
+  literary: Object.freeze({
+    appearance: Object.freeze({ theme: 'sepia', warmth: 'soft' }),
+    typography: Object.freeze({
+      fontSize: 19, font: 'literary', fontWeight: 400, tracking: 0,
+      leading: 1.65, measure: 'balanced', align: 'justify', paragraph: 'normal',
+      indent: 'classic', mode: 'paged', hyphens: 'auto',
+    }),
+  }),
+  'modern-essay': Object.freeze({
+    appearance: Object.freeze({ theme: 'porcelain', warmth: 'off' }),
+    typography: Object.freeze({
+      fontSize: 18, font: 'modern', fontWeight: 400, tracking: 0,
+      leading: 1.6, measure: 'wide', align: 'left', paragraph: 'normal',
+      indent: 'none', mode: 'scroll', hyphens: 'off',
+    }),
+  }),
+  editorial: Object.freeze({
+    appearance: Object.freeze({ theme: 'linen', warmth: 'off' }),
+    typography: Object.freeze({
+      fontSize: 18, font: 'humanist', fontWeight: 400, tracking: 0.01,
+      leading: 1.55, measure: 'wide', align: 'left', paragraph: 'compact',
+      indent: 'none', mode: 'scroll', hyphens: 'off',
+    }),
+  }),
+  poetry: Object.freeze({
+    appearance: Object.freeze({ theme: 'ivory', warmth: 'soft' }),
+    typography: Object.freeze({
+      fontSize: 19, font: 'classic', fontWeight: 400, tracking: 0,
+      leading: 1.7, measure: 'wide', align: 'left', paragraph: 'airy',
+      indent: 'none', mode: 'scroll', hyphens: 'off',
+    }),
+  }),
+  'night-story': Object.freeze({
+    appearance: Object.freeze({ theme: 'midnight', warmth: 'soft' }),
+    typography: Object.freeze({
+      fontSize: 19, font: 'warm', fontWeight: 400, tracking: 0,
+      leading: 1.68, measure: 'narrow', align: 'justify', paragraph: 'normal',
+      indent: 'gentle', mode: 'paged', hyphens: 'auto',
+    }),
+  }),
+  accessible: Object.freeze({
+    appearance: Object.freeze({ theme: 'contrast', warmth: 'off' }),
+    typography: Object.freeze({
+      fontSize: 22, font: 'clear', fontWeight: 500, tracking: 0.01,
+      leading: 1.8, measure: 'narrow', align: 'left', paragraph: 'airy',
+      indent: 'none', mode: 'scroll', hyphens: 'off',
+    }),
+  }),
+  'quiet-study': Object.freeze({
+    appearance: Object.freeze({ theme: 'sage', warmth: 'off' }),
+    typography: Object.freeze({
+      fontSize: 18, font: 'literary', fontWeight: 400, tracking: 0,
+      leading: 1.65, measure: 'narrow', align: 'left', paragraph: 'normal',
+      indent: 'none', mode: 'scroll', hyphens: 'off',
+    }),
+  }),
+});
+
 const THEMES = new Set(READER_PRESENTATION_OPTIONS.themes);
 const WARMTHS = new Set(READER_PRESENTATION_OPTIONS.warmths);
 const FONTS = new Set(READER_PRESENTATION_OPTIONS.fonts);
@@ -51,9 +118,23 @@ function pick(set, value) {
   return set.has(value) ? value : undefined;
 }
 
+function presetFor(value) {
+  return Object.prototype.hasOwnProperty.call(READER_PRESENTATION_PRESETS, value)
+    ? READER_PRESENTATION_PRESETS[value]
+    : null;
+}
+
 export function normalizeReaderPresentation(raw = {}) {
-  const appearanceRaw = raw && typeof raw.appearance === 'object' ? raw.appearance : {};
-  const typographyRaw = raw && typeof raw.typography === 'object' ? raw.typography : {};
+  const presetName = typeof raw?.preset === 'string' && presetFor(raw.preset) ? raw.preset : undefined;
+  const preset = presetName ? presetFor(presetName) : {};
+  const appearanceRaw = {
+    ...(preset?.appearance || {}),
+    ...(raw && typeof raw.appearance === 'object' ? raw.appearance : {}),
+  };
+  const typographyRaw = {
+    ...(preset?.typography || {}),
+    ...(raw && typeof raw.typography === 'object' ? raw.typography : {}),
+  };
   const fontSize = finite(typographyRaw.fontSize);
   const tracking = finite(typographyRaw.tracking);
   const leading = finite(typographyRaw.leading);
@@ -80,6 +161,7 @@ export function normalizeReaderPresentation(raw = {}) {
 
   return {
     version: READER_PRESENTATION_VERSION,
+    ...(presetName ? { preset: presetName } : {}),
     appearance: Object.fromEntries(Object.entries(appearance).filter(([, value]) => value !== undefined)),
     typography: Object.fromEntries(Object.entries(typography).filter(([, value]) => value !== undefined)),
   };
@@ -183,6 +265,10 @@ export function clearReaderPersonalization(area) {
   const state = readState();
   state[area] = false;
   writeState(state);
+}
+
+export function clearAllReaderPersonalization() {
+  writeState({ appearance: false, typography: false });
 }
 
 export function readerPersonalizationState() {

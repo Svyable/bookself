@@ -33,6 +33,19 @@ GitHub calls step 5 a **commit**. We call it **saving a version**.
 
 That is enough to start.
 
+### Make the Reader comfortable
+
+The Reader is not a fixed page. Open its **Settings** control to switch between
+Pages and continuous Scroll, change text size and typeface, adjust weight,
+spacing, line width, alignment, paragraph rhythm, indentation, and hyphenation,
+or use a ready-made reading preset. The existing Paper choices can also change
+the reading surface between Ink, Parchment, and Paper.
+
+Those reading preferences are stored in your browser. They change how the
+publication is presented to you; they do not edit the manuscript or create a
+new public version. That makes them safe to experiment with while proofreading,
+teaching, or simply making a long reading session easier on your eyes.
+
 ## If there is no publication yet
 
 There are two friendly paths.

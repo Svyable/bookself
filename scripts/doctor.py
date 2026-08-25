@@ -18,6 +18,7 @@ CONTENT_LINK = re.compile(
     re.M,
 )
 INFO_CELL = r"\|\s*\*\*{label}\*\*\s*\|\s*([^|\n]+)\|"
+URL_SCHEME = re.compile(r"^[a-z][a-z0-9+.-]*:", re.I)
 
 
 @dataclass(frozen=True)
@@ -100,11 +101,47 @@ def read_text(path: Path, out: list[Finding], code: str) -> str | None:
         return None
 
 
+def reader_style_paths(value: object) -> tuple[list[str], list[str]]:
+    if value is None:
+        return [], []
+    if not isinstance(value, list):
+        return [], ["imprint.json readerStyles must be an array of repository-local .css paths."]
+
+    errors: list[str] = []
+    if len(value) > 8:
+        errors.append("imprint.json readerStyles supports at most 8 stylesheets.")
+
+    styles: list[str] = []
+    seen: set[str] = set()
+    for raw in value[:8]:
+        if not isinstance(raw, str):
+            errors.append("imprint.json readerStyles entries must be strings.")
+            continue
+        path = re.sub(r"^\./+", "", raw.strip())
+        invalid = (
+            not path
+            or path.startswith("/")
+            or path.startswith("//")
+            or URL_SCHEME.match(path) is not None
+            or ".." in Path(path).parts
+            or not path.lower().endswith(".css")
+        )
+        if invalid:
+            errors.append(f"Invalid readerStyles path: {raw!r}.")
+            continue
+        if path in seen:
+            continue
+        seen.add(path)
+        styles.append(path)
+    return styles, errors
+
+
 def inspect_root(root: Path) -> list[Finding]:
     root = root.resolve()
     out: list[Finding] = []
 
     imprint_path = root / "imprint.json"
+    imprint: dict[str, object] = {}
     role = ""
     if not imprint_path.is_file():
         out.append(finding("error", "missing_imprint", "imprint.json is missing."))
@@ -125,6 +162,27 @@ def inspect_root(root: Path) -> list[Finding]:
                 )
             else:
                 out.append(finding("ok", "role", f"Repository role: {role}."))
+
+            styles, style_errors = reader_style_paths(imprint.get("readerStyles"))
+            for message in style_errors:
+                out.append(finding("error", "invalid_reader_styles", message))
+            missing_styles = [path for path in styles if not (root / path).is_file()]
+            for path in missing_styles:
+                out.append(
+                    finding(
+                        "error",
+                        "missing_reader_style",
+                        f"imprint.json readerStyles points to missing {path}.",
+                    )
+                )
+            if styles and not style_errors and not missing_styles:
+                out.append(
+                    finding(
+                        "ok",
+                        "reader_styles",
+                        f"Reader has {len(styles)} instance stylesheet{'s' if len(styles) != 1 else ''}.",
+                    )
+                )
 
     git_root = git_output(root, "rev-parse", "--show-toplevel")
     if git_root is None:

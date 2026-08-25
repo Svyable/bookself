@@ -48,9 +48,32 @@ teaching, or simply making a long reading session easier on your eyes.
 
 ## If there is no publication yet
 
-There are two friendly paths.
+There are three friendly paths.
 
-### Easiest: ask to start one
+### Easiest: use the New Publication Studio
+
+Open the **Publishing Desk** and choose **Start a publication**.
+
+The New Publication Studio asks what you are making, its working title, the
+author, the first piece or chapter, and the Reader style you want to recommend.
+It then generates a normal Bookself folder containing:
+
+- `README.md` — title, author, format, status, and contents
+- `reader.json` — the book's suggested Reader starting design
+- `manuscript/` — a first Markdown piece shaped for the selected format
+
+On browsers that support direct folder writing, **Save starter folder** can
+write that folder into the repository's `books/` directory. Everywhere else,
+Bookself offers the same files as a small ZIP. Nothing is uploaded or published
+automatically.
+
+The studio also gives you the one catalog line needed under the root README's
+`## The books` section so the Desk and Reader can discover the new folder.
+
+See **[New Publication Studio](docs/new-publication-studio.md)** for the exact
+behavior and privacy boundary.
+
+### Collaborative: ask to start one
 
 Open **Issues → New issue → Start a publication**.
 
@@ -107,13 +130,15 @@ or journalism may take a bit longer.
 
 You do not need a different publishing system.
 
-- **Research paper or whitepaper:** start from `books/_PAPER_TEMPLATE/`. The
+- **Research paper or whitepaper:** choose **Paper / whitepaper** in the New
+  Publication Studio or start from `books/_PAPER_TEMPLATE/`. The
   [academic writing guide](docs/academic-writing.md) covers citations,
   footnotes, figures, references, and the supported math conventions.
-- **Course text or textbook:** start from `books/_TEMPLATE/` like any other
-  chaptered book. Keep the next semester's revision private in Binder and
-  release a deliberate public Shelf snapshot when students should receive it.
-  See [Revisions and releases](docs/revisions.md) for the edition model.
+- **Course text or textbook:** choose **Book** or **Quiet study** in the New
+  Publication Studio, or start from `books/_TEMPLATE/` like any other chaptered
+  book. Keep the next semester's revision private in Binder and release a
+  deliberate public Shelf snapshot when students should receive it. See
+  [Revisions and releases](docs/revisions.md) for the edition model.
 
 Both paths keep the same plain Markdown, Git history, Reader, Desk, and
 Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.
@@ -124,6 +149,8 @@ Inside a publication you will usually see:
 
 - **`README.md`** — the publication's little control card: title, author, status,
   format, and contents.
+- **`reader.json`** — optional recommended Reader design; readers remain free to
+  override it in their own browser.
 - **`manuscript/`** — the actual writing. A book may use one file per chapter;
   a paper or issue may use one longer manuscript file.
 - **`media/`** — optional cover art, figures, page art, and other images.
@@ -176,6 +203,7 @@ The safest beginner rule is simple: **change prose, not plumbing**.
 Stay mostly inside:
 
 - `books/<your-publication>/README.md`
+- `books/<your-publication>/reader.json`
 - `books/<your-publication>/manuscript/`
 - `books/<your-publication>/media/`
 

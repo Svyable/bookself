@@ -36,3 +36,4 @@ jobs:
       - run: python scripts/doctor.py --root .
       - run: node reader/js/presentation.test.mjs
       - run: node --check desk/reader-design.js
+      - run: node desk/new-publication.test.mjs

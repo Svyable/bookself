@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "appearance": {
+    "theme": "light",
+    "warmth": "off"
+  },
+  "typography": {
+    "font": "system",
+    "fontSize": 18,
+    "fontWeight": 400,
+    "tracking": 0,
+    "leading": 1.5,
+    "measure": "wide",
+    "align": "left",
+    "paragraph": "normal",
+    "indent": "none",
+    "mode": "scroll",
+    "hyphens": "off"
+  }
+}

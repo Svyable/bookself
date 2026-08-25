@@ -9,7 +9,7 @@ For instance-specific Reader design, keep your CSS outside `reader/` and declare
 Create a repository-root file such as `styles/reader.css`:
 
 ```css
-:root {
+html[data-bookself-style-api="1"] {
   --accent: #7b2639;
 }
 
@@ -35,6 +35,8 @@ Then add it to `imprint.json`:
 ```
 
 The Reader loads instance styles after its shared platform styles, so ordinary CSS cascade rules can override Bookself defaults.
+
+For reusable styles, target the documented [Reader Style API v1](reader-style-api.md) rather than relying on incidental DOM nesting.
 
 ## Why the file belongs outside `reader/`
 
@@ -88,26 +90,7 @@ This check is intentionally local-first. It does not need npm, a browser automat
 
 ## What you can safely customize
 
-Prefer stable Bookself variables and semantic selectors over deeply nested implementation selectors.
-
-Useful variables include the existing color and type tokens such as:
-
-```css
-:root {
-  --bg-page: #fffdf8;
-  --text-primary: #201b18;
-  --accent: #835f2f;
-  --font-display: Georgia, serif;
-}
-```
-
-Useful semantic surfaces include:
-
-- `.page-surface` and `.page-inner` for paged reading;
-- `.scroll-document` and `.scroll-chapter` for continuous reading;
-- `.cover-page`, `.cover-front`, and `.cover-title` for covers;
-- publication-format attributes and classes emitted by the Reader;
-- atmosphere/theme data attributes on the document root.
+Prefer the versioned Style API variables and semantic selectors over deeply nested implementation selectors. The API documents supported state attributes, reading surfaces, palette tokens, and typography-role tokens.
 
 When a customization needs a stable hook that Bookself does not expose yet, propose the hook upstream instead of depending on a brittle DOM path. A small semantic hook is easier for every downstream instance to maintain than a copy of platform CSS.
 
@@ -121,7 +104,7 @@ Custom styles are an instance extension, not a new Bookself build system:
 - the Binder → Shelf release path remains local-first;
 - `reader/` and `desk/` can stay byte-for-byte synchronized with the platform.
 
-If you distribute a reusable design for other Bookself users, keep it as ordinary CSS plus a short README explaining which stable variables and selectors it uses.
+If you distribute a reusable design for other Bookself users, keep it as ordinary CSS plus a short README explaining which Style API version it targets.
 
 ## Trust model
 

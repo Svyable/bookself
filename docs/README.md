@@ -7,6 +7,7 @@ Start with the document that matches what you are trying to do:
 - Architecture and workflow: [`bookself.md`](bookself.md)
 - Writing lifecycle: [`writing-lifecycle.md`](writing-lifecycle.md)
 - Author guidance: [`author-guide.md`](author-guide.md)
+- Publication Reader defaults and reader ownership: [`reader-presentation.md`](reader-presentation.md)
 - Instance-specific Reader design: [`custom-reader-styles.md`](custom-reader-styles.md)
 - Contributor lanes and local verification: [`contributor-map.md`](contributor-map.md)
 

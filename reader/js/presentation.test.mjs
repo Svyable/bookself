@@ -62,10 +62,10 @@ assert.deepEqual(readerPersonalizationState(), { appearance: false, typography: 
 clearReaderPersonalization('typography');
 assert.deepEqual(readerPersonalizationState(), { appearance: false, typography: false });
 
-localStorage = new MemoryStorage();
-global.localStorage = localStorage;
-localStorage.setItem('test-bookself:prefs', JSON.stringify({ theme: 'sepia' }));
-localStorage.setItem('test-bookself:reader-experience', JSON.stringify({ font: 'clear' }));
+const migratedStorage = new MemoryStorage();
+global.localStorage = migratedStorage;
+migratedStorage.setItem('test-bookself:prefs', JSON.stringify({ theme: 'sepia' }));
+migratedStorage.setItem('test-bookself:reader-experience', JSON.stringify({ font: 'clear' }));
 migrateReaderPersonalization();
 assert.deepEqual(readerPersonalizationState(), { appearance: true, typography: true });
 

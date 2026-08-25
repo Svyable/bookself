@@ -187,6 +187,18 @@ The current publication presentation schema is version `1`.
 
 Unknown values are ignored and out-of-range numeric values are clamped. A malformed or absent `reader.json` simply falls back to Bookself/reader defaults; it never prevents the book from opening.
 
+## Validate before release
+
+Run the normal dependency-free repository health check after editing or generating a presentation file:
+
+```bash
+python3 scripts/doctor.py
+```
+
+The doctor inspects every `books/*/reader.json` it finds, including publication templates. It reports malformed JSON, unsupported schema versions, unknown keys, invalid enum values, and wrong numeric shapes as errors. Values that the Reader can safely clamp—such as an oversized font size or excessive leading—are warnings so the author can see that the rendered result will differ from the file.
+
+`reader.json` remains optional. A publication with no design recommendation does not produce an error.
+
 ## Offline behavior
 
 `reader.json` is fetched like the rest of a publication. The service worker keeps successful same-origin reads in the Reader cache, so a publication design that has been opened can participate in later offline reading without adding a build step or external dependency.

@@ -3,6 +3,7 @@
 Start with the document that matches what you are trying to do:
 
 - New to Bookself: [`../START-HERE.md`](../START-HERE.md)
+- Agent-operated end-to-end publishing: [`agent-first.md`](agent-first.md)
 - Start a publication without a terminal: [`new-publication-studio.md`](new-publication-studio.md)
 - Requirements and OS support: [`compatibility.md`](compatibility.md)
 - Architecture and workflow: [`bookself.md`](bookself.md)
@@ -11,5 +12,7 @@ Start with the document that matches what you are trying to do:
 - Publication Reader defaults and reader ownership: [`reader-presentation.md`](reader-presentation.md)
 - Instance-specific Reader design: [`custom-reader-styles.md`](custom-reader-styles.md)
 - Contributor lanes and local verification: [`contributor-map.md`](contributor-map.md)
+
+Agents should also read root [`../bookself.json`](../bookself.json) for the machine-readable capability map and intent boundaries, plus root [`../AGENTS.md`](../AGENTS.md) for repository invariants.
 
 Bookself's baseline is deliberately small: **browser for reading/writing; Git + Python 3 for local work; macOS, Windows, and Linux supported.**

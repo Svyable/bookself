@@ -11,6 +11,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
 
+from reader_presentation import validate_presentation
+
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 BOOK_LINK = re.compile(r"\]\((?:\./)?books/([a-z0-9][a-z0-9-]*)/?\)", re.I)
 CONTENT_LINK = re.compile(
@@ -110,6 +112,33 @@ def read_text(path: Path, out: list[Finding], code: str) -> str | None:
     except OSError as exc:
         out.append(finding("error", code, f"Could not read {path}: {exc}"))
         return None
+
+
+def inspect_reader_presentations(root: Path, out: list[Finding]) -> None:
+    books = root / "books"
+    if not books.is_dir():
+        return
+    for path in sorted(books.glob("*/reader.json")):
+        rel = path.relative_to(root)
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            out.append(
+                finding(
+                    "error",
+                    "invalid_reader_presentation_json",
+                    f"{rel}: reader presentation is not readable JSON: {exc}",
+                )
+            )
+            continue
+        for item in validate_presentation(data):
+            out.append(
+                finding(
+                    item.level,
+                    item.code,
+                    f"{rel}: {item.message}",
+                )
+            )
 
 
 def inspect_root(root: Path) -> list[Finding]:
@@ -298,6 +327,8 @@ def inspect_root(root: Path) -> list[Finding]:
                 out.append(finding("ok", f"{Path(rel).name}_present", f"{rel} is present."))
             else:
                 out.append(finding("error", f"{Path(rel).name}_missing", f"{rel} is missing."))
+
+    inspect_reader_presentations(root, out)
 
     workflows = root / ".github" / "workflows"
     if workflows.is_dir() and any(

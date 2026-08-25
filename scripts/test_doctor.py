@@ -94,6 +94,29 @@ class DoctorTests(unittest.TestCase):
             codes = {item.code for item in inspect_root(root)}
             self.assertIn("missing_manuscript_file", codes)
 
+    def test_invalid_reader_presentation_is_an_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            write(
+                root / "books" / "demo" / "reader.json",
+                json.dumps({"version": 1, "typography": {"font": "handwriting"}}),
+            )
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("reader_typography_font", codes)
+
+    def test_valid_reader_presentation_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            write(
+                root / "books" / "demo" / "reader.json",
+                json.dumps({"version": 1, "appearance": {"theme": "ivory"}}),
+            )
+            findings = inspect_root(root)
+            self.assertEqual(summary(findings)["error"], 0)
+            self.assertIn("reader_presentation", {item.code for item in findings})
+
 
 if __name__ == "__main__":
     unittest.main()

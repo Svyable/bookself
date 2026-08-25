@@ -1,11 +1,16 @@
 import assert from 'node:assert/strict';
 import {
+  READER_PRESENTATION_OPTIONS,
   normalizeReaderPresentation,
   readerPersonalizationState,
   markReaderPersonalized,
   clearReaderPersonalization,
   migrateReaderPersonalization,
 } from './presentation.js';
+
+assert.ok(READER_PRESENTATION_OPTIONS.themes.includes('contrast-dark'));
+assert.ok(READER_PRESENTATION_OPTIONS.fonts.includes('clear'));
+assert.deepEqual(READER_PRESENTATION_OPTIONS.ranges.fontSize, { min: 14, max: 32, step: 1 });
 
 const normalized = normalizeReaderPresentation({
   appearance: { theme: 'sepia', warmth: 'soft', ignored: true },

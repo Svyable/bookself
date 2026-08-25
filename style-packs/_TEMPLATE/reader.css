@@ -1,0 +1,43 @@
+/* Bookself Reader style pack template
+   Target: Reader Style API v1
+
+   Keep reusable packs on documented semantic hooks. Remove examples you do not
+   need rather than depending on Reader DOM nesting. */
+
+html[data-bookself-style-api="1"] {
+  /* House-style tokens. Reader atmospheres may override palette values, so
+     scope atmosphere-specific changes below when that distinction matters. */
+  --accent: #7b2639;
+  --accent-dim: #9a6070;
+  --font-display: Georgia, serif;
+}
+
+/* Example: tune the pack's accent on one known atmosphere without disabling
+   the reader's ability to choose another atmosphere. */
+html[data-bookself-style-api="1"][data-theme="light"] {
+  --accent: #7b2639;
+}
+
+/* Covers are a documented semantic surface. */
+html[data-bookself-style-api="1"] .cover-title {
+  letter-spacing: 0.08em;
+  text-wrap: balance;
+}
+
+/* Keep the main reading experience responsive to reader preferences. */
+html[data-bookself-style-api="1"][data-reader-mode="scroll"] .scroll-document {
+  text-wrap: pretty;
+}
+
+html[data-bookself-style-api="1"][data-reader-measure="narrow"] .scroll-document {
+  /* Add only pack-specific treatment here; do not undo Bookself's measure. */
+  hanging-punctuation: first allow-end last;
+}
+
+/* Publication cards expose their parsed format as a stable v1 hook. */
+html[data-bookself-style-api="1"] a.volume[data-publication-format="paper"] .volume-title {
+  letter-spacing: 0.08em;
+}
+
+/* Accessibility principle: avoid fixed body font sizes, forced motion, or
+   blanket !important rules that defeat Reader preferences. */

@@ -50,6 +50,8 @@ Recognized format families include:
 - `Report`, `Annual Report`, `Field Report`, `Manual`, `Handbook`, `Guide`, `Catalog` / `Catalogue`, `Pamphlet`, or `Brochure`
 - `Thesis` or `Dissertation` using the paper treatment
 
+The underscore-prefixed folders such as `books/_MAGAZINE_TEMPLATE/` and `books/_JOURNAL_TEMPLATE/` are **blank authoring templates, not public Reader examples**. The Reader intentionally does not put those starters on the shelf. To preview a real issue or edition, copy the appropriate template to a normal publication slug in the private Binder, replace its placeholder content and media, and list that publication in the Binder catalog. It should reach the public Shelf only through a deliberate release.
+
 These are format families, not rigid schemas. Bookself keeps the author's exact `Format` label for display and maps related forms onto a small number of Reader treatments so the platform does not grow a separate application for every publishing noun.
 
 Periodical-style publications can add issue metadata without introducing a second configuration file:

@@ -80,6 +80,19 @@ function applyReaderStyles(styles) {
   }
 }
 
+function emptyLibraryText(role) {
+  if (role === 'binder') {
+    return 'No manuscripts yet. Start one from a blank template in books/, keep it Drafting, and preview it here before release.';
+  }
+  if (role === 'shelf') {
+    return 'No released publications yet. Keep drafts in the private Binder, then release a committed snapshot to this public Shelf when it is ready.';
+  }
+  if (role === 'platform') {
+    return 'No platform examples are listed yet. Add published specimen content under books/ to demonstrate Bookself without using a private Binder.';
+  }
+  return 'No publications are listed yet.';
+}
+
 export async function loadImprint() {
   try {
     const data = JSON.parse(await fetchText('imprint.json'));
@@ -142,6 +155,8 @@ export function applyImprint(imprint) {
       fork.hidden = true;
     }
   }
+  const emptyShelf = document.getElementById('emptyShelf');
+  if (emptyShelf) emptyShelf.textContent = emptyLibraryText(imprint.role);
   const home = document.getElementById('homeFromEnd');
   if (home) home.textContent = imprint.homeLabel;
   const logo = document.getElementById('logoBtn');

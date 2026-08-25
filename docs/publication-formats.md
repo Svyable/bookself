@@ -107,7 +107,13 @@ The Reader shows outbound destinations on the publication cover. Links open the 
 
 Put image files in the publication's `media/` folder. PNG, JPG, WebP, and SVG are all appropriate.
 
-Reference them from a manuscript with ordinary Markdown:
+### Publication cover art
+
+To give a publication artwork on both its shelf volume and Reader cover, put one image in `media/` named `cover.png`, `cover.jpg`, `cover.webp`, or `cover.jpeg`. The Reader discovers those names automatically; no README field or asset manifest is required.
+
+Keep the cover inside the publication folder so it travels with the same Binder → Shelf snapshot as the manuscript. Other image filenames remain ordinary figures or page art and are not treated as the publication cover.
+
+Reference manuscript images with ordinary Markdown:
 
 ```md
 ![A concise description of the figure](../media/figure-1.png)

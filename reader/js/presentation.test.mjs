@@ -40,7 +40,14 @@ assert.deepEqual(normalized.typography, {
 
 const invalid = normalizeReaderPresentation({
   appearance: { theme: 'remote-theme', warmth: 'hot' },
-  typography: { font: 'custom-font', fontWeight: 700, mode: 'flipbook' },
+  typography: {
+    fontSize: null,
+    leading: '',
+    tracking: undefined,
+    font: 'custom-font',
+    fontWeight: 700,
+    mode: 'flipbook',
+  },
 });
 assert.deepEqual(invalid.appearance, {});
 assert.deepEqual(invalid.typography, {});

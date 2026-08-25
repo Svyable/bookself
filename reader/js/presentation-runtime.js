@@ -26,6 +26,7 @@ let applying = false;
 let activeSlug = '';
 let activePresentation = null;
 let routeTimer = null;
+let appearanceRepairTimer = null;
 
 function systemTheme() {
   try {
@@ -59,6 +60,13 @@ function clickChoice(selector) {
   const button = document.querySelector(selector);
   if (!button || button.getAttribute('aria-pressed') === 'true') return;
   button.click();
+}
+
+function activateChoice(selector) {
+  const button = document.querySelector(selector);
+  if (!button) return false;
+  button.click();
+  return true;
 }
 
 function applyTypography(typography) {
@@ -96,11 +104,13 @@ function applyTypography(typography) {
 function applyAppearance(appearance) {
   const root = document.documentElement;
   if (root.dataset.theme !== appearance.theme) {
-    clickChoice(`.atmosphere-option[data-paper="${CSS.escape(appearance.theme)}"], [data-paper="${CSS.escape(appearance.theme)}"]`);
-    if (root.dataset.theme !== appearance.theme) root.dataset.theme = appearance.theme;
+    const activated = activateChoice(
+      `.atmosphere-option[data-paper="${CSS.escape(appearance.theme)}"], [data-paper="${CSS.escape(appearance.theme)}"]`
+    );
+    if (!activated || root.dataset.theme !== appearance.theme) root.dataset.theme = appearance.theme;
   }
   if (root.dataset.readerWarmth !== appearance.warmth) {
-    clickChoice(`[data-reader-warmth="${CSS.escape(appearance.warmth)}"]`);
+    activateChoice(`[data-reader-warmth="${CSS.escape(appearance.warmth)}"]`);
   }
 }
 
@@ -224,6 +234,35 @@ function bindPersonalizationTracking() {
   }, true);
 }
 
+function repairBookAppearance() {
+  clearTimeout(appearanceRepairTimer);
+  appearanceRepairTimer = window.setTimeout(() => {
+    if (applying || !activePresentation || readerPersonalizationState().appearance) return;
+    const expected = resolvedPresentation(activePresentation).appearance;
+    const root = document.documentElement;
+    if (root.dataset.theme === expected.theme && root.dataset.readerWarmth === expected.warmth) return;
+    applying = true;
+    try {
+      applyAppearance(expected);
+    } finally {
+      applying = false;
+    }
+  }, 0);
+}
+
+function watchOwnedAppearance() {
+  const root = document.documentElement;
+  const observer = new MutationObserver((records) => {
+    if (applying || readerPersonalizationState().appearance) return;
+    if (!records.some((record) => ['data-theme', 'data-reader-warmth'].includes(record.attributeName))) return;
+    repairBookAppearance();
+  });
+  observer.observe(root, {
+    attributes: true,
+    attributeFilter: ['data-theme', 'data-reader-warmth'],
+  });
+}
+
 async function applyCurrentPresentation({ force = false } = {}) {
   const route = parseRoute();
   const slug = route.slug || '';
@@ -256,6 +295,7 @@ function scheduleRouteSync() {
 async function initialize() {
   migrateReaderPersonalization();
   bindPersonalizationTracking();
+  watchOwnedAppearance();
 
   let attempts = 0;
   while ((!window.__IMPRINT || !document.getElementById('readerExperience')) && attempts < 120) {

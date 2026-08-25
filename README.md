@@ -137,7 +137,6 @@ first paragraph.
 Word processors are excellent at showing a page and surprisingly bad at
 remembering the life of a sentence. Git was built for code, but several of its
 habits are wonderful for prose and research writing:
-
 - **Time travel.** You can see what a paragraph used to say.
 - **Small, named saves.** “Tighten opening scene” or “Correct sample size” is more useful than “v27”.
 - **Line-level conversation.** Editors and collaborators can point at the exact sentence.
@@ -334,7 +333,7 @@ paper labeling in the reader.
 
 ## The web shelf
 
-- [QNTLab](https://qntlab.app/) — Build + Test = Run
+- [Example Web Volume](https://example.com/) — External project example
 
 A web volume is only a link. Bookself binds it visually like a book on the
 shelf, but the website stays at its original URL and remains its own source of
@@ -343,7 +342,7 @@ and other work that deserves shelf presence without being copied into Git.
 
 ## The stand
 
-- [Geek to Me](https://geektome.lovable.app/)
+- [Example Feature](https://example.com/)
 
 The stand is the lighter magazine treatment for external creations. Use the web
 shelf when something should feel like a durable volume; use the stand when it

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "appearance": {
+    "theme": "sepia",
+    "warmth": "off"
+  },
+  "typography": {
+    "font": "classic",
+    "fontSize": 17,
+    "fontWeight": 400,
+    "tracking": 0,
+    "leading": 1.45,
+    "measure": "wide",
+    "align": "justify",
+    "paragraph": "compact",
+    "indent": "none",
+    "mode": "scroll",
+    "hyphens": "auto"
+  }
+}

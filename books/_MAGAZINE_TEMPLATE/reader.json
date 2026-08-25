@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "appearance": {
+    "theme": "porcelain",
+    "warmth": "off"
+  },
+  "typography": {
+    "font": "modern",
+    "fontSize": 18,
+    "fontWeight": 400,
+    "tracking": 0,
+    "leading": 1.55,
+    "measure": "balanced",
+    "align": "left",
+    "paragraph": "airy",
+    "indent": "none",
+    "mode": "scroll",
+    "hyphens": "off"
+  }
+}

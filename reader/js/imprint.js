@@ -1,4 +1,5 @@
 import { fetchText, fileUrl } from './base.js';
+import { migrateReaderPersonalization } from './presentation.js';
 
 export const DEFAULT_IMPRINT = {
   role: 'instance',
@@ -96,6 +97,7 @@ export async function loadImprint() {
 
 export function applyImprint(imprint) {
   window.__IMPRINT = imprint;
+  migrateReaderPersonalization();
   document.title = imprint.name;
   document.documentElement.dataset.bookselfRole = imprint.role || 'instance';
   applyReaderStyles(imprint.readerStyles);
@@ -181,4 +183,10 @@ export function imprintGithub() {
 
 export function storagePrefix() {
   return window.__IMPRINT?.storagePrefix || DEFAULT_IMPRINT.storagePrefix;
+}
+
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  import('./presentation-runtime.js').catch((error) => {
+    console.warn('Reader presentation defaults could not be loaded', error);
+  });
 }

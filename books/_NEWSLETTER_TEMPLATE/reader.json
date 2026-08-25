@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "appearance": {
+    "theme": "light",
+    "warmth": "off"
+  },
+  "typography": {
+    "font": "humanist",
+    "fontSize": 18,
+    "fontWeight": 400,
+    "tracking": 0.01,
+    "leading": 1.6,
+    "measure": "balanced",
+    "align": "left",
+    "paragraph": "airy",
+    "indent": "none",
+    "mode": "scroll",
+    "hyphens": "off"
+  }
+}

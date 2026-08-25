@@ -1,7 +1,7 @@
 import { parseRoute } from './router.js';
 import {
   READER_PRESENTATION_VERSION,
-  clearReaderPersonalization,
+  clearAllReaderPersonalization,
   loadBookPresentation,
   markReaderPersonalized,
   migrateReaderPersonalization,
@@ -27,6 +27,51 @@ let activeSlug = '';
 let activePresentation = null;
 let routeTimer = null;
 let appearanceRepairTimer = null;
+let baseAppearance = null;
+
+function storagePrefix() {
+  return window.__IMPRINT?.storagePrefix || 'obb';
+}
+
+function persistenceKeys() {
+  const prefix = storagePrefix();
+  return [
+    `${prefix}:prefs`,
+    `${prefix}:reader-experience`,
+    `${prefix}:reader-warmth`,
+  ];
+}
+
+function snapshotPersistence() {
+  try {
+    return new Map(persistenceKeys().map((key) => [key, localStorage.getItem(key)]));
+  } catch {
+    return new Map();
+  }
+}
+
+function restorePersistence(snapshot) {
+  if (!snapshot.size) return;
+  try {
+    snapshot.forEach((value, key) => {
+      if (value == null) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    });
+  } catch {
+    // Reading still works when browser storage is unavailable.
+  }
+}
+
+function sessionOnly(callback) {
+  const snapshot = snapshotPersistence();
+  applying = true;
+  try {
+    callback();
+  } finally {
+    restorePersistence(snapshot);
+    applying = false;
+  }
+}
 
 function systemTheme() {
   try {
@@ -36,11 +81,21 @@ function systemTheme() {
   }
 }
 
+function captureBaseAppearance() {
+  if (baseAppearance) return baseAppearance;
+  baseAppearance = {
+    theme: document.documentElement.dataset.theme || systemTheme(),
+    warmth: document.documentElement.dataset.readerWarmth || 'off',
+  };
+  return baseAppearance;
+}
+
 function resolvedPresentation(presentation) {
+  const base = captureBaseAppearance();
   return {
     appearance: {
-      theme: presentation?.appearance?.theme || systemTheme(),
-      warmth: presentation?.appearance?.warmth || 'off',
+      theme: presentation?.appearance?.theme || base.theme,
+      warmth: presentation?.appearance?.warmth || base.warmth,
     },
     typography: {
       ...DEFAULT_TYPOGRAPHY,
@@ -58,8 +113,9 @@ function setRange(id, value) {
 
 function clickChoice(selector) {
   const button = document.querySelector(selector);
-  if (!button || button.getAttribute('aria-pressed') === 'true') return;
+  if (!button || button.getAttribute('aria-pressed') === 'true') return false;
   button.click();
+  return true;
 }
 
 function activateChoice(selector) {
@@ -69,6 +125,11 @@ function activateChoice(selector) {
   return true;
 }
 
+function escapeCss(value) {
+  if (typeof CSS !== 'undefined' && CSS.escape) return CSS.escape(String(value));
+  return String(value).replace(/["\\]/g, '\\$&');
+}
+
 function applyTypography(typography) {
   const root = document.documentElement;
   setRange('readerFontSize', typography.fontSize);
@@ -76,64 +137,83 @@ function applyTypography(typography) {
   setRange('readerLeading', typography.leading);
 
   if (root.dataset.readerFont !== typography.font) {
-    clickChoice(`[data-reader-font-value="${CSS.escape(typography.font)}"]`);
+    clickChoice(`[data-reader-font-value="${escapeCss(typography.font)}"]`);
   }
-  if (Number(root.style.getPropertyValue('--reader-font-weight')) !== Number(typography.fontWeight)) {
+  if (Number.parseFloat(root.style.getPropertyValue('--reader-font-weight')) !== Number(typography.fontWeight)) {
     clickChoice(`[data-reader-weight-value="${typography.fontWeight}"]`);
   }
   if (root.dataset.readerMeasure !== typography.measure) {
-    clickChoice(`[data-reader-measure-value="${CSS.escape(typography.measure)}"]`);
+    clickChoice(`[data-reader-measure-value="${escapeCss(typography.measure)}"]`);
   }
   if (root.dataset.readerAlign !== typography.align) {
-    clickChoice(`[data-reader-align-value="${CSS.escape(typography.align)}"]`);
+    clickChoice(`[data-reader-align-value="${escapeCss(typography.align)}"]`);
   }
   if (root.dataset.readerParagraph !== typography.paragraph) {
-    clickChoice(`[data-reader-paragraph-value="${CSS.escape(typography.paragraph)}"]`);
+    clickChoice(`[data-reader-paragraph-value="${escapeCss(typography.paragraph)}"]`);
   }
   if (root.dataset.readerIndent !== typography.indent) {
-    clickChoice(`[data-reader-indent-value="${CSS.escape(typography.indent)}"]`);
+    clickChoice(`[data-reader-indent-value="${escapeCss(typography.indent)}"]`);
   }
   if (root.dataset.readerHyphens !== typography.hyphens) {
-    clickChoice(`[data-reader-hyphens-value="${CSS.escape(typography.hyphens)}"]`);
+    clickChoice(`[data-reader-hyphens-value="${escapeCss(typography.hyphens)}"]`);
   }
   if (root.dataset.readerMode !== typography.mode) {
-    clickChoice(`[data-reader-mode-value="${CSS.escape(typography.mode)}"]`);
+    clickChoice(`[data-reader-mode-value="${escapeCss(typography.mode)}"]`);
   }
 }
 
 function applyAppearance(appearance) {
   const root = document.documentElement;
   if (root.dataset.theme !== appearance.theme) {
+    const escaped = escapeCss(appearance.theme);
     const activated = activateChoice(
-      `.atmosphere-option[data-paper="${CSS.escape(appearance.theme)}"], [data-paper="${CSS.escape(appearance.theme)}"]`
+      `#readerAtmosphere .atmosphere-option[data-paper="${escaped}"], [data-paper="${escaped}"]`
     );
     if (!activated || root.dataset.theme !== appearance.theme) root.dataset.theme = appearance.theme;
   }
   if (root.dataset.readerWarmth !== appearance.warmth) {
-    activateChoice(`[data-reader-warmth="${CSS.escape(appearance.warmth)}"]`);
+    const activated = activateChoice(`[data-reader-warmth="${escapeCss(appearance.warmth)}"]`);
+    if (!activated || root.dataset.readerWarmth !== appearance.warmth) {
+      root.dataset.readerWarmth = appearance.warmth;
+      const active = appearance.warmth !== 'off';
+      document.getElementById('nightLightOverlay')?.classList.toggle('active', active);
+      document.getElementById('lampPool')?.classList.toggle('active', active);
+    }
   }
 }
 
 function hasBookDefaults(presentation) {
   return !!(
-    Object.keys(presentation?.appearance || {}).length
+    presentation?.preset
+    || Object.keys(presentation?.appearance || {}).length
     || Object.keys(presentation?.typography || {}).length
   );
 }
 
+function presetLabel() {
+  if (!activePresentation?.preset) return hasBookDefaults(activePresentation) ? 'Custom' : 'Bookself default';
+  return activePresentation.preset
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function statusText() {
   const state = readerPersonalizationState();
-  if (state.appearance && state.typography) return 'Your browser controls the page';
-  if (state.appearance) return 'Your colors · book typography';
-  if (state.typography) return 'Book colors · your typography';
-  return hasBookDefaults(activePresentation) ? 'Following this book’s design' : 'Following Bookself defaults';
+  const label = presetLabel();
+  if (state.appearance && state.typography) return `Your browser settings · book suggests ${label}`;
+  if (state.appearance) return `Your colors · ${label} typography`;
+  if (state.typography) return `${label} colors · your typography`;
+  return hasBookDefaults(activePresentation) ? `Following ${label}` : 'Following Bookself defaults';
 }
 
 function syncStatus() {
   const state = readerPersonalizationState();
   const root = document.documentElement;
-  root.dataset.readerPresentation = state.appearance || state.typography ? 'reader' : 'book';
+  root.dataset.readerPresentation = activePresentation?.preset || (hasBookDefaults(activePresentation) ? 'custom' : 'default');
   root.dataset.readerPresentationVersion = String(READER_PRESENTATION_VERSION);
+  root.dataset.readerPresentationAppearance = state.appearance ? 'reader' : 'book';
+  root.dataset.readerPresentationTypography = state.typography ? 'reader' : 'book';
   const out = document.getElementById('readerPresentationStatus');
   if (out) out.textContent = statusText();
   const button = document.getElementById('readerUseBookDefaults');
@@ -155,15 +235,14 @@ function installUi() {
     <button id="readerUseBookDefaults" class="experience-save-preset" type="button">
       Use this book’s design
     </button>
-    <p class="reader-presentation-note">Author defaults are recommendations. Your changes stay in this browser and never edit the book.</p>`;
+    <p class="reader-presentation-note">Author defaults are recommendations. Your changes stay in this browser and never edit the publication.</p>`;
 
   const firstControl = section.querySelector('.experience-control-first');
   if (firstControl) firstControl.insertAdjacentElement('beforebegin', tools);
   else section.appendChild(tools);
 
   document.getElementById('readerUseBookDefaults')?.addEventListener('click', async () => {
-    clearReaderPersonalization('appearance');
-    clearReaderPersonalization('typography');
+    clearAllReaderPersonalization();
     await applyCurrentPresentation({ force: true });
     syncStatus();
     showToast('Using this book’s design');
@@ -232,6 +311,15 @@ function bindPersonalizationTracking() {
     markReaderPersonalized('typography');
     queueMicrotask(syncStatus);
   }, true);
+
+  document.addEventListener('keydown', (event) => {
+    if (!event.isTrusted || applying || event.metaKey || event.ctrlKey || event.altKey) return;
+    if (event.target.closest?.('input, textarea, select, button, [contenteditable="true"]')) return;
+    if (document.body.dataset.stage !== 'read') return;
+    if (!['+', '=', '-', 'v', 'V'].includes(event.key)) return;
+    markReaderPersonalized('typography');
+    queueMicrotask(syncStatus);
+  }, true);
 }
 
 function repairBookAppearance() {
@@ -241,12 +329,7 @@ function repairBookAppearance() {
     const expected = resolvedPresentation(activePresentation).appearance;
     const root = document.documentElement;
     if (root.dataset.theme === expected.theme && root.dataset.readerWarmth === expected.warmth) return;
-    applying = true;
-    try {
-      applyAppearance(expected);
-    } finally {
-      applying = false;
-    }
+    sessionOnly(() => applyAppearance(expected));
   }, 0);
 }
 
@@ -273,13 +356,10 @@ async function applyCurrentPresentation({ force = false } = {}) {
   const resolved = resolvedPresentation(presentation);
   const state = readerPersonalizationState();
 
-  applying = true;
-  try {
+  sessionOnly(() => {
     if (force || !state.appearance) applyAppearance(resolved.appearance);
     if (force || !state.typography) applyTypography(resolved.typography);
-  } finally {
-    applying = false;
-  }
+  });
   syncStatus();
 }
 
@@ -303,6 +383,7 @@ async function initialize() {
     attempts += 1;
   }
 
+  captureBaseAppearance();
   installUi();
   await applyCurrentPresentation();
   window.addEventListener('hashchange', scheduleRouteSync);

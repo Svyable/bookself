@@ -54,7 +54,12 @@ class AgentContractTests(unittest.TestCase):
         self.assertEqual(presets, EXPECTED_PRESETS)
         presentation = (ROOT / "reader/js/presentation.js").read_text(encoding="utf-8")
         for preset in presets:
-            self.assertRegex(presentation, rf"['\"]{re.escape(preset)}['\"]\s*:")
+            escaped = re.escape(preset)
+            if re.fullmatch(r"[A-Za-z_$][A-Za-z0-9_$]*", preset):
+                pattern = rf"(?:['\"]{escaped}['\"]|\b{escaped})\s*:"
+            else:
+                pattern = rf"['\"]{escaped}['\"]\s*:"
+            self.assertRegex(presentation, pattern)
 
     def test_canonical_commands_point_to_existing_scripts(self) -> None:
         for capability in ("bootstrapWorkspace", "bootstrapSingleInstance", "validate", "syncSharedUi", "release"):

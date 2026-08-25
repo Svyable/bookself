@@ -24,6 +24,7 @@ function clamp(value, min, max) {
 }
 
 function finite(value) {
+  if (value == null || value === '') return null;
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
 }

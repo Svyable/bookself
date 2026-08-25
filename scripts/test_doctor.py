@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from doctor import inspect_root, portal_slugs, summary
+from doctor import PUBLICATION_TEMPLATES, inspect_root, portal_slugs, summary
 
 
 def write(path: Path, content: str = "") -> None:
@@ -33,8 +33,8 @@ def fixture(root: Path, role: str, *, status: str | None = None, catalog: bool =
     write(root / "books" / "demo" / "manuscript" / "ch01.md", "# Chapter 1\n\nHello.\n")
 
     if role == "platform":
-        write(root / "books" / "_TEMPLATE" / "README.md", "# Template\n")
-        write(root / "books" / "_PAPER_TEMPLATE" / "README.md", "# Paper template\n")
+        for template in PUBLICATION_TEMPLATES:
+            write(root / "books" / template / "README.md", f"# {template}\n")
 
     if role in {"platform", "binder"}:
         write(root / "scripts" / "release-book.py", "# release helper\n")

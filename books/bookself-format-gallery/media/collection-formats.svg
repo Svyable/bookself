@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Four Bookself collection and reference publication formats</title>
+  <desc id="desc">An editorial illustration showing anthology, report, manual, and comic covers arranged as a small publication stand.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#211b26"/><stop offset="1" stop-color="#13202a"/></linearGradient>
+    <linearGradient id="anth" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#cf9ecf"/><stop offset=".55" stop-color="#71537f"/><stop offset="1" stop-color="#292238"/></linearGradient>
+    <linearGradient id="comic" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0d3a0"/><stop offset="1" stop-color="#82a3a4"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="16" stdDeviation="14" flood-opacity=".28"/></filter>
+  </defs>
+  <rect width="1400" height="760" rx="36" fill="url(#bg)"/>
+  <text x="70" y="80" fill="#f5eee4" font-family="Georgia, serif" font-size="46">Collections, evidence, instructions, sequence</text>
+  <text x="72" y="120" fill="#b9b3b0" font-family="system-ui, sans-serif" font-size="20">Different reading jobs can still live as portable publication folders with versioned media beside the prose.</text>
+
+  <g transform="translate(70 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="9" fill="url(#anth)"/>
+    <text x="24" y="46" fill="#2c2031" font-family="system-ui, sans-serif" font-size="15" letter-spacing="2">ANTHOLOGY · OPEN COLLECTION</text>
+    <text x="24" y="106" fill="#fff5f4" font-family="Georgia, serif" font-size="37">Voices &amp;</text>
+    <text x="24" y="148" fill="#fff5f4" font-family="Georgia, serif" font-size="37">Visions</text>
+    <circle cx="142" cy="276" r="72" fill="#d7a36b" opacity=".9"/>
+    <path d="M142 348 C139 306 145 278 142 240 M142 275 C113 249 91 238 72 220 M143 285 C173 255 197 242 222 221 M142 302 C110 290 87 291 60 300 M144 310 C175 294 207 296 235 307" stroke="#3b2a32" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <text x="24" y="408" fill="#f2ddea" font-family="system-ui, sans-serif" font-size="16">Many contributors · one edited release</text>
+    <text x="24" y="436" fill="#d7bdd0" font-family="system-ui, sans-serif" font-size="13">Credits and permissions travel with the collection.</text>
+  </g>
+
+  <g transform="translate(390 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="7" fill="#e8f0f2"/>
+    <rect x="0" y="0" width="285" height="112" rx="7" fill="#c7dfe7"/>
+    <text x="22" y="42" fill="#25404a" font-family="system-ui, sans-serif" font-size="15" letter-spacing="2">REPORT · 2026</text>
+    <text x="22" y="84" fill="#16303b" font-family="Georgia, serif" font-size="31">State of Open Publishing</text>
+    <g transform="translate(28 158)">
+      <rect x="0" y="96" width="34" height="64" fill="#5d9db7"/><rect x="48" y="60" width="34" height="100" fill="#80b3c4"/><rect x="96" y="78" width="34" height="82" fill="#4b829b"/><rect x="144" y="26" width="34" height="134" fill="#9ac5d2"/><rect x="192" y="48" width="34" height="112" fill="#6ca9bd"/>
+      <line x1="0" y1="168" x2="230" y2="168" stroke="#65838d"/>
+    </g>
+    <text x="22" y="370" fill="#29454f" font-family="system-ui, sans-serif" font-size="17" font-weight="700">Findings → discussion → recommendations</text>
+    <text x="22" y="406" fill="#607981" font-family="system-ui, sans-serif" font-size="14">Evidence-heavy work remains inspectable as source.</text>
+  </g>
+
+  <g transform="translate(710 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="8" fill="#e7a72c"/>
+    <text x="24" y="46" fill="#4a2e05" font-family="system-ui, sans-serif" font-size="15" letter-spacing="2">MANUAL · PRACTICAL REFERENCE</text>
+    <text x="24" y="104" fill="#2c210f" font-family="Georgia, serif" font-size="36">Bookself</text>
+    <text x="24" y="145" fill="#2c210f" font-family="Georgia, serif" font-size="36">User Manual</text>
+    <g transform="translate(143 272)">
+      <circle r="62" fill="#47351a"/><circle r="27" fill="#e7a72c"/>
+      <g fill="#47351a"><rect x="-8" y="-91" width="16" height="34"/><rect x="-8" y="57" width="16" height="34"/><rect x="57" y="-8" width="34" height="16"/><rect x="-91" y="-8" width="34" height="16"/></g>
+    </g>
+    <text x="24" y="390" fill="#4a2e05" font-family="system-ui, sans-serif" font-size="17" font-weight="700">Procedures · warnings · lookup</text>
+    <text x="24" y="424" fill="#69440a" font-family="system-ui, sans-serif" font-size="14">Task-oriented structure over narrative sequence.</text>
+  </g>
+
+  <g transform="translate(1030 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="9" fill="url(#comic)"/>
+    <text x="22" y="44" fill="#304046" font-family="system-ui, sans-serif" font-size="15" letter-spacing="2">COMIC · ISSUE 01</text>
+    <text x="22" y="92" fill="#1d3038" font-family="Georgia, serif" font-size="34" font-weight="700">The Adventures</text>
+    <text x="22" y="130" fill="#1d3038" font-family="Georgia, serif" font-size="34" font-weight="700">of Bookself</text>
+    <rect x="22" y="158" width="241" height="220" rx="5" fill="#b8cfcb" stroke="#314b50" stroke-width="4"/>
+    <path d="M22 315 L76 254 L116 291 L166 218 L263 315 L263 378 L22 378Z" fill="#6c8f86"/>
+    <circle cx="204" cy="204" r="29" fill="#f5df9e"/>
+    <path d="M100 342 C108 303 118 282 139 268 C154 290 159 315 163 342" fill="#2e4650"/>
+    <rect x="34" y="174" width="118" height="52" rx="18" fill="#fff8df" stroke="#314b50" stroke-width="2"/>
+    <text x="48" y="196" fill="#263b40" font-family="system-ui, sans-serif" font-size="12">Every panel, caption,</text><text x="48" y="213" fill="#263b40" font-family="system-ui, sans-serif" font-size="12">and alt text is versioned.</text>
+    <text x="22" y="412" fill="#24393f" font-family="system-ui, sans-serif" font-size="16" font-weight="700">Sequential art + script + accessible reading order</text>
+  </g>
+</svg>

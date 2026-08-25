@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Four Bookself serial publication formats</title>
+  <desc id="desc">An editorial illustration showing magazine, newspaper, journal, and newsletter covers arranged as a small publication stand.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#171a24"/><stop offset="1" stop-color="#2b1f29"/></linearGradient>
+    <linearGradient id="mag" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#103f55"/><stop offset="1" stop-color="#cc6d3c"/></linearGradient>
+    <linearGradient id="journal" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#163a58"/><stop offset="1" stop-color="#071627"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="16" stdDeviation="14" flood-opacity=".28"/></filter>
+  </defs>
+  <rect width="1400" height="760" rx="36" fill="url(#bg)"/>
+  <text x="70" y="80" fill="#f5eee4" font-family="Georgia, serif" font-size="46">Serial publications, one Reader</text>
+  <text x="72" y="120" fill="#b9b3b0" font-family="system-ui, sans-serif" font-size="20">Issue-led formats share the same Markdown + Git release model while keeping their own editorial rhythm.</text>
+
+  <g transform="translate(70 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="10" fill="url(#mag)"/>
+    <text x="24" y="48" fill="#f9f1e7" font-family="system-ui, sans-serif" font-size="16" letter-spacing="3">MAGAZINE · VOL 01 · ISSUE 01</text>
+    <text x="24" y="112" fill="#fff8ed" font-family="Georgia, serif" font-size="41">THE</text>
+    <text x="24" y="154" fill="#fff8ed" font-family="Georgia, serif" font-size="41">BOOKSELF</text>
+    <text x="24" y="196" fill="#fff8ed" font-family="Georgia, serif" font-size="41">REVIEW</text>
+    <circle cx="208" cy="292" r="58" fill="#ffd98b" opacity=".9"/>
+    <path d="M52 388 C110 300 160 365 235 260" stroke="#f5eee4" stroke-width="7" fill="none" opacity=".82"/>
+    <text x="24" y="438" fill="#fff8ed" font-family="system-ui, sans-serif" font-size="17">Features · departments · visual pacing</text>
+  </g>
+
+  <g transform="translate(390 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="3" fill="#eee8db"/>
+    <text x="18" y="38" fill="#332c27" font-family="Georgia, serif" font-size="17">TUESDAY · OPEN EDITION</text>
+    <text x="18" y="86" fill="#171411" font-family="Georgia, serif" font-size="38" font-weight="700">The Bookself Daily</text>
+    <line x1="18" y1="102" x2="267" y2="102" stroke="#2b2520" stroke-width="3"/>
+    <text x="18" y="140" fill="#201c18" font-family="Georgia, serif" font-size="25" font-weight="700">Knowledge moves</text>
+    <text x="18" y="168" fill="#201c18" font-family="Georgia, serif" font-size="25" font-weight="700">when editions stay legible</text>
+    <rect x="18" y="196" width="117" height="145" fill="#b9c4be"/>
+    <path d="M28 321 L69 263 L94 291 L126 232" stroke="#435d63" stroke-width="6" fill="none"/>
+    <g fill="#51483e" font-family="Georgia, serif" font-size="12">
+      <text x="150" y="211">BRIEFING</text><text x="150" y="230">A date-led edition can</text><text x="150" y="247">carry sections, briefs,</text><text x="150" y="264">and visible corrections.</text>
+      <text x="150" y="302">CORRECTIONS</text><text x="150" y="321">History stays inspectable.</text>
+    </g>
+    <line x1="18" y1="370" x2="267" y2="370" stroke="#a69d91"/>
+    <text x="18" y="402" fill="#332c27" font-family="system-ui, sans-serif" font-size="15">Edition · sections · correction trail</text>
+  </g>
+
+  <g transform="translate(710 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="8" fill="url(#journal)"/>
+    <text x="24" y="46" fill="#d8e7ef" font-family="system-ui, sans-serif" font-size="15" letter-spacing="2">JOURNAL · VOL 1 · ISSUE 1</text>
+    <text x="24" y="108" fill="#f2f5f6" font-family="Georgia, serif" font-size="36">Journal of</text>
+    <text x="24" y="150" fill="#f2f5f6" font-family="Georgia, serif" font-size="36">Open Publishing</text>
+    <path d="M42 312 C88 230 144 348 230 226" stroke="#7fb6c9" stroke-width="3" fill="none"/>
+    <g fill="#a8d1dd"><circle cx="42" cy="312" r="7"/><circle cx="104" cy="273" r="7"/><circle cx="164" cy="309" r="7"/><circle cx="230" cy="226" r="7"/></g>
+    <text x="24" y="390" fill="#c8d8df" font-family="system-ui, sans-serif" font-size="16">Articles · citations · figures · equations</text>
+    <text x="24" y="426" fill="#7fa0ad" font-family="system-ui, sans-serif" font-size="14">Exact edition history remains part of the publication.</text>
+  </g>
+
+  <g transform="translate(1030 170)" filter="url(#shadow)">
+    <rect width="285" height="470" rx="9" fill="#0e563f"/>
+    <rect y="0" width="285" height="128" rx="9" fill="#154a38"/>
+    <text x="24" y="46" fill="#dff3e9" font-family="system-ui, sans-serif" font-size="15" letter-spacing="2">NEWSLETTER · MAY</text>
+    <text x="24" y="92" fill="#fffaf1" font-family="Georgia, serif" font-size="34">Bookself Notes</text>
+    <rect x="24" y="160" width="237" height="154" rx="4" fill="#b8c9ad"/>
+    <path d="M24 286 C72 220 126 258 160 208 C198 154 228 216 261 176 L261 314 L24 314Z" fill="#4e765d"/>
+    <text x="24" y="354" fill="#f0f5eb" font-family="system-ui, sans-serif" font-size="20" font-weight="700">A durable issue beyond the inbox</text>
+    <text x="24" y="386" fill="#c5ddcf" font-family="system-ui, sans-serif" font-size="15">Briefs · feature · links · archive</text>
+    <text x="24" y="430" fill="#93bea5" font-family="system-ui, sans-serif" font-size="13">Email can distribute it; the publication remains readable.</text>
+  </g>
+</svg>

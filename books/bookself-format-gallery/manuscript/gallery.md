@@ -18,6 +18,8 @@ Volume-and-issue scholarly publishing. `_JOURNAL_TEMPLATE` pairs naturally with 
 
 Compact serial publishing. `_NEWSLETTER_TEMPLATE` keeps an issue readable as a durable publication even when email is also a distribution channel.
 
+![Four illustrated serial publication covers: magazine, newspaper, journal, and newsletter.](../media/serial-formats.svg "Figure 1. Magazine, newspaper, journal, and newsletter can share one Reader without sharing one editorial shape.")
+
 ## Anthology
 
 Many voices in one collection. `_ANTHOLOGY_TEMPLATE` gives contributors and editors a shared release surface without requiring a database.
@@ -33,5 +35,7 @@ Task-oriented reference material belongs in `_MANUAL_TEMPLATE`, where procedures
 ## Comic / graphic narrative
 
 `_COMIC_TEMPLATE` keeps sequential art beside its script and alt text, so images and reading order are versioned together.
+
+![Four illustrated publication covers: anthology, report, manual, and comic.](../media/collection-formats.svg "Figure 2. Anthologies, reports, manuals, and comics demonstrate how different reading jobs can remain portable publication folders.")
 
 The important boundary is unchanged: these are authoring starters in a private Binder. Only an intentionally released publication belongs on a public Shelf.

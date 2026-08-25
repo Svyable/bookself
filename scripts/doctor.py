@@ -18,6 +18,18 @@ CONTENT_LINK = re.compile(
     re.M,
 )
 INFO_CELL = r"\|\s*\*\*{label}\*\*\s*\|\s*([^|\n]+)\|"
+PUBLICATION_TEMPLATES = (
+    "_TEMPLATE",
+    "_PAPER_TEMPLATE",
+    "_MAGAZINE_TEMPLATE",
+    "_NEWSPAPER_TEMPLATE",
+    "_JOURNAL_TEMPLATE",
+    "_NEWSLETTER_TEMPLATE",
+    "_ANTHOLOGY_TEMPLATE",
+    "_REPORT_TEMPLATE",
+    "_MANUAL_TEMPLATE",
+    "_COMIC_TEMPLATE",
+)
 
 
 @dataclass(frozen=True)
@@ -274,7 +286,7 @@ def inspect_root(root: Path) -> list[Finding]:
                 )
 
     if role == "platform":
-        for template in ("_TEMPLATE", "_PAPER_TEMPLATE"):
+        for template in PUBLICATION_TEMPLATES:
             if (root / "books" / template / "README.md").is_file():
                 out.append(finding("ok", f"{template.lower()}_present", f"books/{template}/ is present."))
             else:

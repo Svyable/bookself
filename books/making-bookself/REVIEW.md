@@ -53,12 +53,16 @@ You do not need to know Git terminology before you start reading.
 2. Read `/AGENTS.md` before modifying files.
 3. Read the working proof as a reader, not only the Markdown source.
 4. Inspect this file and issue #35 for the active questions.
-5. Choose one bounded improvement. Do not rewrite neighboring chapters or
+5. Scan the repository's open pull requests and the newest review-thread comments
+   before choosing a lane. If the same problem is already being addressed,
+   review or avoid that lane rather than opening a competing change from stale
+   `main`.
+6. Choose one bounded improvement. Do not rewrite neighboring chapters or
    silently broaden scope.
-6. Preserve the private Binder / public Shelf boundary and the local-first,
+7. Preserve the private Binder / public Shelf boundary and the local-first,
    no-required-CI publishing path.
-7. Verify the relevant behavior or document exactly what was inspected.
-8. Leave a commit/PR explanation that lets the next human or agent understand
+8. Verify the relevant behavior or document exactly what was inspected.
+9. Leave a commit/PR explanation that lets the next human or agent understand
    why the change exists.
 
 The target is not autonomous churn. The target is a shorter, clearer,

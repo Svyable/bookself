@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from doctor import inspect_root, portal_slugs, summary
+from doctor import inspect_root, portal_slugs, reader_style_paths, summary
 
 
 def write(path: Path, content: str = "") -> None:
@@ -56,6 +56,20 @@ class DoctorTests(unittest.TestCase):
 """
         self.assertEqual(portal_slugs(markdown), ["one"])
 
+    def test_reader_style_paths_normalizes_local_css(self):
+        styles, errors = reader_style_paths(
+            ["styles/reader.css", "./themes/serif.css", "styles/reader.css"]
+        )
+        self.assertEqual(styles, ["styles/reader.css", "themes/serif.css"])
+        self.assertEqual(errors, [])
+
+    def test_reader_style_paths_rejects_unsafe_shapes(self):
+        styles, errors = reader_style_paths(
+            ["../escape.css", "/absolute.css", "https://example.com/a.css", "theme.js"]
+        )
+        self.assertEqual(styles, [])
+        self.assertEqual(len(errors), 4)
+
     def test_healthy_platform_has_no_errors(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -64,6 +78,41 @@ class DoctorTests(unittest.TestCase):
             self.assertEqual(summary(findings)["error"], 0)
             self.assertIn("role", {item.code for item in findings})
             self.assertIn("catalog", {item.code for item in findings})
+
+    def test_valid_reader_style_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            imprint_path = root / "imprint.json"
+            imprint = json.loads(imprint_path.read_text(encoding="utf-8"))
+            imprint["readerStyles"] = ["styles/reader.css"]
+            write(imprint_path, json.dumps(imprint))
+            write(root / "styles" / "reader.css", ":root { --accent: #000; }\n")
+            findings = inspect_root(root)
+            self.assertEqual(summary(findings)["error"], 0)
+            self.assertIn("reader_styles", {item.code for item in findings})
+
+    def test_missing_reader_style_is_an_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            imprint_path = root / "imprint.json"
+            imprint = json.loads(imprint_path.read_text(encoding="utf-8"))
+            imprint["readerStyles"] = ["styles/missing.css"]
+            write(imprint_path, json.dumps(imprint))
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("missing_reader_style", codes)
+
+    def test_invalid_reader_style_config_is_an_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            imprint_path = root / "imprint.json"
+            imprint = json.loads(imprint_path.read_text(encoding="utf-8"))
+            imprint["readerStyles"] = "styles/reader.css"
+            write(imprint_path, json.dumps(imprint))
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("invalid_reader_styles", codes)
 
     def test_shelf_catalog_requires_published_status(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -35,6 +35,27 @@ Git repository.
 See [Bookself 101](../books/bookself-101/) and the
 [publication formats guide](publication-formats.md).
 
+## What should I give students when I assign a Bookself course text?
+
+Give students the **public Shelf Reader link**, not a Binder link. The Shelf is
+the released edition intended for readers; the Binder is the private workspace
+for drafts and the next revision.
+
+For a syllabus or LMS, it is useful to record two things together:
+
+- the normal Shelf Reader link students open to read the text
+- the **public Shelf commit SHA** (and optionally its date) that identifies the
+  exact assigned edition
+
+Keep next-semester edits in the private Binder while the class reads the current
+Shelf edition. If you intentionally hotfix the public edition during the term,
+record the new public Shelf commit with the course materials. Do not use a
+private Binder commit or Binder URL as the student-facing provenance reference.
+
+This requires no tag, GitHub Release, DOI, build pipeline, or CI job. See
+[revisions and releases](revisions.md#record-the-assigned-edition) for the full
+semester-edition workflow.
+
 ## Can students take private notes without sending them to the author or class?
 
 Yes. Reader notes are browser-local to that Bookself site. They are not committed

@@ -74,6 +74,18 @@ Bookself ignores:
 
 These constraints keep the extension seam portable and make an instance repository the source of truth for its presentation.
 
+## Validate locally
+
+Run the dependency-free repository doctor after changing `readerStyles`:
+
+```bash
+python3 scripts/doctor.py
+```
+
+The doctor reports invalid `readerStyles` shapes, unsafe paths, too many configured stylesheets, and CSS files that are declared but missing from the repository. A valid configured stylesheet is also included in the healthy summary.
+
+This check is intentionally local-first. It does not need npm, a browser automation stack, or GitHub Actions.
+
 ## What you can safely customize
 
 Prefer stable Bookself variables and semantic selectors over deeply nested implementation selectors.

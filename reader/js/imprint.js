@@ -1,4 +1,5 @@
 import { fetchText, fileUrl } from './base.js';
+import { migrateReaderPersonalization } from './presentation.js';
 
 export const DEFAULT_IMPRINT = {
   role: 'instance',
@@ -96,6 +97,7 @@ export async function loadImprint() {
 
 export function applyImprint(imprint) {
   window.__IMPRINT = imprint;
+  migrateReaderPersonalization();
   document.title = imprint.name;
   document.documentElement.dataset.bookselfRole = imprint.role || 'instance';
   applyReaderStyles(imprint.readerStyles);

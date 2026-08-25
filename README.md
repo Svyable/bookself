@@ -266,6 +266,7 @@ Those are examples, not identities baked into the shared software.
 | [How to Bookself](books/how-to-bookself/) | Book |
 | [Bookself 101](books/bookself-101/) | Academic textbook example |
 | [The Bookself Review](books/bookself-review/) | Illustrated magazine specimen |
+| [The Bookself Daily](books/bookself-daily/) | Illustrated newspaper specimen |
 | [Bookself Format Gallery](books/bookself-format-gallery/) | Illustrated publication-format gallery |
 | [The Common Book](books/style-common-book/) | Reader style specimen — book |
 | [The Lamplight Room](books/style-lamplight-room/) | Reader style specimen — literary |

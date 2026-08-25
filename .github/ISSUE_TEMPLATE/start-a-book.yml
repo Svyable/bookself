@@ -1,5 +1,5 @@
 name: Start a publication
-description: Begin a Bookself book, paper, or course text — no Git or folder-copy knowledge required
+description: Begin a Bookself publication — no Git or folder-copy knowledge required
 title: "[Start a publication]: "
 labels: ["proposal"]
 body:
@@ -8,9 +8,9 @@ body:
       value: |
         You bring the publication. We can help with the computer-shaped parts.
 
-        This form is enough to scaffold a new Bookself book, paper, or course
-        text for a human or connected agent to finish setting up. You do not
-        need to invent a folder name, know Markdown, or know what a branch is.
+        This form is enough to scaffold a new Bookself publication for a human
+        or connected agent to finish setting up. You do not need to invent a
+        folder name, know Markdown, or know what a branch is.
 
         **Privacy note:** issues have the visibility of this repository. If
         this is a public repo, this form is public. Do not paste private
@@ -26,6 +26,14 @@ body:
         - Book
         - Course text / textbook
         - Research paper / whitepaper
+        - Magazine / zine
+        - Newspaper / gazette
+        - Journal / proceedings
+        - Newsletter / bulletin
+        - Anthology / collection
+        - Report
+        - Manual / handbook / guide
+        - Comic / graphic narrative
         - Other long-form publication
     validations:
       required: true

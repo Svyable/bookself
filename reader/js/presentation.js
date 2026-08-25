@@ -2,20 +2,38 @@ import { fetchText } from './base.js';
 
 export const READER_PRESENTATION_VERSION = 1;
 
-const THEMES = new Set([
-  'light', 'linen', 'porcelain', 'sage', 'lavender', 'ivory', 'sepia', 'rose', 'sand',
-  'dark', 'slate', 'midnight', 'forest', 'ember', 'deep-sea', 'aubergine',
-  'contrast', 'contrast-dark',
-]);
-const WARMTHS = new Set(['off', 'soft', 'golden']);
-const FONTS = new Set(['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'system']);
-const MEASURES = new Set(['narrow', 'balanced', 'wide']);
-const ALIGNS = new Set(['left', 'justify']);
-const PARAGRAPHS = new Set(['compact', 'normal', 'airy']);
-const INDENTS = new Set(['none', 'gentle', 'classic']);
-const MODES = new Set(['paged', 'scroll']);
-const HYPHENS = new Set(['auto', 'off']);
-const WEIGHTS = new Set([400, 500, 600]);
+export const READER_PRESENTATION_OPTIONS = Object.freeze({
+  themes: Object.freeze([
+    'light', 'linen', 'porcelain', 'sage', 'lavender', 'ivory', 'sepia', 'rose', 'sand',
+    'dark', 'slate', 'midnight', 'forest', 'ember', 'deep-sea', 'aubergine',
+    'contrast', 'contrast-dark',
+  ]),
+  warmths: Object.freeze(['off', 'soft', 'golden']),
+  fonts: Object.freeze(['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'system']),
+  fontWeights: Object.freeze([400, 500, 600]),
+  measures: Object.freeze(['narrow', 'balanced', 'wide']),
+  aligns: Object.freeze(['left', 'justify']),
+  paragraphs: Object.freeze(['compact', 'normal', 'airy']),
+  indents: Object.freeze(['none', 'gentle', 'classic']),
+  modes: Object.freeze(['paged', 'scroll']),
+  hyphens: Object.freeze(['auto', 'off']),
+  ranges: Object.freeze({
+    fontSize: Object.freeze({ min: 14, max: 32, step: 1 }),
+    tracking: Object.freeze({ min: -0.02, max: 0.08, step: 0.01 }),
+    leading: Object.freeze({ min: 1.3, max: 2, step: 0.05 }),
+  }),
+});
+
+const THEMES = new Set(READER_PRESENTATION_OPTIONS.themes);
+const WARMTHS = new Set(READER_PRESENTATION_OPTIONS.warmths);
+const FONTS = new Set(READER_PRESENTATION_OPTIONS.fonts);
+const MEASURES = new Set(READER_PRESENTATION_OPTIONS.measures);
+const ALIGNS = new Set(READER_PRESENTATION_OPTIONS.aligns);
+const PARAGRAPHS = new Set(READER_PRESENTATION_OPTIONS.paragraphs);
+const INDENTS = new Set(READER_PRESENTATION_OPTIONS.indents);
+const MODES = new Set(READER_PRESENTATION_OPTIONS.modes);
+const HYPHENS = new Set(READER_PRESENTATION_OPTIONS.hyphens);
+const WEIGHTS = new Set(READER_PRESENTATION_OPTIONS.fontWeights);
 
 const cache = new Map();
 
@@ -40,17 +58,18 @@ export function normalizeReaderPresentation(raw = {}) {
   const tracking = finite(typographyRaw.tracking);
   const leading = finite(typographyRaw.leading);
   const fontWeight = finite(typographyRaw.fontWeight);
+  const ranges = READER_PRESENTATION_OPTIONS.ranges;
 
   const appearance = {
     theme: pick(THEMES, appearanceRaw.theme),
     warmth: pick(WARMTHS, appearanceRaw.warmth),
   };
   const typography = {
-    fontSize: fontSize == null ? undefined : Math.round(clamp(fontSize, 14, 32)),
+    fontSize: fontSize == null ? undefined : Math.round(clamp(fontSize, ranges.fontSize.min, ranges.fontSize.max)),
     font: pick(FONTS, typographyRaw.font),
     fontWeight: WEIGHTS.has(fontWeight) ? fontWeight : undefined,
-    tracking: tracking == null ? undefined : Number(clamp(tracking, -0.02, 0.08).toFixed(2)),
-    leading: leading == null ? undefined : Number(clamp(leading, 1.3, 2).toFixed(2)),
+    tracking: tracking == null ? undefined : Number(clamp(tracking, ranges.tracking.min, ranges.tracking.max).toFixed(2)),
+    leading: leading == null ? undefined : Number(clamp(leading, ranges.leading.min, ranges.leading.max).toFixed(2)),
     measure: pick(MEASURES, typographyRaw.measure),
     align: pick(ALIGNS, typographyRaw.align),
     paragraph: pick(PARAGRAPHS, typographyRaw.paragraph),

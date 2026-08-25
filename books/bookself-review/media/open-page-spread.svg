@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">The Open Page magazine feature spread</title>
+  <desc id="desc">An editorial illustration of a two-page magazine spread showing a calm reading page, a private Binder notebook, and a public Shelf volume connected by a deliberate release arrow.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#172c3b"/><stop offset="1" stop-color="#8e4d38"/></linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffaf0"/><stop offset="1" stop-color="#eee2cd"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-opacity=".28"/></filter>
+  </defs>
+  <rect width="1400" height="820" rx="34" fill="url(#bg)"/>
+  <text x="72" y="82" fill="#fff8ed" font-family="Georgia, serif" font-size="52">The shape of an open book</text>
+  <text x="74" y="122" fill="#e9d6c6" font-family="system-ui, sans-serif" font-size="21">Ordinary source. Deliberate release. A reading surface that earns its polish.</text>
+
+  <g transform="translate(70 175)" filter="url(#shadow)">
+    <rect width="590" height="540" rx="14" fill="url(#paper)"/>
+    <text x="34" y="48" fill="#7f523f" font-family="system-ui, sans-serif" font-size="15" letter-spacing="3">PRIVATE BINDER</text>
+    <text x="34" y="100" fill="#2e2a26" font-family="Georgia, serif" font-size="38">The writing room</text>
+    <rect x="34" y="132" width="522" height="2" fill="#b89576"/>
+    <g fill="#675f57">
+      <rect x="34" y="170" width="360" height="12" rx="6"/><rect x="34" y="198" width="476" height="10" rx="5" opacity=".72"/><rect x="34" y="224" width="432" height="10" rx="5" opacity=".72"/>
+      <rect x="34" y="250" width="455" height="10" rx="5" opacity=".72"/><rect x="34" y="276" width="392" height="10" rx="5" opacity=".72"/>
+    </g>
+    <rect x="34" y="324" width="238" height="148" rx="10" fill="#d9c8aa"/>
+    <path d="M58 438 C92 392 122 416 157 366 C196 417 221 390 250 352 L250 450 L58 450Z" fill="#6c8777"/>
+    <circle cx="208" cy="359" r="22" fill="#d99d69"/>
+    <text x="298" y="342" fill="#4c453e" font-family="system-ui, sans-serif" font-size="17" font-weight="700">Draft here</text>
+    <text x="298" y="374" fill="#6a625a" font-family="system-ui, sans-serif" font-size="15">Markdown, images, notes, history.</text>
+    <text x="298" y="402" fill="#6a625a" font-family="system-ui, sans-serif" font-size="15">Nothing is public merely because</text>
+    <text x="298" y="426" fill="#6a625a" font-family="system-ui, sans-serif" font-size="15">it exists in the writing room.</text>
+    <text x="34" y="510" fill="#8a7766" font-family="Georgia, serif" font-size="17" font-style="italic">Revision can stay messy because release is explicit.</text>
+  </g>
+
+  <g transform="translate(742 175)" filter="url(#shadow)">
+    <rect width="590" height="540" rx="14" fill="#162129"/>
+    <text x="34" y="48" fill="#e1aa78" font-family="system-ui, sans-serif" font-size="15" letter-spacing="3">PUBLIC SHELF</text>
+    <text x="34" y="100" fill="#fff6e8" font-family="Georgia, serif" font-size="38">The released edition</text>
+    <rect x="34" y="132" width="522" height="2" fill="#815e47"/>
+    <rect x="54" y="170" width="220" height="292" rx="8" fill="#b45f3d"/>
+    <text x="76" y="214" fill="#fff7ea" font-family="system-ui, sans-serif" font-size="13" letter-spacing="2">THE BOOKSELF REVIEW</text>
+    <text x="76" y="274" fill="#fff7ea" font-family="Georgia, serif" font-size="34">THE</text>
+    <text x="76" y="314" fill="#fff7ea" font-family="Georgia, serif" font-size="34">OPEN</text>
+    <text x="76" y="354" fill="#fff7ea" font-family="Georgia, serif" font-size="34">PAGE</text>
+    <circle cx="218" cy="398" r="38" fill="#f3d28c"/>
+    <text x="308" y="188" fill="#f4dfca" font-family="system-ui, sans-serif" font-size="17" font-weight="700">Read here</text>
+    <text x="308" y="220" fill="#bfc8cd" font-family="system-ui, sans-serif" font-size="15">Calm pages, navigation, notes,</text>
+    <text x="308" y="244" fill="#bfc8cd" font-family="system-ui, sans-serif" font-size="15">search, citations, and source links.</text>
+    <text x="308" y="302" fill="#f4dfca" font-family="system-ui, sans-serif" font-size="17" font-weight="700">Stable until replaced</text>
+    <text x="308" y="334" fill="#bfc8cd" font-family="system-ui, sans-serif" font-size="15">The next edition can change privately</text>
+    <text x="308" y="358" fill="#bfc8cd" font-family="system-ui, sans-serif" font-size="15">without silently changing this one.</text>
+    <rect x="308" y="402" width="218" height="48" rx="24" fill="#e1aa78"/>
+    <text x="344" y="433" fill="#172129" font-family="system-ui, sans-serif" font-size="15" font-weight="700">INTENTIONAL RELEASE</text>
+    <text x="34" y="510" fill="#b8a38f" font-family="Georgia, serif" font-size="17" font-style="italic">Publication is a decision, not a side effect.</text>
+  </g>
+
+  <g transform="translate(648 402)">
+    <circle r="48" fill="#fff4df" stroke="#d5a775" stroke-width="4"/>
+    <path d="M-20 0 H18 M7 -12 L20 0 L7 12" fill="none" stroke="#7b4c38" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

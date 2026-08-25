@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&family=Lora:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500&display=swap');
+@import url('./typesetting.css?v=r1');
+
 /* Continuous reading + advanced personalization for Bookself. */
 
 :root {
@@ -74,8 +77,6 @@
   color: var(--accent);
 }
 
-/* In continuous mode, the physical pages step aside but the reader chrome,
-   search, TOC, notes, progress, and settings remain available. */
 [data-reader-mode="scroll"] body[data-stage="read"] .pages-wrapper,
 [data-reader-mode="scroll"] body[data-stage="read"] .page-nav,
 [data-reader-mode="scroll"] body[data-stage="read"] .read-hint {
@@ -119,9 +120,6 @@
   line-height: var(--reader-leading);
 }
 
-/* Chapters should arrive like chapters, not like web sections. Each new
-   chapter gets a generous quiet field before its title; the title then sits
-   lower in that field and hands the reader into a compact opening paragraph. */
 .scroll-chapter {
   position: relative;
 }
@@ -185,14 +183,9 @@
   letter-spacing: 0.01em;
 }
 
-.scroll-document p {
-  margin: 0;
-}
+.scroll-document p { margin: 0; }
 
-/* A restrained drop-cap makes the opening prose legible as an opening rather
-   than decorating every paragraph. It naturally skips chapters that begin
-   with lists, code, images, or other non-prose material. */
-.scroll-chapter > h1 + p::first-letter {
+.scroll-chapter > .scroll-block:first-child:has(> h1) + .scroll-block:has(> p) > p::first-letter {
   float: left;
   margin: 0.08em 0.1em 0 0;
   color: var(--accent);
@@ -202,13 +195,8 @@
   line-height: 0.76;
 }
 
-[data-reader-align="left"] .scroll-document p {
-  text-align: left;
-}
-
-[data-reader-align="justify"] .scroll-document p {
-  text-align: justify;
-}
+[data-reader-align="left"] .scroll-document p { text-align: left; }
+[data-reader-align="justify"] .scroll-document p { text-align: justify; }
 
 .scroll-document blockquote {
   margin: 1.6em 0;
@@ -220,13 +208,8 @@
 }
 
 .scroll-document ul,
-.scroll-document ol {
-  padding-left: 1.45em;
-}
-
-.scroll-document li + li {
-  margin-top: 0.35em;
-}
+.scroll-document ol { padding-left: 1.45em; }
+.scroll-document li + li { margin-top: 0.35em; }
 
 .scroll-document a {
   color: var(--accent);
@@ -285,8 +268,6 @@
   font-family: var(--font-accent);
 }
 
-/* A subtle center-weighted reading field keeps long-form scroll mode feeling
-   like a page without boxing it into a faux card. */
 [data-reader-mode="scroll"] body[data-stage="read"] .stage {
   background:
     radial-gradient(
@@ -297,25 +278,16 @@
 }
 
 @media (max-width: 700px) {
-  .experience-mode-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  .experience-mode-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .experience-mode {
     min-height: 3rem;
     border-radius: 10px;
   }
 
-  .experience-mode strong {
-    font-size: 0.74rem;
-  }
+  .experience-mode strong { font-size: 0.74rem; }
+  .experience-mode small { font-size: 0.56rem; }
 
-  .experience-mode small {
-    font-size: 0.56rem;
-  }
-
-  /* Keep the primary sheet action reachable while its body scrolls. The DOM
-     keeps the accessible label “Close”; phones present the friendlier “Done”. */
   .settings-card.experience-card {
     display: flex;
     flex-direction: column;
@@ -354,13 +326,7 @@
     font-size: clamp(2.25em, 12vw, 3.25em);
   }
 
-  .scroll-chapter > h1 + p::first-letter {
+  .scroll-chapter > .scroll-block:first-child:has(> h1) + .scroll-block:has(> p) > p::first-letter {
     font-size: 3em;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-reader {
-    scroll-behavior: auto;
   }
 }

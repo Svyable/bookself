@@ -15,11 +15,12 @@ A Binder release copies a committed snapshot into the Shelf. Binder and Shelf ar
 
 - [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
 - [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md): beginner path for authors who do not already know GitHub.
+- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. In a real workflow these belong in the private Binder; a public Shelf should contain only intentionally released publications.
 - [FAQ](https://github.com/Svyable/bookself/blob/main/docs/faq.md): direct answers about Git-based books, version-controlled textbooks, Markdown papers, private/public publishing, CI/CD, interoperability, and comparisons with common alternatives.
 - [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing and publishing workflow in plain language.
 - [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): private Binder, public Shelf, release model, Reader, and Publishing Desk.
 - [Writing lifecycle](https://github.com/Svyable/bookself/blob/main/docs/writing-lifecycle.md): how software-development ideas map to books and papers.
-- [Publication formats](https://github.com/Svyable/bookself/blob/main/docs/publication-formats.md): books, papers, figures, and external web creations.
+- [Publication formats](https://github.com/Svyable/bookself/blob/main/docs/publication-formats.md): books, papers, serials, comics, anthologies, reports/manuals, figures, and external web creations.
 - [Revisions and releases](https://github.com/Svyable/bookself/blob/main/docs/revisions.md): safe revision and edition workflow.
 - [Editor guide](https://github.com/Svyable/bookself/blob/main/docs/editor-guide.md): review and editing workflow.
 

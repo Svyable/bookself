@@ -137,6 +137,7 @@ first paragraph.
 Word processors are excellent at showing a page and surprisingly bad at
 remembering the life of a sentence. Git was built for code, but several of its
 habits are wonderful for prose and research writing:
+
 - **Time travel.** You can see what a paragraph used to say.
 - **Small, named saves.** “Tighten opening scene” or “Correct sample size” is more useful than “v27”.
 - **Line-level conversation.** Editors and collaborators can point at the exact sentence.

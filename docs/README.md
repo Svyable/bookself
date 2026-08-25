@@ -3,6 +3,7 @@
 Start with the document that matches what you are trying to do:
 
 - New to Bookself: [`../START-HERE.md`](../START-HERE.md)
+- Start a publication without a terminal: [`new-publication-studio.md`](new-publication-studio.md)
 - Requirements and OS support: [`compatibility.md`](compatibility.md)
 - Architecture and workflow: [`bookself.md`](bookself.md)
 - Writing lifecycle: [`writing-lifecycle.md`](writing-lifecycle.md)

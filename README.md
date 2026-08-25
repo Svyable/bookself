@@ -33,6 +33,8 @@ You can also try completed examples in the platform Reader:
 
 - [**How to Bookself** — practical guide →](https://svyable.github.io/bookself/reader/#/b/how-to-bookself/)
 - [**Bookself 101** — academic textbook example →](https://svyable.github.io/bookself/reader/#/b/bookself-101/)
+- [**The Bookself Review** — illustrated magazine specimen →](https://svyable.github.io/bookself/reader/#/b/bookself-review/)
+- [**Bookself Format Gallery** — visual guide to the publication starters →](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/)
 - [**Open the Bookself Reader home →**](https://svyable.github.io/bookself/reader/)
 
 These are ordinary Markdown publications. Binder and Shelf use the same shared
@@ -262,14 +264,20 @@ Those are examples, not identities baked into the shared software.
 |---|---|
 | [How to Bookself](books/how-to-bookself/) | Book |
 | [Bookself 101](books/bookself-101/) | Academic textbook example |
+| [The Bookself Review](books/bookself-review/) | Illustrated magazine specimen |
+| [Bookself Format Gallery](books/bookself-format-gallery/) | Illustrated publication-format gallery |
 | [Making Bookself](books/making-bookself/) | Living draft / public Binder-style specimen |
 
 **How to Bookself** is the short practical guide. **Bookself 101** demonstrates
 how a professor might structure a course text with learning objectives, key
 terms, discussion questions, labs, semester editions, and a stable public
-reading surface. **Making Bookself** is intentionally unfinished: it dogfoods
-Bookself's own draft → proof → review → revision loop in public so the workflow
-can be inspected and improved.
+reading surface. **The Bookself Review** is a real published magazine specimen
+with generated cover art. **Bookself Format Gallery** visually maps the blank
+magazine, newspaper, journal, newsletter, anthology, report, manual, and comic
+starters without copying those platform specimens into a user's Binder.
+**Making Bookself** is intentionally unfinished: it dogfoods Bookself's own
+draft → proof → review → revision loop in public so the workflow can be
+inspected and improved.
 
 Real shelves can list books and whitepapers together; a publication with
 `Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives

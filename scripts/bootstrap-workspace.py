@@ -12,7 +12,13 @@ from pathlib import Path
 
 
 def run(command: list[str], *, cwd: Path | None = None) -> None:
-    subprocess.run(command, cwd=cwd, check=True)
+    subprocess.run(
+        command,
+        cwd=cwd,
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
 
 
 def ensure_empty_workspace(path: Path) -> None:

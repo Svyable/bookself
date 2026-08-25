@@ -18,8 +18,8 @@ Create a repository-root file such as `styles/reader.css`:
   font-feature-settings: "liga" 1, "kern" 1;
 }
 
-[data-format="poetry"] .scroll-document p {
-  text-align: left;
+body[data-stage="read"] .scroll-document {
+  text-wrap: pretty;
 }
 ```
 

@@ -35,7 +35,7 @@ You can also try completed examples in the platform Reader:
 - [**Bookself 101** — academic textbook example →](https://svyable.github.io/bookself/reader/#/b/bookself-101/)
 - [**The Bookself Review** — illustrated magazine specimen →](https://svyable.github.io/bookself/reader/#/b/bookself-review/)
 - [**Bookself Format Gallery** — visual guide to the publication starters →](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/)
-- [**Reader Style Shelf** — six contrasting type and atmosphere specimens →](https://svyable.github.io/bookself/reader/#/b/style-lamplight-room/)
+- [**Reader Style Shelf** — eight contrasting type and atmosphere specimens →](https://svyable.github.io/bookself/reader/#/b/style-common-book/)
 - [**Open the Bookself Reader home →**](https://svyable.github.io/bookself/reader/)
 
 These are ordinary Markdown publications. Binder and Shelf use the same shared
@@ -267,12 +267,14 @@ Those are examples, not identities baked into the shared software.
 | [Bookself 101](books/bookself-101/) | Academic textbook example |
 | [The Bookself Review](books/bookself-review/) | Illustrated magazine specimen |
 | [Bookself Format Gallery](books/bookself-format-gallery/) | Illustrated publication-format gallery |
+| [The Common Book](books/style-common-book/) | Reader style specimen — book |
 | [The Lamplight Room](books/style-lamplight-room/) | Reader style specimen — literary |
 | [A Clear Margin](books/style-clear-margin/) | Reader style specimen — modern essay |
 | [Field Notes Quarterly](books/style-field-notes/) | Reader style specimen — editorial |
 | [Poems at the Window](books/style-poems-at-window/) | Reader style specimen — poetry |
-| [Easy Reading](books/style-easy-reading/) | Reader style specimen — accessible |
 | [After Midnight](books/style-after-midnight/) | Reader style specimen — night story |
+| [Easy Reading](books/style-easy-reading/) | Reader style specimen — accessible |
+| [Study in Green](books/style-quiet-study/) | Reader style specimen — quiet study |
 | [Making Bookself](books/making-bookself/) | Living draft / public Binder-style specimen |
 
 **How to Bookself** is the short practical guide. **Bookself 101** demonstrates
@@ -283,15 +285,48 @@ with generated cover art. **Bookself Format Gallery** visually maps the blank
 magazine, newspaper, journal, newsletter, anthology, report, manual, and comic
 starters without copying those platform specimens into a user's Binder.
 
-The six **Reader style specimens** are intentionally small books with contrasting
-`reader.json` recommendations. Together they demonstrate literary, modern essay,
-editorial, poetry, accessibility-first, and night-reading compositions. Open the
-Reading experience panel while moving between them to see which parts come from
-the book and which parts your browser owns.
+The eight **Reader style specimens** are intentionally small books with
+contrasting `reader.json` recommendations. Together they demonstrate every
+named presentation preset and make differences in atmosphere, typeface, size,
+measure, alignment, paragraph rhythm, and Pages/Scroll mode easy to inspect.
 
 **Making Bookself** is intentionally unfinished: it dogfoods Bookself's own
 draft → proof → review → revision loop in public so the workflow can be
 inspected and improved.
+
+## Reader style options
+
+Authors and stylists can recommend a complete starting composition with one
+line in `reader.json`:
+
+```json
+{
+  "version": 1,
+  "preset": "literary"
+}
+```
+
+| Preset | Example | Starting composition |
+|---|---|---|
+| `book` | [The Common Book](books/style-common-book/) | ivory · Source Serif 4 · balanced paged reading |
+| `literary` | [The Lamplight Room](books/style-lamplight-room/) | parchment · Literata · classic indents · pages |
+| `modern-essay` | [A Clear Margin](books/style-clear-margin/) | porcelain · IBM Plex Sans · wide left-aligned scroll |
+| `editorial` | [Field Notes Quarterly](books/style-field-notes/) | linen · humanist sans · compact editorial scroll |
+| `poetry` | [Poems at the Window](books/style-poems-at-window/) | ivory · classic serif · airy open scroll |
+| `night-story` | [After Midnight](books/style-after-midnight/) | midnight · Lora · narrow warm paged reading |
+| `accessible` | [Easy Reading](books/style-easy-reading/) | high contrast · Atkinson Hyperlegible · larger narrow scroll |
+| `quiet-study` | [Study in Green](books/style-quiet-study/) | sage · Literata · narrow left-aligned study scroll |
+
+Presets are shorthand, not locked themes. Authors can fine-tune the recommended
+atmosphere, warmth, font, text size, weight, tracking, leading, measure,
+alignment, paragraph rhythm, first-line indentation, Pages/Scroll mode, and
+hyphenation with explicit `reader.json` values.
+
+**The publication can suggest. The reader decides.** When a reader changes any
+of those settings, that personalization belongs only to that browser. It does
+not edit the publication, change Git, or change anybody else's reading
+experience. See [Publication Reader design](docs/reader-presentation.md) for the
+full schema and ownership model.
 
 Real shelves can list books and whitepapers together; a publication with
 `Format: Whitepaper` keeps the same folder-and-Markdown workflow and receives

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "appearance": {
+    "theme": "porcelain",
+    "warmth": "off"
+  },
+  "typography": {
+    "font": "book",
+    "fontSize": 17,
+    "fontWeight": 400,
+    "tracking": 0,
+    "leading": 1.55,
+    "measure": "wide",
+    "align": "justify",
+    "paragraph": "compact",
+    "indent": "none",
+    "mode": "paged",
+    "hyphens": "auto"
+  }
+}

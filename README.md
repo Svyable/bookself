@@ -122,8 +122,8 @@ build just to publish Markdown.
 You can ignore almost everything else in this README.
 
 1. Open **[START HERE](START-HERE.md)**.
-2. Make a book from `books/_TEMPLATE/`, or a paper from `books/_PAPER_TEMPLATE/`.
-3. Write one chapter or paper section.
+2. Choose the matching blank starter under `books/` — book, paper, magazine, newspaper, journal, newsletter, anthology, report, manual/handbook, or comic — and copy it to a normal publication slug in your private Binder.
+3. Keep `Status: Drafting` while you write one chapter, section, issue, or paper.
 4. Save it — GitHub calls that a **commit**.
 5. Open the Reader and see whether the work still works when it looks published.
 6. Repeat until it is less wrong than yesterday.

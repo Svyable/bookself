@@ -133,9 +133,10 @@ An unlisted file in a public repository is still public.
 
 ## Keeping issue forms current
 
-`.github/ISSUE_TEMPLATE/chapter-feedback.yml` contains a **Book** dropdown.
-When adding or retiring a book, keep that list in sync in the same change.
-Details are in the [Editor guide](docs/editor-guide.md).
+`.github/ISSUE_TEMPLATE/chapter-feedback.yml` accepts the publication name or
+folder slug as free text. Keep that field generic: stamped Binder/Shelf
+repositories should not inherit a platform-maintained list of Bookself example
+publications. Details are in the [Editor guide](docs/editor-guide.md).
 
 The platform bug and idea forms intentionally do not require contributors to
 know which file owns a problem. Triage can happen after the report exists.

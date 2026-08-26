@@ -491,13 +491,16 @@ async function loadRemoteWorkspace(repo) {
   try {
     const meta = await api();
     state.branch = meta.default_branch || 'main';
-    const [directories, portalMarkdown] = await Promise.all([
+    const [directories, portalMarkdown, remoteImprint] = await Promise.all([
       api(`/contents/books?ref=${encodeURIComponent(state.branch)}`),
       remoteText('README.md').catch(() => ''),
+      remoteText('imprint.json').then((text) => JSON.parse(text)).catch(() => ({})),
     ]);
+    state.imprint = remoteImprint;
+    state.role = remoteImprint.role || 'shelf';
     const catalogSlugs = parsePortalCatalog(portalMarkdown || '');
-    const bookDirectories = directories.filter((item) => item.type === 'dir' && item.name !== '_TEMPLATE');
-    showLoading(`Reading ${bookDirectories.length} manuscript hub${bookDirectories.length === 1 ? '' : 's'}…`);
+    const bookDirectories = directories.filter((item) => item.type === 'dir' && !item.name.startsWith('_'));
+    showLoading(`Reading ${bookDirectories.length} manuscript hub${bookDirectories.length === 1 ? '' : 's'} from this ${state.role}…`);
     state.books = await mapLimit(bookDirectories, 6, (directory) => loadRemoteBook(directory, catalogSlugs));
     finishLoad(meta);
 

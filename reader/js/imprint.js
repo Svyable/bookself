@@ -80,6 +80,56 @@ function applyReaderStyles(styles) {
   }
 }
 
+function installShelfNavigation(imprint) {
+  const headerLeft = document.querySelector('.header-left');
+  const logo = document.getElementById('logoBtn');
+  if (!headerLeft || !logo) return;
+
+  let shelf = document.getElementById('shelfHomeBtn');
+  if (!shelf) {
+    shelf = document.createElement('button');
+    shelf.id = 'shelfHomeBtn';
+    shelf.type = 'button';
+    shelf.className = 'reader-shelf-home';
+    shelf.addEventListener('click', () => {
+      if (location.hash === '#/' || location.hash === '') return;
+      location.hash = '#/';
+    });
+    logo.insertAdjacentElement('afterend', shelf);
+  }
+
+  const role = String(imprint.role || 'instance').toLowerCase();
+  shelf.textContent = role === 'binder' ? 'Back to Binder' : 'Back to Shelf';
+  shelf.title = shelf.textContent;
+  shelf.setAttribute('aria-label', shelf.textContent);
+
+  if (!document.getElementById('readerShelfHomeStyle')) {
+    const style = document.createElement('style');
+    style.id = 'readerShelfHomeStyle';
+    style.textContent = `
+      .reader-shelf-home {
+        appearance: none;
+        border: 0;
+        border-left: 1px solid var(--border);
+        margin-left: .2rem;
+        padding: .25rem 0 .25rem .75rem;
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font: 600 .76rem/1.2 var(--font-accent);
+        letter-spacing: .02em;
+      }
+      .reader-shelf-home:hover,
+      .reader-shelf-home:focus-visible { color: var(--accent); }
+      body[data-stage="binder"] .reader-shelf-home { visibility: hidden; }
+      @media (max-width: 560px) {
+        .reader-shelf-home { font-size: .7rem; padding-left: .55rem; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
 function emptyLibraryText(role) {
   if (role === 'binder') {
     return 'No manuscripts yet. Start one from a blank template in books/, keep it Drafting, and preview it here before release.';
@@ -114,6 +164,7 @@ export function applyImprint(imprint) {
   document.title = imprint.name;
   document.documentElement.dataset.bookselfRole = imprint.role || 'instance';
   applyReaderStyles(imprint.readerStyles);
+  installShelfNavigation(imprint);
 
   const apple = document.querySelector('meta[name="apple-mobile-web-app-title"]');
   if (apple) apple.setAttribute('content', imprint.shortName);

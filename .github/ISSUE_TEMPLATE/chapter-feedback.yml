@@ -1,5 +1,5 @@
-name: Chapter feedback
-description: Suggest an improvement to a chapter — no git knowledge needed
+name: Publication feedback
+description: Suggest an improvement to a publication — no git knowledge needed
 title: "[Feedback]: "
 labels: ["feedback"]
 body:
@@ -12,17 +12,17 @@ body:
   - type: input
     id: book
     attributes:
-      label: Book
-      description: Which book is this about? Use the folder slug when you know it.
-      placeholder: e.g. my-book
+      label: Publication
+      description: Which publication is this about? Use the folder slug when you know it.
+      placeholder: e.g. my-publication
     validations:
       required: true
   - type: input
     id: location
     attributes:
-      label: Where in the book?
-      description: Chapter name, or a few words from the passage.
-      placeholder: e.g. Chapter 2, the paragraph starting with…
+      label: Where in the publication?
+      description: Chapter, section, issue, article, or a few words from the passage.
+      placeholder: e.g. Chapter 2, Methods, Issue 1, or the paragraph starting with…
     validations:
       required: true
   - type: dropdown

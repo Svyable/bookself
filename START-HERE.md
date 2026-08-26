@@ -134,11 +134,12 @@ You do not need a different publishing system.
   Publication Studio or start from `books/_PAPER_TEMPLATE/`. The
   [academic writing guide](docs/academic-writing.md) covers citations,
   footnotes, figures, references, and the supported math conventions.
-- **Course text or textbook:** choose **Book** or **Quiet study** in the New
-  Publication Studio, or start from `books/_TEMPLATE/` like any other chaptered
-  book. Keep the next semester's revision private in Binder and release a
-  deliberate public Shelf snapshot when students should receive it. See
-  [Revisions and releases](docs/revisions.md) for the edition model.
+- **Course text or textbook:** choose **Book** as the publication format in the
+  New Publication Studio, then choose a Reader starting style such as **Quiet
+  study** if it suits the material; or start from `books/_TEMPLATE/` like any
+  other chaptered book. Keep the next semester's revision private in Binder and
+  release a deliberate public Shelf snapshot when students should receive it.
+  See [Revisions and releases](docs/revisions.md) for the edition model.
 
 Both paths keep the same plain Markdown, Git history, Reader, Desk, and
 Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.

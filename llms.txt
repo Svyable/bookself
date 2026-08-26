@@ -24,7 +24,7 @@ Read these before acting:
 
 Local agents can create sibling Binder + Shelf workspaces with:
 
-`python scripts/bootstrap-workspace.py <workspace> --owner <owner> --json`
+`python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json`
 
 The JSON result gives stable paths for subsequent operations. GitHub-connected agents without a shell should reproduce the same durable repository/file results with whatever authorized GitHub capabilities they have.
 

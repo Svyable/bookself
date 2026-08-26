@@ -11,11 +11,16 @@ humans and agents where the current questions live and how to join the loop.
 - **Public review thread:** https://github.com/Svyable/bookself/issues/35
 - **Source folder:** https://github.com/Svyable/bookself/tree/main/books/making-bookself
 - **History:** https://github.com/Svyable/bookself/commits/main/books/making-bookself
-- **Released Shelf:** https://svyable.github.io/shelf/reader/
+- **Bookself example Shelf:** https://svyable.github.io/bookself/reader/
 
 This publication is intentionally public as a teaching specimen. Do not infer
 from it that a real Binder should be public. A real Binder is the private work
 room; this specimen exists so the workflow itself can be inspected by anyone.
+
+Use the platform-owned Bookself example Shelf when comparing this Binder-style
+proof with intentionally released examples. Independently deployed Shelves are
+useful instance references, but they are not the canonical specimen surface for
+this review loop.
 
 ## Questions under review
 

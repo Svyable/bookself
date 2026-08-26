@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Authors**   | @svyable |
+| **Authors**   | Bookself Teaching Collective |
 | **Status**    | Published |
 | **Publisher** | Bookself |
 | **Series**    | Course Texts |
@@ -10,7 +10,9 @@
 | **Edition**   | First |
 | **Language**  | English |
 | **Format**    | Book |
-| **Chapters**  | 6 of 6 drafted |
+| **Chapters**  | 6 of 6 published |
+
+A fictional course-text specimen used to demonstrate textbook structure, academic apparatus, media, and semester-style releases. It is demo content, not an author's personal manuscript.
 
 ## Contents
 

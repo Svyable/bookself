@@ -53,9 +53,11 @@ The starters cover books, papers, magazines, newspapers, journals, newsletters, 
 
 Bookself does not require CI/CD to write, preview, release, or read a publication. A private Binder can work with zero GitHub Actions minutes. The normal release helper runs locally, verifies a committed snapshot, prepares the Shelf diff, and stops before commit or push.
 
+Use the cross-platform Python 3 entrypoints below. On systems where Python 3 uses a different launcher name, use the equivalent `python` or `py -3` command. The `.sh` files remain optional convenience wrappers for shell users.
+
 ```bash
-scripts/stamp-instance.sh ../binder binder YOUR_GITHUB_OWNER binder
-scripts/stamp-instance.sh ../shelf shelf YOUR_GITHUB_OWNER shelf
+python3 scripts/stamp-instance.py ../binder binder YOUR_GITHUB_OWNER binder
+python3 scripts/stamp-instance.py ../shelf shelf YOUR_GITHUB_OWNER shelf
 ```
 
 Create the Binder repository as **private** and the Shelf repository as **public**.
@@ -63,13 +65,13 @@ Create the Binder repository as **private** and the Shelf repository as **public
 For a release:
 
 ```bash
-scripts/release-book.sh your-title ../shelf
+python3 scripts/release-book.py your-title ../shelf
 ```
 
 For shared Reader/Desk upgrades:
 
 ```bash
-scripts/sync-ui.sh
+python3 scripts/sync-ui.py
 ```
 
 Only shared UI is replaced; instance publications and identity remain owned by the instance.

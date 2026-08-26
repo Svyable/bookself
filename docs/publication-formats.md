@@ -6,12 +6,12 @@ Bookself can stay simple while publishing more than books. The underlying rule i
 
 Copy `books/_TEMPLATE/` and write chapters as Markdown. A published book appears on the shelf and opens in the full reader.
 
-## Whitepapers and research notes
+## Papers, whitepapers, and research notes
 
-Copy `books/_PAPER_TEMPLATE/` instead. A paper uses the same publication folder and Git history, but its README adds:
+Copy `books/_PAPER_TEMPLATE/` instead. The generic starter begins with the neutral `Format: Paper` label and uses the same publication folder and Git history as other Bookself work. Change the format to a more specific real form such as `Whitepaper`, `Research Paper`, `Preprint`, `Thesis`, or `Dissertation` when that better describes the publication. Paper metadata can include:
 
 ```md
-| **Format** | Whitepaper |
+| **Format** | Paper |
 | **Venue**  | Optional venue or working-paper series |
 | **DOI**    | Optional DOI |
 ```

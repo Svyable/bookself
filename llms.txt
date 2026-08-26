@@ -65,14 +65,15 @@ No DOI or semantic version is claimed unless the project actually publishes one.
 
 ## Examples
 
+- [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/): the platform repository's own public example shelf; use this first when evaluating Bookself's built-in specimens and Reader behavior.
 - [How to Bookself](https://github.com/Svyable/bookself/tree/main/books/how-to-bookself): short practical guide built as a Bookself publication.
 - [Bookself 101](https://github.com/Svyable/bookself/tree/main/books/bookself-101): academic textbook example with learning objectives, key terms, discussion questions, labs, and semester editions.
 - [The Bookself Review](https://github.com/Svyable/bookself/tree/main/books/bookself-review): published illustrated magazine specimen showing a non-book serial in the same Reader and repository model.
 - [Bookself Format Gallery](https://github.com/Svyable/bookself/tree/main/books/bookself-format-gallery): illustrated guide to the magazine, newspaper, journal, newsletter, anthology, report, manual, and comic publication starters.
 - [Making Bookself](https://github.com/Svyable/bookself/tree/main/books/making-bookself): intentionally unfinished public Binder-style teaching specimen that dogfoods the Bookself improvement loop.
 - [Reader Style Shelf](https://github.com/Svyable/bookself/tree/main/books/style-common-book): contrasting Reader presentation examples for named author presets.
-- [Public Shelf implementation](https://github.com/Svyable/shelf): example public release repository.
-- [Public Reader](https://svyable.github.io/shelf/reader/): live Bookself Shelf reader.
+- [Reference public Shelf deployment](https://github.com/Svyable/shelf): a separate example instance showing what an independently deployed public Shelf repository can look like; it is not the platform's canonical example shelf.
+- [Reference Shelf Reader](https://svyable.github.io/shelf/reader/): the Reader for that separate reference deployment.
 
 ## Live recursive improvement loop
 
@@ -83,7 +84,7 @@ Use this when the request is broad, exploratory, or asks how Bookself itself cou
 3. [Read the public review thread](https://github.com/Svyable/bookself/issues/35).
 4. Read `AGENTS.md` before modifying the repository.
 5. Choose one bounded improvement, verify the relevant behavior, and leave a durable explanation in the commit or pull request.
-6. Compare the working-proof experience with the [released Shelf Reader](https://svyable.github.io/shelf/reader/).
+6. Compare the working-proof experience with the [reference released Shelf Reader](https://svyable.github.io/shelf/reader/), while treating the [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/) as the platform-owned specimen surface.
 
 The target loop is: read -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real Binders should remain private.
 

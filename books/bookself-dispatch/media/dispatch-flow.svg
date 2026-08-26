@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Newsletter release flow</title>
+  <desc id="desc">A private Binder with a draft next issue passes through a deliberate release checkpoint to a public Shelf holding the stable published issue.</desc>
+  <rect width="1200" height="620" fill="#f2eee3"/>
+  <text x="600" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#18362d">One issue can be public while the next stays private</text>
+  <rect x="70" y="150" width="340" height="310" rx="26" fill="#18362d"/>
+  <text x="240" y="215" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#ffffff">Private Binder</text>
+  <text x="240" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#dce8e2">Issue 02 · drafting</text>
+  <rect x="130" y="310" width="220" height="78" rx="12" fill="#f8f5ed"/>
+  <text x="240" y="344" text-anchor="middle" font-family="monospace" font-size="20" fill="#18362d">manuscript/issue.md</text>
+  <text x="240" y="374" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#665f52">notes · edits · replacement art</text>
+  <rect x="490" y="225" width="220" height="160" rx="22" fill="#fffaf0" stroke="#9c5c3a" stroke-width="5"/>
+  <text x="600" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#9c5c3a">DELIBERATE RELEASE</text>
+  <text x="600" y="317" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#18362d">committed snapshot</text>
+  <text x="600" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#665f52">review before public copy</text>
+  <line x1="410" y1="305" x2="490" y2="305" stroke="#9c5c3a" stroke-width="9"/>
+  <line x1="710" y1="305" x2="790" y2="305" stroke="#9c5c3a" stroke-width="9"/>
+  <polygon points="790,305 755,284 755,326" fill="#9c5c3a"/>
+  <rect x="790" y="150" width="340" height="310" rx="26" fill="#ded6c4" stroke="#18362d" stroke-width="4"/>
+  <text x="960" y="215" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#18362d">Public Shelf</text>
+  <text x="960" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#665f52">Issue 01 · published</text>
+  <rect x="850" y="310" width="220" height="78" rx="12" fill="#fffaf0"/>
+  <text x="960" y="344" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#18362d">Stable Reader copy</text>
+  <text x="960" y="374" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#665f52">public history remains inspectable</text>
+  <text x="600" y="535" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#665f52">Work on what comes next without silently rewriting what readers already received.</text>
+</svg>

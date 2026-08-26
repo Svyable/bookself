@@ -275,6 +275,7 @@ baked into the shared software.
 | [Bookself 101](books/bookself-101/) | Academic textbook example |
 | [The Bookself Review](books/bookself-review/) | Illustrated magazine specimen |
 | [The Bookself Daily](books/bookself-daily/) | Illustrated newspaper specimen |
+| [Bookself Dispatch](books/bookself-dispatch/) | Newsletter specimen |
 | [Bookself Format Gallery](books/bookself-format-gallery/) | Illustrated publication-format gallery |
 | [Open Scholarship Notes](books/open-scholarship-notes/) | Scholarly journal specimen |
 | [The Common Book](books/style-common-book/) | Reader style specimen — book |

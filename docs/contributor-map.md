@@ -12,7 +12,7 @@ Pick the lane that matches the change you want to make. Stay in that lane unless
 | Reading, navigation, accessibility, media, math, citations, or shelf presentation | `reader/` | One coherent Reader behavior; no manuscript edits |
 | Publishing readiness and author-facing workflow | `desk/` | One coherent Desk behavior; no manuscript edits |
 | Binder → Shelf release behavior or instance setup | `scripts/` and relevant docs | One local-first workflow change with tests where practical |
-| Templates and publication conventions | `books/_TEMPLATE/`, `books/_PAPER_TEMPLATE/`, docs | Keep the default simple; avoid adding configuration just because a format can support it |
+| Templates and publication conventions | underscore-prefixed starters under `books/` (for example `_TEMPLATE`, `_PAPER_TEMPLATE`, `_MAGAZINE_TEMPLATE`) and relevant docs | Keep the default simple; avoid adding configuration just because a format can support it |
 | Explanations, examples, onboarding, or community guidance | root docs, `docs/`, `.github/` | Documentation/community change only unless code is required to make the documentation true |
 
 If you are unsure, open a **Platform idea** issue and describe the problem before designing a new subsystem.

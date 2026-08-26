@@ -10,7 +10,7 @@
 | **Edition**   | First |
 | **Language**  | English |
 | **Format**    | Book |
-| **Chapters**  | 5 of 5 drafted |
+| **Chapters**  | 6 of 6 drafted |
 
 ## Contents
 
@@ -20,4 +20,5 @@
 - [x] [Ch 3 — Scholarship, Media, and Evidence](manuscript/ch03-scholarship-and-evidence.md)
 - [x] [Ch 4 — Semester Editions and Release](manuscript/ch04-semester-editions.md)
 - [x] [Ch 5 — Academic Apparatus in Plain Markdown](manuscript/ch05-academic-apparatus.md)
+- [x] [Ch 6 — Course Readers as Anthologies](manuscript/ch06-course-readers.md)
 - [x] [Back Matter](manuscript/back-matter.md)

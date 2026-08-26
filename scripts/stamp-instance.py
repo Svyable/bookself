@@ -16,6 +16,10 @@ def storage_prefix(role: str, repo: str) -> str:
     return re.sub(r"[^a-z0-9-]", "", value)
 
 
+def is_publication_template(name: str) -> bool:
+    return name == "_TEMPLATE" or (name.startswith("_") and name.endswith("_TEMPLATE"))
+
+
 def copy_platform(root: Path, destination: Path, role: str) -> None:
     def ignore(directory: str, names: list[str]) -> set[str]:
         current = Path(directory).resolve()
@@ -26,7 +30,7 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         elif rel == Path(".github"):
             skipped.add("workflows")
         elif rel == Path("books"):
-            allowed = {"_TEMPLATE", "_PAPER_TEMPLATE"} if role == "binder" else set()
+            allowed = {name for name in names if role == "binder" and is_publication_template(name)}
             skipped.update(name for name in names if name not in allowed)
         elif rel == Path("docs"):
             skipped.update({"superpowers", "instances"})
@@ -107,7 +111,8 @@ def main() -> int:
         print("Publication content starts empty; the first release creates books/<slug>/.")
         print("Enable GitHub Pages for the public shelf.")
     else:
-        print("Blank starters included: books/_TEMPLATE + books/_PAPER_TEMPLATE")
+        templates = sorted(path.name for path in (destination / "books").iterdir() if path.is_dir())
+        print(f"Blank starters included: {', '.join(templates)}")
         print("Keep the binder private. Do not enable public Pages for unpublished manuscripts.")
     if args.owner == "auto":
         print("Optional: edit imprint.json and set github.owner for repository edit/history links.")

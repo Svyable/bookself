@@ -11,6 +11,25 @@ The architecture has three roles:
 
 A Binder release copies a committed snapshot into the Shelf. Binder and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Binder.
 
+## Agent-first operation
+
+Bookself's documented human workflow is also an executable protocol for capable agents. If a user gives you this repository and asks for an outcome such as “set this up for me,” “write my first book in my Binder,” or “publish it to my Shelf,” do not turn the mechanical Bookself steps back into a checklist for the user.
+
+Read these before acting:
+
+- [Machine-readable capabilities](https://github.com/Svyable/bookself/blob/main/bookself.json): roles, file contracts, canonical commands, intent boundaries, and completion states.
+- [Agent-first Bookself](https://github.com/Svyable/bookself/blob/main/docs/agent-first.md): end-to-end orchestration model for local and GitHub-connected agents.
+- [Bookself publisher skill](https://github.com/Svyable/bookself/blob/main/.agents/skills/bookself-publisher/SKILL.md): portable execution instructions for setup, drafting, validation, release, and outcome reporting.
+- [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository invariants and editing rules.
+
+Local agents can create sibling Binder + Shelf workspaces with:
+
+`python scripts/bootstrap-workspace.py <workspace> --owner <owner> --json`
+
+The JSON result gives stable paths for subsequent operations. GitHub-connected agents without a shell should reproduce the same durable repository/file results with whatever authorized GitHub capabilities they have.
+
+Optimize for the requested end state. Infer mechanical details such as slug, template, filenames, and a reasonable Reader preset when safe. Do not infer across consequential boundaries the user did not authorize: especially public release of unpublished work, destructive history changes, licensing changes, secrets, or new mandatory external services.
+
 ## Start here
 
 - [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
@@ -51,6 +70,7 @@ No DOI or semantic version is claimed unless the project actually publishes one.
 - [The Bookself Review](https://github.com/Svyable/bookself/tree/main/books/bookself-review): published illustrated magazine specimen showing a non-book serial in the same Reader and repository model.
 - [Bookself Format Gallery](https://github.com/Svyable/bookself/tree/main/books/bookself-format-gallery): illustrated guide to the magazine, newspaper, journal, newsletter, anthology, report, manual, and comic publication starters.
 - [Making Bookself](https://github.com/Svyable/bookself/tree/main/books/making-bookself): intentionally unfinished public Binder-style teaching specimen that dogfoods the Bookself improvement loop.
+- [Reader Style Shelf](https://github.com/Svyable/bookself/tree/main/books/style-common-book): contrasting Reader presentation examples for named author presets.
 - [Public Shelf implementation](https://github.com/Svyable/shelf): example public release repository.
 - [Public Reader](https://svyable.github.io/shelf/reader/): live Bookself Shelf reader.
 
@@ -70,6 +90,8 @@ The target loop is: read -> locate -> understand -> propose -> review -> revise 
 ## For contributors and agents
 
 - [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository architecture, invariants, editing rules, and cross-agent instructions.
+- [bookself.json](https://github.com/Svyable/bookself/blob/main/bookself.json): machine-readable capability and outcome contract.
+- [Agent-first guide](https://github.com/Svyable/bookself/blob/main/docs/agent-first.md): orchestration guidance for end-to-end agent operation.
 - [.github/copilot-instructions.md](https://github.com/Svyable/bookself/blob/main/.github/copilot-instructions.md): GitHub Copilot repository onramp.
 - [.github/instructions/publications.instructions.md](https://github.com/Svyable/bookself/blob/main/.github/instructions/publications.instructions.md): path-specific publication editing rules for GitHub agents.
 - [Contributing](https://github.com/Svyable/bookself/blob/main/CONTRIBUTING.md): contribution workflow.

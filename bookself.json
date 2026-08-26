@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "name": "Bookself",
+  "description": "Agent-readable capability map for Git-native long-form publishing.",
+  "agentEntryPoints": {
+    "rules": "AGENTS.md",
+    "llmMap": "llms.txt",
+    "orchestrationGuide": "docs/agent-first.md",
+    "humanStart": "START-HERE.md"
+  },
+  "roles": {
+    "platform": {
+      "purpose": "Reusable software, templates, documentation, and local tooling.",
+      "instanceOwned": false
+    },
+    "binder": {
+      "purpose": "Private authoring repository for drafts, experiments, and the next edition.",
+      "visibility": "private-by-default",
+      "instanceOwned": true
+    },
+    "shelf": {
+      "purpose": "Public repository containing deliberately released publication snapshots.",
+      "visibility": "public-by-default",
+      "instanceOwned": true
+    }
+  },
+  "contracts": {
+    "sharedUi": ["reader/", "desk/"],
+    "instanceOwned": ["books/", "README.md", "imprint.json"],
+    "publicationRoot": "books/<slug>/",
+    "publicationMetadata": "books/<slug>/README.md",
+    "publicationPresentation": "books/<slug>/reader.json",
+    "publicationManuscript": "books/<slug>/manuscript/",
+    "publicationMedia": "books/<slug>/media/",
+    "catalogSection": "## The books"
+  },
+  "capabilities": {
+    "bootstrapWorkspace": {
+      "kind": "local-command",
+      "command": "python scripts/bootstrap-workspace.py <workspace> --owner <owner> --json",
+      "result": "Creates sibling Binder and Shelf directories, stamps roles, and initializes Git repositories.",
+      "requires": ["python3", "git"]
+    },
+    "bootstrapSingleInstance": {
+      "kind": "local-command",
+      "command": "python scripts/stamp-instance.py <destination> <binder|shelf> <owner> <repository>",
+      "requires": ["python3"]
+    },
+    "createPublication": {
+      "kind": "file-contract",
+      "formats": {
+        "book": "books/_TEMPLATE/",
+        "paper": "books/_PAPER_TEMPLATE/",
+        "magazine": "books/_MAGAZINE_TEMPLATE/",
+        "newspaper": "books/_NEWSPAPER_TEMPLATE/",
+        "journal": "books/_JOURNAL_TEMPLATE/",
+        "newsletter": "books/_NEWSLETTER_TEMPLATE/",
+        "anthology": "books/_ANTHOLOGY_TEMPLATE/",
+        "report": "books/_REPORT_TEMPLATE/",
+        "manual": "books/_MANUAL_TEMPLATE/",
+        "comic": "books/_COMIC_TEMPLATE/"
+      },
+      "browserStudio": "desk/#newPublicationStudio",
+      "statusWhileDrafting": "Drafting"
+    },
+    "designPublication": {
+      "kind": "file-contract",
+      "file": "books/<slug>/reader.json",
+      "presets": ["book", "literary", "modern-essay", "editorial", "poetry", "night-story", "accessible", "quiet-study"],
+      "rule": "Publication values are author recommendations; reader browser-local personalization overrides them."
+    },
+    "validate": {
+      "kind": "local-command",
+      "command": "python scripts/doctor.py --root .",
+      "requires": ["python3"]
+    },
+    "preview": {
+      "kind": "local-command",
+      "command": "python -m http.server",
+      "readerPath": "reader/#/b/<slug>/",
+      "deskPath": "desk/",
+      "requires": ["python3", "browser"]
+    },
+    "syncSharedUi": {
+      "kind": "local-command",
+      "command": "python scripts/sync-ui.py [binder-path] [shelf-path]",
+      "requires": ["python3"]
+    },
+    "release": {
+      "kind": "local-command",
+      "command": "python scripts/release-book.py <slug> <path-to-shelf>",
+      "preconditions": [
+        "Binder role is verified.",
+        "Shelf role is verified.",
+        "Release publication is committed in Binder.",
+        "Public release is within the user's expressed intent."
+      ],
+      "result": "Prepares and verifies an exact Shelf publication snapshot, sets it Published, and updates the Shelf catalog. Stops before commit or push.",
+      "requires": ["python3", "git"]
+    }
+  },
+  "outcomeProtocol": {
+    "defaultGoal": "Turn natural-language publishing intent into a valid private Binder, a well-formed publication, and optionally a deliberately released public Shelf snapshot.",
+    "steps": [
+      "Read AGENTS.md and this manifest before editing.",
+      "Infer publication format, structure, style, and workflow details from the user's goal when reasonable; ask only when a missing choice materially changes the intended work.",
+      "Create or locate the private Binder and public Shelf. Never expose unpublished Binder content to make preview easier.",
+      "Create the publication in Binder using the nearest format contract and add it to the Binder catalog.",
+      "Draft requested content in bounded, reviewable changes while preserving the user's voice and factual constraints.",
+      "Choose or tune reader.json as an author recommendation, not a reader lock.",
+      "Validate with doctor and preview when the environment permits.",
+      "Commit Binder work before release.",
+      "If the user explicitly asked to publish, run the release transaction, review its Shelf diff, commit it, and push/publish using the environment's authorized Git/GitHub capabilities.",
+      "Report the durable Binder/Shelf locations, publication slug, validation result, and release state rather than narrating every mechanical substep."
+    ]
+  },
+  "intentBoundaries": {
+    "mayInferWithoutAsking": [
+      "slug",
+      "starter template",
+      "reasonable chapter filenames",
+      "initial Reader preset",
+      "mechanical metadata needed by Bookself",
+      "commit messages for mechanical steps"
+    ],
+    "requiresUserIntent": [
+      "making unpublished manuscript content public",
+      "publishing or replacing a Shelf release when publication was not requested",
+      "deleting publication history or repositories",
+      "changing licensing or copyright ownership",
+      "adding secrets, credentials, paid services, or mandatory external dependencies"
+    ],
+    "explicitPublishExamples": [
+      "publish it to my shelf",
+      "release this book",
+      "make the finished version public"
+    ]
+  },
+  "completion": {
+    "draftReady": [
+      "Binder role is valid.",
+      "Publication metadata and catalog entry are consistent.",
+      "Requested manuscript content exists in Binder.",
+      "doctor reports no blocking structural errors."
+    ],
+    "publishedReady": [
+      "All draftReady conditions hold.",
+      "Binder publication state used for release is committed.",
+      "Shelf contains a verified released snapshot with Status Published.",
+      "Shelf catalog points to the released publication.",
+      "Public delivery URL or repository location is reported when available."
+    ]
+  }
+}

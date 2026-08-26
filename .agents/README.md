@@ -8,6 +8,14 @@ Supported desktop operating systems are **macOS, Windows, and Linux**.
 
 For the human-facing compatibility policy, read `docs/compatibility.md`.
 
+For end-to-end outcome requests such as creating Binder/Shelf repositories, starting a publication, drafting it, validating it, and releasing it, read:
+
+- root `AGENTS.md` for repository invariants;
+- root `bookself.json` for machine-readable capabilities and intent boundaries;
+- `docs/agent-first.md` for the orchestration model;
+- `.agents/skills/bookself-publisher/SKILL.md` for a portable agent execution skill;
+- `.agents/skills/human-prose/SKILL.md` for voice-sensitive manuscript work.
+
 When changing tooling:
 
 - prefer Python standard-library code for canonical automation;

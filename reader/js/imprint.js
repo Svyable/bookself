@@ -1,5 +1,6 @@
 import { fetchText, fileUrl } from './base.js';
 import { migrateReaderPersonalization } from './presentation.js';
+import { binderHash, coverHash, go, parseRoute } from './router.js';
 
 export const DEFAULT_IMPRINT = {
   role: 'instance',
@@ -85,45 +86,100 @@ function installShelfNavigation(imprint) {
   const logo = document.getElementById('logoBtn');
   if (!headerLeft || !logo) return;
 
-  let shelf = document.getElementById('shelfHomeBtn');
-  if (!shelf) {
-    shelf = document.createElement('button');
+  let nav = document.getElementById('readerExitNav');
+  if (!nav) {
+    nav = document.createElement('nav');
+    nav.id = 'readerExitNav';
+    nav.className = 'reader-exit-nav';
+    nav.setAttribute('aria-label', 'Publication navigation');
+
+    const shelf = document.createElement('button');
     shelf.id = 'shelfHomeBtn';
     shelf.type = 'button';
-    shelf.className = 'reader-shelf-home';
-    shelf.addEventListener('click', () => {
-      if (location.hash === '#/' || location.hash === '') return;
-      location.hash = '#/';
+    shelf.className = 'reader-exit-btn reader-exit-shelf';
+    shelf.addEventListener('click', () => go(binderHash()));
+
+    const cover = document.createElement('button');
+    cover.id = 'bookCoverBtn';
+    cover.type = 'button';
+    cover.className = 'reader-exit-btn reader-exit-cover';
+    cover.innerHTML = '<span aria-hidden="true">↖</span><span>Cover</span>';
+    cover.title = 'Back to book cover';
+    cover.setAttribute('aria-label', 'Back to book cover');
+    cover.addEventListener('click', () => {
+      const route = parseRoute();
+      if (route.slug) go(coverHash(route.slug));
     });
-    logo.insertAdjacentElement('afterend', shelf);
+
+    nav.append(shelf, cover);
+    logo.insertAdjacentElement('afterend', nav);
   }
 
+  const shelf = document.getElementById('shelfHomeBtn');
+  const cover = document.getElementById('bookCoverBtn');
   const role = String(imprint.role || 'instance').toLowerCase();
-  shelf.textContent = role === 'binder' ? 'Back to Binder' : 'Back to Shelf';
-  shelf.title = shelf.textContent;
-  shelf.setAttribute('aria-label', shelf.textContent);
+  const home = role === 'binder' ? 'Binder' : 'Shelf';
+  shelf.innerHTML = `<span aria-hidden="true">←</span><span>${home}</span>`;
+  shelf.title = `Back to ${home}`;
+  shelf.setAttribute('aria-label', `Back to ${home}`);
+
+  const sync = () => {
+    const route = parseRoute();
+    const atHome = route.view === 'binder';
+    shelf.hidden = atHome;
+    cover.hidden = atHome || route.view === 'cover';
+  };
+  sync();
+  if (!nav.dataset.routeSync) {
+    window.addEventListener('hashchange', sync);
+    window.addEventListener('popstate', sync);
+    nav.dataset.routeSync = 'true';
+  }
 
   if (!document.getElementById('readerShelfHomeStyle')) {
     const style = document.createElement('style');
     style.id = 'readerShelfHomeStyle';
     style.textContent = `
-      .reader-shelf-home {
-        appearance: none;
-        border: 0;
+      .reader-exit-nav {
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+        margin-left: .15rem;
+        padding-left: .55rem;
         border-left: 1px solid var(--border);
-        margin-left: .2rem;
-        padding: .25rem 0 .25rem .75rem;
+      }
+      .reader-exit-btn {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .32rem;
+        min-height: 2rem;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: .35rem .58rem;
         background: transparent;
         color: var(--text-secondary);
         cursor: pointer;
-        font: 600 .76rem/1.2 var(--font-accent);
-        letter-spacing: .02em;
+        font: 600 .76rem/1 var(--font-accent);
+        letter-spacing: .01em;
+        white-space: nowrap;
       }
-      .reader-shelf-home:hover,
-      .reader-shelf-home:focus-visible { color: var(--accent); }
-      body[data-stage="binder"] .reader-shelf-home { visibility: hidden; }
+      .reader-exit-btn:hover,
+      .reader-exit-btn:focus-visible {
+        border-color: var(--border);
+        background: var(--bg-secondary);
+        color: var(--accent);
+        outline: none;
+      }
+      .reader-exit-shelf {
+        color: var(--text-primary);
+      }
+      .reader-exit-btn[hidden] { display: none; }
       @media (max-width: 560px) {
-        .reader-shelf-home { font-size: .7rem; padding-left: .55rem; }
+        .reader-exit-nav { gap: 0; padding-left: .3rem; }
+        .reader-exit-btn { padding: .35rem .42rem; font-size: .7rem; }
+        .reader-exit-cover span:last-child { display: none; }
+        .reader-exit-cover { min-width: 2rem; justify-content: center; }
       }
     `;
     document.head.appendChild(style);

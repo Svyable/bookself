@@ -382,7 +382,8 @@ function bindUi() {
 
 function syncDeskLinks() {
   const target = $('rootEditLink')?.href;
-  if (target) $('newPublicationEditCatalog').href = target;
+  const catalog = $('newPublicationEditCatalog');
+  if (target && catalog && catalog.href !== target) catalog.href = target;
   const start = $('startBookLink');
   if (start && !start.dataset.newPublicationBound) {
     start.dataset.newPublicationBound = 'true';
@@ -415,8 +416,11 @@ function installStudio() {
   bindUi();
   renderBundle();
   syncDeskLinks();
-  const observer = new MutationObserver(syncDeskLinks);
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['href', 'hidden'] });
+  const rootEditLink = $('rootEditLink');
+  if (rootEditLink) {
+    const observer = new MutationObserver(syncDeskLinks);
+    observer.observe(rootEditLink, { attributes: true, attributeFilter: ['href'] });
+  }
 }
 
 function initialize() {

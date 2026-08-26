@@ -55,6 +55,17 @@ Inside the book:
 Structurally, you now have a book. Whether it is any good remains charmingly
 outside the scope of the file system.
 
+In a private Binder, also add one row for the new folder under the repository
+root README's `## The books` section, for example:
+
+`| [The Long Way Home](books/the-long-way-home/) | Book |`
+
+That Binder catalog entry is how the Publishing Desk and Reader discover the
+working publication. It does **not** publish the draft: the Binder remains
+private and the publication can remain `Status: Drafting`. On a public Shelf,
+by contrast, `## The books` should list only deliberately released publications
+with `Status: Published`; the release helper prepares that Shelf entry for you.
+
 ## Making an edit on GitHub
 
 This walkthrough uses the GitHub website on a computer.

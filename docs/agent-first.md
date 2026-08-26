@@ -51,7 +51,7 @@ Do not ask the user to approve each mechanical transition again. Do stop when a 
 When the agent can execute local commands, clone or open the Bookself platform and run:
 
 ```text
-python scripts/bootstrap-workspace.py <workspace> --owner <github-owner> --json
+python3 scripts/bootstrap-workspace.py <workspace> --owner <github-owner> --json
 ```
 
 This creates sibling Binder and Shelf directories, stamps their roles, and initializes both Git repositories. The JSON result gives the agent stable paths for the rest of the task.
@@ -120,7 +120,7 @@ A reader's browser-local choices still win. An agent must not “solve” design
 Inside Binder:
 
 ```text
-python scripts/doctor.py --root .
+python3 scripts/doctor.py --root .
 ```
 
 Before release, commit the Binder publication state that is being released.
@@ -128,7 +128,7 @@ Before release, commit the Binder publication state that is being released.
 Then from Binder:
 
 ```text
-python scripts/release-book.py <slug> <path-to-shelf>
+python3 scripts/release-book.py <slug> <path-to-shelf>
 ```
 
 The release helper prepares and verifies the Shelf snapshot but intentionally stops before commit/push. If the user's outcome request explicitly includes publishing and the agent has authorized Git/GitHub write capability, the agent may review that prepared diff and complete the Shelf commit/push without asking the user to execute those mechanics.

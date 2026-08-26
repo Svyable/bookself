@@ -16,12 +16,17 @@ requirement that you already know what a repository is.
 | Stage | What the Reader is doing | Open it |
 |---|---|---|
 | **Binder Reader — working proof** | Read an unfinished manuscript, see Draft/Proof state, inspect source/history, leave notes, and review what should change | [Read *Making Bookself* in proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/) |
-| **Shelf Reader — released publication** | Read snapshots the author deliberately chose to make public | [Browse the public Shelf →](https://svyable.github.io/shelf/reader/) |
+| **Bookself example Shelf — released examples** | Browse published specimens that live in this platform repository and show what intentionally released work looks like | [Browse Bookself's example Shelf →](https://svyable.github.io/bookself/reader/) |
 
 A real Binder should be **private**. The *Making Bookself* proof above is a
 deliberately public teaching specimen so students, authors, professors,
 maintainers, and AI agents can inspect the writing loop without being invited
 into somebody's actual private drafts.
+
+The example Shelf above belongs to the Bookself platform repository itself. It
+is the clearest place to evaluate Bookself's built-in publication examples. A
+separate `Svyable/shelf` deployment is listed later only as a reference showing
+what an independent public Shelf instance looks like in practice.
 
 The specimen is recursive: Bookself is being used to write a book about making
 books, and the friction discovered while writing it becomes input for improving
@@ -29,14 +34,14 @@ Bookself itself. You can [read its review notes](books/making-bookself/REVIEW.md
 [join the live review thread](https://github.com/Svyable/bookself/issues/35), or
 [inspect its source](books/making-bookself/).
 
-You can also try completed examples in the platform Reader:
+From the platform example Shelf, you can also open completed specimens directly:
 
 - [**How to Bookself** — practical guide →](https://svyable.github.io/bookself/reader/#/b/how-to-bookself/)
 - [**Bookself 101** — academic textbook example →](https://svyable.github.io/bookself/reader/#/b/bookself-101/)
 - [**The Bookself Review** — illustrated magazine specimen →](https://svyable.github.io/bookself/reader/#/b/bookself-review/)
 - [**Bookself Format Gallery** — visual guide to the publication starters →](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/)
 - [**Reader Style Shelf** — eight contrasting type and atmosphere specimens →](https://svyable.github.io/bookself/reader/#/b/style-common-book/)
-- [**Open the Bookself Reader home →**](https://svyable.github.io/bookself/reader/)
+- [**Open the Bookself example Shelf →**](https://svyable.github.io/bookself/reader/)
 
 These are ordinary Markdown publications. Binder and Shelf use the same shared
 `reader/` software; the repository role and publication state give that Reader
@@ -245,19 +250,22 @@ run is required.
 For the complete architecture and publishing workflow, see
 **[docs/bookself.md](docs/bookself.md)**.
 
-## A real implementation
+## Reference deployment
 
-Bookself is developed against a real deployment so the platform has to survive
-contact with actual publications:
+Bookself is also developed against a separate real deployment so the platform
+has to survive contact with an independent Binder and Shelf. These are examples
+of an instance made with Bookself, not the Bookself platform's own example
+Shelf:
 
 | Role | Reference |
 |---|---|
 | Platform | this repository (`Svyable/bookself`) |
-| Private binder | `Svyable/binder` |
-| Public shelf | [Svyable/shelf](https://github.com/Svyable/shelf) |
-| Public reader | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
+| Reference private Binder | `Svyable/binder` |
+| Reference public Shelf | [Svyable/shelf](https://github.com/Svyable/shelf) |
+| Reference public Reader | [Svyable Shelf](https://svyable.github.io/shelf/reader/) |
 
-Those are examples, not identities baked into the shared software.
+Those references demonstrate deployment boundaries; they are not identities
+baked into the shared software.
 
 ## The books
 

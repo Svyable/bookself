@@ -65,6 +65,13 @@ class DoctorTests(unittest.TestCase):
             self.assertIn("role", {item.code for item in findings})
             self.assertIn("catalog", {item.code for item in findings})
 
+    def test_platform_catalog_requires_published_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform", status="Drafting")
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("catalog_not_published", codes)
+
     def test_shelf_catalog_requires_published_status(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

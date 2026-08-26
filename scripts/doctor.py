@@ -14,9 +14,9 @@ from typing import Iterable
 from reader_presentation import validate_presentation
 
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
-BOOK_LINK = re.compile(r"\]\((?:\./)?books/([a-z0-9][a-z0-9-]*)/?\)", re.I)
+BOOK_LINK = re.compile(r"\]\((?:\.\/)?books\/([a-z0-9][a-z0-9-]*)\/?\)", re.I)
 CONTENT_LINK = re.compile(
-    r"^- \[[ xX]\] \[([^\]]+)\]\((manuscript/[^)\s]+)\)",
+    r"^- \[[ xX]\] \[([^\]]+)\]\((manuscript\/[^)\s]+)\)",
     re.M,
 )
 INFO_CELL = r"\|\s*\*\*{label}\*\*\s*\|\s*([^|\n]+)\|"
@@ -247,12 +247,12 @@ def inspect_root(root: Path) -> list[Finding]:
             out.append(finding("error", "missing_status", f"{slug}: publication Status is missing."))
         if not authors:
             out.append(finding("warning", "missing_authors", f"{slug}: Author/Authors is missing."))
-        if role == "shelf" and status != "Published":
+        if role in {"platform", "shelf"} and status != "Published":
             out.append(
                 finding(
                     "error",
                     "catalog_not_published",
-                    f"{slug}: public Shelf catalog entry has Status {status or 'blank'} instead of Published.",
+                    f"{slug}: released catalog entry has Status {status or 'blank'} instead of Published.",
                 )
             )
         if role == "binder" and status == "Published":

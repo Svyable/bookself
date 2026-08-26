@@ -4,7 +4,7 @@
 |---|---|
 | **Authors**        | @your-handle |
 | **Status**         | Drafting |
-| **Format**         | Whitepaper |
+| **Format**         | Paper |
 | **Publisher**      | Your lab, studio, or organization |
 | **Venue**          | |
 | **DOI**            | |
@@ -13,6 +13,8 @@
 | **Author Links**   | |
 | **Find elsewhere** | |
 | **Chapters**       | 1 of 1 drafted |
+
+`Paper` is the neutral starting label. Change **Format** to a more specific real form such as `Whitepaper`, `Research Paper`, `Preprint`, `Thesis`, or `Dissertation` when that better describes the work.
 
 Fill **Venue** and **DOI** only when they are real publication metadata; leave those cells blank otherwise.
 

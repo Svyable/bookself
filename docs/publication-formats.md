@@ -62,10 +62,10 @@ Periodical-style publications can add issue metadata without introducing a secon
 | **Issue**            | 2 |
 | **Publication date** | 2026-08-24 |
 | **Frequency**        | Quarterly |
-| **ISSN**             | 1234-5678 |
+| **ISSN**             | your assigned ISSN, if any |
 ```
 
-The same fields also work for newspapers, journals, newsletters, and other serial publications. Omit anything that does not apply. Bookself deliberately does not require a periodical database or build pipeline just to publish an issue.
+The same fields also work for newspapers, journals, newsletters, and other serial publications. Omit anything that does not apply. Use an ISSN, ISBN, DOI, or other publication identifier only when it has actually been assigned to that work; do not copy example values or invent one for completeness. Bookself deliberately does not require a periodical database or build pipeline just to publish an issue.
 
 ## Author profiles and finding a publication elsewhere
 
@@ -86,7 +86,7 @@ Additional author identities can go in `Author Links`:
 To help readers find a physical, ebook, audiobook, library, or retailer edition outside Bookself, add `Links` or `Find elsewhere`:
 
 ```md
-| **ISBN** | 978-0-000000-00-0 |
+| **ISBN** | your assigned ISBN, if any |
 | **Links** | [Goodreads](https://www.goodreads.com/book/example) · [Amazon](https://www.amazon.com/example) · [WorldCat](https://search.worldcat.org/example) · [Open Library](https://openlibrary.org/example) |
 ```
 

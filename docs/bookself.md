@@ -128,7 +128,7 @@ Without an agent:
 
 The generated starting state is intentionally role-specific:
 
-- **Binder:** Reader + Desk, local publishing tooling, and only the blank book and paper templates under `books/`. No platform example manuscripts are copied.
+- **Binder:** Reader + Desk, local publishing tooling, and all blank underscore-prefixed publication starters under `books/` (book, paper, magazine, newspaper, journal, newsletter, anthology, report, manual/handbook, and comic). No platform example manuscripts are copied.
 - **Shelf:** Reader + Desk and local publishing tooling, but no publication folders at all. The first deliberate release creates `books/<slug>/`.
 - **Both:** no platform GitHub Actions workflows are copied into the user-owned repositories.
 

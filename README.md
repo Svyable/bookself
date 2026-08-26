@@ -268,6 +268,7 @@ Those are examples, not identities baked into the shared software.
 | [The Bookself Review](books/bookself-review/) | Illustrated magazine specimen |
 | [The Bookself Daily](books/bookself-daily/) | Illustrated newspaper specimen |
 | [Bookself Format Gallery](books/bookself-format-gallery/) | Illustrated publication-format gallery |
+| [Open Scholarship Notes](books/open-scholarship-notes/) | Scholarly journal specimen |
 | [The Common Book](books/style-common-book/) | Reader style specimen — book |
 | [The Lamplight Room](books/style-lamplight-room/) | Reader style specimen — literary |
 | [A Clear Margin](books/style-clear-margin/) | Reader style specimen — modern essay |
@@ -337,10 +338,10 @@ paper labeling in the reader.
 
 - [Example Web Volume](https://example.com/) — External project example
 
-A web volume is only a link. Bookself binds it visually like a book on the
-shelf, but the website stays at its original URL and remains its own source of
-truth. This is useful for apps, documentation sites, interactive essays, labs,
-and other work that deserves shelf presence without being copied into Git.
+A web volume is only a link. Bookself binds it visually like a book on the shelf,
+but the website stays at its original URL and remains its own source of truth.
+This is useful for apps, documentation sites, interactive essays, labs, and
+other work that deserves shelf presence without being copied into Git.
 
 ## The stand
 

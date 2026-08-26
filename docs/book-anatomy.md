@@ -9,6 +9,7 @@ Each book lives at `books/<slug>/`:
 
     books/<slug>/
     ├── README.md          # Hub: info table + checkbox table of contents
+    ├── reader.json        # Optional recommended Reader presentation
     ├── manuscript/
     │   ├── front-matter.md
     │   ├── ch01-<short-slug>.md
@@ -17,6 +18,11 @@ Each book lives at `books/<slug>/`:
     └── media/             # Cover art and figures (optional files)
 
 Start a book by copying `books/_TEMPLATE/` and renaming the copy.
+
+`reader.json` is presentation guidance, not manuscript content. It can recommend
+a starting atmosphere, type treatment, measure, paragraph rhythm, and Pages or
+Scroll mode. Readers can override those choices in their own browser without
+editing the publication.
 
 ## Naming rules
 

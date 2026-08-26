@@ -38,13 +38,13 @@
   "capabilities": {
     "bootstrapWorkspace": {
       "kind": "local-command",
-      "command": "python scripts/bootstrap-workspace.py <workspace> --owner <owner> --json",
+      "command": "python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json",
       "result": "Creates sibling Binder and Shelf directories, stamps roles, and initializes Git repositories.",
       "requires": ["python3", "git"]
     },
     "bootstrapSingleInstance": {
       "kind": "local-command",
-      "command": "python scripts/stamp-instance.py <destination> <binder|shelf> <owner> <repository>",
+      "command": "python3 scripts/stamp-instance.py <destination> <binder|shelf> <owner> <repository>",
       "requires": ["python3"]
     },
     "createPublication": {
@@ -72,24 +72,24 @@
     },
     "validate": {
       "kind": "local-command",
-      "command": "python scripts/doctor.py --root .",
+      "command": "python3 scripts/doctor.py --root .",
       "requires": ["python3"]
     },
     "preview": {
       "kind": "local-command",
-      "command": "python -m http.server",
+      "command": "python3 -m http.server",
       "readerPath": "reader/#/b/<slug>/",
       "deskPath": "desk/",
       "requires": ["python3", "browser"]
     },
     "syncSharedUi": {
       "kind": "local-command",
-      "command": "python scripts/sync-ui.py [binder-path] [shelf-path]",
+      "command": "python3 scripts/sync-ui.py [binder-path] [shelf-path]",
       "requires": ["python3"]
     },
     "release": {
       "kind": "local-command",
-      "command": "python scripts/release-book.py <slug> <path-to-shelf>",
+      "command": "python3 scripts/release-book.py <slug> <path-to-shelf>",
       "preconditions": [
         "Binder role is verified.",
         "Shelf role is verified.",

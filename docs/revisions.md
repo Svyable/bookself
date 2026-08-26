@@ -1,8 +1,10 @@
-# Revising a published book
+# Revising a published work
 
 The easy rule is:
 
 > **Write the next edition in Binder. Keep the current edition on Shelf until the replacement is ready.**
+
+This same workflow applies to books, papers, journals, magazines, newsletters, reports, course texts, and other Bookself publication formats.
 
 Binder and Shelf are separate Git repositories. A release copies a publication snapshot from Binder into Shelf; it does not create a live reference, submodule, symlink, or shared history between the two repositories. After release, the copies are independent until the next release.
 
@@ -33,6 +35,8 @@ Git may assign the same blob SHA to byte-identical files in Binder and Shelf. Th
 
 The release transaction is local. `scripts/release-book.sh` calls the Python standard-library release helper and local Git; it does not call the GitHub API, start GitHub Actions, upload a build artifact, or require a hosted runner.
 
+Despite the historical `release-book` command name, the release helper accepts any Bookself publication slug; it is not limited to book-format publications.
+
 That is an architectural requirement, not merely the current implementation. A private Binder must remain fully writable, previewable, and releasable with zero GitHub Actions minutes. CI and pull-request checks may be useful optional review tools, but exhausting or disabling them must not block publication.
 
 ## Normal revision workflow
@@ -60,7 +64,7 @@ It then:
 - changes only the Shelf copy's `Status` to `Published`
 - adds or updates the root Shelf catalog row
 - replaces the old Shelf publication snapshot
-- verifies that every publication file except the intentionally different book README byte-matches the committed Binder snapshot
+- verifies that every publication file except the intentionally different publication README byte-matches the committed Binder snapshot
 - prints the Binder commit SHA used for the release
 - stops before commit or push
 
@@ -85,7 +89,7 @@ This does not require tags, GitHub Releases, a DOI, or CI. Those can be added wh
 
 ## Why Shelf should stay stable
 
-A public Git repository is public even when the Reader hides a publication. Changing a Shelf book from `Published` to `Revision in progress` can remove it from the visible bookshelf, but its raw Markdown and Git history remain public.
+A public Git repository is public even when the Reader hides a publication. Changing a Shelf publication from `Published` to `Revision in progress` can remove it from the visible bookshelf, but its raw Markdown and Git history remain public.
 
 So Bookself treats these as different states:
 

@@ -2,14 +2,14 @@
 
 | | |
 |---|---|
-| **Authors**   | @svyable |
+| **Authors**   | Bookself Demo Guides |
 | **Status**    | Published |
 | **Publisher** | Bookself |
 | **Series**    | Field Notes |
 | **Tags**      | bookself, git, publishing |
 | **Edition**   | First |
 | **Format**    | Book |
-| **Chapters**  | 4 of 4 drafted |
+| **Chapters**  | 4 of 4 published |
 
 ## Contents
 

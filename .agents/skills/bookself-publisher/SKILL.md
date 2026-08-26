@@ -89,7 +89,7 @@ Do not expose Binder content for preview. Preview private work locally or throug
 
 ### 3. Create the publication in Binder
 
-Use the nearest format contract from `bookself.json` and `books/_*_TEMPLATE`.
+Use the nearest format contract from `bookself.json` and its mapped starter under `books/` (for example, `books/_TEMPLATE/` for a book or `books/_PAPER_TEMPLATE/` for a paper).
 
 Create a normal lowercase hyphenated `books/<slug>/` folder. Fill the publication README metadata and contents. Add the Binder catalog link under root `## The books` so Reader and Desk can discover it.
 

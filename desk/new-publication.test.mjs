@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   PUBLICATION_FORMATS,
   STARTER_PRESETS,
@@ -54,5 +55,10 @@ assert.equal(zip.at(-21), 0x4b);
 assert.equal(zip.at(-20), 0x05);
 assert.equal(zip.at(-19), 0x06);
 assert.throws(() => zipStore({ '../escape.txt': 'no' }), /Unsafe archive path/);
+
+const source = readFileSync(new URL('./new-publication.js', import.meta.url), 'utf8');
+assert.doesNotMatch(source, /observer\.observe\(document\.body/);
+assert.match(source, /observer\.observe\(rootEditLink, \{ attributes: true, attributeFilter: \['href'\] \}\)/);
+assert.match(source, /catalog\.href !== target/);
 
 console.log('new publication studio tests ok');

@@ -61,6 +61,9 @@ const hub = `# River Book
 |---|---|
 | **Authors**   | @ada |
 | **Status**    | Published |
+| **Rights** | © 2026 Ada · All Rights Reserved |
+| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |
+| **Rights file** | [RIGHTS.md](RIGHTS.md) |
 | **Chapters**  | 1 of 2 drafted |
 
 ## Contents
@@ -80,6 +83,9 @@ assert.equal(book.contents.length, 2);
 assert.equal(book.contents[0].id, 'front-matter');
 assert.equal(book.contents[1].id, 'ch01-current');
 assert.equal(book.publisher, '');
+assert.equal(book.rights, '© 2026 Ada · All Rights Reserved');
+assert.equal(book.aiUse, 'Training, RAG, AI indexing, and generative reuse reserved');
+assert.equal(book.rightsFile, '[RIGHTS.md](RIGHTS.md)');
 assert.deepEqual(book.authorLinks, []);
 assert.deepEqual(book.externalLinks, []);
 
@@ -90,6 +96,9 @@ const pub = parseBookReadme(
 assert.equal(pub.publisher, 'House');
 assert.equal(pub.edition, 'Second');
 assert.equal(pub.isbn, '978-1');
+assert.equal(pub.rights, 'All Rights Reserved');
+assert.equal(pub.aiUse, 'AI training and generative use reserved');
+assert.equal(pub.rightsFile, '[RIGHTS.md](RIGHTS.md)');
 
 const paper = parseBookReadme(
   `# A Result\n\n| **Status** | Published |\n| **Format** | Whitepaper |\n| **Venue** | Example Lab |\n| **DOI** | 10.1234/example |\n`,

@@ -46,13 +46,61 @@ function markdownCell(value) {
   return String(value || '').replace(/\s+/g, ' ').replace(/\|/g, '\\|').trim();
 }
 
+function rightsName(value) {
+  return String(value || '')
+    .replace(/\[([^\]]+)\]\(https?:\/\/[^)\s]+\)/gi, '$1')
+    .replace(/\\\|/g, '|')
+    .replace(/^@/, '')
+    .replace(/\s+/g, ' ')
+    .trim() || 'Your Name';
+}
+
 function safePieceTitle(value, fallback) {
   const clean = String(value || '').replace(/[\r\n]+/g, ' ').trim();
   return clean || fallback;
 }
 
-function publicationRights(author, year) {
-  return `# Rights for this publication\n\n© ${year} ${author}. All rights reserved.\n\nThis publication is publicly readable only when its rightsholder deliberately makes an official copy public. Public availability does **not** make the work open source, public domain, or Creative Commons licensed.\n\nUnless the rightsholder separately grants permission, no license is granted to reproduce, republish, distribute, sell, adapt, translate, create synthetic narration or other derivative editions, sublicense, or commercially exploit the publication.\n\nThe rightsholder also expressly reserves rights concerning AI and machine-learning uses, including model training or fine-tuning, creation of model weights or embeddings for generative use, retrieval-augmented generation (RAG), grounding, AI-generated summaries or substitutes, AI-specific indexing, synthetic translation or narration, and other generative reuse.\n\nNothing in this notice is intended to restrict a use independently permitted by applicable law, including any applicable fair-use, quotation, research, library, accessibility, or other statutory exception.\n\nHosting-provider terms are separate. Uploading this publication to a platform may grant that platform rights under its own agreement even when this publication remains All Rights Reserved against other ungranted uses.\n\nFor Bookself's explanation of these defaults and machine-readable rights signals, see https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md\n`;
+function publicationRights(title, author, year) {
+  return `# Rights & permissions — ${title}\n\n© ${year} ${author}. All Rights Reserved.\n\n**Work:** *${title}*  \n**Author and copyright owner:** ${author}  \n**Rights profile:** \`bookself-arr-v1\`\n\nThis work may be made publicly readable by the copyright owner. Public availability, source-visible Markdown, Git history, or a public Reader does not place the work in the public domain and does not grant an open-source or Creative Commons license.\n\nUnless the copyright owner separately grants permission, no license is granted to reproduce, republish, distribute, sell, sublicense, adapt, translate, create derivative editions, create synthetic narration, or commercially exploit this work.\n\nThe copyright owner expressly reserves rights concerning AI and machine-learning uses, including model training or fine-tuning, creation of model weights or embeddings for generative use, retrieval-augmented generation (RAG), grounding, AI-specific indexing, AI-generated summaries or substitutes, synthetic translation or narration, and other generative reuse.\n\nNothing in this statement is intended to prohibit a use independently permitted by applicable law, including an applicable fair-use, quotation, research, library, accessibility, or other statutory exception.\n\nThe title, author, copyright-owner identity, copyright notice, terms and conditions, this \`RIGHTS.md\`, \`rights.json\`, and links or identifiers referring to them are intended to remain associated with official copies as copyright-management information. Do not remove or alter this information without the copyright owner's authority. Any claim under 17 U.S.C. §1202 remains subject to that statute's knowledge, intent, and other requirements.\n\n\`rights.json\` is the machine-readable companion to this notice. Registration data is asserted only if a real registration number and effective date are deliberately recorded there; \`not-recorded-in-bookself\` is not a statement that the work is unregistered.\n\nHosting-provider terms are separate and may grant the host rights under its own agreement with the copyright owner.\n\nFor Bookself's explanation of these defaults and machine-readable rights signals, see https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md\n`;
+}
+
+export function publicationRightsManifest(title, author, year) {
+  const manifest = {
+    schemaVersion: 1,
+    policy: 'bookself-arr-v1',
+    work: { title, author },
+    copyright: {
+      owner: author,
+      year,
+      notice: `© ${year} ${author}. All Rights Reserved.`,
+    },
+    license: {
+      id: 'ARR',
+      label: 'All Rights Reserved',
+      file: 'RIGHTS.md',
+    },
+    permissions: {
+      publicReading: true,
+      conventionalSearch: true,
+      reproduction: false,
+      distribution: false,
+      derivatives: false,
+      commercialUse: false,
+      aiTraining: false,
+      aiGenerativeUse: false,
+      aiRetrievalGrounding: false,
+      aiIndexing: false,
+      syntheticNarration: false,
+      syntheticTranslation: false,
+    },
+    registration: {
+      jurisdiction: 'US',
+      status: 'not-recorded-in-bookself',
+      number: null,
+      effectiveDate: null,
+    },
+  };
+  return `${JSON.stringify(manifest, null, 2)}\n`;
 }
 
 function starterBody(formatId, title) {
@@ -92,11 +140,12 @@ export function buildPublicationFiles(input = {}) {
   const recipe = PUBLICATION_FORMATS[formatId];
   const title = String(input.title || '').trim() || 'Untitled Publication';
   const slug = slugifyTitle(input.slug || title);
-  const author = markdownCell(input.author) || 'Your Name';
+  const authorCell = markdownCell(input.author) || 'Your Name';
+  const author = rightsName(authorCell);
   const pieceTitle = safePieceTitle(input.pieceTitle, recipe.pieceLabel);
   const preset = READER_PRESENTATION_PRESETS[input.preset] ? input.preset : 'book';
   const year = new Date().getFullYear();
-  const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${author} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${author} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
+  const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${authorCell} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${author} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Rights manifest** | [rights.json](rights.json) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
   const presentation = `${JSON.stringify({ version: 1, preset }, null, 2)}\n`;
   const manuscript = starterBody(formatId, pieceTitle);
   return {
@@ -107,7 +156,8 @@ export function buildPublicationFiles(input = {}) {
     catalog: catalogSnippet({ title, slug, format: recipe.format }),
     files: {
       [`${slug}/README.md`]: readme,
-      [`${slug}/RIGHTS.md`]: publicationRights(author, year),
+      [`${slug}/RIGHTS.md`]: publicationRights(title, author, year),
+      [`${slug}/rights.json`]: publicationRightsManifest(title, author, year),
       [`${slug}/reader.json`]: presentation,
       [`${slug}/manuscript/${recipe.filename}`]: manuscript,
     },
@@ -235,7 +285,7 @@ function studioMarkup() {
         <div>
           <p class="eyebrow">Start without a terminal</p>
           <h2 id="newPublicationTitle">New Publication Studio</h2>
-          <p>Describe the work. Bookself creates a normal portable publication folder—Markdown, metadata, Reader design, and an author-owned rights notice included.</p>
+          <p>Describe the work. Bookself creates a normal portable publication folder—Markdown, metadata, Reader design, and an author-owned rights evidence package included.</p>
         </div>
         <span class="new-publication-badge">No account · no build</span>
       </div>
@@ -267,7 +317,7 @@ function studioMarkup() {
             <span>Catalog line</span>
             <code id="newPublicationCatalog"></code>
           </div>
-          <p class="new-publication-note">Nothing is uploaded automatically. You decide when these ordinary files enter Git history. The generated publication is All Rights Reserved by default; public does not mean open source.</p>
+          <p class="new-publication-note">Nothing is uploaded automatically. You decide when these ordinary files enter Git history. The generated publication is All Rights Reserved by default; public does not mean open source. Registration fields remain neutral until you deliberately record real evidence.</p>
         </div>
       </div>
 

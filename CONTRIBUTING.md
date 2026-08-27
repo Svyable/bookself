@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping make a book, a tool, or a sentence better.
+Thanks for helping make a publication, a tool, or a sentence better.
 
 You do not need to know GitHub's vocabulary before you are useful here. If you
 spot something worth changing, there is a path for that.
@@ -16,7 +16,7 @@ owns which kind of change and the smallest local checks that go with it.
 
 | You want to… | Best starting point |
 |---|---|
-| Improve a sentence or chapter | Edit that publication under `books/` |
+| Improve a sentence, chapter, article, issue, or other manuscript piece | Edit that publication under `books/` |
 | Report a Reader, Desk, release, accessibility, or academic-rendering bug | Open **Platform bug** |
 | Propose a platform or research feature | Open **Platform idea** and start with the problem |
 | Change Reader / Desk behavior | Read the [Contributor map](docs/contributor-map.md) |
@@ -24,7 +24,7 @@ owns which kind of change and the smallest local checks that go with it.
 
 A good report is already a contribution. You do not have to arrive with a patch.
 
-## Two easy ways in for book and paper work
+## Two easy ways in for publication work
 
 ### 1. Propose an edit
 
@@ -44,36 +44,37 @@ walkthrough.
 If you spotted a problem and do not want to edit the text yourself, open an
 **issue**. An issue is simply a tracked note or conversation.
 
-Use **Chapter feedback** for a specific passage. Use **New book proposal** when
-you are pitching a title that does not exist yet.
+Use **Publication feedback** for a specific passage. Use **New book proposal**
+when you are pitching a book title that does not exist yet.
 
 A useful issue says where the problem is and what you noticed. It does not need
 to arrive wearing project-management language.
 
 ## Keep manuscript changes pleasantly small
 
-For editorial work, prefer one chapter per pull request.
+For editorial work, prefer one coherent manuscript piece per pull request — for
+example one chapter, article, issue, essay, or collected piece.
 
-A chapter PR may also update that book's `README.md` when the table of contents,
-chapter count, or status needs to stay in sync.
+A manuscript PR may also update that publication's `README.md` when the table of
+contents, piece count, or status needs to stay in sync.
 
-Please do not bundle unrelated chapters, repo-wide formatting changes, or
-platform code into the same editorial change. Small changes are easier for an
-author to understand, discuss, accept, reject, or steal one excellent sentence
-from.
+Please do not bundle unrelated manuscript pieces, repo-wide formatting changes,
+or platform code into the same editorial change. Small changes are easier for
+an author to understand, discuss, accept, reject, or steal one excellent
+sentence from.
 
 Changes to `reader/`, `desk/`, or platform tooling are software work rather than
-chapter editing. Keep those separate from manuscript PRs.
+manuscript editing. Keep those separate from manuscript PRs.
 
 ## Lead authors can save directly
 
-People named as authors on a book's README may commit directly to `main` for
-ordinary changes to their own book. Small prose fixes should not require a
+People named as authors on a publication's README may commit directly to `main`
+for ordinary changes to their own work. Small prose fixes should not require a
 ceremony with robes.
 
-If you are editing someone else's book, even if you have repository access,
-prefer a pull request so the author gets to review the change before it becomes
-the main version.
+If you are editing someone else's publication, even if you have repository
+access, prefer a pull request so the author gets to review the change before it
+becomes the main version.
 
 ## Review like an editor, not a replacement author
 
@@ -82,9 +83,9 @@ the main version.
 - Use a suggested replacement when you have one.
 - Preserve the author's voice unless changing the voice is the actual brief.
 - Prefer a precise change over “rewrite this.”
-- The lead author of the book decides what gets merged.
+- The lead author of the publication decides what gets merged.
 
-The goal is not to win the comment thread. The goal is a better book with an
+The goal is not to win the comment thread. The goal is better work with an
 understandable history.
 
 ## Platform changes do not require a cloud ceremony
@@ -122,8 +123,8 @@ academic-feature boundaries, focused test commands, and PR-shaping guidance.
 
 On a public Shelf, publication means both:
 
-1. the book README says `Status: Published`
-2. the Shelf root README lists the book under **The books**
+1. the publication README says `Status: Published`
+2. the Shelf root README lists the publication under **The books**
 
 Make those two changes together so the catalog and manuscript do not tell two
 different stories.
@@ -147,8 +148,9 @@ Welcome to the plumbing.
 
 Before changing shared Reader or Desk behavior, read the boundary in
 [Bookself architecture](docs/bookself.md): `reader/` and `desk/` are shared
-platform software; books and instance identity belong to each Binder or Shelf.
-Then use the [Contributor map](docs/contributor-map.md) for the practical path.
+platform software; publications and instance identity belong to each Binder or
+Shelf. Then use the [Contributor map](docs/contributor-map.md) for the practical
+path.
 
-If you are here to change a sentence in chapter 3, you can safely ignore that
+If you are here to change one manuscript piece, you can safely ignore that
 entire paragraph.

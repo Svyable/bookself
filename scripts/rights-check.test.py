@@ -1,14 +1,16 @@
 from __future__ import annotations
 import importlib.util
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 MODULE = Path(__file__).with_name("rights-check.py")
 spec = importlib.util.spec_from_file_location("rights_check", MODULE)
-rights_check = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
+rights_check = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = rights_check
 spec.loader.exec_module(rights_check)
 
 class RightsCheckTests(unittest.TestCase):

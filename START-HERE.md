@@ -123,6 +123,12 @@ computers use to find it. Lowercase letters and hyphens keep everyone calm.
 Then open the new publication's `README.md` and replace the placeholder title
 with the actual title.
 
+In a private Binder, also add one row for that new folder under the repository
+root README's `## The books` section. That catalog row is how the Publishing
+Desk and Reader discover the working publication. It does **not** publish the
+draft: the Binder remains private and the publication can stay
+`Status: Drafting` until you deliberately release it to a public Shelf.
+
 Congratulations: structurally, that is now a publication. Literature, scholarship,
 or journalism may take a bit longer.
 

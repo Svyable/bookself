@@ -38,6 +38,20 @@ Useful direct examples:
 
 A release copies a committed publication snapshot from Binder to Shelf. A public Shelf should not point back into a private Binder, and an unlisted draft in a public repository is still public.
 
+## What is free, and what needs GitHub Pro?
+
+Bookself itself is open source and does not require a paid Bookself plan. GitHub plan requirements depend only on how you choose to host the repositories and Reader.
+
+| Setup | GitHub plan | What you get |
+|---|---|---|
+| **Private Binder + local Reader/Desk** | GitHub Free is enough | Keep the Git repository private and preview locally. No Pages or Actions are required. |
+| **Public Shelf + public GitHub Pages Reader** | GitHub Free is enough | A public repository can publish its released Shelf with GitHub Pages. |
+| **Private Binder + public GitHub Pages working preview** | GitHub Pro for a personal repository, or an eligible Team/Enterprise plan | Keep the Git repository private while deliberately serving the Binder Reader publicly as a working-in-public proof. |
+
+The third option is an **optional convenience**, not part of Bookself's core publishing requirement. GitHub Pages sites are public by default even when their source repository is private, so a private Binder repository plus a Pages preview means **private Git history, public website content**. Do not use that mode for material that must remain confidential.
+
+A truly private or author-only GitHub Pages site is a separate GitHub Enterprise access-control feature. Bookself does not rely on that feature and does not present a client-side password as a privacy boundary.
+
 ## If you just want to write
 
 1. Open **[START HERE](START-HERE.md)**.
@@ -60,7 +74,7 @@ python3 scripts/stamp-instance.py ../binder binder YOUR_GITHUB_OWNER binder
 python3 scripts/stamp-instance.py ../shelf shelf YOUR_GITHUB_OWNER shelf
 ```
 
-Create the Binder repository as **private** and the Shelf repository as **public**.
+Create the Binder repository as **private** and the Shelf repository as **public**. On GitHub Free, preview the private Binder locally and publish the public Shelf with Pages. If you deliberately want a public Pages preview from the private Binder itself, that private-repository Pages feature requires GitHub Pro or another eligible paid GitHub plan.
 
 For a release:
 

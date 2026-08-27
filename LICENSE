@@ -1,11 +1,13 @@
 # License
 
-This repository uses two notices.
+Bookself separates reusable publishing software from author-owned publication content.
 
-## Framework (everything outside `books/`)
+## MIT-licensed Bookself framework
 
-The scaffolding, documentation, GitHub configuration, and everything else
-outside the `books/` directory are licensed under the MIT License:
+The following are licensed under the MIT License:
+
+- framework code, shared Reader and Publishing Desk software, scripts, documentation, and repository scaffolding outside `books/`;
+- underscore-prefixed blank publication starters under `books/`, such as `books/_TEMPLATE/`, `books/_PAPER_TEMPLATE/`, and the other `_*_TEMPLATE/` directories.
 
 MIT License
 
@@ -29,14 +31,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Books (everything inside `books/`)
+## Publication content is not MIT by default
 
-All rights reserved.
+Normal publication directories under `books/<slug>/` are outside the MIT grant above unless their own rights file expressly says otherwise.
 
-Manuscripts, media, and other files under `books/` remain copyright of their
-respective authors, as named in each book's `manuscript/front-matter.md`. They
-are not licensed under the MIT License. Do not copy, publish, or reuse book
-contents without the author's permission.
+Manuscripts, illustrations, photographs, cover art, audio, and other publication content remain copyright of their respective rightsholders. The Bookself default for a real publication is **All Rights Reserved**. Public visibility, Git source availability, or inclusion in a public Shelf does not by itself grant permission to reproduce, republish, distribute, sell, adapt, translate, train or fine-tune AI systems on, ingest into generative AI systems, or otherwise exploit the publication.
 
-The `books/_TEMPLATE/` folder is example material for starting a new book.
-Replace its copyright line with your own when you copy it.
+A publication may deliberately choose a different license in its own `RIGHTS.md`. That publication-specific file controls the author's intended grant for that work, subject to applicable law and separate hosting-provider terms.
+
+See [RIGHTS.md](RIGHTS.md) and [docs/rights-and-ai.md](docs/rights-and-ai.md) for the rights model and AI-use defaults.

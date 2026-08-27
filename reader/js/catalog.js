@@ -163,6 +163,9 @@ export function parseBookReadme(markdown, slug) {
   const authors = plainInlineText(authorsRaw);
   const chaptersCell = cell(markdown, 'Chapters');
   const formatLabel = cell(markdown, 'Format');
+  const rights = cell(markdown, 'Rights') || 'All Rights Reserved';
+  const aiUse = cell(markdown, 'AI use') || 'AI training and generative use reserved';
+  const rightsFile = cell(markdown, 'Rights file') || '[RIGHTS.md](RIGHTS.md)';
   const contents = [];
   const re = /^- \[[ xX]\] \[([^\]]+)\]\((manuscript\/[^)\s]+)\)/gm;
   let m;
@@ -201,6 +204,9 @@ export function parseBookReadme(markdown, slug) {
     issue: cell(markdown, 'Issue'),
     publicationDate: cell(markdown, 'Publication date') || cell(markdown, 'Date'),
     frequency: cell(markdown, 'Frequency'),
+    rights,
+    aiUse,
+    rightsFile,
     externalLinks: mergeLinks(
       explicitExternalLinks,
       identifierLinks(isbn, doi, explicitExternalLinks)

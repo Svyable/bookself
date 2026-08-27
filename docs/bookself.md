@@ -7,14 +7,32 @@ The separation is intentional:
 | | Platform | Binder | Shelf |
 |---|---|---|---|
 | **Purpose** | Software source of truth | Private writing | Public publishing |
-| **Visibility** | Public upstream/fork | Private | Public |
-| **Pages** | Optional demo | Off for unpublished work | On from repo root, no build required |
+| **Visibility** | Public upstream/fork | Private repository by default | Public |
+| **Pages** | Optional demo | Local by default; optional public Pages preview from a private repo on an eligible paid GitHub plan | On from repo root, no build required |
 | **Shared UI** | `reader/` + `desk/` | synced copy | synced copy |
 | **Books** | examples/templates only | drafts and working manuscripts | released manuscripts |
 | **Identity** | neutral/demo `imprint.json` | binder `imprint.json` | shelf `imprint.json` |
 | **Root README** | product docs | private manuscript inventory | public catalog |
 
-Visibility is per repository. Unlisted drafts on a public repository are not private. A private binder should never be made public merely to obtain a preview URL.
+Visibility is per repository. Unlisted drafts on a public repository are not private. A Binder repository can stay private while its Reader is deliberately public, but that is a separate hosting choice with its own GitHub plan requirement.
+
+## GitHub plans and hosting modes
+
+Bookself itself is open source. There is no paid Bookself tier required to write, preview, release, or publish. The GitHub plan question only affects which repository can serve GitHub Pages.
+
+| Author setup | GitHub plan | Privacy / publication behavior |
+|---|---|---|
+| **Private Binder + local Reader/Desk** | GitHub Free is enough | The Binder repository stays private. Preview from the local checkout. No Pages, Actions, or hosted build is required. |
+| **Public Shelf + public Pages Reader** | GitHub Free is enough | The released Shelf lives in a public repository and can be served with GitHub Pages. This is Bookself's normal public release path. |
+| **Private Binder + public Pages working proof** | GitHub Pro for a personal repository, or an eligible Team/Enterprise plan | The Git repository stays private, but the Pages site is deliberately public. This is an optional write-in-public preview mode. |
+
+GitHub Pages is available for public repositories on GitHub Free and for private repositories on GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. If a private repository loses the eligible paid plan, its Pages site can become unavailable until the plan is restored or the repository is made public.
+
+A public Pages site backed by a private repository is still **public on the web by default**. Repository privacy does not make the website author-only. True private Pages access control is a separate GitHub Enterprise capability and is not part of Bookself's core architecture. Bookself also does not treat a client-side password prompt as meaningful confidentiality.
+
+The important product boundary is therefore:
+
+> **GitHub Free covers private writing plus public releases. GitHub Pro is only needed if you also want the private Binder repository itself to serve a public GitHub Pages proof.**
 
 ## Repository relationship
 
@@ -108,6 +126,8 @@ The upstream project currently has a first real implementation used while the pl
 | Private binder | `Svyable/binder` |
 | Public shelf | `Svyable/shelf` |
 
+The Svyable reference Binder deliberately uses the optional **private repository + public Pages working proof** mode. That demonstrates the GitHub Pro path; it is not a requirement for other Bookself authors.
+
 Personal names, repository URLs, and branding for that implementation belong in those instance repositories and their `imprint.json` files. Shared `reader/` and `desk/` code must remain instance-neutral.
 
 ## Start
@@ -125,6 +145,8 @@ Without an agent:
 3. Create the binder repository as **private**.
 4. Create the shelf repository as **public** and enable GitHub Pages from the repository root.
 5. Customize each generated `imprint.json`. The stamp already supplies role, safe defaults, and GitHub repo identity when owner/repo arguments are given.
+
+On GitHub Free, that is the complete default setup: preview the private Binder locally and serve the public Shelf with Pages. If you explicitly want the private Binder itself to have a public Pages Reader URL, enable that only on an eligible paid GitHub plan.
 
 The generated starting state is intentionally role-specific:
 
@@ -171,6 +193,8 @@ Commit the binder and shelf updates separately so each instance has its own clea
 
 The Desk reads the local binder directly. It does not need a GitHub token to inspect private manuscripts when served from the binder checkout. It also does not need a private-repository Actions run.
 
+If an author chooses the optional paid GitHub Pages mode for the private Binder, the same Reader can be served as a public working proof. That does not change Binder statuses to `Published`, does not release anything to Shelf, and should be described clearly as working in public.
+
 ## Release (binder → shelf)
 
 When a manuscript is meant to become public, commit the Binder publication first, then run:
@@ -203,14 +227,14 @@ The same Desk understands both roles from `imprint.json`.
 The normal revision path is:
 
 1. Keep the current Shelf edition unchanged.
-2. Revise the Binder copy privately.
+2. Revise the Binder copy privately, or deliberately in public if that Binder uses the optional public Pages proof mode.
 3. Commit the Binder revision.
 4. Run `scripts/release-book.sh <slug> ../shelf` when the replacement is ready.
 5. Review and land the resulting Shelf release change.
 
 Do not change a public Shelf book to a drafting status merely to work on its next edition. That can make it disappear from the visible shelf without making its files private.
 
-An intentionally public proof is a separate, explicit publishing choice. A public repository is never a privacy boundary, even when a Reader route is unlisted.
+An intentionally public proof is a separate, explicit publishing choice. A public website is never a privacy boundary, even when its source Git repository is private.
 
 ## Imprint configuration
 
@@ -227,8 +251,10 @@ GitHub Pages instances may use `"auto"` owner/repo values and let the browser in
 ## What not to expect
 
 - The public Shelf does not need access to the private Binder.
-- Private Binder publishing does not require GitHub Actions or CI minutes.
-- The reader does not password-gate public repositories.
+- Private Binder authoring and release do not require GitHub Pro, GitHub Actions, or CI minutes.
+- A public Pages preview from a private Binder does require an eligible paid GitHub plan.
+- A Pages site sourced from a private repository is public by default; private-repository visibility does not make the website private.
+- The reader does not password-gate public repositories or public Pages sites.
 - The browser Desk never asks for a GitHub token.
 - Remote Desk inspection works for public repositories; private binders use same-origin local instance mode.
 - Blank publication templates belong in Binder; a freshly stamped Shelf has no publication folders until the first release.

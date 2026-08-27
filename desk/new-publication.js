@@ -142,10 +142,11 @@ export function buildPublicationFiles(input = {}) {
   const slug = slugifyTitle(input.slug || title);
   const authorCell = markdownCell(input.author) || 'Your Name';
   const author = rightsName(authorCell);
+  const rightsOwnerCell = markdownCell(author);
   const pieceTitle = safePieceTitle(input.pieceTitle, recipe.pieceLabel);
   const preset = READER_PRESENTATION_PRESETS[input.preset] ? input.preset : 'book';
   const year = new Date().getFullYear();
-  const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${authorCell} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${author} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Rights manifest** | [rights.json](rights.json) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
+  const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${authorCell} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${rightsOwnerCell} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Rights manifest** | [rights.json](rights.json) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
   const presentation = `${JSON.stringify({ version: 1, preset }, null, 2)}\n`;
   const manuscript = starterBody(formatId, pieceTitle);
   return {

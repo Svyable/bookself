@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "policy": "bookself-arr-v1",
+  "work": { "title": "Your Newsletter Title", "author": "Your Name" },
+  "copyright": { "owner": "Your Name", "year": 2026, "notice": "© 2026 Your Name. All Rights Reserved." },
+  "license": { "id": "ARR", "label": "All Rights Reserved", "file": "RIGHTS.md" },
+  "permissions": { "publicReading": true, "conventionalSearch": true, "reproduction": false, "distribution": false, "derivatives": false, "commercialUse": false, "aiTraining": false, "aiGenerativeUse": false, "aiRetrievalGrounding": false, "aiIndexing": false, "syntheticNarration": false, "syntheticTranslation": false },
+  "registration": { "jurisdiction": "US", "status": "not-recorded-in-bookself", "number": null, "effectiveDate": null }
+}

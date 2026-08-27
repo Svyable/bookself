@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Svyable/bookself/blob/main/schemas/rights-v1.schema.json",
+  "title": "Bookself publication rights manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "policy", "work", "copyright", "license", "permissions", "registration"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "policy": { "type": "string", "minLength": 1 },
+    "work": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "author"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "author": { "type": "string", "minLength": 1 }
+      }
+    },
+    "copyright": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "year", "notice"],
+      "properties": {
+        "owner": { "type": "string", "minLength": 1 },
+        "year": { "type": "integer", "minimum": 1800, "maximum": 2200 },
+        "notice": { "type": "string", "minLength": 1 }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "file"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "file": { "type": "string", "minLength": 1 }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publicReading", "conventionalSearch", "reproduction", "distribution", "derivatives", "commercialUse", "aiTraining", "aiGenerativeUse", "aiRetrievalGrounding", "aiIndexing", "syntheticNarration", "syntheticTranslation"],
+      "properties": {
+        "publicReading": { "type": "boolean" },
+        "conventionalSearch": { "type": "boolean" },
+        "reproduction": { "type": "boolean" },
+        "distribution": { "type": "boolean" },
+        "derivatives": { "type": "boolean" },
+        "commercialUse": { "type": "boolean" },
+        "aiTraining": { "type": "boolean" },
+        "aiGenerativeUse": { "type": "boolean" },
+        "aiRetrievalGrounding": { "type": "boolean" },
+        "aiIndexing": { "type": "boolean" },
+        "syntheticNarration": { "type": "boolean" },
+        "syntheticTranslation": { "type": "boolean" }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["jurisdiction", "status", "number", "effectiveDate"],
+      "properties": {
+        "jurisdiction": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["not-recorded-in-bookself", "pending", "preregistered", "registered", "refused"] },
+        "number": { "type": ["string", "null"] },
+        "effectiveDate": { "type": ["string", "null"], "format": "date" }
+      }
+    }
+  }
+}

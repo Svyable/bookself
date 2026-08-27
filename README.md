@@ -38,6 +38,20 @@ Useful direct examples:
 
 A release copies a committed publication snapshot from Binder to Shelf. A public Shelf should not point back into a private Binder, and an unlisted draft in a public repository is still public.
 
+## Open tools. Author-owned words.
+
+**Public is a visibility setting. Open is a license. They are not the same thing.**
+
+Bookself software and blank underscore-prefixed starters are MIT licensed so people can build with them. A real publication is **All Rights Reserved by default** unless its author deliberately chooses another license in that publication's `RIGHTS.md`.
+
+New publications created from a starter or the Publishing Desk include a rights file and explicit metadata. The default grants ordinary public reading when an author publishes an official copy, while reserving broader reproduction, republication, adaptation, commercial exploitation, AI training/fine-tuning, RAG/grounding, AI-specific indexing, synthetic narration/translation, and other generative reuse except where the author separately grants permission or applicable law independently permits the use.
+
+The Reader also carries a machine-readable RSL reservation on the rendered publication surface: conventional search is permitted; AI uses are not licensed by the Bookself default. These signals communicate rights—they are not encryption or a promise that every crawler will comply.
+
+**Hosting terms are separate.** Copyright ownership and an author's public license do not cancel permissions the author may separately grant a hosting provider by accepting that provider's terms. This matters on services such as GitHub. Authors with strict provider-level requirements should review the current hosting agreement before uploading manuscripts.
+
+See **[Rights, copyright, and AI](docs/rights-and-ai.md)** for the full 2026 model, registration guidance, GitHub-hosting caveat, RSL/TDM guidance, and deployment limits. See [RIGHTS.md](RIGHTS.md) for the repository-level boundary.
+
 ## What is free, and what needs GitHub Pro?
 
 Bookself itself is open source and does not require a paid Bookself plan. GitHub plan requirements depend only on how you choose to host the repositories and Reader.
@@ -161,6 +175,7 @@ Shared UI must not contain a personal author name, private Binder URL, or unrela
 | Need | Go here |
 |---|---|
 | Start writing | [START HERE](START-HERE.md) |
+| Rights, copyright, and AI | [Rights guide](docs/rights-and-ai.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |
 | Publication formats | [Publication formats](docs/publication-formats.md) |
 | Writing lifecycle | [Writing lifecycle](docs/writing-lifecycle.md) |
@@ -183,4 +198,4 @@ Then open `http://127.0.0.1:8000/reader/` or `http://127.0.0.1:8000/desk/`.
 
 ## Citation and license
 
-For citation metadata, see **[CITATION.cff](CITATION.cff)**. The framework outside `books/` is MIT licensed; publication content keeps its own authorship and rights as described in [LICENSE](LICENSE).
+For citation metadata, see **[CITATION.cff](CITATION.cff)**. Bookself framework code, documentation, shared UI, scripts, and blank underscore-prefixed starters are MIT licensed. Real publication content keeps its authorship and publication-specific rights as described in [LICENSE](LICENSE), [RIGHTS.md](RIGHTS.md), and each publication's own `RIGHTS.md` when present.

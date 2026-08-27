@@ -51,6 +51,10 @@ function safePieceTitle(value, fallback) {
   return clean || fallback;
 }
 
+function publicationRights(author, year) {
+  return `# Rights for this publication\n\n© ${year} ${author}. All rights reserved.\n\nThis publication is publicly readable only when its rightsholder deliberately makes an official copy public. Public availability does **not** make the work open source, public domain, or Creative Commons licensed.\n\nUnless the rightsholder separately grants permission, no license is granted to reproduce, republish, distribute, sell, adapt, translate, create synthetic narration or other derivative editions, sublicense, or commercially exploit the publication.\n\nThe rightsholder also expressly reserves rights concerning AI and machine-learning uses, including model training or fine-tuning, creation of model weights or embeddings for generative use, retrieval-augmented generation (RAG), grounding, AI-generated summaries or substitutes, AI-specific indexing, synthetic translation or narration, and other generative reuse.\n\nNothing in this notice is intended to restrict a use independently permitted by applicable law, including any applicable fair-use, quotation, research, library, accessibility, or other statutory exception.\n\nHosting-provider terms are separate. Uploading this publication to a platform may grant that platform rights under its own agreement even when this publication remains All Rights Reserved against other ungranted uses.\n\nFor Bookself's explanation of these defaults and machine-readable rights signals, see https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md\n`;
+}
+
 function starterBody(formatId, title) {
   const safe = title.replace(/[\r\n]+/g, ' ').trim();
   const shared = `# ${safe}\n\n`;
@@ -91,7 +95,8 @@ export function buildPublicationFiles(input = {}) {
   const author = markdownCell(input.author) || 'Your Name';
   const pieceTitle = safePieceTitle(input.pieceTitle, recipe.pieceLabel);
   const preset = READER_PRESENTATION_PRESETS[input.preset] ? input.preset : 'book';
-  const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${author} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
+  const year = new Date().getFullYear();
+  const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${author} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${author} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
   const presentation = `${JSON.stringify({ version: 1, preset }, null, 2)}\n`;
   const manuscript = starterBody(formatId, pieceTitle);
   return {
@@ -102,6 +107,7 @@ export function buildPublicationFiles(input = {}) {
     catalog: catalogSnippet({ title, slug, format: recipe.format }),
     files: {
       [`${slug}/README.md`]: readme,
+      [`${slug}/RIGHTS.md`]: publicationRights(author, year),
       [`${slug}/reader.json`]: presentation,
       [`${slug}/manuscript/${recipe.filename}`]: manuscript,
     },
@@ -229,7 +235,7 @@ function studioMarkup() {
         <div>
           <p class="eyebrow">Start without a terminal</p>
           <h2 id="newPublicationTitle">New Publication Studio</h2>
-          <p>Describe the work. Bookself creates a normal portable publication folder—Markdown, metadata, and Reader design included.</p>
+          <p>Describe the work. Bookself creates a normal portable publication folder—Markdown, metadata, Reader design, and an author-owned rights notice included.</p>
         </div>
         <span class="new-publication-badge">No account · no build</span>
       </div>
@@ -261,7 +267,7 @@ function studioMarkup() {
             <span>Catalog line</span>
             <code id="newPublicationCatalog"></code>
           </div>
-          <p class="new-publication-note">Nothing is uploaded automatically. You decide when these ordinary files enter Git history.</p>
+          <p class="new-publication-note">Nothing is uploaded automatically. You decide when these ordinary files enter Git history. The generated publication is All Rights Reserved by default; public does not mean open source.</p>
         </div>
       </div>
 

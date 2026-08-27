@@ -11,6 +11,25 @@ The architecture has three roles:
 
 A Binder release copies a committed snapshot into the Shelf. Binder and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Binder.
 
+## Rights boundary
+
+Public source is not the same thing as an open-content license.
+
+- Bookself framework code, docs, shared UI, scripts, and underscore-prefixed blank starters are MIT licensed.
+- A real `books/<slug>/` publication is **All Rights Reserved by default** unless that publication's own `RIGHTS.md` expressly grants another license.
+- New publications include `RIGHTS.md` plus README rows for `Rights`, `AI use`, and `Rights file`.
+- The Bookself default reserves reproduction, republication, commercial exploitation, adaptation, AI training/fine-tuning, RAG/grounding, AI-specific indexing, synthetic narration/translation, and other generative reuse except where the rightsholder separately licenses the use or applicable law independently permits it.
+- The Reader carries an element-scoped RSL signal over the rendered publication surface: conventional search is permitted; AI uses are not licensed by the default.
+- Rights signals are not secrecy controls. Confidential manuscripts need actual access control.
+- Hosting-provider terms are a separate contractual rights layer. Do not claim a Bookself notice cancels permissions the author separately granted the host.
+
+Agents must read the applicable root and per-publication `RIGHTS.md` before making a consequential publication, licensing, ingestion, export, or external-service decision. Do not add manuscript text to a new training corpus, vector store, RAG system, AI-specific index, publisher, or third-party service without explicit authorization for that external use.
+
+Read:
+- [Rights, copyright, and AI](https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md)
+- [Repository rights boundary](https://github.com/Svyable/bookself/blob/main/RIGHTS.md)
+- [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md)
+
 ## Agent-first operation
 
 Bookself's documented human workflow is also an executable protocol for capable agents. If a user gives you this repository and asks for an outcome such as “set this up for me,” “write my first book in my Binder,” or “publish it to my Shelf,” do not turn the mechanical Bookself steps back into a checklist for the user.
@@ -28,13 +47,14 @@ Local agents can create sibling Binder + Shelf workspaces with:
 
 The JSON result gives stable paths for subsequent operations. GitHub-connected agents without a shell should reproduce the same durable repository/file results with whatever authorized GitHub capabilities they have.
 
-Optimize for the requested end state. Infer mechanical details such as slug, template, filenames, and a reasonable Reader preset when safe. Do not infer across consequential boundaries the user did not authorize: especially public release of unpublished work, destructive history changes, licensing changes, secrets, or new mandatory external services.
+Optimize for the requested end state. Infer mechanical details such as slug, template, filenames, and a reasonable Reader preset when safe. Do not infer across consequential boundaries the user did not authorize: especially public release of unpublished work, destructive history changes, licensing changes, secrets, new external manuscript ingestion, or new mandatory external services.
 
 ## Start here
 
 - [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
 - [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md): beginner path for authors who do not already know GitHub.
-- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. In a real workflow these belong in the private Binder; a public Shelf should contain only intentionally released publications.
+- [Rights, copyright, and AI](https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md): default publication rights, AI reservations, GitHub-hosting caveat, RSL/TDM guidance, and deployment limitations.
+- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. In a real workflow these belong in the private Binder; a public Shelf should contain only intentionally released publications unless the author explicitly chooses to write in public.
 - [FAQ](https://github.com/Svyable/bookself/blob/main/docs/faq.md): direct answers about Git-based books, version-controlled textbooks, Markdown papers, private/public publishing, CI/CD, interoperability, and comparisons with common alternatives.
 - [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing and publishing workflow in plain language.
 - [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): private Binder, public Shelf, release model, Reader, and Publishing Desk.
@@ -82,16 +102,17 @@ Use this when the request is broad, exploratory, or asks how Bookself itself cou
 1. [Read the Making Bookself working proof](https://svyable.github.io/bookself/reader/#/b/making-bookself/) as a reader.
 2. [Read its review map](https://github.com/Svyable/bookself/blob/main/books/making-bookself/REVIEW.md) for active questions and the distinction between personal notes, shared review feedback, and source changes.
 3. [Read the public review thread](https://github.com/Svyable/bookself/issues/35).
-4. Read `AGENTS.md` before modifying the repository.
+4. Read `AGENTS.md`, `RIGHTS.md`, and the target publication's `RIGHTS.md` when present before modifying the repository.
 5. Scan open pull requests and the newest review-thread comments before choosing a lane. If the same problem is already being addressed, review or avoid that lane rather than opening a competing change from stale `main`.
 6. Choose one bounded improvement, verify the relevant behavior, and leave a durable explanation in the commit or pull request.
 7. Compare the working-proof experience with the [reference released Shelf Reader](https://svyable.github.io/shelf/reader/), while treating the [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/) as the platform-owned specimen surface.
 
-The target loop is: read -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real Binders should remain private.
+The target loop is: read -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real authors choose whether their Binder stays private or uses an explicit working-in-public mode.
 
 ## For contributors and agents
 
 - [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository architecture, invariants, editing rules, and cross-agent instructions.
+- [RIGHTS.md](https://github.com/Svyable/bookself/blob/main/RIGHTS.md): framework/publication rights boundary.
 - [bookself.json](https://github.com/Svyable/bookself/blob/main/bookself.json): machine-readable capability and outcome contract.
 - [Agent-first guide](https://github.com/Svyable/bookself/blob/main/docs/agent-first.md): orchestration guidance for end-to-end agent operation.
 - [.github/copilot-instructions.md](https://github.com/Svyable/bookself/blob/main/.github/copilot-instructions.md): GitHub Copilot repository onramp.
@@ -103,4 +124,5 @@ Important constraints:
 - Do not require CI/CD for the private Binder authoring or release path.
 - Shared UI is reader/ and desk/; instance identity belongs in imprint.json.
 - Do not hard-code an author's private repository or identity into shared UI.
-- The framework is MIT licensed; publication manuscripts retain their authors' copyright.
+- Do not change publication licensing or AI-use rights without explicit rightsholder approval.
+- Bookself framework and blank starters are MIT licensed; real publication manuscripts are All Rights Reserved by default unless their own `RIGHTS.md` says otherwise.

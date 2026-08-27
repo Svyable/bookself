@@ -85,8 +85,12 @@ build step unless a human explicitly asks to change that architecture.
   reader can expose Abstract, Methods, Results, Discussion, and References in
   the table of contents. No YAML front matter. No HTML comments in manuscript
   files.
-- Book READMEs are an info table plus a checkbox table of contents. A
-  publication may add `Format: Whitepaper` and optional `Venue` / `DOI` rows.
+- Publication READMEs use the info-table/contents shape supplied by their chosen
+  starter and preserve format-specific metadata when applicable. Books may use
+  fields such as `Series` and `ISBN`; serials may use `Volume`, `Issue`,
+  `Publication date`, `Frequency`, and `ISSN`; scholarly works may use `Venue`
+  and `DOI`. Omit fields that do not apply and never invent identifiers, dates,
+  or publication claims.
 - Follow existing naming: `books/<slug>/`, `chNN-slug.md`, `front-matter.md`,
   `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
 - Images live in that publication's `media/` folder and are referenced with

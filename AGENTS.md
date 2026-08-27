@@ -12,6 +12,9 @@ Rules for AI agents working in this repository.
   table of contents and the Chapters count in the same change.
 - Do not put book prose in `reader/` or `desk/`. Authors and agents edit
   Markdown under `books/<slug>/`.
+- Public source is not permission for unrestricted reuse. Read and preserve the
+  applicable root and per-publication `RIGHTS.md` files before changing a real
+  publication.
 
 ## Architecture: platform, binder, shelf
 
@@ -68,6 +71,40 @@ GitHub Pages is a static public delivery surface for Shelf, not a required
 Actions-based build pipeline. Do not replace the no-build Reader with a hosted
 build step unless a human explicitly asks to change that architecture.
 
+## Rights, copyright, and external AI
+
+Bookself separates open software from author-owned publication content.
+
+- Framework code, docs, shared UI, scripts, and underscore-prefixed blank
+  publication starters are MIT licensed.
+- A real `books/<slug>/` publication is **All Rights Reserved by default** unless
+  its own `RIGHTS.md` expressly grants another license.
+- A public repository or public Reader URL does not turn a manuscript into open
+  source or grant a general right to republish, adapt, commercialize, train on,
+  or ingest it into generative systems.
+- Publication README rows such as `Rights`, `AI use`, and `Rights file` are
+  rights metadata. Preserve them unless the rightsholder explicitly asks for a
+  licensing change.
+- The default Bookself rights posture reserves model training/fine-tuning,
+  RAG/grounding, AI-specific indexing, synthetic narration/translation, and
+  other generative reuse. It does not purport to override uses independently
+  permitted by applicable law.
+- Do not copy a manuscript into a new external dataset, service, model-training
+  pipeline, vector store, RAG corpus, or publishing platform merely because it
+  is convenient. A human must explicitly authorize a new external use that may
+  grant, expose, or sublicense publication rights.
+- Accessing repository text to perform the requested Bookself task is not a
+  license to retain, republish, train on, or reuse that text for unrelated work.
+- Hosting-provider terms are a separate rights layer. Do not claim that
+  `RIGHTS.md`, RSL, TDMRep, `robots.txt`, or another machine signal cancels
+  permissions the author separately granted the host by contract.
+- Rights notices and machine-readable reservations are not secrecy controls.
+  Confidential work must remain behind actual access control.
+
+Read `RIGHTS.md` and `docs/rights-and-ai.md` for the current product policy. When
+releasing a publication, its publication-specific rights file is part of the
+publication snapshot and should travel with the manuscript.
+
 ## Voice
 
 - For book, essay, narrative, or other voice-sensitive prose tasks, read and apply
@@ -89,8 +126,9 @@ build step unless a human explicitly asks to change that architecture.
   starter and preserve format-specific metadata when applicable. Books may use
   fields such as `Series` and `ISBN`; serials may use `Volume`, `Issue`,
   `Publication date`, `Frequency`, and `ISSN`; scholarly works may use `Venue`
-  and `DOI`. Omit fields that do not apply and never invent identifiers, dates,
-  or publication claims.
+  and `DOI`. Rights rows are publication data too. Omit fields that do not apply
+  and never invent identifiers, dates, ownership, license grants, or publication
+  claims.
 - Follow existing naming: `books/<slug>/`, `chNN-slug.md`, `front-matter.md`,
   `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
 - Images live in that publication's `media/` folder and are referenced with
@@ -126,8 +164,8 @@ build step unless a human explicitly asks to change that architecture.
 
 ## Do not
 
-- Do not touch `LICENSE` or change licensing without the repository owner's
-  explicit approval.
+- Do not touch `LICENSE`, root `RIGHTS.md`, or a publication's `RIGHTS.md`, or
+  change licensing/AI-use grants, without the rightsholder's explicit approval.
 - Do not reformat a file wholesale as a drive-by.
 - Do not add a build step, CODEOWNERS, or branch protection unless a human
   asked for that by name.
@@ -148,25 +186,27 @@ These are the public lifecycle. Each manuscript change is Markdown (and maybe
 `media/`).
 
 **Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
-authors, `Status: Drafting`. In a private binder, also list the manuscript under
-root **The books** so the local Desk can discover it.
+authors, `Status: Drafting`, and replace the rights placeholders in
+`RIGHTS.md`. In a private binder, also list the manuscript under root **The
+books** so the local Desk can discover it.
 
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
-authors, optional venue / DOI, and keep `Status: Drafting` while the work is in
-progress. The same Git history, review, media, preview, and release flow applies.
-Use [docs/academic-writing.md](docs/academic-writing.md) for citations,
-footnotes, figures, and references, and [docs/latex.md](docs/latex.md) when the
-paper contains mathematical notation.
+authors, optional venue / DOI, replace the rights placeholders, and keep
+`Status: Drafting` while the work is in progress. The same Git history, review,
+media, preview, and release flow applies. Use
+[docs/academic-writing.md](docs/academic-writing.md) for citations, footnotes,
+figures, and references, and [docs/latex.md](docs/latex.md) when the paper
+contains mathematical notation.
 
 **Start another publication format.** Choose the closest blank starter under
 `books/`: `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`,
 `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`,
 `_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`. Copy it to a normal lowercase,
 hyphenated `books/<slug>/` folder in the private Binder, replace the placeholder
-metadata, and keep `Status: Drafting` until a deliberate Binder → Shelf release.
-Use [docs/publication-formats.md](docs/publication-formats.md) when choosing
-between format families. Do not publish or edit the underscore-prefixed starter
-itself.
+metadata and rights notice, and keep `Status: Drafting` until a deliberate
+Binder → Shelf release. Use [docs/publication-formats.md](docs/publication-formats.md)
+when choosing between format families. Do not publish or edit the
+underscore-prefixed starter itself.
 
 **Add a web volume.** Under root `## The web shelf`, add one Markdown link such
 as `- [Project name](https://example.com/) — a short optional note`. The Reader
@@ -189,11 +229,11 @@ private binder public just to preview it.
 then run `scripts/release-book.sh <slug> [path-to-shelf]`. The command runs
 locally; it does not require GitHub Actions or a hosted build. It refuses
 uncommitted release-path changes, verifies Binder/Shelf roles, prepares an exact
-replacement Shelf snapshot, sets the Shelf copy to `Published`, updates the
-Shelf catalog row, verifies copied publication files against the committed
-Binder snapshot, and stops before commit or push. Review and land the Shelf
-change through its normal Git workflow; a pull request is useful but not
-required by Bookself itself.
+replacement Shelf snapshot including publication rights metadata/files, sets
+the Shelf copy to `Published`, updates the Shelf catalog row, verifies copied
+publication files against the committed Binder snapshot, and stops before commit
+or push. Review and land the Shelf change through its normal Git workflow; a
+pull request is useful but not required by Bookself itself.
 
 **Promote / copy only.** `scripts/promote-book.sh <slug> [path-to-shelf]` is the
 lower-level file-copy operation. It does not publish, verify a release
@@ -215,6 +255,7 @@ to work on the next edition.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,
-**DOI**. Series groups volumes on the public shelf. Tags are comma-separated.
-Wiki links `[[ch03-publishing|label]]` in chapter Markdown become in-reader
-jumps. Do not invent another config file for these.
+**DOI**, **Rights**, **AI use**, **Rights file**. Series groups volumes on the
+public shelf. Tags are comma-separated. Wiki links `[[ch03-publishing|label]]`
+in chapter Markdown become in-reader jumps. Do not invent another config file
+for these.

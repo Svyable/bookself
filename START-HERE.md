@@ -14,6 +14,22 @@ sentence.
 If you do not have a GitHub account yet, or you want the basic connection steps
 for ChatGPT, Claude, Claude Code, or OpenCode, start with **[Getting Set Up](books/how-to-bookself/manuscript/ch00-getting-set-up.md)** in *How to Bookself*. The local/direct paths described there do not require private-repository GitHub Actions.
 
+## Before anything else: your words are not MIT
+
+Bookself's software is open source. **Your book is not open source just because you write it with Bookself or let people read it on the web.**
+
+The default for a real publication is:
+
+> **© the author · All Rights Reserved. Public reading by choice. Broader reuse only by permission or applicable law.**
+
+Every new publication starter now includes `RIGHTS.md`. The Publishing Desk generates the same file. The default reserves republication, commercial reuse, adaptation, AI training/fine-tuning, RAG/grounding, AI-specific indexing, synthetic narration/translation, and other generative reuse unless you deliberately grant those rights.
+
+You can choose Creative Commons or another open-content license later if that is what you want. Bookself will not choose one for you merely because your repository or Reader is public.
+
+There is one separate thing to understand: **your hosting provider has its own contract with you.** An All Rights Reserved notice tells readers and third parties what you are granting; it does not erase permissions you separately gave GitHub or another host under its terms. If provider-level AI/data rights matter to you, read **[Rights, copyright, and AI](docs/rights-and-ai.md)** before uploading a manuscript.
+
+For confidential work, use a private Binder and actual access control. A copyright notice, `robots.txt`, or unlisted URL is not secrecy.
+
 ## The five-minute version
 
 A Bookself publication is just a folder containing plain-text manuscript files.
@@ -58,7 +74,8 @@ The New Publication Studio asks what you are making, its working title, the
 author, the first piece or chapter, and the Reader style you want to recommend.
 It then generates a normal Bookself folder containing:
 
-- `README.md` — title, author, format, status, and contents
+- `README.md` — title, author, format, status, rights summary, and contents
+- `RIGHTS.md` — the publication-specific rights notice; All Rights Reserved by default
 - `reader.json` — the book's suggested Reader starting design
 - `manuscript/` — a first Markdown piece shaped for the selected format
 
@@ -120,8 +137,8 @@ Copy your chosen starter to a new folder with a simple name such as:
 The folder name is not the publication title. It is just the tidy label
 computers use to find it. Lowercase letters and hyphens keep everyone calm.
 
-Then open the new publication's `README.md` and replace the placeholder title
-with the actual title.
+Then open the new publication's `README.md`, replace the placeholder title with
+the actual title, and replace the placeholder author/year in `RIGHTS.md`.
 
 In a private Binder, also add one row for that new folder under the repository
 root README's `## The books` section. That catalog row is how the Publishing
@@ -147,15 +164,16 @@ You do not need a different publishing system.
   release a deliberate public Shelf snapshot when students should receive it.
   See [Revisions and releases](docs/revisions.md) for the edition model.
 
-Both paths keep the same plain Markdown, Git history, Reader, Desk, and
-Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.
+Both paths keep the same plain Markdown, Git history, Reader, Desk, rights file,
+and Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.
 
 ## What am I looking at?
 
 Inside a publication you will usually see:
 
 - **`README.md`** — the publication's little control card: title, author, status,
-  format, and contents.
+  format, rights summary, and contents.
+- **`RIGHTS.md`** — the publication's copyright/license choice and AI-use reservation.
 - **`reader.json`** — optional recommended Reader design; readers remain free to
   override it in their own browser.
 - **`manuscript/`** — the actual writing. A book may use one file per chapter;
@@ -210,6 +228,7 @@ The safest beginner rule is simple: **change prose, not plumbing**.
 Stay mostly inside:
 
 - `books/<your-publication>/README.md`
+- `books/<your-publication>/RIGHTS.md` — change only when you deliberately mean to change rights
 - `books/<your-publication>/reader.json`
 - `books/<your-publication>/manuscript/`
 - `books/<your-publication>/media/`
@@ -245,21 +264,29 @@ You do not have to use that on day one.
 
 Bookself can use two spaces:
 
-- the **Binder** — private writing room
+- the **Binder** — private writing room by default, or an explicitly public working proof if the author chooses that mode
 - the **Shelf** — public bookcase
 
-Draft privately in the Binder. When the work is actually meant for readers,
-release a committed snapshot to the Shelf and publish that copy there. The
-Binder stays private and keeps its own history; the Shelf copy is independent
-until you deliberately release another snapshot.
+The free/default path is to draft privately in the Binder. When the work is meant
+for readers, release a committed snapshot to the Shelf and publish that copy
+there. The Binder keeps its own history; the Shelf copy is independent until you
+deliberately release another snapshot.
+
+An author may instead choose to write in public and expose a Binder Reader. That
+changes visibility, **not copyright ownership or the publication license**.
 
 A public repository is public even when a draft is not linked from the shelf.
-“Unlisted” is not the same thing as private.
+“Unlisted” is not the same thing as private. Public Git history, forks, caches,
+and hosting-provider terms also matter, so read the [rights guide](docs/rights-and-ai.md)
+before treating GitHub itself as a rights boundary.
 
 ## Where next?
 
 If you want the same path with screenshots-in-words and exact GitHub buttons,
 read the **[Author guide](docs/author-guide.md)**.
+
+If you want the full copyright, AI-use, RSL/TDM, and hosting explanation, read
+**[Rights, copyright, and AI](docs/rights-and-ai.md)**.
 
 If you are curious about the machinery, read **[Bookself architecture](docs/bookself.md)**.
 

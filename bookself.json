@@ -5,6 +5,8 @@
   "description": "Agent-readable capability map for Git-native long-form publishing.",
   "agentEntryPoints": {
     "rules": "AGENTS.md",
+    "rights": "RIGHTS.md",
+    "rightsGuide": "docs/rights-and-ai.md",
     "llmMap": "llms.txt",
     "orchestrationGuide": "docs/agent-first.md",
     "humanStart": "START-HERE.md"
@@ -27,13 +29,32 @@
   },
   "contracts": {
     "sharedUi": ["reader/", "desk/"],
-    "instanceOwned": ["books/", "README.md", "imprint.json"],
+    "instanceOwned": ["books/", "README.md", "imprint.json", "RIGHTS.md"],
     "publicationRoot": "books/<slug>/",
     "publicationMetadata": "books/<slug>/README.md",
+    "publicationRights": "books/<slug>/RIGHTS.md",
     "publicationPresentation": "books/<slug>/reader.json",
     "publicationManuscript": "books/<slug>/manuscript/",
     "publicationMedia": "books/<slug>/media/",
     "catalogSection": "## The books"
+  },
+  "rightsDefaults": {
+    "framework": "MIT",
+    "blankStarters": "MIT",
+    "realPublication": "All Rights Reserved unless books/<slug>/RIGHTS.md expressly grants another license",
+    "publicVisibilityIsLicense": false,
+    "conventionalSearch": "permitted by the default Reader RSL signal",
+    "aiUsesReserved": [
+      "model training and fine-tuning",
+      "generative embeddings or model weights",
+      "retrieval-augmented generation and grounding",
+      "AI-specific indexing",
+      "AI-generated summaries or substitutes",
+      "synthetic narration and translation",
+      "other generative reuse"
+    ],
+    "statutoryExceptionsStillApply": true,
+    "hostingProviderTermsAreSeparate": true
   },
   "capabilities": {
     "bootstrapWorkspace": {
@@ -62,7 +83,10 @@
         "comic": "books/_COMIC_TEMPLATE/"
       },
       "browserStudio": "desk/#newPublicationStudio",
-      "statusWhileDrafting": "Drafting"
+      "statusWhileDrafting": "Drafting",
+      "rightsFile": "books/<slug>/RIGHTS.md",
+      "defaultRights": "All Rights Reserved",
+      "defaultAiUse": "training, RAG/grounding, AI indexing, synthetic narration/translation, and generative reuse reserved"
     },
     "designPublication": {
       "kind": "file-contract",
@@ -94,25 +118,26 @@
         "Binder role is verified.",
         "Shelf role is verified.",
         "Release publication is committed in Binder.",
-        "Public release is within the user's expressed intent."
+        "Public release is within the user's expressed intent.",
+        "Publication rights metadata and RIGHTS.md are preserved unless the rightsholder explicitly changes them."
       ],
-      "result": "Prepares and verifies an exact Shelf publication snapshot, sets it Published, and updates the Shelf catalog. Stops before commit or push.",
+      "result": "Prepares and verifies an exact Shelf publication snapshot including publication rights files, sets it Published, and updates the Shelf catalog. Stops before commit or push.",
       "requires": ["python3", "git"]
     }
   },
   "outcomeProtocol": {
-    "defaultGoal": "Turn natural-language publishing intent into a valid private Binder, a well-formed publication, and optionally a deliberately released public Shelf snapshot.",
+    "defaultGoal": "Turn natural-language publishing intent into a valid private Binder, a well-formed publication, and optionally a deliberately released public Shelf snapshot while preserving the rightsholder's licensing choices.",
     "steps": [
-      "Read AGENTS.md and this manifest before editing.",
+      "Read AGENTS.md, RIGHTS.md, this manifest, and the target publication RIGHTS.md when present before editing.",
       "Infer publication format, structure, style, and workflow details from the user's goal when reasonable; ask only when a missing choice materially changes the intended work.",
-      "Create or locate the private Binder and public Shelf. Never expose unpublished Binder content to make preview easier.",
-      "Create the publication in Binder using the nearest format contract and add it to the Binder catalog.",
+      "Create or locate the private Binder and public Shelf. Never expose unpublished Binder content to make preview easier unless the author explicitly chose a working-in-public mode.",
+      "Create the publication in Binder using the nearest format contract, preserve the default rights file unless the rightsholder requests another license, and add it to the Binder catalog.",
       "Draft requested content in bounded, reviewable changes while preserving the user's voice and factual constraints.",
       "Choose or tune reader.json as an author recommendation, not a reader lock.",
       "Validate with doctor and preview when the environment permits.",
       "Commit Binder work before release.",
-      "If the user explicitly asked to publish, run the release transaction, review its Shelf diff, commit it, and push/publish using the environment's authorized Git/GitHub capabilities.",
-      "Report the durable Binder/Shelf locations, publication slug, validation result, and release state rather than narrating every mechanical substep."
+      "If the user explicitly asked to publish, run the release transaction, review its Shelf diff including rights metadata, commit it, and push/publish using the environment's authorized Git/GitHub capabilities.",
+      "Report the durable Binder/Shelf locations, publication slug, validation result, rights posture, and release state rather than narrating every mechanical substep."
     ]
   },
   "intentBoundaries": {
@@ -128,7 +153,8 @@
       "making unpublished manuscript content public",
       "publishing or replacing a Shelf release when publication was not requested",
       "deleting publication history or repositories",
-      "changing licensing or copyright ownership",
+      "changing licensing, copyright ownership, AI-use grants, or RIGHTS.md",
+      "sending manuscript content to a new external AI service, training corpus, vector store, RAG system, AI index, publisher, or other third party",
       "adding secrets, credentials, paid services, or mandatory external dependencies"
     ],
     "explicitPublishExamples": [
@@ -142,12 +168,14 @@
       "Binder role is valid.",
       "Publication metadata and catalog entry are consistent.",
       "Requested manuscript content exists in Binder.",
+      "Publication rights posture is explicit or resolves to the Bookself All Rights Reserved default.",
       "doctor reports no blocking structural errors."
     ],
     "publishedReady": [
       "All draftReady conditions hold.",
       "Binder publication state used for release is committed.",
       "Shelf contains a verified released snapshot with Status Published.",
+      "Shelf preserves the publication rights file and rights metadata.",
       "Shelf catalog points to the released publication.",
       "Public delivery URL or repository location is reported when available."
     ]

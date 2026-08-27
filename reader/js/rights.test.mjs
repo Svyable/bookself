@@ -3,7 +3,7 @@ import { rightsSummary } from './rights.js';
 
 assert.deepEqual(rightsSummary({}), {
   rights: 'All Rights Reserved',
-  aiUse: 'AI training and generative use reserved',
+  aiUse: 'AI training, retrieval/grounding, indexing, and generative use reserved',
 });
 
 assert.deepEqual(rightsSummary({

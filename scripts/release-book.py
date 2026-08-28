@@ -219,21 +219,21 @@ def atomic_write(path: Path, text: str) -> None:
         raise
 
 
-def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
+def prepare_release(desk: Path, shelf: Path, slug: str) -> dict[str, str]:
     if not SLUG_RE.fullmatch(slug) or slug == "_TEMPLATE":
         fail("slug must use lowercase letters, numbers, and hyphens only")
 
-    binder = binder.resolve()
+    desk = desk.resolve()
     shelf = shelf.resolve()
-    require_git_worktree(binder, "Binder")
+    require_git_worktree(desk, "Desk")
     require_git_worktree(shelf, "Shelf")
 
-    if read_role(binder) != "binder":
-        fail(f"source is not a Binder instance: {binder}")
+    if read_role(desk) != "desk":
+        fail(f"source is not a Desk instance: {desk}")
     if read_role(shelf) != "shelf":
         fail(f"destination is not a Shelf instance: {shelf}")
 
-    source_book = binder / "books" / slug
+    source_book = desk / "books" / slug
     source_readme = source_book / "README.md"
     shelf_books = shelf / "books"
     shelf_book = shelf_books / slug
@@ -243,7 +243,7 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
     if not shelf_root.is_file():
         fail(f"Shelf README not found: {shelf_root}")
 
-    require_clean_paths(binder, "Binder", [f"books/{slug}"])
+    require_clean_paths(desk, "Desk", [f"books/{slug}"])
     require_clean_paths(shelf, "Shelf", ["README.md", f"books/{slug}"])
 
     leftovers = sorted(shelf_books.glob(f".{slug}.bookself-*")) if shelf_books.exists() else []
@@ -260,7 +260,7 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
         fail("book README has no readable Status value")
     if source_status.lower() == "published":
         fail(
-            "Binder copy is already marked Published; keep Binder as the working "
+            "Desk copy is already marked Published; keep Desk as the working "
             "edition and release a non-published status"
         )
 
@@ -277,7 +277,7 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
     next_book_md = set_status_published(book_md)
 
     source_manifest = file_manifest(source_book, exclude_readme=True)
-    source_commit = run_git(binder, "rev-parse", "HEAD")
+    source_commit = run_git(desk, "rev-parse", "HEAD")
     shelf_branch = run_git(shelf, "branch", "--show-current") or "(detached HEAD)"
 
     shelf_books.mkdir(parents=True, exist_ok=True)
@@ -291,7 +291,7 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
         )
         (stage_book / "README.md").write_text(next_book_md, encoding="utf-8")
         if file_manifest(stage_book, exclude_readme=True) != source_manifest:
-            fail("staged publication does not byte-match the committed Binder content")
+            fail("staged publication does not byte-match the committed Desk content")
         if (stage_book / "README.md").read_text(encoding="utf-8") != next_book_md:
             fail("staged publication README does not match the expected published form")
     except Exception:
@@ -310,7 +310,7 @@ def prepare_release(binder: Path, shelf: Path, slug: str) -> dict[str, str]:
         atomic_write(shelf_root, next_root)
 
         if file_manifest(shelf_book, exclude_readme=True) != source_manifest:
-            fail("post-copy verification failed: Shelf content differs from Binder content")
+            fail("post-copy verification failed: Shelf content differs from Desk content")
         shelf_book_md = (shelf_book / "README.md").read_text(encoding="utf-8")
         if shelf_book_md != next_book_md:
             fail("post-copy verification failed: Shelf book README differs from the prepared release")
@@ -343,26 +343,26 @@ def main(argv: list[str]) -> int:
         print("usage: release-book.py <slug> [path-to-shelf]", file=sys.stderr)
         return 2
 
-    binder = Path(__file__).resolve().parent.parent
+    desk = Path(__file__).resolve().parent.parent
     slug = argv[1].strip()
     shelf = (
         Path(argv[2]).expanduser()
         if len(argv) == 3
-        else binder.parent / "shelf"
+        else desk.parent / "shelf"
     )
 
     try:
-        result = prepare_release(binder, shelf, slug)
+        result = prepare_release(desk, shelf, slug)
     except ReleaseError as exc:
         print(f"release-book: {exc}", file=sys.stderr)
         return 1
 
     print(f"Prepared release: {result['title']}")
-    print(f"Binder snapshot: {result['source_commit']}")
+    print(f"Desk snapshot: {result['source_commit']}")
     print(f"Shelf branch: {result['shelf_branch']}")
     print(f"Catalog: {result['catalog_action']}")
     print(
-        "Verified: Shelf content matches the committed Binder snapshot, with "
+        "Verified: Shelf content matches the committed Desk snapshot, with "
         "only the prepared Published README/catalog transformation."
     )
     print("Nothing was committed or pushed.")

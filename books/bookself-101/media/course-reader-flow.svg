@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
   <title id="title">Course reader editorial and release flow</title>
-  <desc id="desc">Four stages show candidate materials moving into a private Binder, through permissions and editorial review, and then into a public Shelf assigned to students.</desc>
+  <desc id="desc">Four stages show candidate materials moving onto a private Desk, through permissions and editorial review, and then into a public Shelf assigned to students.</desc>
   <rect width="1200" height="640" rx="32" fill="#f4efe6"/>
   <text x="76" y="92" font-family="Georgia, serif" font-size="42" fill="#2a251f">From source packet to assigned reader</text>
   <text x="76" y="130" font-family="Arial, sans-serif" font-size="21" fill="#665f56">The editing happens before the public release boundary.</text>
@@ -14,7 +14,7 @@
     <text x="100" y="406" font-size="20" fill="#665f56">Consented contribution</text>
 
     <rect x="362" y="210" width="220" height="250" rx="24" fill="#e8dfcf" stroke="#927f66" stroke-width="3"/>
-    <text x="390" y="258" font-size="25" font-weight="700" fill="#2a251f">Private Binder</text>
+    <text x="390" y="258" font-size="25" font-weight="700" fill="#2a251f">Private Desk</text>
     <text x="390" y="304" font-size="20" fill="#665f56">Sequence readings</text>
     <text x="390" y="338" font-size="20" fill="#665f56">Write context</text>
     <text x="390" y="372" font-size="20" fill="#665f56">Revise next edition</text>

@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
   <title id="title">Course-text edition loop</title>
-  <desc id="desc">A private Binder revision moves through review to a released Shelf edition, while the released edition remains stable during the next revision.</desc>
+  <desc id="desc">A private Desk revision moves through review to a released Shelf edition, while the released edition remains stable during the next revision.</desc>
   <rect width="960" height="360" rx="28" fill="#f3eee4"/>
   <g font-family="Georgia, 'Times New Roman', serif" fill="#2f2923">
     <text x="480" y="54" text-anchor="middle" font-size="27" font-weight="700">A course-text edition loop</text>
     <g>
       <rect x="70" y="118" width="220" height="112" rx="18" fill="#fffaf1" stroke="#8f7657" stroke-width="2"/>
-      <text x="180" y="158" text-anchor="middle" font-size="22" font-weight="700">Binder</text>
+      <text x="180" y="158" text-anchor="middle" font-size="22" font-weight="700">Desk</text>
       <text x="180" y="190" text-anchor="middle" font-size="16">private revision</text>
       <text x="180" y="214" text-anchor="middle" font-size="16">next edition</text>
     </g>

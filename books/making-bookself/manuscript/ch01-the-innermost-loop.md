@@ -14,17 +14,17 @@ Bookself therefore needs to dogfood the innermost loop.
 
 ## The two readers are the same software with different jobs
 
-A Bookself **Binder** is the private writing room. It contains work that is not ready for strangers: incomplete chapters, experiments, next-edition changes, arguments with yourself, and the occasional paragraph that seemed brilliant at midnight.
+A Bookself **Desk** is the private writing room. It contains work that is not ready for strangers: incomplete chapters, experiments, next-edition changes, arguments with yourself, and the occasional paragraph that seemed brilliant at midnight.
 
 A Bookself **Shelf** is the public release surface. It contains snapshots the author deliberately chose to publish.
 
 Both can use the same Reader software. The important distinction is not the renderer. It is the publication state and the repository boundary.
 
-In a Binder, the Reader is a proofing surface. Drafts can carry a Draft badge and Proof ribbon. The point is to see unfinished work as a reader will see it before deciding that it deserves release.
+On a Desk, the Reader is a proofing surface. Drafts can carry a Draft badge and Proof ribbon. The point is to see unfinished work as a reader will see it before deciding that it deserves release.
 
 On a Shelf, the Reader is the public reading surface. The manuscript is no longer merely the latest thing in a working directory. It is an intentional release.
 
-This public **Making Bookself** copy is a teaching exception. Real private drafts should stay private. This specimen is intentionally visible so anyone can inspect how the loop works without being granted access to somebody's actual Binder.
+This public **Making Bookself** copy is a teaching exception. Real private drafts should stay private. This specimen is intentionally visible so anyone can inspect how the loop works without being granted access to somebody's actual Desk.
 
 ## Reading should lead back to evidence
 

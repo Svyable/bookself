@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
   <title id="title">Bookself edition flow</title>
-  <desc id="desc">A diagram showing work moving from a private Binder through a deliberate release into a public Shelf, while the Reader can display both a working proof and a released snapshot.</desc>
+  <desc id="desc">A diagram showing work moving from a private Desk through a deliberate release into a public Shelf, while the Reader can display both a working proof and a released snapshot.</desc>
   <rect width="1200" height="620" fill="#f3efe5"/>
   <rect x="70" y="120" width="380" height="330" rx="28" fill="#ddd1ba" stroke="#27251f" stroke-width="5"/>
-  <text x="260" y="185" text-anchor="middle" font-family="Georgia,serif" font-size="46" font-weight="700" fill="#27251f">Private Binder</text>
+  <text x="260" y="185" text-anchor="middle" font-family="Georgia,serif" font-size="46" font-weight="700" fill="#27251f">Private Desk</text>
   <text x="260" y="245" text-anchor="middle" font-family="system-ui,sans-serif" font-size="27" fill="#504b42">drafts · notes · next edition</text>
   <text x="260" y="315" text-anchor="middle" font-family="Georgia,serif" font-size="32" fill="#27251f">Working proof</text>
   <text x="260" y="360" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" fill="#504b42">Reader + Desk can inspect</text>
@@ -17,5 +17,5 @@
   <path d="M475 285 H715" stroke="#7f2923" stroke-width="14" stroke-linecap="round"/>
   <path d="M715 285 l-42 -28 v56 z" fill="#7f2923"/>
   <text x="595" y="245" text-anchor="middle" font-family="system-ui,sans-serif" font-size="26" font-weight="700" fill="#7f2923">DELIBERATE RELEASE</text>
-  <text x="600" y="535" text-anchor="middle" font-family="Georgia,serif" font-size="27" fill="#504b42">The Shelf is a copied snapshot, not a live window into the private Binder.</text>
+  <text x="600" y="535" text-anchor="middle" font-family="Georgia,serif" font-size="27" fill="#504b42">The Shelf is a copied snapshot, not a live window into the private Desk.</text>
 </svg>

@@ -106,10 +106,10 @@ when Node is available. For release-tooling work, run:
 python3 scripts/test_release_book.py
 ```
 
-You do not need access to the reference private Binder in order to contribute a
-Reader or Desk improvement. The platform repository is the source of truth for
-shared UI; maintainers can sync the final shared files into reference instances
-when the change lands.
+You do not need access to the reference private Desk in order to contribute a
+Reader or Publishing Desk improvement. The platform repository is the source of
+truth for shared UI; maintainers can sync the final shared files into reference
+instances when the change lands.
 
 Please do not introduce a required GitHub Actions job, hosted build, package
 manager, or external service merely to make a normal Bookself contribution
@@ -129,13 +129,13 @@ On a public Shelf, publication means both:
 Make those two changes together so the catalog and manuscript do not tell two
 different stories.
 
-For private drafting, use the Bookself [Binder → Shelf workflow](docs/bookself.md).
+For private drafting, use the Bookself [Desk → Shelf workflow](docs/bookself.md).
 An unlisted file in a public repository is still public.
 
 ## Keeping issue forms current
 
 `.github/ISSUE_TEMPLATE/chapter-feedback.yml` accepts the publication name or
-folder slug as free text. Keep that field generic: stamped Binder/Shelf
+folder slug as free text. Keep that field generic: stamped Desk/Shelf
 repositories should not inherit a platform-maintained list of Bookself example
 publications. Details are in the [Editor guide](docs/editor-guide.md).
 
@@ -148,7 +148,7 @@ Welcome to the plumbing.
 
 Before changing shared Reader or Desk behavior, read the boundary in
 [Bookself architecture](docs/bookself.md): `reader/` and `desk/` are shared
-platform software; publications and instance identity belong to each Binder or
+platform software; publications and instance identity belong to each Desk or
 Shelf. Then use the [Contributor map](docs/contributor-map.md) for the practical
 path.
 

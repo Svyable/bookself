@@ -12,9 +12,9 @@ This first issue asks a practical question: how can a publication look intention
 
 Open publishing works best when the writing surface stays ordinary and the reading surface earns its polish. The manuscript remains portable text. The Reader supplies hierarchy, atmosphere, navigation, notes, and a cover without turning the publication into a proprietary bundle.
 
-The useful tension is that the issue can be visually specific while the source stays boring in the best possible way. A writer can keep drafts, experiments, image revisions, and the next issue in a private Binder. A released issue can remain stable on the public Shelf until the editor deliberately replaces it.
+The useful tension is that the issue can be visually specific while the source stays boring in the best possible way. A writer can keep drafts, experiments, image revisions, and the next issue on a private Desk. A released issue can remain stable on the public Shelf until the editor deliberately replaces it.
 
-![An illustrated two-page editorial spread comparing a private Binder writing room with a public Shelf release.](../media/open-page-spread.svg "Feature plate. The private Binder can stay messy while the public Shelf remains an intentional released edition.")
+![An illustrated two-page editorial spread comparing a private Desk writing room with a public Shelf release.](../media/open-page-spread.svg "Feature plate. The private Desk can stay messy while the public Shelf remains an intentional released edition.")
 
 That separation changes the emotional texture of revision. Authors do not have to choose between never publishing and silently editing the thing readers already saw. They can keep working privately, compare versions, invite review, and publish the replacement when it is ready.
 
@@ -39,6 +39,6 @@ The table is intentionally mundane. A publication system earns trust when the po
 
 ## Desk notes
 
-The released issue is not the newsroom. A future issue can be drafted privately in Binder while this edition remains stable on Shelf. Corrections and replacements stay deliberate, reviewable changes rather than invisible CMS edits.
+The released issue is not the newsroom. A future issue can be drafted privately on the Desk while this edition remains stable on Shelf. Corrections and replacements stay deliberate, reviewable changes rather than invisible CMS edits.
 
 For editors, that means the Desk can answer a different question from the Reader. The Reader asks, “Does this feel good to read?” The Desk asks, “Is this the version we mean to release?” Keeping those questions separate is one of Bookself’s most useful design constraints.

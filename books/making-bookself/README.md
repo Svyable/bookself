@@ -17,7 +17,7 @@
 
 ## This book is intentionally unfinished
 
-**Making Bookself** is fictional demo writing kept unfinished on purpose. It is the platform's public Binder-style specimen: a safe example of proofing, review, and revision without exposing somebody's real private draft.
+**Making Bookself** is fictional demo writing kept unfinished on purpose. It is the platform's public Desk-style specimen: a safe example of proofing, review, and revision without exposing somebody's real private draft.
 
 - [Read the working proof](https://svyable.github.io/bookself/reader/#/b/making-bookself/)
 - [Read the live review notes](REVIEW.md)

@@ -36,7 +36,7 @@ def fixture(root: Path, role: str, *, status: str | None = None, catalog: bool =
         for template in PUBLICATION_TEMPLATES:
             write(root / "books" / template / "README.md", f"# {template}\n")
 
-    if role in {"platform", "binder"}:
+    if role in {"platform", "desk"}:
         write(root / "scripts" / "release-book.py", "# release helper\n")
         write(root / "scripts" / "release-book.sh", "# release wrapper\n")
 
@@ -86,12 +86,19 @@ class DoctorTests(unittest.TestCase):
             codes = {item.code for item in inspect_root(root)}
             self.assertIn("published_not_cataloged", codes)
 
-    def test_binder_rejects_published_working_copy(self):
+    def test_desk_rejects_published_working_copy(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            fixture(root, "binder", status="Published")
+            fixture(root, "desk", status="Published")
             codes = {item.code for item in inspect_root(root)}
-            self.assertIn("binder_published", codes)
+            self.assertIn("desk_published", codes)
+
+    def test_obsolete_binder_role_is_invalid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "binder")
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("invalid_role", codes)
 
     def test_missing_manuscript_file_is_an_error(self):
         with tempfile.TemporaryDirectory() as tmp:

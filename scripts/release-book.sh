@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prepare a committed Binder publication for release to a local Shelf checkout.
+# Prepare a committed Desk publication for release to a local Shelf checkout.
 # Usage: scripts/release-book.sh <slug> [path-to-shelf]
 set -eu
 

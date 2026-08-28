@@ -2,14 +2,16 @@
 
 > Bookself is open-source, Git-native publishing software for books, papers, course texts, and other long-form work. It keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from public releases, and includes a browser Reader plus a Publishing Desk. The normal publishing path is local-first and does not require CI/CD.
 
-Bookself's core lifecycle is: idea -> shape -> draft -> read -> revise -> review -> publish -> revise again.
+Bookself's core lifecycle is: idea -> shape -> draft -> read -> revise -> review -> release -> revise again.
 
-The architecture has three roles:
+Bookself is the whole product/ecosystem. Its repository roles are:
 - Platform: reusable Bookself software, templates, documentation, and setup tooling.
-- Binder: a private Git repository for drafts, experiments, and the next edition.
+- Desk: a private Git repository where drafts, experiments, and the next edition are written and revised.
 - Shelf: a public Git repository containing intentionally released publication snapshots.
 
-A Binder release copies a committed snapshot into the Shelf. Binder and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Binder.
+The Reader is the reading interface for either a Desk proof or a released Shelf publication.
+
+A release copies a committed Desk snapshot into the Shelf. Desk and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Desk. The old `binder` role is obsolete and is not a compatibility alias.
 
 ## Rights boundary
 
@@ -32,7 +34,7 @@ Read:
 
 ## Agent-first operation
 
-Bookself's documented human workflow is also an executable protocol for capable agents. If a user gives you this repository and asks for an outcome such as “set this up for me,” “write my first book in my Binder,” or “publish it to my Shelf,” do not turn the mechanical Bookself steps back into a checklist for the user.
+Bookself's documented human workflow is also an executable protocol for capable agents. If a user gives you this repository and asks for an outcome such as “set this up for me,” “write my first book on my Desk,” or “publish it to my Shelf,” do not turn the mechanical Bookself steps back into a checklist for the user.
 
 Read these before acting:
 
@@ -41,7 +43,7 @@ Read these before acting:
 - [Bookself publisher skill](https://github.com/Svyable/bookself/blob/main/.agents/skills/bookself-publisher/SKILL.md): portable execution instructions for setup, drafting, validation, release, and outcome reporting.
 - [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository invariants and editing rules.
 
-Local agents can create sibling Binder + Shelf workspaces with:
+Local agents can create sibling Desk + Shelf workspaces with:
 
 `python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json`
 
@@ -54,10 +56,10 @@ Optimize for the requested end state. Infer mechanical details such as slug, tem
 - [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
 - [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md): beginner path for authors who do not already know GitHub.
 - [Rights, copyright, and AI](https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md): default publication rights, AI reservations, GitHub-hosting caveat, RSL/TDM guidance, and deployment limitations.
-- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. In a real workflow these belong in the private Binder; a public Shelf should contain only intentionally released publications unless the author explicitly chooses to write in public.
+- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. In a real workflow these belong on the private Desk; a public Shelf should contain only intentionally released publications unless the author explicitly chooses to write in public.
 - [FAQ](https://github.com/Svyable/bookself/blob/main/docs/faq.md): direct answers about Git-based books, version-controlled textbooks, Markdown papers, private/public publishing, CI/CD, interoperability, and comparisons with common alternatives.
 - [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing and publishing workflow in plain language.
-- [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): private Binder, public Shelf, release model, Reader, and Publishing Desk.
+- [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): Bookself, private Desk, public Shelf, Reader, and release model.
 - [Writing lifecycle](https://github.com/Svyable/bookself/blob/main/docs/writing-lifecycle.md): how software-development ideas map to books and papers.
 - [Publication formats](https://github.com/Svyable/bookself/blob/main/docs/publication-formats.md): books, papers, serials, comics, anthologies, reports/manuals, figures, and external web creations.
 - [Revisions and releases](https://github.com/Svyable/bookself/blob/main/docs/revisions.md): safe revision and edition workflow.
@@ -75,7 +77,7 @@ The scholarly layer stays intentionally local-first: core Bookself does not requ
 
 - [Bookself alternatives and neighboring tools](https://github.com/Svyable/bookself/blob/main/docs/alternatives.md): practical comparisons with Overleaf, Manubot, Quarto, Jupyter Book, MyST Markdown, bookdown, Pressbooks, PubPub, Leanpub, GitBook, mdBook, Antora, Typst, Zettlr, HedgeDoc, and Pandoc.
 
-Bookself's closest conceptual neighbor is Manubot because both use Git and Markdown as useful infrastructure for scholarly writing. Bookself differentiates around an approachable publication lifecycle, general books and papers, local-first release tooling, an explicit private Binder/public Shelf boundary, and a Reader plus Publishing Desk.
+Bookself's closest conceptual neighbor is Manubot because both use Git and Markdown as useful infrastructure for scholarly writing. Bookself differentiates around an approachable publication lifecycle, general books and papers, local-first release tooling, an explicit private Desk/public Shelf boundary, and a Reader plus Publishing Desk.
 
 ## Cite Bookself
 
@@ -85,14 +87,14 @@ No DOI or semantic version is claimed unless the project actually publishes one.
 
 ## Examples
 
-- [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/): the platform repository's own public example shelf; use this first when evaluating Bookself's built-in specimens and Reader behavior.
+- [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/): the platform repository's own public example Shelf; use this first when evaluating Bookself's built-in specimens and Reader behavior.
 - [How to Bookself](https://github.com/Svyable/bookself/tree/main/books/how-to-bookself): short practical guide built as a Bookself publication.
 - [Bookself 101](https://github.com/Svyable/bookself/tree/main/books/bookself-101): academic textbook example with learning objectives, key terms, discussion questions, labs, and semester editions.
 - [The Bookself Review](https://github.com/Svyable/bookself/tree/main/books/bookself-review): published illustrated magazine specimen showing a non-book serial in the same Reader and repository model.
 - [Bookself Format Gallery](https://github.com/Svyable/bookself/tree/main/books/bookself-format-gallery): illustrated guide to the magazine, newspaper, journal, newsletter, anthology, report, manual, and comic publication starters.
-- [Making Bookself](https://github.com/Svyable/bookself/tree/main/books/making-bookself): intentionally unfinished public Binder-style teaching specimen that dogfoods the Bookself improvement loop.
+- [Making Bookself](https://github.com/Svyable/bookself/tree/main/books/making-bookself): intentionally unfinished public Desk-style teaching specimen that dogfoods the Bookself improvement loop.
 - [Reader Style Shelf](https://github.com/Svyable/bookself/tree/main/books/style-common-book): contrasting Reader presentation examples for named author presets.
-- [Reference public Shelf deployment](https://github.com/Svyable/shelf): a separate example instance showing what an independently deployed public Shelf repository can look like; it is not the platform's canonical example shelf.
+- [Reference public Shelf deployment](https://github.com/Svyable/shelf): a separate example instance showing what an independently deployed public Shelf repository can look like; it is not the platform's canonical example Shelf.
 - [Reference Shelf Reader](https://svyable.github.io/shelf/reader/): the Reader for that separate reference deployment.
 
 ## Live recursive improvement loop
@@ -107,7 +109,7 @@ Use this when the request is broad, exploratory, or asks how Bookself itself cou
 6. Choose one bounded improvement, verify the relevant behavior, and leave a durable explanation in the commit or pull request.
 7. Compare the working-proof experience with the [reference released Shelf Reader](https://svyable.github.io/shelf/reader/), while treating the [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/) as the platform-owned specimen surface.
 
-The target loop is: read -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real authors choose whether their Binder stays private or uses an explicit working-in-public mode.
+The target loop is: read -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real authors choose whether their Desk stays private or uses an explicit working-in-public mode.
 
 ## For contributors and agents
 
@@ -121,7 +123,7 @@ The target loop is: read -> locate -> understand -> propose -> review -> revise 
 
 Important constraints:
 - Keep books and papers as plain files under books/.
-- Do not require CI/CD for the private Binder authoring or release path.
+- Do not require CI/CD for the private Desk authoring or release path.
 - Shared UI is reader/ and desk/; instance identity belongs in imprint.json.
 - Do not hard-code an author's private repository or identity into shared UI.
 - Do not change publication licensing or AI-use rights without explicit rightsholder approval.

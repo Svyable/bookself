@@ -1,5 +1,5 @@
 #!/bin/sh
-# Lower-level copy: Binder publication -> Shelf checkout.
+# Lower-level copy: Desk publication -> Shelf checkout.
 # Usage: scripts/promote-book.sh <slug> [path-to-shelf]
 # Default shelf: ../shelf
 # For normal releases, prefer scripts/release-book.sh.
@@ -30,7 +30,7 @@ esac
 
 SRC="$ROOT/books/$SLUG"
 if [ ! -d "$SRC" ]; then
-  echo "book not found: $SRC" >&2
+  echo "publication not found: $SRC" >&2
   exit 1
 fi
 if [ ! -d "$DEST" ]; then
@@ -44,5 +44,5 @@ rsync -a --delete \
   "$SRC/" "$DEST/books/$SLUG/"
 
 echo "Copied $SLUG → $DEST/books/$SLUG"
-echo "This is only a file copy; it does not publish or link Binder to Shelf."
+echo "This is only a file copy; it does not publish or link Desk to Shelf."
 echo "For normal releases, use scripts/release-book.sh instead."

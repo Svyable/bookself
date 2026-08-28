@@ -9,9 +9,9 @@ Pick the lane that matches the change you want to make. Stay in that lane unless
 | You want to change… | Work here | Keep the PR shaped like… |
 |---|---|---|
 | A sentence, chapter, book, or paper | `books/<slug>/` | One numbered chapter per PR; update that publication's README only when its TOC/count needs to match |
-| Reading, navigation, accessibility, media, math, citations, or shelf presentation | `reader/` | One coherent Reader behavior; no manuscript edits |
-| Publishing readiness and author-facing workflow | `desk/` | One coherent Desk behavior; no manuscript edits |
-| Binder → Shelf release behavior or instance setup | `scripts/` and relevant docs | One local-first workflow change with tests where practical |
+| Reading, navigation, accessibility, media, math, citations, or Shelf presentation | `reader/` | One coherent Reader behavior; no manuscript edits |
+| Publishing readiness and author-facing workflow | `desk/` | One coherent Publishing Desk behavior; no manuscript edits |
+| Desk → Shelf release behavior or instance setup | `scripts/` and relevant docs | One local-first workflow change with tests where practical |
 | Templates and publication conventions | underscore-prefixed starters under `books/` (for example `_TEMPLATE`, `_PAPER_TEMPLATE`, `_MAGAZINE_TEMPLATE`) and relevant docs | Keep the default simple; avoid adding configuration just because a format can support it |
 | Explanations, examples, onboarding, or community guidance | root docs, `docs/`, `.github/` | Documentation/community change only unless code is required to make the documentation true |
 
@@ -19,17 +19,19 @@ If you are unsure, open a **Platform idea** issue and describe the problem befor
 
 ## The architectural boundary that matters most
 
-Bookself has three roles:
+Bookself is the whole product/ecosystem. Its repository roles are:
 
-- **Bookself** — reusable platform source
-- **Binder** — private working edition
-- **Shelf** — public released edition
+- **platform** — reusable upstream software, templates, docs, and neutral demos
+- **desk** — private working edition
+- **shelf** — public released edition
 
-`reader/` and `desk/` are shared platform UI. `books/`, root `README.md`, and `imprint.json` belong to each instance.
+The **Reader** is the reading interface for Desk proofs and Shelf releases.
 
-A platform contributor does **not** need access to somebody's private Binder in order to improve Bookself. Make the shared change in this repository. Maintainers can mirror the final `reader/` / `desk/` bytes into reference instances when the change lands.
+`reader/` and `desk/` are shared Bookself UI. `books/`, root `README.md`, and `imprint.json` belong to each instance.
 
-Do not hard-code a repository owner, private URL, publication identity, or Svyable-specific behavior into shared UI.
+A platform contributor does **not** need access to somebody's private Desk in order to improve Bookself. Make the shared change in this repository. Maintainers can mirror the final `reader/` / `desk/` bytes into reference instances when the change lands.
+
+Do not hard-code a repository owner, private URL, publication identity, or Svyable-specific behavior into shared UI. The obsolete `binder` role is not a supported alias.
 
 ## Local verification without a build system
 
@@ -41,7 +43,7 @@ For a dependency-free repository health check, start with:
 python3 scripts/doctor.py
 ```
 
-The doctor is read-only. It checks the repository role, Git worktree state, Reader and Desk presence, catalog/publication consistency, and other structural invariants so you can spot a baseline problem before attributing it to your change.
+The doctor is read-only. It checks the repository role, Git worktree state, Reader and Publishing Desk presence, catalog/publication consistency, and other structural invariants so you can spot a baseline problem before attributing it to your change.
 
 Serve a checkout from its root:
 
@@ -72,7 +74,7 @@ Run the checks related to your change; Bookself does not require every contribut
 
 ## Shared Reader / Desk changes
 
-If you maintain local Binder or Shelf instances, sync shared UI after changing `reader/` or `desk/`:
+If you maintain local Desk or Shelf instances, sync shared UI after changing `reader/` or `desk/`:
 
 ```bash
 scripts/sync-ui.sh /path/to/instance

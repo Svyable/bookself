@@ -15,7 +15,7 @@
 
 - [x] [Front Matter](manuscript/front-matter.md)
 - [x] [Getting Set Up — GitHub and AI tools](manuscript/ch00-getting-set-up.md)
-- [x] [Ch 1 — Opening the Binder](manuscript/ch01-opening-the-binder.md)
+- [x] [Ch 1 — Opening the Desk](manuscript/ch01-opening-the-desk.md)
 - [x] [Ch 2 — Writing with an Agent](manuscript/ch02-writing-with-an-agent.md)
 - [x] [Ch 3 — Publishing](manuscript/ch03-publishing.md)
 - [x] [Back Matter](manuscript/back-matter.md)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only health check for a Bookself platform, Binder, or Shelf checkout."""
+"""Read-only health check for a Bookself platform, Desk, or Shelf checkout."""
 
 from __future__ import annotations
 
@@ -156,12 +156,12 @@ def inspect_root(root: Path) -> list[Finding]:
         except (OSError, json.JSONDecodeError) as exc:
             out.append(finding("error", "invalid_imprint", f"imprint.json is not readable JSON: {exc}"))
         else:
-            if role not in {"platform", "binder", "shelf"}:
+            if role not in {"platform", "desk", "shelf"}:
                 out.append(
                     finding(
                         "error",
                         "invalid_role",
-                        f"imprint.json role must be platform, binder, or shelf; found {role or 'blank'}.",
+                        f"imprint.json role must be platform, desk, or shelf; found {role or 'blank'}.",
                     )
                 )
             else:
@@ -196,7 +196,7 @@ def inspect_root(root: Path) -> list[Finding]:
         else:
             out.append(
                 finding(
-                    "error" if role in {"platform", "binder", "shelf"} else "warning",
+                    "error" if role in {"platform", "desk", "shelf"} else "warning",
                     f"{code}_missing",
                     f"{label} is missing ({path.relative_to(root)}).",
                 )
@@ -255,12 +255,12 @@ def inspect_root(root: Path) -> list[Finding]:
                     f"{slug}: released catalog entry has Status {status or 'blank'} instead of Published.",
                 )
             )
-        if role == "binder" and status == "Published":
+        if role == "desk" and status == "Published":
             out.append(
                 finding(
                     "error",
-                    "binder_published",
-                    f"{slug}: Binder working copy says Published; Published is a Shelf state.",
+                    "desk_published",
+                    f"{slug}: Desk working copy says Published; Published is a Shelf state.",
                 )
             )
 
@@ -295,7 +295,7 @@ def inspect_root(root: Path) -> list[Finding]:
                     )
                 )
 
-    if role == "binder":
+    if role == "desk":
         for pub_dir in iter_publication_dirs(root):
             if pub_dir.name in catalog_set:
                 continue
@@ -309,8 +309,8 @@ def inspect_root(root: Path) -> list[Finding]:
                 out.append(
                     finding(
                         "error",
-                        "binder_published",
-                        f"{pub_dir.name}: Binder working copy says Published; Published is a Shelf state.",
+                        "desk_published",
+                        f"{pub_dir.name}: Desk working copy says Published; Published is a Shelf state.",
                     )
                 )
 
@@ -321,7 +321,7 @@ def inspect_root(root: Path) -> list[Finding]:
             else:
                 out.append(finding("error", f"{template.lower()}_missing", f"books/{template}/README.md is missing."))
 
-    if role in {"platform", "binder"}:
+    if role in {"platform", "desk"}:
         for rel in ("scripts/release-book.py", "scripts/release-book.sh"):
             if (root / rel).is_file():
                 out.append(finding("ok", f"{Path(rel).name}_present", f"{rel} is present."))
@@ -368,7 +368,7 @@ def print_human(root: Path, findings: list[Finding]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Read-only health check for a Bookself platform, Binder, or Shelf checkout."
+        description="Read-only health check for a Bookself platform, Desk, or Shelf checkout."
     )
     parser.add_argument(
         "--root",

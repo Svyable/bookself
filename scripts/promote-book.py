@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy one Binder publication into a Shelf checkout without publishing it."""
+"""Copy one Desk publication into a Shelf checkout without publishing it."""
 
 from __future__ import annotations
 
@@ -13,9 +13,9 @@ SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Copy a Binder publication into a Shelf checkout."
+        description="Copy a Desk publication into a Shelf checkout."
     )
-    parser.add_argument("slug", help="book slug, for example leveraging-luck")
+    parser.add_argument("slug", help="publication slug, for example leveraging-luck")
     parser.add_argument("shelf", nargs="?", help="Shelf checkout; defaults to ../shelf")
     args = parser.parse_args()
 
@@ -27,7 +27,7 @@ def main() -> int:
     shelf = Path(args.shelf).expanduser().resolve() if args.shelf else root.parent / "shelf"
 
     if not source.is_dir():
-        parser.error(f"book not found: {source}")
+        parser.error(f"publication not found: {source}")
     if not shelf.is_dir():
         parser.error(f"shelf not found: {shelf}")
 
@@ -38,7 +38,7 @@ def main() -> int:
     shutil.copytree(source, destination, ignore=shutil.ignore_patterns(".DS_Store"))
 
     print(f"Copied {args.slug} -> {destination}")
-    print("This is only a file copy; it does not publish or link Binder to Shelf.")
+    print("This is only a file copy; it does not publish or link Desk to Shelf.")
     print("For normal releases, use scripts/release-book.py instead.")
     return 0
 

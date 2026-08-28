@@ -12,11 +12,11 @@ When editing a Bookself publication:
 - Preserve the author's voice, tense, rhythm, and local structure. Do not rewrite neighboring prose merely to make it sound more uniform.
 - Keep one numbered chapter per pull request unless a human explicitly asks for broader manuscript work.
 - When adding, renaming, or removing a chapter, update the publication README contents/count in the same change.
-- When starting a new publication, use the matching underscore-prefixed starter under `books/` (`_TEMPLATE`, `_PAPER_TEMPLATE`, `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`, `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`, `_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`). Copy it to a normal lowercase-hyphenated slug in the private Binder, replace the placeholders there, and keep `Status: Drafting` until a deliberate Binder → Shelf release.
+- When starting a new publication, use the matching underscore-prefixed starter under `books/` (`_TEMPLATE`, `_PAPER_TEMPLATE`, `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`, `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`, `_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`). Copy it to a normal lowercase-hyphenated slug on the private Desk, replace the placeholders there, and keep `Status: Drafting` until a deliberate Desk → Shelf release.
 - Preserve the format-specific README metadata supplied by that starter. Serial publications may use `Volume`, `Issue`, `Publication date`, `Frequency`, and `ISSN`; scholarly publications may use `Venue` and `DOI`. Omit fields that do not apply, and do not invent identifiers, dates, or publication claims.
 - Keep manuscript source plain and portable. Do not add a required CMS, database, hosted build, or CI dependency.
 - Treat Reader notes as personal reading notes; use issues/review threads for shared editorial feedback and pull requests/diffs for proposed source changes.
 - Preview the changed publication in the Reader when practical. For a draft, preserve Draft/Proof state rather than silently marking it Published.
-- Do not move or copy unfinished work into a public Shelf unless the human explicitly intends a release.
+- Do not move or copy unfinished work onto a public Shelf unless the human explicitly intends a release.
 
-For the recursive public specimen under `books/making-bookself/`, inspect its `REVIEW.md` and public review thread before proposing an exploratory improvement. It is intentionally public for teaching; it does not change the rule that real Binders should be private.
+For the recursive public specimen under `books/making-bookself/`, inspect its `REVIEW.md` and public review thread before proposing an exploratory improvement. It is intentionally public for teaching; it does not change the rule that real Desks should be private by default.

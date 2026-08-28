@@ -1,4 +1,4 @@
-# Opening the Binder
+# Opening the Desk
 
 This book is sitting inside the system it describes. Its source is a folder in the Bookself repository. The chapters are Markdown files, the figures sit beside them in `media/`, and Git remembers the versions. The Reader does not receive a special exported copy; it reads these files and turns them into pages.
 
@@ -12,9 +12,9 @@ A chapter is one file. Its first line is the title. Images are ordinary relative
 
 The book README is the manuscript hub. It carries the metadata the Reader needs and a checked table of contents that says which files belong to the book. That list matters more than an alphabetical directory listing; `back-matter.md`, for example, does not become the ending merely because GitHub happens to sort it somewhere convenient.
 
-This repository is the **platform demo**, so it contains templates and this practical guide. A real author's working manuscript belongs somewhere else: a private Binder. The public Shelf is another repository again. That separation is not cosmetic. It means a revision can stay private for months while the previous released edition remains unchanged and readable.
+This repository is the **platform demo**, so it contains templates and this practical guide. A real author's working manuscript belongs somewhere else: on a private Desk. The public Shelf is another repository again. That separation is not cosmetic. It means a revision can stay private for months while the previous released edition remains unchanged and readable.
 
-The shared Reader and Publishing Desk flow outward from the Bookself platform into both instances. Manuscripts move in the other direction only when an author deliberately releases one: Binder to Shelf. There is no live connection between the private and public copies after that release.
+The shared Reader and Publishing Desk flow outward from Bookself into both instances. Manuscripts move in the other direction only when an author deliberately releases one: Desk to Shelf. There is no live connection between the private and public copies after that release.
 
 You also do not need a build pipeline to make any of this true. Serve a checkout with `python3 -m http.server` and the Reader can open the Markdown directly. The release helper is local Python and Git. GitHub Pages can serve a public Shelf from the repository root without first turning the book into some other artifact.
 

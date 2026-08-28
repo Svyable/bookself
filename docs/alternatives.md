@@ -48,8 +48,8 @@ building.
 
 Bookself broadens that Git-native idea across books, papers, course texts, and
 other long-form publications. Its distinctive emphasis is the human lifecycle:
-a private Binder for work in progress, a deliberate release boundary to a
-public Shelf, a calm Reader, and a Publishing Desk that explains state without
+a private Desk for work in progress, a deliberate release boundary to a public
+Shelf, a calm Reader, and a Publishing Desk that explains state without
 requiring CI/CD for normal publishing.
 
 ### Quarto, Jupyter Book, and MyST Markdown
@@ -156,7 +156,7 @@ Bookself is a good fit when several of these statements sound familiar:
   `final-v7-really-final.docx` files.
 - You want authors and editors to benefit from Git without pretending everyone
   already knows Git terminology.
-- You want unfinished work in a genuinely private Binder and released work in a
+- You want unfinished work on a genuinely private Desk and released work in a
   separate public Shelf.
 - You want a browser Reader that makes Markdown feel published before and after
   release.

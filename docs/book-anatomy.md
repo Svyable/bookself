@@ -17,7 +17,7 @@ Each book lives at `books/<slug>/`:
     │   └── back-matter.md
     └── media/             # Cover art and figures (optional files)
 
-Start a book by copying `books/_TEMPLATE/` and renaming the copy.
+Start a book by copying `books/_TEMPLATE/` on the private Desk and renaming the copy.
 
 `reader.json` is presentation guidance, not manuscript content. It can recommend
 a starting atmosphere, type treatment, measure, paragraph rhythm, and Pages or
@@ -64,25 +64,29 @@ list:
 Tick boxes by editing `[ ]` to `[x]` (see the author guide). Update the
 Chapters count when it drifts.
 
-**Status** is how the public reader decides what to list.
+**Status** describes the publication copy in the repository where it lives.
 
-- `Drafting` (or anything except `Published`) — GitHub only, plus an
-  unlisted reader URL `reader/#/b/<slug>/`.
-- `Published` — appears on the public shelf **after** the portal README
-  also links `books/<slug>/`.
+- On a **Desk**, use `Drafting`, `Revision in progress`, or another non-published
+  status while writing. List the working publication under the Desk root
+  `## The books` inventory so the Publishing Desk can discover it. Open a proof
+  directly at `reader/#/b/<slug>/`.
+- On a **Shelf**, a released publication uses the exact status `Published` and
+  the Shelf root `## The books` catalog links `books/<slug>/`. The normal
+  Desk → Shelf release helper prepares those two public states together.
 
-Unlisted is not private. For a closed studio plus a public shelf, see
-[Bookself](bookself.md).
+A Desk is private by default. An intentionally public proof is a separate
+visibility choice; an unlisted file in a public repository is still public.
+See [Bookself architecture](bookself.md) for the repository boundary.
 
-Optional cover art: `media/cover.png` (or `.jpg` / `.webp`). The reader
-uses it on the generated cover. If it is missing, the reader makes a cloth
+Optional cover art: `media/cover.png` (or `.jpg` / `.webp`). The Reader
+uses it on the generated cover. If it is missing, the Reader makes a cloth
 cover from the title.
 
-Optional hub rows the reader understands if present: **Publisher**,
+Optional hub rows the Reader understands if present: **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**. Empty Publisher
-is fine. Publisher filters the shelf. Series draws a labelled stack.
+is fine. Publisher filters the Shelf. Series draws a labelled stack.
 Tags are comma-separated. In chapters, `[[ch03-publishing|Publishing]]`
-jumps inside the reader. Download Markdown or HTML from Type and tools —
+jumps inside the Reader. Download Markdown or HTML from Type and tools —
 the files, not a database dump.
 
 ## Manuscript

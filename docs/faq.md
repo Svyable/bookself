@@ -18,8 +18,8 @@ optional until it becomes useful.
 
 Keep the manuscript in plain files, commit meaningful changes with short notes,
 and use branches when you want to try a risky rewrite or prepare a larger
-revision. Bookself adds an explicit release boundary: unfinished work stays in a
-private **Binder**, while an intentional committed snapshot is copied into a
+revision. Bookself adds an explicit release boundary: unfinished work stays on a
+private **Desk**, while an intentional committed snapshot is copied onto a
 public **Shelf** when it is ready.
 
 That separation means the public edition can remain stable while the next
@@ -37,8 +37,8 @@ See [Bookself 101](../books/bookself-101/) and the
 
 ## What should I give students when I assign a Bookself course text?
 
-Give students the **public Shelf Reader link**, not a Binder link. The Shelf is
-the released edition intended for readers; the Binder is the private workspace
+Give students the **public Shelf Reader link**, not a Desk link. The Shelf is
+the released edition intended for readers; the Desk is the private workspace
 for drafts and the next revision.
 
 For a syllabus or LMS, it is useful to record two things together:
@@ -47,10 +47,10 @@ For a syllabus or LMS, it is useful to record two things together:
 - the **public Shelf commit SHA** (and optionally its date) that identifies the
   exact assigned edition
 
-Keep next-semester edits in the private Binder while the class reads the current
+Keep next-semester edits on the private Desk while the class reads the current
 Shelf edition. If you intentionally hotfix the public edition during the term,
 record the new public Shelf commit with the course materials. Do not use a
-private Binder commit or Binder URL as the student-facing provenance reference.
+private Desk commit or Desk URL as the student-facing provenance reference.
 
 This requires no tag, GitHub Release, DOI, build pipeline, or CI job. See
 [revisions and releases](revisions.md#record-the-assigned-edition) for the full
@@ -97,7 +97,7 @@ writing as useful infrastructure. Manubot is particularly strong for scholarly
 manuscripts, citations, and automated manuscript builds.
 
 Bookself broadens the idea to books, papers, and course texts and emphasizes an
-approachable author workflow, a private Binder/public Shelf boundary, a browser
+approachable author workflow, a private Desk/public Shelf boundary, a browser
 Reader, and a Publishing Desk without making CI/CD part of the normal release
 path.
 
@@ -111,7 +111,7 @@ status, and release boundaries as first-class concepts.
 ## Does Bookself require GitHub Actions or CI/CD?
 
 No. The normal authoring, preview, release, and reading workflow is deliberately
-local-first. A private Binder must work with zero GitHub Actions minutes.
+local-first. A private Desk must work with zero GitHub Actions minutes.
 
 Optional automation can be added for convenience, but it is not part of the
 publishing contract.
@@ -127,11 +127,11 @@ useful.
 
 Bookself uses separate repositories:
 
-- **Binder** — private drafts, experiments, and the next edition.
+- **Desk** — private drafts, experiments, and the next edition.
 - **Shelf** — public snapshots that the author deliberately released.
 
-A release copies a committed Binder snapshot into the Shelf. The public Shelf
-does not point into the private Binder, and the two copies remain independent
+A release copies a committed Desk snapshot onto the Shelf. The public Shelf
+does not point into the private Desk, and the two copies remain independent
 until the next release.
 
 See [Bookself architecture](bookself.md) for the full model.
@@ -170,7 +170,7 @@ lifecycle rather than one mandatory output format.
 
 ## What happens when I revise something after publication?
 
-Revise the private Binder copy, commit the new work, review it, and release a
+Revise the private Desk copy, commit the new work, review it, and release a
 new snapshot when it is ready. The currently public Shelf can remain stable
 while the next edition is still changing.
 
@@ -181,7 +181,7 @@ See [revisions and releases](revisions.md).
 GitHub Pages can serve files, but Bookself adds publication-specific structure
 and workflow: a Reader, a Publishing Desk, book and paper conventions, review
 semantics, publication status, edition/revision guidance, and an explicit
-private Binder/public Shelf release model.
+private Desk/public Shelf release model.
 
 ## Can Bookself work with Quarto, Pandoc, notebooks, or other editors?
 

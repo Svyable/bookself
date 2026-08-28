@@ -75,4 +75,4 @@ Bookself should never manufacture a registration number, effective date, publica
 
 For a published visually perceptible U.S. work, 17 U.S.C. §401 describes the familiar notice as © (or Copyright/Copr.), the year of first publication, and the copyright owner's name. Bookself's default published-copy notice follows that form.
 
-A private or unpublished Binder draft can still be copyrighted because copyright does not depend on publication. The Shelf release is a publication/edition milestone, not the moment authorship first becomes fixed.
+A private or unpublished Desk draft can still be copyrighted because copyright does not depend on publication. The Shelf release is a publication/edition milestone, not the moment authorship first becomes fixed.

@@ -11,6 +11,18 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
+PUBLICATION_TEMPLATES = {
+    "_TEMPLATE",
+    "_PAPER_TEMPLATE",
+    "_MAGAZINE_TEMPLATE",
+    "_NEWSPAPER_TEMPLATE",
+    "_JOURNAL_TEMPLATE",
+    "_NEWSLETTER_TEMPLATE",
+    "_ANTHOLOGY_TEMPLATE",
+    "_REPORT_TEMPLATE",
+    "_MANUAL_TEMPLATE",
+    "_COMIC_TEMPLATE",
+}
 
 
 class PortabilityTests(unittest.TestCase):
@@ -59,16 +71,31 @@ class PortabilityTests(unittest.TestCase):
     def test_stamp_instance_keeps_role_specific_publication_content(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            binder = self.stamp_instance(root, "binder")
+            desk = self.stamp_instance(root, "desk")
             shelf = self.stamp_instance(root, "shelf")
 
-            binder_books = {path.name for path in (binder / "books").iterdir()}
+            desk_books = {path.name for path in (desk / "books").iterdir()}
             shelf_books = {path.name for path in (shelf / "books").iterdir()}
 
-            self.assertEqual(binder_books, {"_TEMPLATE", "_PAPER_TEMPLATE"})
+            self.assertEqual(desk_books, PUBLICATION_TEMPLATES)
             self.assertEqual(shelf_books, set())
-            self.assertFalse((binder / ".github" / "workflows").exists())
+            self.assertFalse((desk / ".github" / "workflows").exists())
             self.assertFalse((shelf / ".github" / "workflows").exists())
+
+    def test_obsolete_binder_role_is_rejected_by_stamper(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "stamp-instance.py"),
+                    str(Path(tmp) / "old-role"),
+                    "binder",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("invalid choice", result.stderr)
 
     def test_promote_book_handles_shelf_without_books_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

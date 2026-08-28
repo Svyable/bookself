@@ -10,7 +10,7 @@ If you want the shortest possible version first, read **[START HERE](../START-HE
 
 ## The useful mental model
 
-This place is a binder with an excellent memory:
+Your **Desk** is a writing workspace with an excellent memory:
 
 - a **book** is a folder
 - a **chapter** is a plain-text file
@@ -22,7 +22,7 @@ That is enough vocabulary for quite a while.
 
 ## Your first writing loop
 
-1. Open your book.
+1. Open your book on the Desk.
 2. Open a chapter.
 3. Click the pencil icon: **Edit this file**.
 4. Write.
@@ -55,15 +55,15 @@ Inside the book:
 Structurally, you now have a book. Whether it is any good remains charmingly
 outside the scope of the file system.
 
-In a private Binder, also add one row for the new folder under the repository
+On a private Desk, also add one row for the new folder under the repository
 root README's `## The books` section, for example:
 
 `| [The Long Way Home](books/the-long-way-home/) | Book |`
 
-That Binder catalog entry is how the Publishing Desk and Reader discover the
-working publication. It does **not** publish the draft: the Binder remains
-private and the publication can remain `Status: Drafting`. On a public Shelf,
-by contrast, `## The books` should list only deliberately released publications
+That Desk inventory entry is how the Publishing Desk and Reader discover the
+working publication. It does **not** publish the draft: the Desk remains private
+and the publication can remain `Status: Drafting`. On a public Shelf, by
+contrast, `## The books` should list only deliberately released publications
 with `Status: Published`; the release helper prepares that Shelf entry for you.
 
 ## Making an edit on GitHub
@@ -128,7 +128,7 @@ rewrites much less scary than overwriting one giant document forever.
 
 The book `README.md` has a Contents list like:
 
-    - [ ] [Ch 1 — Opening the Binder](manuscript/ch01-example.md)
+    - [ ] [Ch 1 — Opening the Desk](manuscript/ch01-example.md)
 
 The checkbox is a tiny progress marker. GitHub does not toggle it when you click
 it in the rendered page.
@@ -155,7 +155,7 @@ Reading prose in a book-like layout catches different problems than reading it
 inside an editor. Preview early enough to be annoyed usefully.
 
 The Reader needs the repository to be served over HTTP. On a public Shelf that
-usually means GitHub Pages. In a private Binder, the Publishing Desk and Reader
+usually means GitHub Pages. On a private Desk, the Publishing Desk and Reader
 can be served locally from the checkout.
 
 ## Personal Reader notes stay personal
@@ -170,53 +170,54 @@ device or browser profile, and clearing site data can remove it. For notes you
 want to keep, open **Type and tools** and choose **Export notes**. The Reader
 downloads them as a Markdown file you can save wherever you keep your own work.
 
-## The private Binder and public Shelf
+## Desk, Shelf, and Reader
 
-Bookself's default model uses two spaces:
+Bookself has a simple publishing geography:
 
-- **Binder** — private drafting and working history
-- **Shelf** — public books intended for readers
+- **Desk** — where you write, revise, and keep working history; private by default
+- **Shelf** — where deliberately released publications live for readers
+- **Reader** — the reading interface for a Desk proof or Shelf release
 
-This is deliberate. A draft hidden from the Shelf list but stored in a public
-repository is still public.
+This separation is deliberate. A draft hidden from the Shelf list but stored in
+a public repository is still public.
 
 So the normal lifecycle is:
 
-**write in Binder → review → release to Shelf → publish**
+**write and revise on the Desk → review → release to the Shelf → keep revising on the Desk**
 
 The [Writing lifecycle](writing-lifecycle.md) explains the larger loop.
 
-## Publishing a book
+## Releasing a book
 
-Publishing should answer a simple question:
+Release should answer a simple question:
 
 **Do I mean for strangers to be able to read this version?**
 
-If yes, first save the finished Binder version as a commit. Then, from the
-Binder checkout, run:
+If yes, first save the finished Desk version as a commit. Then, from the Desk
+checkout, run:
 
 ```bash
 scripts/release-book.sh <your-book-folder> ../shelf
 ```
 
-The release helper works locally. It checks that the Binder copy you are
-releasing is committed, verifies that the source is a Binder and the destination
-is a Shelf, copies that exact publication snapshot, sets the Shelf copy to
-`Published`, and adds or updates the Shelf catalog row.
+The release helper works locally. It checks that the Desk copy you are releasing
+is committed, verifies that the source is a Desk and the destination is a Shelf,
+copies that exact publication snapshot, sets the Shelf copy to `Published`, and
+adds or updates the Shelf catalog row.
 
 It **stops before commit or push**. That pause is intentional: review the Shelf
 diff and make sure you really mean for those files to become public. When it
 looks right, commit and push the Shelf change through your normal Git workflow.
-A pull request is useful when you want another person to review the release,
-but Bookself does not require one.
+A pull request is useful when you want another person to review the release, but
+Bookself does not require one.
 
-The Binder copy stays in place as your private working history and the home of
-the next revision. The Shelf copy is an independent public snapshot; it does
-not point back into the private Binder.
+The Desk copy stays in place as your private working history and the home of the
+next revision. The Shelf copy is an independent public snapshot; it does not
+point back into the private Desk.
 
-Nothing in `reader/` should be edited to publish a book. Publishing is manuscript
-and catalog state, not a JavaScript ceremony, and the normal release path does
-not require GitHub Actions or a hosted build.
+Nothing in `reader/` should be edited to release a book. Publication is
+manuscript and catalog state, not a JavaScript ceremony, and the normal release
+path does not require GitHub Actions or a hosted build.
 
 To unpublish, remove the Shelf catalog row and change the public copy's status
 away from `Published`. Remember that content already pushed to public Git
@@ -288,7 +289,7 @@ You do not need to memorize this table. It will still be here later.
 - [Writing lifecycle](writing-lifecycle.md) — the authorship model
 - [Book anatomy](book-anatomy.md) — what files make up a book
 - [Editor guide](editor-guide.md) — review and proposed changes
-- [Bookself architecture](bookself.md) — Binder, Shelf, and platform details
+- [Bookself architecture](bookself.md) — Desk, Shelf, Reader, and upstream details
 
 If your next question is actually about the sentence you are writing, close the
 documentation. That is a good sign.

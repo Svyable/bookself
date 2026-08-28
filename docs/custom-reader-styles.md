@@ -1,6 +1,6 @@
 # Custom Reader styles
 
-Bookself keeps `reader/` and `desk/` as shared platform software. Binder and Shelf instances should not fork those directories just to change typography, colors, spacing, or publication presentation.
+Bookself keeps `reader/` and `desk/` as shared platform software. Desk and Shelf instances should not fork those directories just to change typography, colors, spacing, or publication presentation.
 
 For instance-specific Reader design, keep your CSS outside `reader/` and declare it in the instance-owned `imprint.json`.
 
@@ -38,7 +38,7 @@ The Reader loads instance styles after its shared platform styles, so ordinary C
 
 ## Why the file belongs outside `reader/`
 
-`scripts/sync-ui.sh` replaces `reader/` and `desk/` when platform UI is synchronized into a Binder or Shelf. Root files and other instance-owned paths are left alone.
+`scripts/sync-ui.sh` replaces `reader/` and `desk/` when platform UI is synchronized into a Desk or Shelf. Root files and other instance-owned paths are left alone.
 
 A layout like this keeps the boundary explicit:
 
@@ -106,7 +106,7 @@ Custom styles are an instance extension, not a new Bookself build system:
 - plain books still work with no custom CSS;
 - the Reader remains static browser software;
 - authors do not need Node, npm, Sass, Tailwind, or a bundler;
-- the Binder → Shelf release path remains local-first;
+- the Desk → Shelf release path remains local-first;
 - `reader/` and `desk/` can stay byte-for-byte synchronized with the platform.
 
 If you distribute a reusable design for other Bookself users, keep it as ordinary CSS plus a short README explaining which stable variables and selectors it uses.

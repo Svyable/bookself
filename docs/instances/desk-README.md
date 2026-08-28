@@ -1,17 +1,18 @@
-# binder
+# Desk
 
-Your **private binder** in a [Bookself](docs/bookself.md) setup. Write here.
+Your private **Desk** in a [Bookself](docs/bookself.md) setup. Write and revise here.
 When a book is meant to be read publicly, release a committed snapshot to your
-public **shelf**.
+public **Shelf**.
 
-The same Bookself `reader/` and `desk/` live in both binder and shelf. They
-are shared software; your manuscripts and `imprint.json` are instance-owned.
+The same Bookself `reader/` and `desk/` software lives in both Desk and Shelf.
+Those directories are shared product software; your manuscripts and
+`imprint.json` are instance-owned.
 
-A fresh Binder contains only the blank book and paper starters under `books/`.
-Bookself's platform examples are not copied into your private writing repo.
+A fresh Desk contains only the blank publication starters under `books/`.
+Bookself's platform examples are not copied into your private writing repository.
 
-Do not enable public GitHub Pages on a binder that contains unpublished work.
-For local reader/desk access:
+Do not enable public GitHub Pages on a Desk that contains unpublished work.
+For local Reader/Desk access:
 
 ```bash
 python3 -m http.server
@@ -33,7 +34,7 @@ load it without needing GitHub credentials.
 | If you are… | Start here |
 |---|---|
 | New to GitHub | [Author guide](docs/author-guide.md) |
-| Running binder + shelf | [Bookself](docs/bookself.md) |
+| Running Desk + Shelf | [Bookself](docs/bookself.md) |
 | Comfortable with pull requests | [Editor guide](docs/editor-guide.md) |
 | Starting a new book | [Book anatomy](docs/book-anatomy.md) |
 | An AI agent | [AGENTS.md](AGENTS.md) |

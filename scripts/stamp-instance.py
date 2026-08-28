@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy Bookself into an empty destination and stamp Binder/Shelf identity."""
+"""Copy Bookself into an empty destination and stamp Desk/Shelf identity."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         elif rel == Path(".github"):
             skipped.add("workflows")
         elif rel == Path("books"):
-            allowed = {name for name in names if role == "binder" and is_publication_template(name)}
+            allowed = {name for name in names if role == "desk" and is_publication_template(name)}
             skipped.update(name for name in names if name not in allowed)
         elif rel == Path("docs"):
             skipped.update({"superpowers", "instances"})
@@ -44,7 +44,7 @@ def main() -> int:
         description="Copy this Bookself tree into an empty destination and stamp instance identity."
     )
     parser.add_argument("destination", help="empty directory to create or populate")
-    parser.add_argument("role", choices=("binder", "shelf"))
+    parser.add_argument("role", choices=("desk", "shelf"))
     parser.add_argument("owner", nargs="?", default="auto", help="GitHub owner; defaults to auto")
     parser.add_argument("repository", nargs="?", help="repository name; defaults to destination name")
     args = parser.parse_args()
@@ -63,14 +63,14 @@ def main() -> int:
 
     shutil.copy2(root / "docs" / "instances" / f"{args.role}-README.md", destination / "README.md")
 
-    if args.role == "binder":
+    if args.role == "desk":
         values = {
-            "name": "Private Binder",
-            "shortName": "Binder",
+            "name": "Private Desk",
+            "shortName": "Desk",
             "description": "Private Bookself workspace for drafts and manuscripts.",
             "kicker": "Private manuscripts · Git-native writing",
-            "lede": "Draft and revise here. The same reader and publishing desk are shared with your public shelf.",
-            "homeLabel": "Binder",
+            "lede": "Draft and revise here. The same Reader and publishing Desk are shared with your public Shelf.",
+            "homeLabel": "Desk",
         }
     else:
         values = {
@@ -78,7 +78,7 @@ def main() -> int:
             "shortName": "Shelf",
             "description": "Public Bookself shelf for published Markdown books.",
             "kicker": "Published on Git · Read like a book",
-            "lede": "Published books live here. Drafts stay in the private binder.",
+            "lede": "Published books live here. Drafts stay on the private Desk.",
             "homeLabel": "Shelf",
         }
 
@@ -88,7 +88,7 @@ def main() -> int:
         "credit": "",
         "creditHref": "",
         "writeHref": "../desk/",
-        "writeLabel": "Publishing desk",
+        "writeLabel": "Publishing Desk",
         "forkHref": "",
         "forkLabel": "",
         "storagePrefix": storage_prefix(args.role, repository),
@@ -109,11 +109,11 @@ def main() -> int:
     print("Instance-owned files: books/, README.md, imprint.json")
     if args.role == "shelf":
         print("Publication content starts empty; the first release creates books/<slug>/.")
-        print("Enable GitHub Pages for the public shelf.")
+        print("Enable GitHub Pages for the public Shelf.")
     else:
         templates = sorted(path.name for path in (destination / "books").iterdir() if path.is_dir())
         print(f"Blank starters included: {', '.join(templates)}")
-        print("Keep the binder private. Do not enable public Pages for unpublished manuscripts.")
+        print("Keep the Desk private. Do not enable public Pages for unpublished manuscripts.")
     if args.owner == "auto":
         print("Optional: edit imprint.json and set github.owner for repository edit/history links.")
     return 0

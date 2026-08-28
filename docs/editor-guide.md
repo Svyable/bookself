@@ -24,33 +24,33 @@ Keep the pull request to one chapter. A second chapter is a second PR.
 
 The chapter-feedback issue form accepts the publication slug as text rather
 than keeping a platform-maintained dropdown. That keeps the form usable in
-stamped Binder/Shelf repositories without carrying Bookself's own example-book
+stamped Desk/Shelf repositories without carrying Bookself's own example-book
 list into another author's collaboration workflow.
 
 When reporting feedback, use the folder slug when you know it, for example
 `leveraging-luck`. Readers who do not know the slug can still identify the book
 by name and point to the chapter or passage in the next field.
 
-## Publishing and the public catalog
+## Releasing and the public catalog
 
 For a house that keeps drafts off the street, see [Bookself](bookself.md):
-private binder, public shelf. For a normal Binder → Shelf release, commit the
-Binder publication and run:
+private Desk, public Shelf. For a normal Desk → Shelf release, commit the
+Desk publication and run:
 
 ```bash
 scripts/release-book.sh <slug> [path-to-shelf]
 ```
 
-The local release helper verifies the Binder and Shelf roles, refuses
-uncommitted release-path changes, prepares an exact replacement snapshot, sets
-the Shelf copy to `Published`, updates the public catalog row, verifies the
-copied files, and stops before commit or push. Review the prepared Shelf change
-and land it through that repository's normal Git workflow.
+The local release helper verifies the Desk and Shelf roles, refuses uncommitted
+release-path changes, prepares an exact replacement snapshot, sets the Shelf
+copy to `Published`, updates the public catalog row, verifies the copied files,
+and stops before commit or push. Review the prepared Shelf change and land it
+through that repository's normal Git workflow.
 
 `scripts/promote-book.sh` remains available as the lower-level copy operation,
 but it does not perform the full release transaction or publish the book.
 
-The public reader lists a book only when **both** are true:
+The public Reader lists a book only when **both** are true:
 
 1. The book README Status is exactly `Published`.
 2. The portal `README.md` table under **The books** links `books/<slug>/`.
@@ -62,8 +62,8 @@ Unpublish by reversing both. Preview without publishing:
 `reader/#/b/<slug>/`.
 
 Publisher, Edition, Language, and ISBN are optional rows on the book
-README. If a Publisher is set, the public shelf can filter by it. Print
-from the reader (Type and tools) for a galley PDF. Drafts print with a
+README. If a Publisher is set, the public Shelf can filter by it. Print
+from the Reader (Type and tools) for a galley PDF. Drafts print with a
 draft wash.
 
 ## Line-comment reviews

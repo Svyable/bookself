@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a sibling Binder + Shelf workspace for humans or agents."""
+"""Create a sibling Desk + Shelf workspace for humans or agents."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ def ensure_empty_workspace(path: Path) -> None:
 
 def initialize_git(path: Path) -> None:
     if shutil.which("git") is None:
-        raise RuntimeError("git is required to initialize Binder and Shelf repositories")
+        raise RuntimeError("git is required to initialize Desk and Shelf repositories")
     run(["git", "init"], cwd=path)
     run(["git", "branch", "-M", "main"], cwd=path)
 
@@ -38,7 +38,7 @@ def bootstrap(
     workspace: Path,
     *,
     owner: str,
-    binder_name: str,
+    desk_name: str,
     shelf_name: str,
     initialize_repos: bool = True,
 ) -> dict[str, object]:
@@ -49,22 +49,22 @@ def bootstrap(
     ensure_empty_workspace(workspace)
 
     stamp = root / "scripts" / "stamp-instance.py"
-    binder = workspace / binder_name
+    desk = workspace / desk_name
     shelf = workspace / shelf_name
 
-    run([sys.executable, str(stamp), str(binder), "binder", owner, binder_name])
+    run([sys.executable, str(stamp), str(desk), "desk", owner, desk_name])
     run([sys.executable, str(stamp), str(shelf), "shelf", owner, shelf_name])
 
     if initialize_repos:
-        initialize_git(binder)
+        initialize_git(desk)
         initialize_git(shelf)
 
     return {
         "workspace": str(workspace),
-        "binder": {
-            "path": str(binder),
-            "role": "binder",
-            "repository": binder_name,
+        "desk": {
+            "path": str(desk),
+            "role": "desk",
+            "repository": desk_name,
             "gitInitialized": initialize_repos,
         },
         "shelf": {
@@ -74,9 +74,9 @@ def bootstrap(
             "gitInitialized": initialize_repos,
         },
         "next": [
-            "Create the first publication in binder/books/<slug>/ and list it under Binder README ## The books.",
-            "Run python scripts/doctor.py --root . inside the Binder after meaningful structural changes.",
-            "Commit the Binder publication before release.",
+            "Create the first publication in desk/books/<slug>/ and list it under Desk README ## The books.",
+            "Run python scripts/doctor.py --root . inside the Desk after meaningful structural changes.",
+            "Commit the Desk publication before release.",
             "Release with python scripts/release-book.py <slug> <path-to-shelf>.",
             "Review, commit, and push the Shelf snapshot only when public publication is intended.",
         ],
@@ -85,11 +85,11 @@ def bootstrap(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Create a local Bookself workspace containing sibling private Binder and public Shelf repositories."
+        description="Create a local Bookself workspace containing sibling private Desk and public Shelf repositories."
     )
     parser.add_argument("workspace", help="empty parent directory to create or populate")
     parser.add_argument("--owner", default="auto", help="GitHub owner/login for instance links; defaults to auto")
-    parser.add_argument("--binder", default="binder", help="Binder directory/repository name")
+    parser.add_argument("--desk", default="desk", help="Desk directory/repository name")
     parser.add_argument("--shelf", default="shelf", help="Shelf directory/repository name")
     parser.add_argument("--no-git", action="store_true", help="create folders without running git init")
     parser.add_argument("--json", action="store_true", help="emit only a machine-readable JSON result")
@@ -99,7 +99,7 @@ def main() -> int:
         result = bootstrap(
             Path(args.workspace),
             owner=args.owner,
-            binder_name=args.binder,
+            desk_name=args.desk,
             shelf_name=args.shelf,
             initialize_repos=not args.no_git,
         )
@@ -111,9 +111,9 @@ def main() -> int:
         return 0
 
     print("Bookself workspace ready")
-    print(f"Binder: {result['binder']['path']}")
-    print(f"Shelf:  {result['shelf']['path']}")
-    print("Next: create and commit the first Binder publication, then release its snapshot to Shelf.")
+    print(f"Desk:  {result['desk']['path']}")
+    print(f"Shelf: {result['shelf']['path']}")
+    print("Next: create and commit the first Desk publication, then release its snapshot to Shelf.")
     print("For agents: read bookself.json and AGENTS.md before continuing.")
     return 0
 

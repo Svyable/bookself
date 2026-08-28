@@ -139,10 +139,10 @@ Core Bookself still does not require:
 - a hosted build job;
 - a canonical PDF artifact before a publication can be read.
 
-A future full-TeX path should be an **optional Binder capability** for authors
+A future full-TeX path should be an **optional Desk capability** for authors
 who need a real TeX project and canonical compiled output. It must complement,
 not replace, the Markdown-first Bookself path. A professor writing a normal
-course text should still be able to clone the Binder years from now and work
+course text should still be able to clone the Desk years from now and work
 with Git, Markdown, a browser, and local Python without needing a hosted
 pipeline.
 

@@ -70,24 +70,24 @@ Bookself does not receive or upload those files. The browser writes them locally
 
 ### ZIP fallback
 
-When direct folder writing is unavailable, the studio produces the same starter as a dependency-free ZIP file. Put the generated folder under `books/` in the Binder repository.
+When direct folder writing is unavailable, the studio produces the same starter as a dependency-free ZIP file. Put the generated folder under `books/` on the Desk.
 
 The ZIP writer is implemented in Bookself itself with no package dependency, build step, or network service.
 
 ## Making the publication discoverable
 
-The studio also generates a catalog line such as:
+The studio also generates an inventory line such as:
 
 ```md
 - [My Publication](books/my-publication/) — Book
 ```
 
-Paste that link somewhere under the root README's `## The books` section. The Publishing Desk and Reader discover publication folders from those normal Markdown links; there is no hidden catalog database.
+Paste that link somewhere under the Desk root README's `## The books` section. The Publishing Desk and Reader discover publication folders from those normal Markdown links; there is no hidden catalog database.
 
 ## What the studio does not do
 
-The studio does **not** automatically commit, push, publish, or make a manuscript public. It creates files only.
+The studio does **not** automatically commit, push, release, or make a manuscript public. It creates files only.
 
 That is deliberate: Bookself keeps the boundary between creating a draft and deliberately entering it into Git history visible to the author.
 
-For a private Binder, keep the new publication in `Drafting` while writing. Release a committed snapshot to the public Shelf only when it is meant to be read publicly.
+On a private Desk, keep the new publication in `Drafting` while writing. Release a committed snapshot to the public Shelf only when it is meant to be read publicly.

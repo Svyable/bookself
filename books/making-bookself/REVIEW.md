@@ -14,17 +14,17 @@ humans and agents where the current questions live and how to join the loop.
 - **Bookself example Shelf:** https://svyable.github.io/bookself/reader/
 
 This publication is intentionally public as a teaching specimen. Do not infer
-from it that a real Binder should be public. A real Binder is the private work
-room; this specimen exists so the workflow itself can be inspected by anyone.
+from it that a real Desk should be public. A real Desk is private by default;
+this specimen exists so the workflow itself can be inspected by anyone.
 
-Use the platform-owned Bookself example Shelf when comparing this Binder-style
+Use the platform-owned Bookself example Shelf when comparing this Desk-style
 proof with intentionally released examples. Independently deployed Shelves are
 useful instance references, but they are not the canonical specimen surface for
 this review loop.
 
 ## Questions under review
 
-1. Is the difference between a Binder proof and a Shelf release obvious before
+1. Is the difference between a Desk proof and a Shelf release obvious before
    somebody learns Git terminology?
 2. Can a reader move naturally from a sentence in the Reader to source, history,
    feedback, and a proposed change?
@@ -64,7 +64,7 @@ You do not need to know Git terminology before you start reading.
    `main`.
 6. Choose one bounded improvement. Do not rewrite neighboring chapters or
    silently broaden scope.
-7. Preserve the private Binder / public Shelf boundary and the local-first,
+7. Preserve the private Desk / public Shelf boundary and the local-first,
    no-required-CI publishing path.
 8. Verify the relevant behavior or document exactly what was inspected.
 9. Leave a commit/PR explanation that lets the next human or agent understand

@@ -1,6 +1,6 @@
 # Bookself doctor
 
-`doctor.py` is a read-only local health check for a Bookself platform, Binder, or Shelf checkout.
+`doctor.py` is a read-only local health check for a Bookself platform, Desk, or Shelf checkout.
 
 It exists for one reason: a contributor or author should not have to remember every repository invariant before they can answer **“does this checkout look healthy?”**
 
@@ -28,7 +28,7 @@ The command does not modify files, call GitHub, contact a network service, run A
 
 ## What it checks
 
-The doctor reads `imprint.json` to identify the repository as a Bookself **platform**, **binder**, or **shelf**, then checks the invariants that matter for that role.
+The doctor reads `imprint.json` to identify the repository as a Bookself **platform**, **desk**, or **shelf**, then checks the invariants that matter for that role.
 
 Across roles it checks:
 
@@ -45,9 +45,11 @@ For a **Shelf**, it additionally catches the two sides of the public catalog con
 - a cataloged book that is not `Status: Published`;
 - a publication that says `Status: Published` but is missing from the root catalog.
 
-For a **Binder**, it flags `Status: Published` as an error because Published is a Shelf state. Drafts and next revisions belong in Binder without pretending to be the released public copy.
+For a **Desk**, it flags `Status: Published` as an error because Published is a Shelf state. Drafts and next revisions belong on the Desk without pretending to be the released public copy.
 
-For the **platform**, it checks that the book and paper templates plus local release helpers are present.
+For the **platform**, it checks that the publication templates plus local release helpers are present.
+
+The old `binder` role is invalid and is reported as an unknown role rather than silently treated as a Desk.
 
 ## Errors, warnings, and information
 
@@ -67,8 +69,8 @@ That is intentional. Bookself must remain writable, previewable, releasable, and
 
 Useful moments to run the doctor include:
 
-- after stamping a new Binder or Shelf;
-- before preparing a Binder → Shelf release;
+- after stamping a new Desk or Shelf;
+- before preparing a Desk → Shelf release;
 - after moving or renaming manuscript files;
 - after restoring an older public edition;
 - when the Reader catalog and repository files seem to disagree;
@@ -84,7 +86,7 @@ The doctor has stdlib-only fixture tests:
 python3 scripts/test_doctor.py
 ```
 
-They cover a healthy platform, catalog parsing, Shelf status/catalog mismatches, Binder `Published` state, and missing manuscript files.
+They cover a healthy platform, catalog parsing, Shelf status/catalog mismatches, Desk `Published` state, obsolete-role rejection, and missing manuscript files.
 
 ## What it intentionally does not do
 

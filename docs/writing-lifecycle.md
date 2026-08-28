@@ -12,13 +12,13 @@ very long document that eventually becomes `FINAL_v8_USE_THIS_ONE.docx`.
 
 | Stage | Writer version | What Bookself helps with |
 |---|---|---|
-| **Discover** | What am I trying to say? Who is this for? | notes, book setup, early structure |
-| **Shape** | What belongs in this book, and in what order? | a visible table of contents and chapter files |
-| **Draft** | Get words onto the page | plain Markdown, one chapter at a time |
-| **Read** | Does it work when it feels like a book? | the Reader, not just an editor window |
+| **Discover** | What am I trying to say? Who is this for? | notes, publication setup, early structure |
+| **Shape** | What belongs in this work, and in what order? | a visible table of contents and manuscript files |
+| **Draft** | Get words onto the page | plain Markdown, one bounded piece at a time |
+| **Read** | Does it work when it feels like a publication? | the Reader, not just an editor window |
 | **Revise** | Change the thing without losing the old thing | version history and named save points |
 | **Review** | Let another human disagree usefully | line comments, proposed changes, review copies |
-| **Publish** | Make this version intentionally public | private Binder → public Shelf |
+| **Release** | Make this version intentionally public | private Desk → public Shelf |
 | **Maintain** | Fix, expand, correct, make a new edition | the same history continues after release |
 
 The stages are not a waterfall. You are allowed to discover a better idea while
@@ -35,11 +35,11 @@ Before there is a manuscript, there is usually a mess:
 - a title that is much better than the current book
 
 Bookself does not try to formalize inspiration. The useful part is that once an
-idea becomes a book folder, the work gains a home and a history.
+idea becomes a publication folder, the work gains a home and a history.
 
 A practical starting question is:
 
-**What would have to be true for me to call this book worth finishing?**
+**What would have to be true for me to call this work worth finishing?**
 
 That might mean a complete argument, a specific emotional arc, a field guide
 someone can actually use, or simply “the ending finally earns the beginning.”
@@ -49,16 +49,16 @@ someone can actually use, or simply “the ending finally earns the beginning.�
 Software calls this design. Writers call it outline, structure, beats, sections,
 chapters, index cards, or “I moved everything around at 2 a.m.”
 
-In Bookself, the book `README.md` is the visible spine of the manuscript. Its
-Contents list says what exists and what order it belongs in.
+In Bookself, the publication `README.md` is the visible spine of the manuscript.
+Its Contents list says what exists and what order it belongs in.
 
 The structure should stay boring enough that the prose can be interesting.
 
 ## 3. Draft
 
-One chapter is one plain-text file.
+A chapter or manuscript piece is a plain-text file.
 
-That matters because a chapter becomes a manageable unit of work. You can draft
+That matters because each file becomes a manageable unit of work. You can draft
 chapter 4 without loading the entire universe. An editor can discuss chapter 4
 without accidentally reformatting chapter 9. History can show how chapter 4
 changed over time.
@@ -114,24 +114,26 @@ GitHub's mechanics happen to be good at this:
 The terminology is software-flavored. The behavior is just editorial markup
 with unusually good memory.
 
-## 7. Publish
+## 7. Release
 
-Publishing should be a deliberate state change, not an accidental consequence
-of where the draft happened to live.
+Release should be a deliberate state change, not an accidental consequence of
+where the draft happened to live.
 
 Bookself separates:
 
-- **Binder** — private working manuscripts
-- **Shelf** — public books
+- **Desk** — where the working publication is written and revised
+- **Shelf** — where deliberately released publication snapshots live
+- **Reader** — the interface used to read either a Desk proof or Shelf release
 
-When a book is ready for readers, promote it from Binder to Shelf, mark it
-Published, and list it in the public catalog.
+When a publication is ready for readers, commit the Desk copy and release that
+snapshot to the Shelf. The release process marks the Shelf copy `Published` and
+lists it in the public catalog.
 
 That boundary creates a useful question:
 
 **Do I mean for strangers to be able to read this version?**
 
-If the answer is not yet yes, keep it in the Binder.
+If the answer is not yet yes, keep working on the Desk.
 
 ## 8. Maintain
 
@@ -139,10 +141,12 @@ Software people call this maintenance. Publishers call it corrections,
 revisions, new editions, updated references, or quietly fixing the typo someone
 emailed about at 6:12 a.m.
 
-A published book does not have to become a fossil.
+A released publication does not have to become a fossil.
 
 Because the source remains plain Markdown and the history continues, a Bookself
-book can evolve without losing the record of what readers saw before.
+publication can evolve without losing the record of what readers saw before.
+Keep the current release stable on the Shelf while the next edition changes on
+the Desk, then release another deliberate snapshot when it is ready.
 
 ## The lifecycle is the product
 

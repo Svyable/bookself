@@ -14,7 +14,7 @@
   },
   "roles": {
     "platform": { "purpose": "Reusable software, templates, documentation, and local tooling.", "instanceOwned": false },
-    "binder": { "purpose": "Private authoring repository for drafts, experiments, and the next edition.", "visibility": "private-by-default", "instanceOwned": true },
+    "desk": { "purpose": "Private authoring repository for drafts, experiments, and the next edition.", "visibility": "private-by-default", "instanceOwned": true },
     "shelf": { "purpose": "Public repository containing deliberately released publication snapshots.", "visibility": "public-by-default", "instanceOwned": true }
   },
   "contracts": {
@@ -47,12 +47,12 @@
     "bootstrapWorkspace": {
       "kind": "local-command",
       "command": "python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json",
-      "result": "Creates sibling Binder and Shelf directories, stamps roles, and initializes Git repositories.",
+      "result": "Creates sibling Desk and Shelf directories, stamps roles, and initializes Git repositories.",
       "requires": ["python3", "git"]
     },
     "bootstrapSingleInstance": {
       "kind": "local-command",
-      "command": "python3 scripts/stamp-instance.py <destination> <binder|shelf> <owner> <repository>",
+      "command": "python3 scripts/stamp-instance.py <destination> <desk|shelf> <owner> <repository>",
       "requires": ["python3"]
     },
     "createPublication": {
@@ -93,30 +93,30 @@
     },
     "syncSharedUi": {
       "kind": "local-command",
-      "command": "python3 scripts/sync-ui.py [binder-path] [shelf-path]",
+      "command": "python3 scripts/sync-ui.py [desk-path] [shelf-path]",
       "requires": ["python3"]
     },
     "release": {
       "kind": "local-command",
       "command": "python3 scripts/release-book.py <slug> <path-to-shelf>",
-      "preconditions": ["Binder role is verified.", "Shelf role is verified.", "Release publication is committed in Binder.", "Public release is within the user's expressed intent.", "Publication rights metadata, rights.json, and RIGHTS.md are preserved unless the rightsholder explicitly changes them."],
+      "preconditions": ["Desk role is verified.", "Shelf role is verified.", "Release publication is committed on the Desk.", "Public release is within the user's expressed intent.", "Publication rights metadata, rights.json, and RIGHTS.md are preserved unless the rightsholder explicitly changes them."],
       "result": "Prepares and verifies an exact Shelf publication snapshot including publication rights files, sets it Published, and updates the Shelf catalog. Stops before commit or push.",
       "requires": ["python3", "git"]
     }
   },
   "outcomeProtocol": {
-    "defaultGoal": "Turn natural-language publishing intent into a valid private Binder, a well-formed publication, and optionally a deliberately released public Shelf snapshot while preserving the rightsholder's licensing choices and evidence metadata.",
+    "defaultGoal": "Turn natural-language publishing intent into a valid private Desk, a well-formed publication, and optionally a deliberately released public Shelf snapshot while preserving the rightsholder's licensing choices and evidence metadata.",
     "steps": [
       "Read AGENTS.md, RIGHTS.md, this manifest, and the target publication RIGHTS.md / rights.json when present before editing.",
       "Infer publication format, structure, style, and workflow details from the user's goal when reasonable; ask only when a missing choice materially changes the intended work.",
-      "Create or locate the private Binder and public Shelf. Never expose unpublished Binder content to make preview easier unless the author explicitly chose a working-in-public mode.",
-      "Create the publication in Binder using the nearest format contract, preserve the default rights files unless the rightsholder requests another license, and add it to the Binder catalog.",
+      "Create or locate the private Desk and public Shelf. Never expose unpublished Desk content to make preview easier unless the author explicitly chose a working-in-public mode.",
+      "Create the publication on the Desk using the nearest format contract, preserve the default rights files unless the rightsholder requests another license, and add it to the Desk inventory.",
       "Draft requested content in bounded, reviewable changes while preserving the user's voice and factual constraints.",
       "Choose or tune reader.json as an author recommendation, not a reader lock.",
       "Validate with doctor and rights-check, and preview when the environment permits.",
-      "Commit Binder work before release.",
+      "Commit Desk work before release.",
       "If the user explicitly asked to publish, run the release transaction, review its Shelf diff including rights metadata, commit it, and push/publish using the environment's authorized Git/GitHub capabilities.",
-      "Report the durable Binder/Shelf locations, publication slug, validation result, rights posture, and release state rather than narrating every mechanical substep."
+      "Report the durable Desk/Shelf locations, publication slug, validation result, rights posture, and release state rather than narrating every mechanical substep."
     ]
   },
   "intentBoundaries": {
@@ -125,7 +125,7 @@
     "explicitPublishExamples": ["publish it to my shelf", "release this book", "make the finished version public"]
   },
   "completion": {
-    "draftReady": ["Binder role is valid.", "Publication metadata and catalog entry are consistent.", "Requested manuscript content exists in Binder.", "Publication rights posture is explicit or resolves to the Bookself All Rights Reserved default.", "rights-check reports no blocking rights-manifest errors for a manifest-equipped publication.", "doctor reports no blocking structural errors."],
-    "publishedReady": ["All draftReady conditions hold.", "Binder publication state used for release is committed.", "Shelf contains a verified released snapshot with Status Published.", "Shelf preserves the publication RIGHTS.md and rights.json metadata.", "Shelf catalog points to the released publication.", "Public delivery URL or repository location is reported when available."]
+    "draftReady": ["Desk role is valid.", "Publication metadata and inventory entry are consistent.", "Requested manuscript content exists on the Desk.", "Publication rights posture is explicit or resolves to the Bookself All Rights Reserved default.", "rights-check reports no blocking rights-manifest errors for a manifest-equipped publication.", "doctor reports no blocking structural errors."],
+    "publishedReady": ["All draftReady conditions hold.", "Desk publication state used for release is committed.", "Shelf contains a verified released snapshot with Status Published.", "Shelf preserves the publication RIGHTS.md and rights.json metadata.", "Shelf catalog points to the released publication.", "Public delivery URL or repository location is reported when available."]
   }
 }

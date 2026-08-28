@@ -16,25 +16,31 @@ Rules for AI agents working in this repository.
   applicable root and per-publication `RIGHTS.md` files before changing a real
   publication.
 
-## Architecture: platform, binder, shelf
+## Architecture: Bookself, Desk, Shelf, Reader
 
-Bookself deliberately separates portable software from user instances:
+Bookself is the whole product/ecosystem. It deliberately separates portable
+software from user-owned writing and releases:
 
-- **platform** — this repository; source of truth for shared software,
-  templates, docs, and setup tooling
-- **binder** — private authoring instance; unpublished manuscripts and the next
-  revision of published books live here
-- **shelf** — public publishing instance; the currently released manuscript
-  snapshots live here
+- **Bookself upstream / `platform` role** — this repository; source of truth for
+  shared software, templates, docs, and neutral demos
+- **Desk / `desk` role** — private authoring instance; unpublished manuscripts
+  and the next revision of published books live here
+- **Shelf / `shelf` role** — public publishing instance; deliberately released
+  manuscript snapshots live here
+- **Reader** — the reading interface, shared by Desk proofs and Shelf releases
 
-Binder and Shelf are separate Git repositories with separate histories. A
-release copies a publication snapshot from Binder to Shelf. It is not a live
-reference, submodule, symlink, shared branch, or runtime dependency on the
-private repository. After release, the two copies are independent until the
-next release.
+Desk and Shelf are separate Git repositories with separate histories. A release
+copies a publication snapshot from Desk to Shelf. It is not a live reference,
+submodule, symlink, shared branch, or runtime dependency on the private
+repository. After release, the two copies are independent until the next
+release.
+
+The old `binder` role is obsolete. Do not create, accept, document, or preserve
+it as a compatibility alias. Current authoring instances use `role: "desk"`.
 
 Shared UI consists of **both** `reader/` and `desk/`. Those directories must
-remain byte-for-byte aligned across platform, binder, and shelf after sync.
+remain byte-for-byte aligned across the upstream platform, Desk, and Shelf after
+sync.
 
 Instance-owned files are never overwritten by UI sync:
 - `books/`
@@ -48,24 +54,24 @@ After changing anything under `reader/` or `desk/`:
 scripts/sync-ui.sh
 ```
 
-With no arguments, sibling `../binder` and `../shelf` are synced when present.
+With no arguments, sibling `../desk` and `../shelf` are synced when present.
 Explicit destination paths are also accepted. Commit each instance separately.
 `scripts/sync-reader.sh` is only a compatibility alias for `sync-ui.sh`.
 
-Do not hard-code a person, organization, repository name, shelf URL, or binder
-URL into shared `reader/` or `desk/` code. Instance identity belongs in
+Do not hard-code a person, organization, repository name, Shelf URL, or Desk URL
+into shared `reader/` or `desk/` code. Instance identity belongs in
 `imprint.json`. Platform defaults must remain portable.
 
 ## Local-first publishing invariant
 
 Bookself must not require CI/CD to write, preview, release, or read a
-publication. The complete private-Binder workflow must work with zero GitHub
+publication. The complete private-Desk workflow must work with zero GitHub
 Actions minutes.
 
 The required publishing path is deliberately small: Git + Markdown + a browser,
 with Python's standard library for the release helper. GitHub Actions, hosted
 runners, PR checks, and other automation may be added as optional conveniences,
-but they must never become a prerequisite for the Binder → Shelf release path.
+but they must never become a prerequisite for the Desk → Shelf release path.
 
 GitHub Pages is a static public delivery surface for Shelf, not a required
 Actions-based build pipeline. Do not replace the no-build Reader with a hosted
@@ -119,7 +125,7 @@ publication snapshot and should travel with the manuscript.
 
 - Book chapters use one `# Title` heading, then prose. Whitepapers and research
   notes may also use `##` section headings inside their manuscript file so the
-  reader can expose Abstract, Methods, Results, Discussion, and References in
+  Reader can expose Abstract, Methods, Results, Discussion, and References in
   the table of contents. No YAML front matter. No HTML comments in manuscript
   files.
 - Publication READMEs use the info-table/contents shape supplied by their chosen
@@ -133,7 +139,7 @@ publication snapshot and should travel with the manuscript.
   `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
 - Images live in that publication's `media/` folder and are referenced with
   relative links (`![alt](../media/figure-1.png)`). PNG, JPG, WebP, and SVG are
-  all appropriate reader assets. A quoted Markdown image title on a standalone
+  all appropriate Reader assets. A quoted Markdown image title on a standalone
   image becomes its figure caption, for example
   `![alt](../media/figure-1.png "Figure 1. Caption.")`.
 - Footnotes use a marker such as `[^method]` and a same-chapter definition such
@@ -158,7 +164,7 @@ publication snapshot and should travel with the manuscript.
   BibTeX/Biber, CSL, TikZ, or a required build step unless the task explicitly
   advances the optional full-TeX workflow.
 - External creations do not need a publication folder. Put durable sites/apps
-  under root `## The web shelf` to render them as bound shelf volumes. Put
+  under root `## The web shelf` to render them as bound Shelf volumes. Put
   lighter links under root `## The stand` to render magazine-style cards.
   Both forms open the external source and keep that URL as the source of truth.
 
@@ -169,15 +175,15 @@ publication snapshot and should travel with the manuscript.
 - Do not reformat a file wholesale as a drive-by.
 - Do not add a build step, CODEOWNERS, or branch protection unless a human
   asked for that by name.
-- Do not make private-Binder publishing depend on GitHub Actions, CI runners,
+- Do not make private-Desk publishing depend on GitHub Actions, CI runners,
   hosted build artifacts, or paid automation minutes. Optional CI must remain
   optional to the complete authoring and release lifecycle.
 - Do not change GitHub Pages source away from the repository root, or add a
   custom domain, unless a human asked.
 - Do not commit secrets, credentials, or unpublished manuscripts copied from
   outside this repository.
-- Do not revise the next edition of a published book in the public Shelf by
-  default. Keep the released Shelf snapshot stable and revise the Binder copy.
+- Do not revise the next edition of a published book on the public Shelf by
+  default. Keep the released Shelf snapshot stable and revise the Desk copy.
   A live public hotfix or public proof requires explicit human intent.
 
 ## Verbs (author and agent)
@@ -187,8 +193,8 @@ These are the public lifecycle. Each manuscript change is Markdown (and maybe
 
 **Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, `Status: Drafting`, and replace the rights placeholders in
-`RIGHTS.md`. In a private binder, also list the manuscript under root **The
-books** so the local Desk can discover it.
+`RIGHTS.md`. On a private Desk, also list the manuscript under root **The books**
+so the local Publishing Desk can discover it.
 
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, optional venue / DOI, replace the rights placeholders, and keep
@@ -202,9 +208,9 @@ contains mathematical notation.
 `books/`: `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`,
 `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`,
 `_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`. Copy it to a normal lowercase,
-hyphenated `books/<slug>/` folder in the private Binder, replace the placeholder
+hyphenated `books/<slug>/` folder on the private Desk, replace the placeholder
 metadata and rights notice, and keep `Status: Drafting` until a deliberate
-Binder → Shelf release. Use [docs/publication-formats.md](docs/publication-formats.md)
+Desk → Shelf release. Use [docs/publication-formats.md](docs/publication-formats.md)
 when choosing between format families. Do not publish or edit the
 underscore-prefixed starter itself.
 
@@ -221,41 +227,41 @@ curated doorway.
 **Write / edit.** One chapter file per change. If you add, rename, or remove a
 chapter, update that book's README TOC and Chapters count in the same change.
 
-**Preview.** In a private binder, serve locally (`python3 -m http.server`) and
+**Preview.** On a private Desk, serve locally (`python3 -m http.server`) and
 open `reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not make a
-private binder public just to preview it.
+private Desk public just to preview it.
 
-**Release.** Normal Binder → Shelf publication. Commit the Binder publication,
-then run `scripts/release-book.sh <slug> [path-to-shelf]`. The command runs
-locally; it does not require GitHub Actions or a hosted build. It refuses
-uncommitted release-path changes, verifies Binder/Shelf roles, prepares an exact
-replacement Shelf snapshot including publication rights metadata/files, sets
-the Shelf copy to `Published`, updates the Shelf catalog row, verifies copied
-publication files against the committed Binder snapshot, and stops before commit
-or push. Review and land the Shelf change through its normal Git workflow; a
-pull request is useful but not required by Bookself itself.
+**Release.** Normal Desk → Shelf publication. Commit the Desk publication, then
+run `scripts/release-book.sh <slug> [path-to-shelf]`. The command runs locally;
+it does not require GitHub Actions or a hosted build. It refuses uncommitted
+release-path changes, verifies Desk/Shelf roles, prepares an exact replacement
+Shelf snapshot including publication rights metadata/files, sets the Shelf copy
+to `Published`, updates the Shelf catalog row, verifies copied publication files
+against the committed Desk snapshot, and stops before commit or push. Review and
+land the Shelf change through its normal Git workflow; a pull request is useful
+but not required by Bookself itself.
 
 **Promote / copy only.** `scripts/promote-book.sh <slug> [path-to-shelf]` is the
 lower-level file-copy operation. It does not publish, verify a release
-transaction, or create a live relationship between Binder and Shelf. Prefer
+transaction, or create a live relationship between Desk and Shelf. Prefer
 **Release** for normal publishing.
 
-**Publish.** On a public shelf, a released book has the exact Status
+**Publish.** On a public Shelf, a released book has the exact Status
 `Published` and one root README row under **The books**. Normally the Release
 command prepares both together; do not change only one side.
 
-**Unpublish.** On the shelf, set Status to anything except `Published` and
+**Unpublish.** On the Shelf, set Status to anything except `Published` and
 remove the root catalog row. Remember that removing current files does not make
 content already pushed to public Git history private.
 
 **Revise a published book.** Leave the current Shelf edition unchanged. Revise
-and commit the private Binder copy, then Release the replacement when ready.
-Do not change the public Shelf copy to `Drafting` or `Revision in progress` just
-to work on the next edition.
+and commit the private Desk copy, then Release the replacement when ready. Do
+not change the public Shelf copy to `Drafting` or `Revision in progress` just to
+work on the next edition.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,
 **DOI**, **Rights**, **AI use**, **Rights file**. Series groups volumes on the
-public shelf. Tags are comma-separated. Wiki links `[[ch03-publishing|label]]`
-in chapter Markdown become in-reader jumps. Do not invent another config file
+public Shelf. Tags are comma-separated. Wiki links `[[ch03-publishing|label]]`
+in chapter Markdown become in-Reader jumps. Do not invent another config file
 for these.

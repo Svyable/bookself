@@ -40,14 +40,14 @@ class ReleaseTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         base = Path(self.tmp.name)
-        self.binder = base / "binder"
+        self.desk = base / "desk"
         self.shelf = base / "shelf"
-        init_repo(self.binder, "binder")
+        init_repo(self.desk, "desk")
         init_repo(self.shelf, "shelf")
 
-        binder_book = self.binder / "books" / "my-book"
-        (binder_book / "manuscript").mkdir(parents=True)
-        (binder_book / "README.md").write_text(
+        desk_book = self.desk / "books" / "my-book"
+        (desk_book / "manuscript").mkdir(parents=True)
+        (desk_book / "README.md").write_text(
             "# My Book\n\n"
             "| | |\n|---|---|\n"
             "| **Author** | A Writer |\n"
@@ -57,11 +57,11 @@ class ReleaseTests(unittest.TestCase):
             "- [x] [Chapter 1](manuscript/ch01.md)\n",
             encoding="utf-8",
         )
-        (binder_book / "manuscript" / "ch01.md").write_text(
+        (desk_book / "manuscript" / "ch01.md").write_text(
             "# Chapter 1\n\nnew edition\n", encoding="utf-8"
         )
-        (self.binder / "README.md").write_text("# Binder\n", encoding="utf-8")
-        commit_all(self.binder)
+        (self.desk / "README.md").write_text("# Desk\n", encoding="utf-8")
+        commit_all(self.desk)
 
         shelf_book = self.shelf / "books" / "my-book"
         (shelf_book / "manuscript").mkdir(parents=True)
@@ -91,13 +91,13 @@ class ReleaseTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def test_release_replaces_snapshot_and_preserves_binder(self):
-        source_before = (self.binder / "books" / "my-book" / "README.md").read_text()
+    def test_release_replaces_snapshot_and_preserves_desk(self):
+        source_before = (self.desk / "books" / "my-book" / "README.md").read_text()
         expected_shelf_readme = release_book.set_status_published(source_before)
-        result = release_book.prepare_release(self.binder, self.shelf, "my-book")
+        result = release_book.prepare_release(self.desk, self.shelf, "my-book")
         self.assertEqual(result["catalog_action"], "unchanged")
         self.assertEqual(
-            (self.binder / "books" / "my-book" / "README.md").read_text(),
+            (self.desk / "books" / "my-book" / "README.md").read_text(),
             source_before,
         )
         self.assertEqual(
@@ -111,13 +111,13 @@ class ReleaseTests(unittest.TestCase):
         self.assertFalse((self.shelf / "books" / "my-book" / "old-only.txt").exists())
         self.assertFalse(list((self.shelf / "books").glob(".my-book.bookself-*")))
 
-    def test_dirty_binder_refused(self):
-        path = self.binder / "books" / "my-book" / "manuscript" / "ch01.md"
+    def test_dirty_desk_refused(self):
+        path = self.desk / "books" / "my-book" / "manuscript" / "ch01.md"
         path.write_text(path.read_text() + "dirty\n")
         with self.assertRaisesRegex(
-            release_book.ReleaseError, "Binder has uncommitted changes"
+            release_book.ReleaseError, "Desk has uncommitted changes"
         ):
-            release_book.prepare_release(self.binder, self.shelf, "my-book")
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
 
     def test_dirty_shelf_refused(self):
         path = self.shelf / "README.md"
@@ -125,30 +125,38 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(
             release_book.ReleaseError, "Shelf has uncommitted changes"
         ):
-            release_book.prepare_release(self.binder, self.shelf, "my-book")
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
 
     def test_wrong_role_refused(self):
-        (self.shelf / "imprint.json").write_text(json.dumps({"role": "binder"}))
+        (self.shelf / "imprint.json").write_text(json.dumps({"role": "desk"}))
         commit_all(self.shelf, "wrong role")
         with self.assertRaisesRegex(
             release_book.ReleaseError, "destination is not a Shelf"
         ):
-            release_book.prepare_release(self.binder, self.shelf, "my-book")
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
+
+    def test_old_binder_role_is_not_accepted(self):
+        (self.desk / "imprint.json").write_text(json.dumps({"role": "binder"}))
+        commit_all(self.desk, "obsolete role")
+        with self.assertRaisesRegex(
+            release_book.ReleaseError, "source is not a Desk"
+        ):
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
 
     def test_bad_slug_refused(self):
         with self.assertRaisesRegex(
             release_book.ReleaseError, "slug must use lowercase"
         ):
-            release_book.prepare_release(self.binder, self.shelf, "../my-book")
+            release_book.prepare_release(self.desk, self.shelf, "../my-book")
 
-    def test_published_binder_refused(self):
-        path = self.binder / "books" / "my-book" / "README.md"
+    def test_published_desk_refused(self):
+        path = self.desk / "books" / "my-book" / "README.md"
         path.write_text(path.read_text().replace("Revision in progress", "Published"))
-        commit_all(self.binder, "published binder state")
+        commit_all(self.desk, "published desk state")
         with self.assertRaisesRegex(
-            release_book.ReleaseError, "Binder copy is already marked Published"
+            release_book.ReleaseError, "Desk copy is already marked Published"
         ):
-            release_book.prepare_release(self.binder, self.shelf, "my-book")
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
 
     def test_leftover_transaction_refused(self):
         leftover = self.shelf / "books" / ".my-book.bookself-stage-interrupted"
@@ -157,7 +165,7 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(
             release_book.ReleaseError, "leftover Bookself release transaction paths"
         ):
-            release_book.prepare_release(self.binder, self.shelf, "my-book")
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
 
     def test_catalog_row_added(self):
         (self.shelf / "README.md").write_text(
@@ -168,7 +176,7 @@ class ReleaseTests(unittest.TestCase):
             encoding="utf-8",
         )
         commit_all(self.shelf, "empty catalog")
-        result = release_book.prepare_release(self.binder, self.shelf, "my-book")
+        result = release_book.prepare_release(self.desk, self.shelf, "my-book")
         self.assertEqual(result["catalog_action"], "added")
         self.assertIn(
             "| [My Book](books/my-book/) | A Writer |",
@@ -176,10 +184,10 @@ class ReleaseTests(unittest.TestCase):
         )
 
     def test_catalog_row_updated_when_title_changes(self):
-        path = self.binder / "books" / "my-book" / "README.md"
+        path = self.desk / "books" / "my-book" / "README.md"
         path.write_text(path.read_text().replace("# My Book", "# My Book Revised"))
-        commit_all(self.binder, "title")
-        result = release_book.prepare_release(self.binder, self.shelf, "my-book")
+        commit_all(self.desk, "title")
+        result = release_book.prepare_release(self.desk, self.shelf, "my-book")
         self.assertEqual(result["catalog_action"], "updated")
         self.assertIn(
             "| [My Book Revised](books/my-book/) | A Writer |",

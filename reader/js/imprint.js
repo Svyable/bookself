@@ -1,6 +1,6 @@
 import { fetchText, fileUrl } from './base.js';
 import { migrateReaderPersonalization } from './presentation.js';
-import { binderHash, coverHash, go, parseRoute } from './router.js';
+import { libraryHash, coverHash, go, parseRoute } from './router.js';
 
 export const DEFAULT_IMPRINT = {
   role: 'instance',
@@ -97,7 +97,7 @@ function installShelfNavigation(imprint) {
     shelf.id = 'shelfHomeBtn';
     shelf.type = 'button';
     shelf.className = 'reader-exit-btn reader-exit-shelf';
-    shelf.addEventListener('click', () => go(binderHash()));
+    shelf.addEventListener('click', () => go(libraryHash()));
 
     const cover = document.createElement('button');
     cover.id = 'bookCoverBtn';
@@ -125,7 +125,7 @@ function installShelfNavigation(imprint) {
 
   const sync = () => {
     const route = parseRoute();
-    const atHome = route.view === 'binder';
+    const atHome = route.view === 'library';
     shelf.hidden = atHome;
     cover.hidden = atHome || route.view === 'cover';
   };
@@ -226,11 +226,11 @@ export function applyImprint(imprint) {
   if (apple) apple.setAttribute('content', imprint.shortName);
   const desc = document.querySelector('meta[name="description"]');
   if (desc && imprint.description) desc.setAttribute('content', imprint.description);
-  const h1 = document.querySelector('.binder-hero h1');
+  const h1 = document.querySelector('.library-hero h1');
   if (h1) h1.textContent = imprint.name;
-  const kicker = document.querySelector('.binder-kicker');
+  const kicker = document.querySelector('.library-kicker');
   if (kicker) kicker.textContent = imprint.kicker;
-  const lede = document.querySelector('.binder-lede');
+  const lede = document.querySelector('.library-lede');
   if (lede) {
     lede.textContent = imprint.lede;
     if (imprint.credit && imprint.creditHref) {

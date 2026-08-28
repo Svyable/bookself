@@ -28,7 +28,7 @@ You can choose Creative Commons or another open-content license later if that is
 
 There is one separate thing to understand: **your hosting provider has its own contract with you.** An All Rights Reserved notice tells readers and third parties what you are granting; it does not erase permissions you separately gave GitHub or another host under its terms. If provider-level AI/data rights matter to you, read **[Rights, copyright, and AI](docs/rights-and-ai.md)** before uploading a manuscript.
 
-For confidential work, use a private Binder and actual access control. A copyright notice, `robots.txt`, or unlisted URL is not secrecy.
+For confidential work, use a private Desk and actual access control. A copyright notice, `robots.txt`, or unlisted URL is not secrecy.
 
 ## The five-minute version
 
@@ -84,8 +84,9 @@ write that folder into the repository's `books/` directory. Everywhere else,
 Bookself offers the same files as a small ZIP. Nothing is uploaded or published
 automatically.
 
-The studio also gives you the one catalog line needed under the root README's
-`## The books` section so the Desk and Reader can discover the new folder.
+The studio also gives you the one inventory line needed under the root README's
+`## The books` section so the Publishing Desk and Reader can discover the new
+folder.
 
 See **[New Publication Studio](docs/new-publication-studio.md)** for the exact
 behavior and privacy boundary.
@@ -99,7 +100,7 @@ author, premise, and whatever structure you already have in mind. You may leave
 the computer-shaped details, such as the folder name, to whoever or whatever is
 helping scaffold it.
 
-This is especially useful in a shared Binder or when a connected agent is doing
+This is especially useful on a shared Desk or when a connected agent is doing
 the setup work.
 
 **Privacy note:** an issue has the same visibility as its repository. Do not put
@@ -107,7 +108,7 @@ private manuscript text in a public issue.
 
 ### Hands-on: use a blank starter
 
-A private Binder includes a small library of blank publication templates under
+A private Desk includes a small library of blank publication templates under
 `books/`. Choose the one closest to what you are making, copy it to a new folder,
 and edit the copy rather than the template itself.
 
@@ -140,10 +141,10 @@ computers use to find it. Lowercase letters and hyphens keep everyone calm.
 Then open the new publication's `README.md`, replace the placeholder title with
 the actual title, and replace the placeholder author/year in `RIGHTS.md`.
 
-In a private Binder, also add one row for that new folder under the repository
-root README's `## The books` section. That catalog row is how the Publishing
+On a private Desk, also add one row for that new folder under the repository
+root README's `## The books` section. That inventory row is how the Publishing
 Desk and Reader discover the working publication. It does **not** publish the
-draft: the Binder remains private and the publication can stay
+draft: the Desk remains private and the publication can stay
 `Status: Drafting` until you deliberately release it to a public Shelf.
 
 Congratulations: structurally, that is now a publication. Literature, scholarship,
@@ -160,12 +161,13 @@ You do not need a different publishing system.
 - **Course text or textbook:** choose **Book** as the publication format in the
   New Publication Studio, then choose a Reader starting style such as **Quiet
   study** if it suits the material; or start from `books/_TEMPLATE/` like any
-  other chaptered book. Keep the next semester's revision private in Binder and
-  release a deliberate public Shelf snapshot when students should receive it.
-  See [Revisions and releases](docs/revisions.md) for the edition model.
+  other chaptered book. Keep the next semester's revision private on the Desk
+  and release a deliberate public Shelf snapshot when students should receive
+  it. See [Revisions and releases](docs/revisions.md) for the edition model.
 
-Both paths keep the same plain Markdown, Git history, Reader, Desk, rights file,
-and Binder → Shelf release workflow. Neither requires a hosted build or CI/CD.
+Both paths keep the same plain Markdown, Git history, Reader, Publishing Desk,
+rights file, and Desk → Shelf release workflow. Neither requires a hosted build
+or CI/CD.
 
 ## What am I looking at?
 
@@ -242,7 +244,7 @@ Bookself is not trying to turn a novel into software. It borrows a few useful
 ideas from software work and gives them back to writers in less alarming
 clothes.
 
-**Shape → Draft → Read → Revise → Review → Publish → Keep living**
+**Shape → Draft → Read → Revise → Review → Release → Keep living**
 
 At each stage, the manuscript remains plain files and the history remembers
 how it got there.
@@ -262,20 +264,21 @@ You do not have to use that on day one.
 
 ## When does a publication become public?
 
-Bookself can use two spaces:
+Bookself has a clear division:
 
-- the **Binder** — private writing room by default, or an explicitly public working proof if the author chooses that mode
-- the **Shelf** — public bookcase
+- the **Desk** — where the working publication is written and revised; private by default, or an explicitly public working proof if the author chooses that mode
+- the **Shelf** — where deliberately released publication snapshots live
+- the **Reader** — the reading interface for either a Desk proof or a Shelf release
 
-The free/default path is to draft privately in the Binder. When the work is meant
-for readers, release a committed snapshot to the Shelf and publish that copy
-there. The Binder keeps its own history; the Shelf copy is independent until you
-deliberately release another snapshot.
+The free/default path is to draft privately on the Desk. When the work is meant
+for readers, release a committed snapshot to the Shelf. The Desk keeps its own
+history; the Shelf copy is independent until you deliberately release another
+snapshot.
 
-An author may instead choose to write in public and expose a Binder Reader. That
+An author may instead choose to write in public and expose a Desk Reader. That
 changes visibility, **not copyright ownership or the publication license**.
 
-A public repository is public even when a draft is not linked from the shelf.
+A public repository is public even when a draft is not linked from the Shelf.
 “Unlisted” is not the same thing as private. Public Git history, forks, caches,
 and hosting-provider terms also matter, so read the [rights guide](docs/rights-and-ai.md)
 before treating GitHub itself as a rights boundary.

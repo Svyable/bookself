@@ -10,7 +10,7 @@ After working through this chapter, a student should be able to:
 
 - distinguish a repository from an individual document;
 - explain what a commit records and why a useful commit message matters;
-- describe the different roles of a private Binder and a public Shelf;
+- describe the different roles of a private Desk and a public Shelf;
 - identify why a stable assigned edition can be useful during a semester;
 - inspect the Markdown source behind a chapter in the Reader.
 
@@ -27,11 +27,11 @@ If Dr. Rivera corrects a paragraph after office hours, she might make a commit c
 | **Repository** | The project folder plus its recorded history. |
 | **Commit** | A named save point containing a specific set of changes. |
 | **Markdown** | Plain-text source used for chapters and other publication files. |
-| **Binder** | The private working repository where drafts and the next edition can change. |
+| **Desk** | The private working repository where drafts and the next edition can change. |
 | **Shelf** | The public repository containing the released edition readers are meant to use. |
 | **Reader** | The browser interface that turns the publication's Markdown into a reading experience. |
 
-The Binder/Shelf distinction is especially useful in teaching. Suppose Dr. Rivera assigns the fall edition of her course text on September 1. During the semester, she notices several things she wants to improve for spring. If she edits the public copy every time she has a new thought, students can end up reading different versions of the same assigned passage without realizing it. Instead, the current Shelf edition can remain stable while she revises the next edition privately in Binder.
+The Desk/Shelf distinction is especially useful in teaching. Suppose Dr. Rivera assigns the fall edition of her course text on September 1. During the semester, she notices several things she wants to improve for spring. If she edits the public copy every time she has a new thought, students can end up reading different versions of the same assigned passage without realizing it. Instead, the current Shelf edition can remain stable while she revises the next edition privately on the Desk.
 
 That does not mean a published text can never change. A typo or factual correction may justify a public hotfix. The point is that revision becomes deliberate. The professor can decide whether a change belongs in the current assigned edition or in the next one.
 

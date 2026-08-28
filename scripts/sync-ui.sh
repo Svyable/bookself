@@ -1,10 +1,10 @@
 #!/bin/sh
-# Sync Bookself's shared UI into one or more binder/shelf instances.
+# Sync Bookself's shared UI into one or more desk/shelf instances.
 #
 # Usage:
 #   scripts/sync-ui.sh [path-to-instance ...]
 #
-# With no arguments, sibling ../binder and ../shelf directories are used
+# With no arguments, sibling ../desk and ../shelf directories are used
 # when they exist. Only reader/ and desk/ are replaced; books, README.md,
 # imprint.json, and other instance-owned files are never touched.
 set -e
@@ -32,7 +32,7 @@ if [ "$#" -gt 0 ]; then
 fi
 
 FOUND=0
-for DEST in "$ROOT/../binder" "$ROOT/../shelf"; do
+for DEST in "$ROOT/../desk" "$ROOT/../shelf"; do
   if [ -d "$DEST" ]; then
     sync_one "$DEST"
     FOUND=1
@@ -40,7 +40,7 @@ for DEST in "$ROOT/../binder" "$ROOT/../shelf"; do
 done
 
 if [ "$FOUND" -eq 0 ]; then
-  echo "no sibling binder or shelf found" >&2
+  echo "no sibling desk or shelf found" >&2
   echo "usage: scripts/sync-ui.sh [path-to-instance ...]" >&2
   exit 1
 fi

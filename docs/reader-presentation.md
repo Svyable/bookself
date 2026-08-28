@@ -12,7 +12,7 @@ books/my-book/
   media/
 ```
 
-`reader.json` is publication data. It travels with the book through Git and through the normal Binder → Shelf release path. Reader personalization is different: it stays in that reader's browser storage and is never written back to `reader.json`, Markdown, Git, or another reader's device.
+`reader.json` is publication data. It travels with the book through Git and through the normal Desk → Shelf release path. Reader personalization is different: it stays in that reader's browser storage and is never written back to `reader.json`, Markdown, Git, or another reader's device.
 
 ## The precedence rule
 

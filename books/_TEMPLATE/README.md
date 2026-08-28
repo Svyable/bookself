@@ -14,8 +14,8 @@
   GitHub may call saving a version a "commit". It just means: save this
   version and attach a short note about what changed.
 
-  In a private Binder, keep drafting here. When the book is actually meant
-  for strangers, promote it to the public Shelf, set Status to Published in
+  On a private Desk, keep drafting here. When the book is actually meant
+  for strangers, release it to the public Shelf, set Status to Published in
   the Shelf copy, and add it to the Shelf's root README catalog.
 
   Delete this comment whenever it stops being useful. The comment has no
@@ -53,6 +53,6 @@ Leave them blank until the real destination pages exist.
 ## Contents
 
 - [ ] [Front Matter](manuscript/front-matter.md)
-- [ ] [Ch 1 — Opening the Binder](manuscript/ch01-example.md)
+- [ ] [Ch 1 — Opening the Desk](manuscript/ch01-example.md)
 - [ ] [Ch 2 — Leaving a Trace](manuscript/ch02-example.md)
 - [ ] [Back Matter](manuscript/back-matter.md)

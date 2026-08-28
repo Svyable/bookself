@@ -90,4 +90,4 @@ Required local Bookself tooling and its structural/release checks should run on 
 
 Reader and Desk contributors may also run focused zero-install JavaScript tests with Node.js when Node is already available. Those developer checks do not make Node, npm, or a package install part of Bookself's authoring, preview, release, or reading requirements.
 
-GitHub Actions may be used to verify compatibility, but hosted CI is not part of the publishing runtime. A private Binder must remain usable with zero GitHub Actions minutes.
+GitHub Actions may be used to verify compatibility, but hosted CI is not part of the publishing runtime. A private Desk must remain usable with zero GitHub Actions minutes.

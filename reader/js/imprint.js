@@ -8,11 +8,11 @@ export const DEFAULT_IMPRINT = {
   shortName: 'Bookself',
   description: 'A Git-native bookshelf for Markdown books.',
   kicker: 'Written in Markdown · Read like a book',
-  lede: 'Books live in this repository. The reader and publishing desk are shared Bookself software.',
+  lede: 'Books live in this repository. The Reader and publishing Desk are shared Bookself software.',
   credit: '',
   creditHref: '',
   writeHref: '../desk/',
-  writeLabel: 'Publishing desk',
+  writeLabel: 'Publishing Desk',
   forkHref: '',
   forkLabel: '',
   homeLabel: 'Books',
@@ -21,8 +21,8 @@ export const DEFAULT_IMPRINT = {
   steps: [
     { n: '1', title: 'Start', body: 'Copy books/_TEMPLATE to books/your-title' },
     { n: '2', title: 'Write', body: 'Keep the manuscript in plain Markdown' },
-    { n: '3', title: 'Preview', body: 'Use the reader before publishing' },
-    { n: '4', title: 'Publish', body: 'Promote finished work from a private binder to a public shelf' },
+    { n: '3', title: 'Preview', body: 'Use the Reader before publishing' },
+    { n: '4', title: 'Publish', body: 'Release finished work from a private Desk to a public Shelf' },
   ],
   github: { owner: '', repo: '' },
 };
@@ -118,7 +118,7 @@ function installShelfNavigation(imprint) {
   const shelf = document.getElementById('shelfHomeBtn');
   const cover = document.getElementById('bookCoverBtn');
   const role = String(imprint.role || 'instance').toLowerCase();
-  const home = role === 'binder' ? 'Binder' : 'Shelf';
+  const home = role === 'desk' ? 'Desk' : 'Shelf';
   shelf.innerHTML = `<span aria-hidden="true">←</span><span>${home}</span>`;
   shelf.title = `Back to ${home}`;
   shelf.setAttribute('aria-label', `Back to ${home}`);
@@ -187,14 +187,14 @@ function installShelfNavigation(imprint) {
 }
 
 function emptyLibraryText(role) {
-  if (role === 'binder') {
+  if (role === 'desk') {
     return 'No manuscripts yet. Start one from a blank template in books/, keep it Drafting, and preview it here before release.';
   }
   if (role === 'shelf') {
-    return 'No released publications yet. Keep drafts in the private Binder, then release a committed snapshot to this public Shelf when it is ready.';
+    return 'No released publications yet. Keep drafts on the private Desk, then release a committed snapshot to this public Shelf when it is ready.';
   }
   if (role === 'platform') {
-    return 'No platform examples are listed yet. Add published specimen content under books/ to demonstrate Bookself without using a private Binder.';
+    return 'No platform examples are listed yet. Add published specimen content under books/ to demonstrate Bookself without using a private Desk.';
   }
   return 'No publications are listed yet.';
 }

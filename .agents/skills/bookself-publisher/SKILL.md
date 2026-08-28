@@ -1,6 +1,6 @@
 ---
 name: bookself-publisher
-description: Operate Bookself end to end from natural-language intent. Use when a user asks an agent to create or configure Binder/Shelf repositories, start a publication, write or structure manuscript content, choose Reader presentation, validate, preview, release, or publish a Bookself work without making the user execute the intermediate Git/file workflow manually.
+description: Operate Bookself end to end from natural-language intent. Use when a user asks an agent to create or configure Desk/Shelf repositories, start a publication, write or structure manuscript content, choose Reader presentation, validate, preview, release, or publish a Bookself work without making the user execute the intermediate Git/file workflow manually.
 ---
 
 # Bookself Publisher
@@ -12,8 +12,8 @@ Turn outcome-level publishing requests into ordinary Bookself artifacts and Git 
 Examples:
 
 - “Set Bookself up for me.”
-- “Make me a Binder and Shelf.”
-- “Write my first book in the Binder.”
+- “Make me a Desk and Shelf.”
+- “Write my first book on the Desk.”
 - “Turn these notes into a Bookself course text.”
 - “Publish the finished version to my Shelf.”
 - “Use this Bookself repo as the model and do the whole thing for me.”
@@ -51,18 +51,19 @@ For a new workspace:
 python scripts/bootstrap-workspace.py <workspace> --owner <owner> --json
 ```
 
-Consume the returned JSON paths and continue in the Binder.
+Consume the returned JSON paths and continue on the Desk.
 
 ### GitHub-connected agent
 
 When operating through authorized GitHub APIs/tools, reproduce the durable result of the canonical tools:
 
-- Binder should be private by default.
+- Desk should be private by default.
 - Shelf should be public only when the user intends public publication.
 - Stamp `imprint.json` role and repository identity correctly.
 - Keep `reader/` and `desk/` shared.
 - Keep `books/`, root `README.md`, and `imprint.json` instance-owned.
-- Treat Shelf releases as copied snapshots, never live pointers into Binder.
+- Treat Shelf releases as copied snapshots, never live pointers into Desk.
+- Do not create or accept the obsolete `binder` role as a compatibility alias.
 
 If repository creation or another required external action is unavailable in the current toolset, do every deterministic step that is available and state the precise remaining capability gap. Never claim an external resource exists when it does not.
 
@@ -81,17 +82,17 @@ Infer when reasonable:
 
 Ask only when the missing answer materially changes authorship, facts, rights, audience, public/private intent, or another consequential choice.
 
-### 2. Establish Binder and Shelf
+### 2. Establish Desk and Shelf
 
 Prefer `scripts/bootstrap-workspace.py` locally. In connected environments, create equivalent repositories/files using available authorized tools.
 
-Do not expose Binder content for preview. Preview private work locally or through an already-private environment.
+Do not expose Desk content for preview. Preview private work locally or through an already-private environment.
 
-### 3. Create the publication in Binder
+### 3. Create the publication on the Desk
 
 Use the nearest format contract from `bookself.json` and its mapped starter under `books/` (for example, `books/_TEMPLATE/` for a book or `books/_PAPER_TEMPLATE/` for a paper).
 
-Create a normal lowercase hyphenated `books/<slug>/` folder. Fill the publication README metadata and contents. Add the Binder catalog link under root `## The books` so Reader and Desk can discover it.
+Create a normal lowercase hyphenated `books/<slug>/` folder. Fill the publication README metadata and contents. Add the Desk inventory link under root `## The books` so Reader and Publishing Desk can discover it.
 
 If `reader.json` is useful, choose a named preset or tune explicit values. Remember: this is an author recommendation, not a reader lock.
 
@@ -111,11 +112,11 @@ Run:
 python scripts/doctor.py --root .
 ```
 
-When browser/local preview is available, serve the Binder and inspect both Reader and Desk. Fix structural or presentation problems before declaring the draft ready.
+When browser/local preview is available, serve the Desk and inspect both Reader and Publishing Desk. Fix structural or presentation problems before declaring the draft ready.
 
-### 6. Commit the Binder state
+### 6. Commit the Desk state
 
-A normal release must come from a committed Binder publication state. Create clear checkpoints in Git history.
+A normal release must come from a committed Desk publication state. Create clear checkpoints in Git history.
 
 ### 7. Release only when intended
 
@@ -129,13 +130,13 @@ Review the prepared Shelf diff. The helper stops before commit/push by design.
 
 When the user's request explicitly includes publishing and the environment has authorized write capability, complete the Shelf commit/push/publication mechanics on their behalf. Do not bounce those mechanics back to the user merely because the helper stops before them.
 
-If public release was not requested, stop at the Binder.
+If public release was not requested, stop at the Desk.
 
 ### 8. Report outcomes
 
 Prefer a concise result summary containing durable facts:
 
-- Binder location/repository
+- Desk location/repository
 - Shelf location/repository
 - publication slug/title
 - what was drafted

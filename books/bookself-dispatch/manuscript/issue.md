@@ -6,11 +6,11 @@ A newsletter has a different rhythm from a book. It arrives with a date, assumes
 
 The most useful Bookself idea is also the easiest one to blur: writing and publishing are different acts.
 
-A private Binder is where work can still be wrong. Sentences move, figures get replaced, next month's issue starts before this month's has finished circulating. A public Shelf is where an author puts the snapshot they are prepared to stand behind. Releasing copies that committed snapshot across the boundary; it does not turn the Shelf into a window on the Binder.
+A private Desk is where work can still be wrong. Sentences move, figures get replaced, next month's issue starts before this month's has finished circulating. A public Shelf is where an author puts the snapshot they are prepared to stand behind. Releasing copies that committed snapshot across the boundary; it does not turn the Shelf into a window on the Desk.
 
 That distinction is especially natural for a newsletter. Issue 2 can be half-written in private while Issue 1 remains exactly what readers received.
 
-![Diagram showing a draft issue in a private Binder, a deliberate release checkpoint, and the published issue on a public Shelf](../media/dispatch-flow.svg "Figure 1. A newsletter can keep the next issue in progress while the released issue remains stable on the public Shelf.")
+![Diagram showing a draft issue on a private Desk, a deliberate release checkpoint, and the published issue on a public Shelf](../media/dispatch-flow.svg "Figure 1. A newsletter can keep the next issue in progress while the released issue remains stable on the public Shelf.")
 
 ## Three short notes
 
@@ -32,7 +32,7 @@ For a recurring publication, the release boundary is less about ceremony than ab
 
 The working timeline contains edits that readers have not agreed to receive yet: a revised headline, a paragraph waiting on review, a note for the next issue, a replacement image. The released timeline contains the issue as published. Keeping those states separate gives an editor room to continue working without silently changing the artifact already in circulation.
 
-| Moment | Private Binder | Public Shelf |
+| Moment | Private Desk | Public Shelf |
 |---|---|---|
 | Draft the next issue | yes | no |
 | Review unfinished copy | yes | no |
@@ -51,6 +51,6 @@ There is no requirement for a hosted build pipeline between those columns. The m
 
 ## Housekeeping
 
-This is a deliberately public platform specimen, not a real mailing list and not a copy of a private Binder. It exists to show what the blank newsletter starter can become inside the normal Reader.
+This is a deliberately public platform specimen, not a real mailing list and not a copy of a private Desk. It exists to show what the blank newsletter starter can become inside the normal Reader.
 
-For an actual publication, start from `_NEWSLETTER_TEMPLATE` in a private Binder, keep the issue `Drafting` while it is in progress, and release a committed snapshot only when it is ready to be public.
+For an actual publication, start from `_NEWSLETTER_TEMPLATE` on a private Desk, keep the issue `Drafting` while it is in progress, and release a committed snapshot only when it is ready to be public.

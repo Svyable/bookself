@@ -67,4 +67,4 @@ For a comic, page order is part of the manuscript. Keep the image asset, its acc
 
 ![Four illustrated publication covers: anthology, report, manual, and comic.](../media/collection-formats.svg "Figure 2. Anthologies, reports, manuals, and comics demonstrate how different reading jobs can remain portable publication folders.")
 
-The important boundary is unchanged: these are authoring starters in a private Binder. Copy the closest starter to a normal publication slug, replace its placeholder material, and proof the result there. Only an intentionally released publication belongs on a public Shelf.
+The important boundary is unchanged: these are authoring starters on a private Desk. Copy the closest starter to a normal publication slug, replace its placeholder material, and proof the result there. Only an intentionally released publication belongs on a public Shelf.

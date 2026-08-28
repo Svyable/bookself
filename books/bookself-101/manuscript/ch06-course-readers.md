@@ -11,14 +11,14 @@ After working through this chapter, a student should be able to:
 - explain when a course reader benefits from an anthology structure;
 - distinguish editorial context from the contributed works it surrounds;
 - identify permissions and privacy questions before a collection is released publicly;
-- describe how a private Binder can hold the next reader while students continue using the current Shelf edition;
+- describe how a private Desk can hold the next reader while students continue using the current Shelf edition;
 - explain why a stable public collection is useful for discussion, citation, and semester-to-semester teaching.
 
 Consider a seminar called *Ways of Seeing Evidence*. Professor Chen wants students to read three short pieces together: an instructor-written field note, an openly licensed methods essay, and a student reflection from a previous term whose author has explicitly agreed to publication. The value is in the sequence. The first piece asks students to notice what counts as evidence, the second gives them a vocabulary for evaluating it, and the third shows how another student struggled with that vocabulary in practice.
 
 A generic list of URLs could deliver all three items. An anthology can do more. It can give the collection a title, introduce the editorial idea, place each contribution in a deliberate order, keep contributor notes and permissions information with the edition, and provide one Reader surface for the class.
 
-![A course reader moves from candidate material through editorial and permissions review in a private Binder before a deliberate public Shelf release.](../media/course-reader-flow.svg "Figure 1. A course reader can be assembled privately, checked for permissions and context, then released as one stable public collection.")
+![A course reader moves from candidate material through editorial and permissions review on a private Desk before a deliberate public Shelf release.](../media/course-reader-flow.svg "Figure 1. A course reader can be assembled privately, checked for permissions and context, then released as one stable public collection.")
 
 **Key terms**
 
@@ -30,7 +30,7 @@ A generic list of URLs could deliver all three items. An anthology can do more. 
 | **Permission record** | The durable note that explains why the editor is allowed to publish a contributed work or media item. |
 | **Assigned edition** | The public Shelf snapshot the class is expected to use during a particular teaching period. |
 
-The private Binder is where Professor Chen can assemble the next version. She can reorder pieces, revise the introduction, remove an item whose permission is uncertain, or prepare a new contribution without changing what the current class sees. None of that requires the Shelf edition to become a work in progress.
+The private Desk is where Professor Chen can assemble the next version. She can reorder pieces, revise the introduction, remove an item whose permission is uncertain, or prepare a new contribution without changing what the current class sees. None of that requires the Shelf edition to become a work in progress.
 
 This matters most when the collection includes other people's work. A useful editorial workflow separates **can I access this?** from **may I republish this?** A journal article available through a university library may be readable by enrolled students without being licensed for public redistribution. A student's paper may be excellent without being appropriate to publish under the student's name. A photograph found on the open web may still be copyrighted. Bookself's plain files make provenance easy to record, but they do not replace rights review, institutional policy, or informed consent.
 
@@ -40,11 +40,11 @@ The anthology starter keeps a new collection in one manuscript file. That is oft
 
 **Worked example**
 
-Professor Chen prepares the fall reader in her private Binder. The introduction explains the course's central question. Each contribution begins with a short editorial note identifying the author, why the piece is present, and any reading question the class should carry into it. At the end of the manuscript she keeps contributor notes and a public-facing permissions statement appropriate to the material being released.
+Professor Chen prepares the fall reader on her private Desk. The introduction explains the course's central question. Each contribution begins with a short editorial note identifying the author, why the piece is present, and any reading question the class should carry into it. At the end of the manuscript she keeps contributor notes and a public-facing permissions statement appropriate to the material being released.
 
 Before release she checks three things. First, every included work has a clear publication basis. Second, no private student information or classroom-only feedback has leaked into the manuscript. Third, the collection reads coherently in the Reader rather than merely appearing complete in the source files.
 
-She commits that state and releases it to the public Shelf. The syllabus links the Reader edition students should use. During the semester she notices that the second contribution needs a better introduction and begins revising it in Binder, but she leaves the assigned Shelf collection stable. When spring approaches, she can release a revised anthology as the next edition.
+She commits that state and releases it to the public Shelf. The syllabus links the Reader edition students should use. During the semester she notices that the second contribution needs a better introduction and begins revising it on the Desk, but she leaves the assigned Shelf collection stable. When spring approaches, she can release a revised anthology as the next edition.
 
 That separation gives a professor room to edit while giving students a dependable shared object. Everyone can refer to the same sequence, headings, notes, and public revision history. If exact provenance matters for a paper or research project, the public Shelf commit can identify the precise assigned state.
 

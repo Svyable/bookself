@@ -21,9 +21,9 @@ where $T$ is the number of required transformation steps, $H$ is the number of h
 
 Equation \eqref{release-distance} is not a universal measure of publishing quality. It is a design heuristic: when two workflows provide the same editorial guarantees, the one with fewer opaque transitions is easier to inspect and reproduce.[^distance]
 
-Bookself deliberately keeps the required path small: committed Markdown and media move from a private Binder into a public Shelf snapshot, where the static Reader renders them directly. That design follows a broader reproducibility principle: preserve the materials needed to understand and reconstruct a result, and make their provenance legible to later readers [@sandve|Sandve et al., 2013].
+Bookself deliberately keeps the required path small: committed Markdown and media move from a private Desk into a public Shelf snapshot, where the static Reader renders them directly. That design follows a broader reproducibility principle: preserve the materials needed to understand and reconstruct a result, and make their provenance legible to later readers [@sandve|Sandve et al., 2013].
 
-![Diagram showing a private Binder on the left, a reviewed release boundary in the center, and a public Shelf on the right, with Markdown and media moving across one deliberate snapshot step.](../media/release-distance.svg "Figure 1. A low-distance publication path keeps the reviewed source and released artifact close together while preserving a deliberate private-to-public boundary.")
+![Diagram showing a private Desk on the left, a reviewed release boundary in the center, and a public Shelf on the right, with Markdown and media moving across one deliberate snapshot step.](../media/release-distance.svg "Figure 1. A low-distance publication path keeps the reviewed source and released artifact close together while preserving a deliberate private-to-public boundary.")
 
 The point is not that every scholarly project should avoid specialized tools. Computational notebooks, statistical environments, citation managers, and typesetting systems can all be essential. The point is that each dependency should earn its place. A prose-first article with a table, a figure, and a few equations should not need a complex hosted pipeline merely to remain readable.
 
@@ -35,7 +35,7 @@ The scholarly conventions are intentionally local to this chapter. Citation defi
 
 ## Results for authors and instructors
 
-The practical result is a specimen that can be used in three ways. An author can copy the journal starter and see what finished issue metadata looks like. A student can inspect how source, citations, equations, and figures remain ordinary files. An instructor can point to the separation between a working Binder and a released Shelf without exposing next semester's draft.
+The practical result is a specimen that can be used in three ways. An author can copy the journal starter and see what finished issue metadata looks like. A student can inspect how source, citations, equations, and figures remain ordinary files. An instructor can point to the separation between a working Desk and a released Shelf without exposing next semester's draft.
 
 | Concern | What the specimen demonstrates |
 |---|---|

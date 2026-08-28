@@ -9,7 +9,7 @@ This is **not a full `.tex` project compiler**. Bookself now has simple
 Markdown-native citations, bibliography entries, footnotes, figure captions,
 and equation references; see [Academic writing in Bookself](academic-writing.md).
 Full TeX projects, BibTeX/Biber, packages, classes, `\input`, TikZ, and canonical
-TeX compilation remain a later optional Binder layer rather than a requirement
+TeX compilation remain a later optional Desk layer rather than a requirement
 for ordinary Bookself publications.
 
 ## Write math in Markdown
@@ -154,7 +154,7 @@ but is not placed on the normal public catalog.
 ## Optional full-TeX boundary
 
 A future full-TeX workflow should preserve this Markdown path rather than
-replace it. The appropriate boundary is the **private Binder**: an author who
+replace it. The appropriate boundary is the **private Desk**: an author who
 needs a real TeX project could opt into local compilation of `.tex`, `.bib`,
 packages/classes, figures, diagnostics, and a canonical PDF artifact.
 

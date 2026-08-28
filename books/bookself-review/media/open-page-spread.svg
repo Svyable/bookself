@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
   <title id="title">The Open Page magazine feature spread</title>
-  <desc id="desc">An editorial illustration of a two-page magazine spread showing a calm reading page, a private Binder notebook, and a public Shelf volume connected by a deliberate release arrow.</desc>
+  <desc id="desc">An editorial illustration of a two-page magazine spread showing a calm reading page, a private Desk notebook, and a public Shelf volume connected by a deliberate release arrow.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#172c3b"/><stop offset="1" stop-color="#8e4d38"/></linearGradient>
     <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffaf0"/><stop offset="1" stop-color="#eee2cd"/></linearGradient>
@@ -12,7 +12,7 @@
 
   <g transform="translate(70 175)" filter="url(#shadow)">
     <rect width="590" height="540" rx="14" fill="url(#paper)"/>
-    <text x="34" y="48" fill="#7f523f" font-family="system-ui, sans-serif" font-size="15" letter-spacing="3">PRIVATE BINDER</text>
+    <text x="34" y="48" fill="#7f523f" font-family="system-ui, sans-serif" font-size="15" letter-spacing="3">PRIVATE DESK</text>
     <text x="34" y="100" fill="#2e2a26" font-family="Georgia, serif" font-size="38">The writing room</text>
     <rect x="34" y="132" width="522" height="2" fill="#b89576"/>
     <g fill="#675f57">

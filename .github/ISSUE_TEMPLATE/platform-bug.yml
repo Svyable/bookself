@@ -16,7 +16,7 @@ body:
       options:
         - Reader / shelf
         - Publishing Desk
-        - Binder → Shelf release
+        - Desk → Shelf release
         - Math / citations / academic rendering
         - Accessibility
         - Templates / onboarding / docs
@@ -52,7 +52,7 @@ body:
       options:
         - Public GitHub Pages Reader
         - Local checkout served with python3 -m http.server
-        - Private Binder
+        - Private Desk
         - Public Shelf repository
         - GitHub website only
         - Other

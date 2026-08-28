@@ -59,5 +59,5 @@ body:
       options:
         - label: I understand ordinary Markdown publications should remain readable without a mandatory hosted build or CI job.
           required: true
-        - label: I understand private Binder publishing should continue to work locally with Git + Python and zero required GitHub Actions minutes.
+        - label: I understand private Desk publishing should continue to work locally with Git + Python and zero required GitHub Actions minutes.
           required: true

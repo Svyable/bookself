@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
   <title id="title">Newsletter release flow</title>
-  <desc id="desc">A private Binder with a draft next issue passes through a deliberate release checkpoint to a public Shelf holding the stable published issue.</desc>
+  <desc id="desc">A private Desk with a draft next issue passes through a deliberate release checkpoint to a public Shelf holding the stable published issue.</desc>
   <rect width="1200" height="620" fill="#f2eee3"/>
   <text x="600" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#18362d">One issue can be public while the next stays private</text>
   <rect x="70" y="150" width="340" height="310" rx="26" fill="#18362d"/>
-  <text x="240" y="215" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#ffffff">Private Binder</text>
+  <text x="240" y="215" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#ffffff">Private Desk</text>
   <text x="240" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#dce8e2">Issue 02 · drafting</text>
   <rect x="130" y="310" width="220" height="78" rx="12" fill="#f8f5ed"/>
   <text x="240" y="344" text-anchor="middle" font-family="monospace" font-size="20" fill="#18362d">manuscript/issue.md</text>

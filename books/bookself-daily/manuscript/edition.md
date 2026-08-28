@@ -8,13 +8,13 @@ A newspaper is a useful stress test for Bookself because the shape is different 
 
 The most important boundary in Bookself is not a technical one. It is the moment an author decides that work in progress is ready to become public.
 
-A Binder is the private work room. Drafts, experiments, review notes, and the next edition belong there. A Shelf is the public bookcase. It contains a copied snapshot the author deliberately released. The Shelf does not reach back into the Binder, and later Binder changes do not silently alter what readers already have.
+A Desk is the private work room. Drafts, experiments, review notes, and the next edition belong there. A Shelf is the public bookcase. It contains a copied snapshot the author deliberately released. The Shelf does not reach back into the Desk, and later Desk changes do not silently alter what readers already have.
 
 That separation matters for a newspaper as much as for a book. An editor can prepare tomorrow's edition privately while today's released issue stays stable. A professor can prepare next semester's course text without changing the edition students were assigned. A researcher can revise a report without presenting the revision as already published.
 
-![Diagram showing a private Binder flowing through a deliberate release into a public Shelf](../media/edition-flow.svg "Figure 1. Bookself keeps working material private until a deliberate release copies a snapshot to the public Shelf.")
+![Diagram showing a private Desk flowing through a deliberate release into a public Shelf](../media/edition-flow.svg "Figure 1. Bookself keeps working material private until a deliberate release copies a snapshot to the public Shelf.")
 
-The Reader can show both sides of that lifecycle. In a private Binder it is a proofing surface. On a public Shelf it is the reading surface for released work. The software is shared; the repository role and publication state are what change.
+The Reader can show both sides of that lifecycle. On a private Desk it is a proofing surface. On a public Shelf it is the reading surface for released work. The software is shared; the repository role and publication state are what change.
 
 ## Campus desk
 
@@ -22,7 +22,7 @@ The Reader can show both sides of that lifecycle. In a private Binder it is a pr
 
 Course materials are unusually sensitive to edition drift. Instructors often improve a text while a class is still using the previous version. If the public reading link simply followed the latest draft, a paragraph could change between a lecture and an assignment without students doing anything wrong.
 
-Bookself's answer is deliberately plain: revise in the private Binder and leave the current Shelf snapshot alone. When the next edition is ready, release a new snapshot. For an exact semester record, an instructor can retain the public Shelf commit alongside the normal Reader link.
+Bookself's answer is deliberately plain: revise on the private Desk and leave the current Shelf snapshot alone. When the next edition is ready, release a new snapshot. For an exact semester record, an instructor can retain the public Shelf commit alongside the normal Reader link.
 
 The same pattern works for an edition-based newspaper. Tomorrow's corrections and additions can be prepared privately without rewriting yesterday's published artifact in place.
 
@@ -40,7 +40,7 @@ That means format is presentation and semantics, not a second storage system. Th
 | articles and departments | Markdown under `manuscript/` |
 | cover and figures | that publication's `media/` folder |
 | revision history | Git |
-| working proof | private Binder Reader |
+| working proof | private Desk Reader |
 | released edition | public Shelf snapshot |
 
 ## Around the desk

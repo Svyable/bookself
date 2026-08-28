@@ -26,9 +26,9 @@ Bookself treats each of them as part of the manuscript. That is consistent with 
 | **Equation label** | A stable source identifier attached to a display equation so prose can refer to its generated number. |
 | **Academic apparatus** | The supporting system of notes, citations, references, figures, and cross-references around the main argument. |
 
-Consider the semester-edition workflow from the previous chapter. While students are reading one released edition, the instructor may already be changing examples and references in a private Binder. The public copy should not wobble each time the working copy changes.[^stability] A compact picture of the relationship makes the distinction easier to see.
+Consider the semester-edition workflow from the previous chapter. While students are reading one released edition, the instructor may already be changing examples and references on a private Desk. The public copy should not wobble each time the working copy changes.[^stability] A compact picture of the relationship makes the distinction easier to see.
 
-![Diagram showing a private Binder revision moving through review to a stable public Shelf edition](../media/academic-apparatus-loop.svg "Figure 5.1. A course-text edition moves from private revision through review to a stable released snapshot; the next revision can begin without changing the assigned edition.")
+![Diagram showing a private Desk revision moving through review to a stable public Shelf edition](../media/academic-apparatus-loop.svg "Figure 5.1. A course-text edition moves from private revision through review to a stable released snapshot; the next revision can begin without changing the assigned edition.")
 
 The same relationship can be written as a small piece of notation. Let $E_t$ be the released edition used in term $t$, and let $\Delta_t$ be the set of accepted changes prepared for the next release. Define `apply` as the operation that produces a new edition from those reviewed changes:
 

@@ -8,7 +8,7 @@ A useful academic Bookself publication might include chapter readings, figures i
 
 ## A semester rhythm
 
-One practical rhythm is to keep the assigned edition on the public Shelf for the duration of the course while the private Binder collects corrections, new examples, and next-semester revisions. At an intentional release point, the instructor can review the new edition as a whole and replace the Shelf snapshot.
+One practical rhythm is to keep the assigned edition on the public Shelf for the duration of the course while the private Desk collects corrections, new examples, and next-semester revisions. At an intentional release point, the instructor can review the new edition as a whole and replace the Shelf snapshot.
 
 Git history then serves as more than a backup. It records the editorial history of the teaching material: what changed, when it changed, and the explanation attached to the change.
 

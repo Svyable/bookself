@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync Bookself's shared Reader and Desk into Binder/Shelf instances."""
+"""Sync Bookself's shared Reader and Desk into Desk/Shelf instances."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ def sync_one(root: Path, destination: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Sync Bookself's shared Reader and Desk into Binder/Shelf instances."
+        description="Sync Bookself's shared Reader and Desk into Desk/Shelf instances."
     )
     parser.add_argument("destinations", nargs="*", help="instance directories to update")
     args = parser.parse_args()
@@ -32,10 +32,10 @@ def main() -> int:
     root = Path(__file__).resolve().parent.parent
     destinations = [Path(item).expanduser().resolve() for item in args.destinations]
     if not destinations:
-        destinations = [path for path in (root.parent / "binder", root.parent / "shelf") if path.is_dir()]
+        destinations = [path for path in (root.parent / "desk", root.parent / "shelf") if path.is_dir()]
 
     if not destinations:
-        parser.error("no sibling binder or shelf found; pass one or more instance paths")
+        parser.error("no sibling desk or shelf found; pass one or more instance paths")
 
     for destination in destinations:
         sync_one(root, destination)

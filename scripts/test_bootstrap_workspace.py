@@ -40,27 +40,27 @@ class BootstrapWorkspaceTests(unittest.TestCase):
             result = self.run_bootstrap(workspace, "--no-git", "--json")
             data = json.loads(result.stdout)
 
-            binder = workspace / "binder"
+            desk = workspace / "desk"
             shelf = workspace / "shelf"
-            self.assertEqual(data["binder"]["role"], "binder")
+            self.assertEqual(data["desk"]["role"], "desk")
             self.assertEqual(data["shelf"]["role"], "shelf")
-            self.assertFalse(data["binder"]["gitInitialized"])
+            self.assertFalse(data["desk"]["gitInitialized"])
 
-            binder_imprint = json.loads((binder / "imprint.json").read_text(encoding="utf-8"))
+            desk_imprint = json.loads((desk / "imprint.json").read_text(encoding="utf-8"))
             shelf_imprint = json.loads((shelf / "imprint.json").read_text(encoding="utf-8"))
-            self.assertEqual(binder_imprint["role"], "binder")
+            self.assertEqual(desk_imprint["role"], "desk")
             self.assertEqual(shelf_imprint["role"], "shelf")
-            self.assertEqual(binder_imprint["github"]["owner"], "example")
+            self.assertEqual(desk_imprint["github"]["owner"], "example")
 
-            binder_templates = {path.name for path in (binder / "books").iterdir() if path.is_dir()}
-            self.assertEqual(binder_templates, TEMPLATES)
+            desk_templates = {path.name for path in (desk / "books").iterdir() if path.is_dir()}
+            self.assertEqual(desk_templates, TEMPLATES)
             self.assertEqual(list((shelf / "books").iterdir()), [])
 
-            self.assertTrue((binder / "reader").is_dir())
-            self.assertTrue((binder / "desk").is_dir())
+            self.assertTrue((desk / "reader").is_dir())
+            self.assertTrue((desk / "desk").is_dir())
             self.assertTrue((shelf / "reader").is_dir())
             self.assertTrue((shelf / "desk").is_dir())
-            self.assertNotEqual((binder / "README.md").read_text(), (shelf / "README.md").read_text())
+            self.assertNotEqual((desk / "README.md").read_text(), (shelf / "README.md").read_text())
 
     @unittest.skipUnless(shutil.which("git"), "git is not installed")
     def test_default_bootstrap_initializes_main_git_repositories(self) -> None:
@@ -68,7 +68,7 @@ class BootstrapWorkspaceTests(unittest.TestCase):
             workspace = Path(tmp) / "book-workspace"
             result = self.run_bootstrap(workspace, "--json")
             data = json.loads(result.stdout)
-            for role in ("binder", "shelf"):
+            for role in ("desk", "shelf"):
                 path = workspace / role
                 self.assertTrue((path / ".git").is_dir())
                 branch = subprocess.run(

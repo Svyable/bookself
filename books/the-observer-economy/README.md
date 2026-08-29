@@ -13,7 +13,7 @@
 | **ISBN**           |  |
 | **Author Links**   |  |
 | **Find elsewhere** |  |
-| **Chapters**       | 3 of 3 drafted |
+| **Chapters**       | 4 of 4 drafted |
 
 ## Subtitle
 
@@ -24,6 +24,7 @@
 - [x] [Main Manuscript — The Observer Economy](manuscript/book.md)
 - [x] [Casebook — Ten Reflexive Systems](manuscript/casebook.md)
 - [x] [Field Notes — How to Measure Without Becoming the Metric](manuscript/field-notes.md)
+- [x] [Twelve Paradoxes of Measurement](manuscript/paradoxes.md)
 
 ## Working proof
 

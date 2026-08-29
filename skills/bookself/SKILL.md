@@ -24,7 +24,6 @@ identical in platform, Desk, and Shelf after a sync. Instance identity and
 content are not shared: `books/`, root `README.md`, and `imprint.json` belong
 to each Desk/Shelf instance.
 
-The old `binder` role is obsolete. Do not create it or treat it as an alias.
 GitHub visibility is per repository. Unlisted on a public repo is not private.
 Never enable public Pages on a Desk containing unpublished work unless the user
 explicitly chose a public working-proof mode.

@@ -27,6 +27,13 @@
   font-variant-ligatures: none;
 }
 
+.page-inner a,
+.scroll-document a,
+.page-inner :not(pre) > code,
+.scroll-document :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
 .page-inner :not(pre) > code,
 .scroll-document :not(pre) > code {
   padding: .08em .28em;
@@ -115,15 +122,19 @@
 }
 
 .page-inner ul,
-.page-inner ol {
+.page-inner ol,
+.scroll-document ul,
+.scroll-document ol {
   padding-inline-start: 1.35em;
 }
 
-.page-inner li {
+.page-inner li,
+.scroll-document li {
   padding-inline-start: .08em;
 }
 
-.page-inner li + li {
+.page-inner li + li,
+.scroll-document li + li {
   margin-top: .3em;
 }
 

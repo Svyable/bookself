@@ -12,6 +12,14 @@ body[data-stage="read"] .proof-ribbon {
     background 180ms ease;
 }
 
+/* Header actions stay visually compact while preserving a comfortable 44px hit
+   area on desktop, tablet, portrait phones, and constrained landscape phones. */
+.app-header .header-btn,
+.app-header .logo {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+
 [data-reader-device="phone"] .app-header {
   padding-left: max(.55rem, env(safe-area-inset-left));
   padding-right: max(.55rem, env(safe-area-inset-right));

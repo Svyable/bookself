@@ -48,6 +48,7 @@ function bindPageDrag() {
     locked: false,
     horizontal: false,
     moved: false,
+    ownsTouch: false,
   };
 
   const clearVisual = (animate = true) => {
@@ -64,13 +65,35 @@ function bindPageDrag() {
     state.locked = false;
     state.horizontal = false;
     state.moved = false;
+    state.ownsTouch = false;
   };
 
+  const eligibleSurface = (target) => {
+    if (document.documentElement.dataset.readerMode === 'scroll') return false;
+    if (document.body.dataset.stage !== 'read' || interactiveTarget(target)) return false;
+    if (window.getSelection?.().toString().trim()) return false;
+    return true;
+  };
+
+  // app.js still carries a compatibility Touch Events swipe handler. Suppress
+  // that path for eligible page gestures so Pointer Events owns the turn once,
+  // while leaving links, controls, selection, overlays, and Scroll untouched.
+  wrap.addEventListener('touchstart', (event) => {
+    state.ownsTouch = eligibleSurface(event.target);
+    if (state.ownsTouch) event.stopPropagation();
+  }, { capture: true, passive: true });
+  wrap.addEventListener('touchmove', (event) => {
+    if (state.ownsTouch && state.horizontal) event.stopPropagation();
+  }, { capture: true, passive: true });
+  wrap.addEventListener('touchend', (event) => {
+    if (state.ownsTouch) event.stopPropagation();
+  }, { capture: true, passive: true });
+  wrap.addEventListener('touchcancel', (event) => {
+    if (state.ownsTouch) event.stopPropagation();
+  }, { capture: true, passive: true });
+
   wrap.addEventListener('pointerdown', (event) => {
-    if (event.pointerType === 'mouse') return;
-    if (document.documentElement.dataset.readerMode === 'scroll') return;
-    if (document.body.dataset.stage !== 'read' || interactiveTarget(event.target)) return;
-    if (window.getSelection?.().toString().trim()) return;
+    if (event.pointerType === 'mouse' || !eligibleSurface(event.target)) return;
     state.id = event.pointerId;
     state.x = event.clientX;
     state.y = event.clientY;

@@ -1,30 +1,40 @@
 # Bookself
 
-**Write a publication like software — without needing to be a software person.**
+**Write like a repo. Publish like a book.**
 
-Bookself is the whole Git-native publishing ecosystem: a private **Desk** where books are written and revised, a public **Shelf** for deliberate releases, and a **Reader** for reading them. The artifacts and status make the boundary between working copy and released copy explicit.
+Bookself is a Git-native publishing system for long-form work. Write and revise in the **Desk**, release intentional snapshots to the **Shelf**, and read both through the same beautiful **Reader**.
 
-## Try the demos first
+Your manuscript stays plain text. Git keeps the history. The Desk keeps the next edition moving. The Shelf gives readers a clean, deliberate release.
 
-| Demo | What it shows | Open it |
-|---|---|---|
-| **Desk demo — working proof** | A deliberately unfinished, fictional manuscript with Draft/Proof UI, review links, source, and history | [Open the Desk proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/) |
-| **Shelf demo — released examples** | Published Bookself-owned specimens across books, textbooks, magazines, newspapers, newsletters, journals, papers, and Reader styles | [Open the example Shelf →](https://svyable.github.io/bookself/reader/) |
+**[✍️ Open the live Desk proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)** · **[📚 Browse the example Shelf →](https://svyable.github.io/bookself/reader/)** · **[🚀 Start writing →](START-HERE.md)**
 
-The platform demo contains **example writing only**. It should not be a showcase for an individual author's personal manuscripts, projects, or identity. The separate `Svyable/shelf` deployment is not the Bookself example Shelf and is intentionally not linked from the main demo path.
+## See Bookself in two clicks
 
-Useful direct examples:
+No install. No setup. Open these two demos and the model becomes obvious.
 
-- [Textbook — *Bookself 101* →](https://svyable.github.io/bookself/reader/#/b/bookself-101/)
-- [Magazine — *The Bookself Review* →](https://svyable.github.io/bookself/reader/#/b/bookself-review/)
-- [Newspaper — *The Bookself Daily* →](https://svyable.github.io/bookself/reader/#/b/bookself-daily/)
-- [Newsletter — *Bookself Dispatch* →](https://svyable.github.io/bookself/reader/#/b/bookself-dispatch/)
-- [Journal — *Open Scholarship Notes* →](https://svyable.github.io/bookself/reader/#/b/open-scholarship-notes/)
-- [Paper — *The Example Paper* →](https://svyable.github.io/bookself/reader/#/b/the-example-paper/)
-- [Publication-format gallery →](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/)
-- [Reader style gallery →](https://svyable.github.io/bookself/reader/#/b/style-common-book/)
+### ✍️ Desk — where the next edition lives
 
-> New here? Start with **[START HERE](START-HERE.md)**. You do not need to know GitHub before you begin.
+The Desk is the authoring side of Bookself: the place for drafts, revision, proofing, review, source, history, and whatever comes next. A real Desk is private by default; this public demo is intentionally unfinished so you can see the working state.
+
+**[Open the Desk proof — *Making Bookself* →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)**
+
+Look for the **Draft / Proof** treatment, review links, source access, and revision history. Nothing is pretending to be finished.
+
+### 📚 Shelf — where released editions live
+
+The Shelf is the publishing side: a public bookcase of snapshots the author deliberately chose to release. It uses the same Reader, but the promise is different — this is the edition readers are meant to encounter.
+
+**[Browse the example Shelf →](https://svyable.github.io/bookself/reader/)**
+
+The Shelf demo includes books, textbooks, magazines, newspapers, newsletters, journals, papers, and multiple Reader styles, all built from ordinary repository files.
+
+**Same Reader. Different promise.** Desk means *work in motion*. Shelf means *this snapshot is released*.
+
+Want to jump straight into an example? [*Bookself 101*](https://svyable.github.io/bookself/reader/#/b/bookself-101/) · [*The Bookself Review*](https://svyable.github.io/bookself/reader/#/b/bookself-review/) · [*The Bookself Daily*](https://svyable.github.io/bookself/reader/#/b/bookself-daily/) · [*Bookself Dispatch*](https://svyable.github.io/bookself/reader/#/b/bookself-dispatch/) · [*Open Scholarship Notes*](https://svyable.github.io/bookself/reader/#/b/open-scholarship-notes/) · [*The Example Paper*](https://svyable.github.io/bookself/reader/#/b/the-example-paper/) · [Format gallery](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/) · [Reader styles](https://svyable.github.io/bookself/reader/#/b/style-common-book/)
+
+> **New to Git?** Start with **[START HERE](START-HERE.md)**. Bookself is designed so you can use the publishing model without first becoming a software person.
+
+The platform demos contain **example writing only**. They are there to demonstrate Bookself itself, not an individual author's personal manuscripts or identity.
 
 ## The model
 

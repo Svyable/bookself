@@ -136,6 +136,46 @@
   to { opacity: 1; transform: translate3d(0,0,0); filter: brightness(1); }
 }
 
+/* Direct-manipulation touch/pen turns. Geometry remains owned by pagination;
+   only compositor properties move while the pointer is down. */
+[data-reader-mode="paged"] .pages-wrapper.dragging-page .page-surface.active,
+[data-reader-mode="paged"] .pages-wrapper.drag-settling .page-surface.active {
+  transition: none;
+  will-change: transform, box-shadow;
+}
+
+[data-reader-mode="paged"] .pages-wrapper.dragging-page.drag-next[data-reader-spread="single"] #pageLeft.active,
+[data-reader-mode="paged"] .pages-wrapper.dragging-page.drag-next[data-reader-spread="spread"] #pageRight.active,
+[data-reader-mode="paged"] .pages-wrapper.dragging-page.drag-prev #pageLeft.active {
+  transform: translate3d(var(--drag-x, 0), 0, 0) rotateY(var(--drag-rotate, 0deg));
+  box-shadow: 0 16px 38px color-mix(in srgb, var(--shadow) 74%, transparent);
+  z-index: 6;
+}
+
+[data-reader-mode="paged"] .pages-wrapper.dragging-page.drag-next[data-reader-spread="single"] #pageLeft.active,
+[data-reader-mode="paged"] .pages-wrapper.dragging-page.drag-next[data-reader-spread="spread"] #pageRight.active {
+  transform-origin: left center;
+}
+
+[data-reader-mode="paged"] .pages-wrapper.dragging-page.drag-prev #pageLeft.active {
+  transform-origin: right center;
+}
+
+[data-reader-mode="paged"] .pages-wrapper.dragging-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  opacity: var(--drag-shade, 0);
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,.34));
+}
+
+[data-reader-mode="paged"] .pages-wrapper.drag-settling .page-surface.active {
+  transition: transform 180ms cubic-bezier(.2,.75,.25,1), box-shadow 180ms ease;
+  transform: translate3d(0,0,0) rotateY(0deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-reader-mode="paged"] .pages-wrapper.turn-next[data-reader-spread="spread"] #pageRight.active,
   [data-reader-mode="paged"] .pages-wrapper.turn-next[data-reader-spread="single"] #pageLeft.active,
@@ -144,5 +184,16 @@
   [data-reader-mode="paged"] .page-surface::after {
     animation: none !important;
     filter: none !important;
+  }
+
+  [data-reader-mode="paged"] .pages-wrapper.dragging-page .page-surface.active,
+  [data-reader-mode="paged"] .pages-wrapper.drag-settling .page-surface.active {
+    transform: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-reader-mode="paged"] .pages-wrapper.dragging-page::after {
+    display: none;
   }
 }

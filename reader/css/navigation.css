@@ -66,8 +66,8 @@
 }
 
 .page-nav .nav-btn {
-  min-width: 2.65rem;
-  min-height: 2.65rem;
+  min-width: 3rem;
+  min-height: 3rem;
 }
 
 .page-nav .nav-btn:focus-visible {
@@ -77,8 +77,8 @@
 
 @media (pointer: coarse) {
   .page-nav .nav-btn {
-    min-width: 2.9rem;
-    min-height: 2.9rem;
+    min-width: 3.25rem;
+    min-height: 3.25rem;
   }
 
   .nav-gesture-preview {

@@ -5,6 +5,7 @@ Working manuscripts live here before publication. Review them in the Bookself Re
 | Book | Manuscript | Reader proof | Status |
 |---|---|---|---|
 | **Bottleneck** — *The Innermost Loop of Powering Intelligent Machines* | [`bottleneck-2026-08-28-2202.md`](bottleneck-2026-08-28-2202.md) | [Open working proof →](https://svyable.github.io/bookself/reader/#/b/bottleneck/) | Drafting / review |
+| **The Error Engine** — *How Wrongness Creates Intelligence, Markets, and Progress* | [`the-error-engine-2026-08-28-2300.md`](the-error-engine-2026-08-28-2300.md) + [`casebook`](the-error-engine-casebook-2026-08-28-2300.md) | [Open working proof →](https://svyable.github.io/bookself/reader/#/b/the-error-engine/) | Drafting / review |
 
 ## Review workflow
 

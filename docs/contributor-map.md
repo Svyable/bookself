@@ -31,7 +31,7 @@ The **Reader** is the reading interface for Desk proofs and Shelf releases.
 
 A platform contributor does **not** need access to somebody's private Desk in order to improve Bookself. Make the shared change in this repository. Maintainers can mirror the final `reader/` / `desk/` bytes into reference instances when the change lands.
 
-Do not hard-code a repository owner, private URL, publication identity, or Svyable-specific behavior into shared UI. The obsolete `binder` role is not a supported alias.
+Do not hard-code a repository owner, private URL, publication identity, or Svyable-specific behavior into shared UI.
 
 ## Local verification without a build system
 

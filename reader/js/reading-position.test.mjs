@@ -22,6 +22,10 @@ test('stamps source ranges without disturbing existing block markup', () => {
     withSourceRange('<p data-source-start="0" data-source-end="8">Hello</p>', 20, 40),
     '<p data-source-start="20" data-source-end="40">Hello</p>'
   );
+  assert.equal(
+    withSourceRange('<p title="1 > 0" data-note=">">Hello</p>', 4, 19),
+    '<p data-source-start="4" data-source-end="19" title="1 > 0" data-note=">">Hello</p>'
+  );
 });
 
 test('anchors to the source fragment crossing the visual reading probe', () => {

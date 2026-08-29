@@ -13,7 +13,7 @@
 | **ISBN**           |  |
 | **Author Links**   |  |
 | **Find elsewhere** |  |
-| **Chapters**       | 5 of 5 drafted |
+| **Chapters**       | 6 of 6 drafted |
 
 ## Subtitle
 
@@ -26,6 +26,7 @@
 - [x] [Field Manual — Twenty Practices for Designing Better Feedback Clocks](manuscript/field-manual.md)
 - [x] [Twenty-Four Paradoxes and Dialogues Across the Delay](manuscript/paradoxes-and-dialogues.md)
 - [x] [Systems Atlas — Ten Domains Where the Clock Changes the Outcome](manuscript/systems-atlas.md)
+- [x] [Temporal Portraits — Eight Lives and Institutions That Changed the Clock](manuscript/temporal-portraits.md)
 
 ## Review status
 

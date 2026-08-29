@@ -27,6 +27,13 @@
   font-variant-ligatures: none;
 }
 
+.page-inner a,
+.scroll-document a,
+.page-inner :not(pre) > code,
+.scroll-document :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
 .page-inner :not(pre) > code,
 .scroll-document :not(pre) > code {
   padding: .08em .28em;

@@ -13,7 +13,7 @@
 | **ISBN**           |  |
 | **Author Links**   |  |
 | **Find elsewhere** |  |
-| **Chapters**       | 6 of 6 drafted |
+| **Chapters**       | 7 of 7 drafted |
 
 ## Subtitle
 
@@ -27,6 +27,7 @@
 - [x] [Sixteen Paradoxes of Consequence](manuscript/paradoxes.md)
 - [x] [Field Manual — Twenty Practices for Decisions That Change Their Own Environment](manuscript/field-manual.md)
 - [x] [Dialogues at the Return Path](manuscript/dialogues.md)
+- [x] [Systems Atlas — Ten Places Where the Future Talks Back](manuscript/systems-atlas.md)
 
 ## Review status
 

@@ -60,13 +60,7 @@ export function searchableMarkdown(markdown) {
   }
 
   for (let i = 0; i < source.length; i += 1) {
-    if (hidden[i]) {
-      if (text && !text.endsWith(' ')) {
-        pendingSpace = true;
-        pendingSpaceOffset = i;
-      }
-      continue;
-    }
+    if (hidden[i]) continue;
 
     const ch = source[i];
     if (/\s/.test(ch)) {

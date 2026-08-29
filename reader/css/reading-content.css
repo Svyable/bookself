@@ -34,6 +34,13 @@
   overflow-wrap: anywhere;
 }
 
+.page-inner a:focus-visible,
+.scroll-document a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: .16em;
+  border-radius: 2px;
+}
+
 .page-inner :not(pre) > code,
 .scroll-document :not(pre) > code {
   padding: .08em .28em;

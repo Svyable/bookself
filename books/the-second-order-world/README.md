@@ -13,7 +13,7 @@
 | **ISBN**           |  |
 | **Author Links**   |  |
 | **Find elsewhere** |  |
-| **Chapters**       | 7 of 7 drafted |
+| **Chapters**       | 8 of 8 drafted |
 
 ## Subtitle
 
@@ -28,6 +28,7 @@
 - [x] [Field Manual — Twenty Practices for Decisions That Change Their Own Environment](manuscript/field-manual.md)
 - [x] [Dialogues at the Return Path](manuscript/dialogues.md)
 - [x] [Systems Atlas — Ten Places Where the Future Talks Back](manuscript/systems-atlas.md)
+- [x] [Twenty-Four Laws for Living With Feedback](manuscript/laws.md)
 
 ## Review status
 

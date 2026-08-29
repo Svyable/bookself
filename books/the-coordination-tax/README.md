@@ -13,7 +13,7 @@
 | **ISBN**           |  |
 | **Author Links**   |  |
 | **Find elsewhere** |  |
-| **Chapters**       | 5 of 5 drafted |
+| **Chapters**       | 6 of 6 drafted |
 
 ## Subtitle
 
@@ -26,6 +26,7 @@
 - [x] [Field Notes — Twelve Practices for Systems That Need to Move Together](manuscript/field-notes.md)
 - [x] [Sixteen Paradoxes of Agreement](manuscript/paradoxes.md)
 - [x] [Dialogues — Eight Conversations at the Boundaries](manuscript/dialogues.md)
+- [x] [Institutional Anatomy — Ten Layers Hidden Inside Every Large Collective](manuscript/institutional-anatomy.md)
 
 ## Review status
 

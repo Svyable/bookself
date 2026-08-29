@@ -181,8 +181,15 @@ export function installReadingSurface() {
     const right = document.getElementById('pageRight');
     const toggle = document.getElementById('viewModeBtn');
     const spreadVisible = !!right?.classList.contains('active');
+    if (!spreadVisible) {
+      // The layout is already comfortable. Mark this viewport as handled so a
+      // later explicit user request for Spread is respected until geometry changes.
+      autoCollapseKey = key;
+      return;
+    }
+
     const toggleMeansSingle = /single/i.test(toggle?.textContent || '');
-    if (!spreadVisible || !toggle || toggle.hidden || !toggleMeansSingle) return;
+    if (!toggle || toggle.hidden || !toggleMeansSingle) return;
 
     autoCollapseKey = key;
     queueMicrotask(() => toggle.click());

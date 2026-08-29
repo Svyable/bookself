@@ -106,6 +106,30 @@ function createRepaginator() {
   };
 }
 
+function watchAdaptiveStyles(requestRepaginate) {
+  let observer = null;
+
+  const attach = (link) => {
+    if (!link || link.dataset.readerSurfaceObserved === 'true') return false;
+    link.dataset.readerSurfaceObserved = 'true';
+    const ready = () => afterFrames(2, () => requestRepaginate(0));
+    link.addEventListener('load', ready, { once: true });
+    if (link.sheet) ready();
+    return true;
+  };
+
+  const existing = document.querySelector('link[data-reader-navigation]');
+  if (attach(existing)) return;
+
+  observer = new MutationObserver(() => {
+    const link = document.querySelector('link[data-reader-navigation]');
+    if (!attach(link)) return;
+    observer?.disconnect();
+    observer = null;
+  });
+  observer.observe(document.head, { childList: true });
+}
+
 export function installReadingSurface() {
   const el = root();
   if (el.dataset.readingSurfaceEnhanced === 'true') return;
@@ -120,6 +144,7 @@ export function installReadingSurface() {
   };
 
   syncViewport();
+  watchAdaptiveStyles(requestRepaginate);
 
   const coarseQuery = window.matchMedia?.('(pointer: coarse)');
   coarseQuery?.addEventListener?.('change', syncViewport);

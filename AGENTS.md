@@ -35,8 +35,7 @@ submodule, symlink, shared branch, or runtime dependency on the private
 repository. After release, the two copies are independent until the next
 release.
 
-The old `binder` role is obsolete. Do not create, accept, document, or preserve
-it as a compatibility alias. Current authoring instances use `role: "desk"`.
+Current authoring instances use `role: "desk"`.
 
 Shared UI consists of **both** `reader/` and `desk/`. Those directories must
 remain byte-for-byte aligned across the upstream platform, Desk, and Shelf after

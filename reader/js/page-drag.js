@@ -94,6 +94,10 @@ function bindPageDrag() {
 
   wrap.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' || !eligibleSurface(event.target)) return;
+    // navigation.js already owns tap zones, keyboard semantics, and turn
+    // buffering. Stop only its pointer-gesture path here so one controller owns
+    // the drag while those higher-level navigation contracts remain intact.
+    event.stopPropagation();
     state.id = event.pointerId;
     state.x = event.clientX;
     state.y = event.clientY;
@@ -122,7 +126,7 @@ function bindPageDrag() {
     if (!state.horizontal) return;
 
     event.preventDefault();
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     state.moved = true;
     const visual = dragVisual(dx, wrap.getBoundingClientRect().width);
     wrap.classList.add('dragging-page');
@@ -146,11 +150,11 @@ function bindPageDrag() {
       width: wrap.getBoundingClientRect().width,
     });
     const moved = state.moved;
+    event.stopPropagation();
     clearVisual(true);
     reset();
     if (!moved || cancelled || !decision.commit) return;
     event.preventDefault();
-    event.stopImmediatePropagation();
     const button = document.getElementById(decision.direction > 0 ? 'nextBtn' : 'prevBtn');
     if (button && !button.disabled) button.click();
   };

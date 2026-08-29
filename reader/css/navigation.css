@@ -65,6 +65,45 @@
   animation: navBufferedPulse 520ms ease-in-out infinite alternate;
 }
 
+/* Touch/pen direct manipulation: pagination geometry does not move; only the
+   active visual leaf is compositor-transformed while the pointer owns it. */
+#pagesWrapper.dragging-page .page-surface.active,
+#pagesWrapper.drag-settling .page-surface.active {
+  will-change: transform, box-shadow;
+}
+
+#pagesWrapper.dragging-page.drag-next[data-reader-spread="single"] #pageLeft.active,
+#pagesWrapper.dragging-page.drag-next[data-reader-spread="spread"] #pageRight.active,
+#pagesWrapper.dragging-page.drag-prev #pageLeft.active {
+  z-index: 7;
+  transform: translate3d(var(--drag-x, 0), 0, 0) rotateY(var(--drag-rotate, 0deg));
+  box-shadow: 0 16px 38px color-mix(in srgb, var(--shadow) 74%, transparent);
+}
+
+#pagesWrapper.dragging-page.drag-next[data-reader-spread="single"] #pageLeft.active,
+#pagesWrapper.dragging-page.drag-next[data-reader-spread="spread"] #pageRight.active {
+  transform-origin: left center;
+}
+
+#pagesWrapper.dragging-page.drag-prev #pageLeft.active {
+  transform-origin: right center;
+}
+
+#pagesWrapper.dragging-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  opacity: var(--drag-shade, 0);
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,.34));
+}
+
+#pagesWrapper.drag-settling .page-surface.active {
+  transition: transform 180ms cubic-bezier(.2,.75,.25,1), box-shadow 180ms ease;
+  transform: translate3d(0,0,0) rotateY(0deg);
+}
+
 .page-nav .nav-btn {
   min-width: 3rem;
   min-height: 3rem;
@@ -106,6 +145,17 @@
 
   #pagesWrapper[data-nav-buffered] .nav-gesture-preview {
     animation: none;
+  }
+
+  #pagesWrapper.dragging-page .page-surface.active,
+  #pagesWrapper.drag-settling .page-surface.active {
+    transform: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+
+  #pagesWrapper.dragging-page::after {
+    display: none;
   }
 }
 

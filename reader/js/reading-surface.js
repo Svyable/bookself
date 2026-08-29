@@ -165,11 +165,35 @@ export function installReadingSurface() {
   el.dataset.readingSurfaceEnhanced = 'true';
 
   const requestRepaginate = createRepaginator();
+  let autoCollapseKey = '';
+
+  const maybeAutoCollapseSpread = () => {
+    const snapshot = viewportSnapshot();
+    if (snapshot.spreadRecommended) {
+      autoCollapseKey = '';
+      return;
+    }
+    if (document.body.dataset.stage !== 'read') return;
+
+    const key = `${snapshot.device}:${snapshot.orientation}:${Math.round(snapshot.width / 80)}`;
+    if (autoCollapseKey === key) return;
+
+    const right = document.getElementById('pageRight');
+    const toggle = document.getElementById('viewModeBtn');
+    const spreadVisible = !!right?.classList.contains('active');
+    const toggleMeansSingle = /single/i.test(toggle?.textContent || '');
+    if (!spreadVisible || !toggle || toggle.hidden || !toggleMeansSingle) return;
+
+    autoCollapseKey = key;
+    queueMicrotask(() => toggle.click());
+  };
 
   const syncViewport = () => {
-    setViewportCss(viewportSnapshot());
+    const snapshot = viewportSnapshot();
+    setViewportCss(snapshot);
     syncSpreadState();
     syncPageSemantics();
+    window.setTimeout(maybeAutoCollapseSpread, 0);
   };
 
   syncViewport();
@@ -189,6 +213,7 @@ export function installReadingSurface() {
     const observer = new MutationObserver(() => {
       syncSpreadState();
       syncPageSemantics();
+      window.setTimeout(maybeAutoCollapseSpread, 0);
     });
     if (wrapper) observer.observe(wrapper, { attributes: true, attributeFilter: ['class'] });
     if (right) observer.observe(right, { attributes: true, attributeFilter: ['class'] });
@@ -198,7 +223,9 @@ export function installReadingSurface() {
   const stageObserver = new MutationObserver(() => {
     if (document.body.dataset.stage !== 'read') {
       document.body.classList.remove('reader-chrome-hidden');
+      return;
     }
+    window.setTimeout(maybeAutoCollapseSpread, 0);
   });
   stageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-stage'] });
 

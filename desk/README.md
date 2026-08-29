@@ -4,7 +4,7 @@ Working manuscripts live here before publication. Review them in the Bookself Re
 
 | Book | Manuscript | Reader proof | Status |
 |---|---|---|---|
-| **Silicon Ceilings** — *The War for the Machines That Make Intelligence* | [`silicon-ceilings-2026-08-28-2202.md`](silicon-ceilings-2026-08-28-2202.md) | Reader proof needs the Drafting book structure under `books/silicon-ceilings/` before this link can be activated. | Drafting / review |
+| **Bottleneck** — *The Innermost Loop of Powering Intelligent Machines* | [`bottleneck-2026-08-28-2202.md`](bottleneck-2026-08-28-2202.md) | [Open working proof →](https://svyable.github.io/bookself/reader/#/b/bottleneck/) | Drafting / review |
 
 ## Review workflow
 

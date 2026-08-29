@@ -96,7 +96,7 @@ export function scrollTopForSourceAnchor({
   maxScroll,
 }) {
   const start = Math.max(0, Number(sourceStart) || 0);
-  const end = Math.max(start, Number(end = sourceEnd) || start);
+  const end = Math.max(start, Number(sourceEnd) || start);
   const offset = Math.max(start, Math.min(end, Number(sourceOffset) || start));
   const ratio = end > start ? (offset - start) / (end - start) : 0;
   const top = Math.max(0, Number(blockTop) || 0);

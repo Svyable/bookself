@@ -41,9 +41,10 @@ async function resolveChapter(context, route) {
   return route.chapter || '';
 }
 
-function refreshHighlights(slug, chapter) {
+function refreshHighlights(slug, chapter, originNode) {
   const notes = loadNotes(slug);
-  document.querySelectorAll('.page-inner').forEach((root) => applyNotes(root, notes, chapter));
+  const pagedRoot = originNode?.closest?.('.page-inner');
+  if (pagedRoot) applyNotes(pagedRoot, notes, chapter);
   document.querySelectorAll(`.scroll-chapter[data-chapter="${CSS.escape(chapter)}"]`)
     .forEach((root) => applyNotes(root, notes, chapter));
 }
@@ -86,7 +87,7 @@ function savePending(event) {
     anchor: pending.anchor,
   });
   document.getElementById('noteDialog')?.classList.remove('active');
-  refreshHighlights(pending.slug, pending.chapter);
+  refreshHighlights(pending.slug, pending.chapter, pending.node);
   pending = null;
   window.dispatchEvent(new Event('resize'));
 

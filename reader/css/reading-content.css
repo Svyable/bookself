@@ -151,6 +151,14 @@
   border-radius: 2px;
 }
 
+.page-inner::selection,
+.page-inner *::selection,
+.scroll-document::selection,
+.scroll-document *::selection {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent) 30%, var(--bg-page));
+}
+
 @media (max-width: 700px) {
   .page-inner pre,
   .scroll-document pre {

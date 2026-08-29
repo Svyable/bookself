@@ -67,8 +67,7 @@ When the agent has authorized GitHub tools but no local shell, it should reprodu
 - preserve `reader/` and `desk/` as shared UI;
 - keep `books/`, root `README.md`, and `imprint.json` instance-owned;
 - make manuscript changes on the Desk;
-- create a Shelf release as an independent snapshot rather than a live reference to Desk;
-- do not create or accept the obsolete `binder` role as a compatibility alias.
+- create a Shelf release as an independent snapshot rather than a live reference to Desk.
 
 If the connected tool cannot perform a required external operation such as repository creation, the agent should complete every other deterministic step it can and report the exact remaining capability gap. It should not pretend the repository exists.
 

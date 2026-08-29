@@ -63,7 +63,6 @@ When operating through authorized GitHub APIs/tools, reproduce the durable resul
 - Keep `reader/` and `desk/` shared.
 - Keep `books/`, root `README.md`, and `imprint.json` instance-owned.
 - Treat Shelf releases as copied snapshots, never live pointers into Desk.
-- Do not create or accept the obsolete `binder` role as a compatibility alias.
 
 If repository creation or another required external action is unavailable in the current toolset, do every deterministic step that is available and state the precise remaining capability gap. Never claim an external resource exists when it does not.
 

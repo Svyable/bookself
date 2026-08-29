@@ -251,7 +251,7 @@ An intentionally public proof is a separate, explicit publishing choice. A publi
 
 GitHub Pages instances may use `"auto"` owner/repo values and let the browser infer them from the Pages URL. Private/local Desks should usually record their actual GitHub owner/repo if edit/history links are desired.
 
-The old `binder` role is not part of the current architecture. A repository using that value must be restamped or have its `imprint.json` migrated to `desk` before current release and doctor tooling will accept it.
+Current authoring repositories use `role: "desk"`; release and doctor tooling accept only `platform`, `desk`, or `shelf`.
 
 ## What not to expect
 

@@ -93,10 +93,10 @@ class DoctorTests(unittest.TestCase):
             codes = {item.code for item in inspect_root(root)}
             self.assertIn("desk_published", codes)
 
-    def test_obsolete_binder_role_is_invalid(self):
+    def test_unknown_role_is_invalid(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            fixture(root, "binder")
+            fixture(root, "archive")
             codes = {item.code for item in inspect_root(root)}
             self.assertIn("invalid_role", codes)
 

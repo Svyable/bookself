@@ -11,7 +11,7 @@ Bookself is the whole product/ecosystem. Its repository roles are:
 
 The Reader is the reading interface for either a Desk proof or a released Shelf publication.
 
-A release copies a committed Desk snapshot into the Shelf. Desk and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Desk. The old `binder` role is obsolete and is not a compatibility alias.
+A release copies a committed Desk snapshot into the Shelf. Desk and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Desk.
 
 ## Rights boundary
 

@@ -5,6 +5,7 @@ Working manuscripts live here before publication. Review them in the Bookself Re
 | Book | Manuscript | Reader proof | Status |
 |---|---|---|---|
 | **Bottleneck** — *The Innermost Loop of Powering Intelligent Machines* | [`bottleneck-2026-08-28-2202.md`](bottleneck-2026-08-28-2202.md) | [Open working proof →](https://svyable.github.io/bookself/reader/#/b/bottleneck/) | Drafting / review |
+| **Synthetic Intelligence** | [`synthetic-intelligence-2026-08-28-2257.md`](synthetic-intelligence-2026-08-28-2257.md) | [Open working proof →](https://svyable.github.io/bookself/reader/#/b/synthetic-intelligence/) | Drafting / review |
 
 ## Review workflow
 

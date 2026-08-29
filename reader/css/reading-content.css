@@ -41,6 +41,12 @@
   border-radius: 2px;
 }
 
+/* Internal links, TOC entries, and footnote returns in continuous mode should
+   land with enough context to read the target instead of pinning it to an edge. */
+.scroll-document [id] {
+  scroll-margin-block: clamp(3.5rem, 9vh, 5.5rem);
+}
+
 .page-inner :not(pre) > code,
 .scroll-document :not(pre) > code {
   padding: .08em .28em;

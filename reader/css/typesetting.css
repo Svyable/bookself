@@ -15,6 +15,11 @@
   --reader-heading-ink: color-mix(in srgb, var(--text-primary) 96%, var(--accent) 4%);
   --reader-rule: color-mix(in srgb, var(--accent) 58%, transparent);
   --reader-hairline: color-mix(in srgb, var(--text-muted) 20%, transparent);
+  --reader-page-inline: clamp(2.6rem, 4.3vw, 4.8rem);
+  --reader-page-top: clamp(3.5rem, 6.2vh, 5.25rem);
+  --reader-page-bottom: clamp(3.25rem, 5.5vh, 4.75rem);
+  --reader-turn-duration: 680ms;
+  --reader-turn-ease: cubic-bezier(0.18, 0.74, 0.18, 1);
 }
 
 [data-reader-font="book"] {
@@ -68,6 +73,7 @@
   font-optical-sizing: auto;
   font-variant-ligatures: common-ligatures contextual;
   text-rendering: optimizeLegibility;
+  font-synthesis: none;
 }
 
 [data-reader-font="book"] .page-inner,
@@ -125,8 +131,8 @@
 .experience-preview-sample {
   hanging-punctuation: first allow-end last;
   hyphenate-limit-chars: 6 3 3;
-  orphans: 2;
-  widows: 2;
+  orphans: 3;
+  widows: 3;
   text-wrap: pretty;
   text-underline-offset: 0.14em;
   text-decoration-skip-ink: auto;
@@ -141,7 +147,7 @@
 
 .page-inner h1:first-child {
   max-width: 14ch;
-  margin-top: clamp(1.55em, 5.8vh, 3.2em);
+  margin-top: clamp(1.15em, 4.2vh, 2.35em);
   margin-bottom: 1.35em;
   color: var(--reader-heading-ink);
   font-size: clamp(1.58em, 2.5vw, 1.92em);
@@ -159,8 +165,12 @@
   border-top: 1px solid var(--reader-rule);
 }
 
+/* A short page is still a page in a book, not a centered modal. Keep the
+   typographic top line stable across every turn. Chapter openers control their
+   own vertical rhythm through heading margins instead. */
+.page-inner.is-short,
 .page-inner.chapter-open.is-short {
-  justify-content: flex-start;
+  display: block;
 }
 
 .page-surface:has(.page-inner.chapter-open) .page-running {
@@ -186,10 +196,12 @@
 }
 
 .page-inner h2 {
-  margin-top: 1.85em;
-  margin-bottom: 0.72em;
-  font-size: 1.28em;
-  line-height: 1.16;
+  margin-top: 0.35em;
+  margin-bottom: 0.78em;
+  max-width: 22ch;
+  font-size: 1.26em;
+  line-height: 1.15;
+  letter-spacing: -0.008em;
 }
 
 .page-inner h3 {
@@ -264,13 +276,30 @@
   text-underline-offset: 0.15em;
 }
 
-.page-surface {
+/* Paged reading is composed as a book spread. The page's usable measure grows
+   with the viewport but the margins never collapse into web-panel padding. */
+[data-reader-mode="paged"] .pages-wrapper.active {
+  width: min(94vw, 1080px);
+  max-height: min(78dvh, 760px);
+  margin-inline: auto;
+  filter: drop-shadow(0 20px 34px color-mix(in srgb, #000 30%, transparent));
+}
+
+[data-reader-mode="paged"] .page-surface,
+.page-surface.measure {
+  padding-top: var(--reader-page-top);
+  padding-bottom: var(--reader-page-bottom);
+  padding-left: var(--reader-page-inline);
+  padding-right: var(--reader-page-inline);
+}
+
+[data-reader-mode="paged"] .page-surface {
   background:
     linear-gradient(90deg,
-      color-mix(in srgb, var(--shadow) 6%, transparent),
-      transparent 9%,
-      transparent 91%,
-      color-mix(in srgb, var(--shadow) 5%, transparent)),
+      color-mix(in srgb, var(--shadow) 7%, transparent),
+      transparent 8%,
+      transparent 92%,
+      color-mix(in srgb, var(--shadow) 6%, transparent)),
     radial-gradient(ellipse 72% 54% at 50% 15%,
       color-mix(in srgb, var(--text-primary) 2.5%, transparent),
       transparent 72%),
@@ -279,16 +308,54 @@
   border-bottom: 1px solid color-mix(in srgb, var(--shadow) 18%, transparent);
 }
 
+[data-reader-mode="paged"] .page-surface.left {
+  border-radius: 3px 0 0 3px;
+  box-shadow:
+    inset -26px 0 34px -30px color-mix(in srgb, #000 80%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 3%, transparent);
+}
+
+[data-reader-mode="paged"] .page-surface.right {
+  border-radius: 0 3px 3px 0;
+  box-shadow:
+    inset 26px 0 34px -30px color-mix(in srgb, #000 80%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 3%, transparent);
+}
+
+[data-reader-mode="paged"] .gutter {
+  width: 7px;
+  background: linear-gradient(90deg, #0008, #0003 42%, #0003 58%, #0008);
+  box-shadow: 0 0 18px #0007;
+}
+
+[data-reader-mode="paged"] .page-inner {
+  max-width: 34rem;
+  width: 100%;
+  margin-inline: auto;
+  color: color-mix(in srgb, var(--text-primary) 98%, var(--text-secondary) 2%);
+  line-height: max(var(--reader-leading), 1.48);
+}
+
+[data-reader-mode="paged"] .page-inner > * + * {
+  margin-top: max(var(--reader-paragraph-gap), 0.72em);
+}
+
 .page-running {
+  top: clamp(1rem, 2.1vh, 1.45rem);
+  left: var(--reader-page-inline);
+  right: var(--reader-page-inline);
   font-variant-caps: all-small-caps;
   font-variant-numeric: lining-nums tabular-nums;
   letter-spacing: 0.13em;
   text-transform: none;
+  opacity: 0.62;
 }
 
 .page-num {
+  bottom: clamp(1rem, 2vh, 1.35rem);
   font-variant-numeric: lining-nums tabular-nums;
   letter-spacing: 0.06em;
+  opacity: 0.72;
 }
 
 .scroll-document {
@@ -320,14 +387,131 @@
   font-weight: 600;
 }
 
+/* Human page motion: a page gains speed after the fingers commit, floats
+   through the middle of the turn, then softly lands. These !important longhands
+   intentionally override the older core shorthand without changing reduced-
+   motion behavior. */
+[data-reader-mode="paged"] .pages-wrapper.turn-next #pageRight.active,
+[data-reader-mode="paged"] .pages-wrapper.turn-next:not(:has(#pageRight.active)) #pageLeft.active,
+[data-reader-mode="paged"] .pages-wrapper.turn-prev #pageLeft.active {
+  animation-duration: var(--reader-turn-duration) !important;
+  animation-timing-function: var(--reader-turn-ease) !important;
+  will-change: transform, box-shadow, filter;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+[data-reader-mode="paged"] .pages-wrapper.turn-next #pageRight.active,
+[data-reader-mode="paged"] .pages-wrapper.turn-next:not(:has(#pageRight.active)) #pageLeft.active {
+  animation-name: bookLeafNext !important;
+}
+
+[data-reader-mode="paged"] .pages-wrapper.turn-prev #pageLeft.active {
+  animation-name: bookLeafPrev !important;
+}
+
+@keyframes bookLeafNext {
+  0% {
+    transform: translate3d(0, 0, 0) rotateY(0deg) scaleX(1);
+    filter: brightness(1);
+  }
+  18% {
+    transform: translate3d(-2px, 0, 10px) rotateY(-18deg) scaleX(0.999);
+    filter: brightness(0.995);
+  }
+  46% {
+    transform: translate3d(-8px, -1px, 24px) rotateY(-61deg) scaleX(0.992);
+    filter: brightness(0.96);
+    box-shadow: inset 34px 0 42px -22px #000c, -18px 20px 42px #0008;
+  }
+  72% {
+    transform: translate3d(-11px, 0, 15px) rotateY(-91deg) scaleX(0.989);
+    filter: brightness(0.91);
+    box-shadow: inset 42px 0 48px -20px #000d, -22px 14px 34px #0006;
+  }
+  90% {
+    transform: translate3d(-5px, 0, 4px) rotateY(-103deg) scaleX(0.997);
+    filter: brightness(0.94);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotateY(-106deg) scaleX(1);
+    filter: brightness(0.96);
+  }
+}
+
+@keyframes bookLeafPrev {
+  0% {
+    transform: translate3d(0, 0, 0) rotateY(0deg) scaleX(1);
+    filter: brightness(1);
+  }
+  18% {
+    transform: translate3d(2px, 0, 10px) rotateY(18deg) scaleX(0.999);
+    filter: brightness(0.995);
+  }
+  46% {
+    transform: translate3d(8px, -1px, 24px) rotateY(61deg) scaleX(0.992);
+    filter: brightness(0.96);
+    box-shadow: inset -34px 0 42px -22px #000c, 18px 20px 42px #0008;
+  }
+  72% {
+    transform: translate3d(11px, 0, 15px) rotateY(91deg) scaleX(0.989);
+    filter: brightness(0.91);
+    box-shadow: inset -42px 0 48px -20px #000d, 22px 14px 34px #0006;
+  }
+  90% {
+    transform: translate3d(5px, 0, 4px) rotateY(103deg) scaleX(0.997);
+    filter: brightness(0.94);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotateY(106deg) scaleX(1);
+    filter: brightness(0.96);
+  }
+}
+
+[data-reader-mode="paged"] .page-surface.turning {
+  animation-name: pageInkSettle !important;
+  animation-duration: 260ms !important;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+}
+
+@keyframes pageInkSettle {
+  from { opacity: 0.82; filter: brightness(0.96); }
+  to { opacity: 1; filter: brightness(1); }
+}
+
 ::selection {
   background: color-mix(in srgb, var(--accent) 34%, transparent);
   color: var(--text-primary);
 }
 
+@media (max-width: 1100px) {
+  :root {
+    --reader-page-inline: clamp(2rem, 4vw, 3.4rem);
+    --reader-page-top: clamp(3.1rem, 5.4vh, 4.25rem);
+    --reader-page-bottom: clamp(2.9rem, 5vh, 4rem);
+  }
+}
+
 @media (max-width: 700px) {
+  :root {
+    --reader-page-inline: clamp(1.25rem, 6vw, 2rem);
+    --reader-page-top: clamp(2.8rem, 5vh, 3.5rem);
+    --reader-page-bottom: clamp(2.6rem, 4.5vh, 3.3rem);
+  }
+
+  [data-reader-mode="paged"] .pages-wrapper.active {
+    width: calc(100vw - 1rem);
+    max-height: none;
+    filter: drop-shadow(0 12px 22px color-mix(in srgb, #000 22%, transparent));
+  }
+
+  [data-reader-mode="paged"] .page-inner {
+    max-width: none;
+  }
+
   .page-inner h1:first-child {
-    margin-top: clamp(1.15em, 4.2vh, 2.1em);
+    margin-top: clamp(0.9em, 3.6vh, 1.7em);
     margin-bottom: 1.05em;
     font-size: clamp(1.48em, 6.5vw, 1.72em);
   }
@@ -342,20 +526,34 @@
   }
 
   .page-running {
-    left: 1.2rem;
-    right: 1.2rem;
+    left: var(--reader-page-inline);
+    right: var(--reader-page-inline);
     letter-spacing: 0.1em;
   }
 }
 
 @media (max-height: 560px) {
+  :root {
+    --reader-page-top: 2.4rem;
+    --reader-page-bottom: 2.25rem;
+  }
+
   .page-inner h1:first-child {
-    margin-top: 0.8em;
+    margin-top: 0.55em;
     margin-bottom: 0.85em;
   }
 
   .page-inner.chapter-open > p:first-of-type::first-letter {
     font-size: 2.7em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reader-mode="paged"] .pages-wrapper.turn-next #pageRight.active,
+  [data-reader-mode="paged"] .pages-wrapper.turn-next:not(:has(#pageRight.active)) #pageLeft.active,
+  [data-reader-mode="paged"] .pages-wrapper.turn-prev #pageLeft.active,
+  [data-reader-mode="paged"] .page-surface.turning {
+    animation: none !important;
   }
 }
 
@@ -365,6 +563,7 @@
     background: #fff !important;
     color: #111 !important;
     box-shadow: none !important;
+    filter: none !important;
   }
 
   .page-inner,

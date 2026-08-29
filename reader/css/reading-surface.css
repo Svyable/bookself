@@ -16,6 +16,12 @@
   --reader-paper-shadow: 0 18px 52px color-mix(in srgb, var(--shadow) 72%, transparent);
 }
 
+/* Reading measure is a reader preference, not a device side effect. Keep these
+   values in this final geometry layer so responsive rules never erase it. */
+[data-reader-measure="narrow"] { --reader-page-pad: clamp(3.7rem, 5.8vw, 5.4rem); }
+[data-reader-measure="balanced"] { --reader-page-pad: clamp(2.4rem, 4.2vw, 4.5rem); }
+[data-reader-measure="wide"] { --reader-page-pad: clamp(1.45rem, 2.6vw, 2.7rem); }
+
 body[data-stage="read"] .stage {
   background:
     radial-gradient(ellipse 54% 40% at 50% 16%, color-mix(in srgb, var(--accent) 4.5%, transparent), transparent 76%),
@@ -247,10 +253,13 @@ body[data-stage="read"] .book-stage {
    tiny desktop. The core may still offer Spread when space permits. */
 [data-reader-device="tablet"] {
   --reader-stage-inline: clamp(.5rem, 1.7vw, 1rem);
-  --reader-page-pad: clamp(2rem, 5vw, 3.6rem);
   --reader-page-top: clamp(3rem, 5.4vh, 4.4rem);
   --reader-page-bottom: clamp(2.7rem, 4.8vh, 4rem);
 }
+
+[data-reader-device="tablet"][data-reader-measure="narrow"] { --reader-page-pad: clamp(3rem, 7vw, 4.5rem); }
+[data-reader-device="tablet"][data-reader-measure="balanced"] { --reader-page-pad: clamp(2rem, 5vw, 3.5rem); }
+[data-reader-device="tablet"][data-reader-measure="wide"] { --reader-page-pad: clamp(1.2rem, 3vw, 2.1rem); }
 
 [data-reader-device="tablet"][data-reader-orientation="portrait"] .pages-wrapper.active:not(:has(#pageRight.active)) {
   width: min(100%, 43rem, calc((var(--reader-viewport-height, 100dvh) - 7rem) * .74));
@@ -262,11 +271,14 @@ body[data-stage="read"] .book-stage {
 [data-reader-device="phone"] {
   --reader-stage-inline: 0px;
   --reader-stage-block: 0px;
-  --reader-page-pad: clamp(1.05rem, 5.4vw, 1.55rem);
   --reader-page-top: clamp(2.65rem, 6.8vh, 3.6rem);
   --reader-page-bottom: clamp(2.35rem, 6vh, 3.2rem);
   --reader-page-radius: 0px;
 }
+
+[data-reader-device="phone"][data-reader-measure="narrow"] { --reader-page-pad: clamp(1.55rem, 7vw, 2rem); }
+[data-reader-device="phone"][data-reader-measure="balanced"] { --reader-page-pad: clamp(1.05rem, 5.4vw, 1.55rem); }
+[data-reader-device="phone"][data-reader-measure="wide"] { --reader-page-pad: clamp(.7rem, 3.8vw, 1.05rem); }
 
 [data-reader-device="phone"] body[data-stage="read"] .book-stage {
   padding: 0;
@@ -306,8 +318,11 @@ body[data-stage="read"] .book-stage {
   :root {
     --reader-page-top: 2.4rem;
     --reader-page-bottom: 2.25rem;
-    --reader-page-pad: clamp(1.6rem, 3.4vw, 2.8rem);
   }
+
+  [data-reader-measure="narrow"] { --reader-page-pad: clamp(2.2rem, 4.4vw, 3.2rem); }
+  [data-reader-measure="balanced"] { --reader-page-pad: clamp(1.6rem, 3.4vw, 2.8rem); }
+  [data-reader-measure="wide"] { --reader-page-pad: clamp(1rem, 2.2vw, 1.8rem); }
 
   .pages-wrapper.active {
     max-height: 100%;

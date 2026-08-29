@@ -12,7 +12,6 @@ Before changing anything, read the root `AGENTS.md`. It is the canonical cross-a
 - Books and papers remain portable files under `books/`.
 - Prefer small, reviewable changes. Do not perform drive-by rewrites or broad cleanup.
 - Do not invent DOI, version, release, citation, or publication claims.
-- The obsolete `binder` role is not a supported compatibility alias.
 
 ## Fast orientation
 

@@ -18,18 +18,40 @@ export function interpolateSourceOffset(start, end, ratio = 0.5) {
   return Math.round(lo + (hi - lo) * clamp01(ratio));
 }
 
+function openingTagEnd(source) {
+  const start = source.search(/\S/);
+  if (start < 0 || source[start] !== '<' || !/[A-Za-z]/.test(source[start + 1] || '')) return -1;
+  let quote = '';
+  for (let i = start + 2; i < source.length; i += 1) {
+    const char = source[i];
+    if (quote) {
+      if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      quote = char;
+      continue;
+    }
+    if (char === '>') return i + 1;
+  }
+  return -1;
+}
+
 export function withSourceRange(html, start, end) {
   const source = String(html || '');
   const lo = Math.max(0, Number(start) || 0);
   const hi = Math.max(lo, Number(end) || lo);
-  const match = source.match(/^(\s*<[A-Za-z][A-Za-z0-9:-]*)([^>]*>)/);
-  if (!match) return source;
+  const endIndex = openingTagEnd(source);
+  if (endIndex < 0) return source;
 
+  const opening = source.slice(0, endIndex);
+  const match = opening.match(/^(\s*<[A-Za-z][A-Za-z0-9:-]*)([\s\S]*)$/);
+  if (!match) return source;
   const cleaned = match[2]
     .replace(/\sdata-source-start=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
     .replace(/\sdata-source-end=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
-  const opening = `${match[1]} data-source-start="${lo}" data-source-end="${hi}"${cleaned}`;
-  return opening + source.slice(match[0].length);
+  const stamped = `${match[1]} data-source-start="${lo}" data-source-end="${hi}"${cleaned}`;
+  return stamped + source.slice(endIndex);
 }
 
 export function sourceAnchorFromRects(fragments, probeY) {
@@ -74,7 +96,7 @@ export function scrollTopForSourceAnchor({
   maxScroll,
 }) {
   const start = Math.max(0, Number(sourceStart) || 0);
-  const end = Math.max(start, Number(sourceEnd) || start);
+  const end = Math.max(start, Number(end = sourceEnd) || start);
   const offset = Math.max(start, Math.min(end, Number(sourceOffset) || start));
   const ratio = end > start ? (offset - start) / (end - start) : 0;
   const top = Math.max(0, Number(blockTop) || 0);

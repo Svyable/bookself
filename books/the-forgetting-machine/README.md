@@ -13,7 +13,7 @@
 | **ISBN**           |  |
 | **Author Links**   |  |
 | **Find elsewhere** |  |
-| **Chapters**       | 6 of 6 drafted |
+| **Chapters**       | 7 of 7 drafted |
 
 ## Subtitle
 
@@ -27,6 +27,7 @@
 - [x] [Twenty Paradoxes of Memory](manuscript/paradoxes.md)
 - [x] [Memory Atlas — Ten Domains Where the Past Quietly Governs the Future](manuscript/memory-atlas.md)
 - [x] [Dialogues at the Edge of Memory](manuscript/dialogues.md)
+- [x] [Thirty Laws of Selective Memory](manuscript/laws.md)
 
 ## Review status
 

@@ -352,7 +352,10 @@ function protectAcademicLinks() {
 
   window.addEventListener('resize', () => closeAcademicPreview());
   window.addEventListener('orientationchange', () => closeAcademicPreview());
-  document.addEventListener('scroll', () => closeAcademicPreview(), true);
+  document.addEventListener('scroll', (event) => {
+    if (activePreview?.dialog.contains(event.target)) return;
+    closeAcademicPreview();
+  }, true);
 }
 
 if (typeof window !== 'undefined') {

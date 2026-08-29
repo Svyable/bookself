@@ -34,6 +34,13 @@
   overflow-wrap: anywhere;
 }
 
+.page-inner a,
+.scroll-document a {
+  text-decoration-thickness: max(1px, .07em);
+  text-underline-offset: .14em;
+  text-decoration-skip-ink: auto;
+}
+
 .page-inner a:focus-visible,
 .scroll-document a:focus-visible {
   outline: 2px solid var(--accent);

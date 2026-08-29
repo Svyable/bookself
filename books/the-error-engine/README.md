@@ -13,7 +13,7 @@
 | **ISBN** |  |
 | **Author Links** |  |
 | **Find elsewhere** |  |
-| **Chapters** | 2 of 2 drafted |
+| **Chapters** | 3 of 3 drafted |
 
 ## Subtitle
 
@@ -23,9 +23,10 @@
 
 - [x] [Main manuscript — The Error Engine](manuscript/book.md)
 - [x] [Casebook — Twelve Laboratories of Useful Wrongness](manuscript/casebook.md)
+- [x] [Field Notes — Four Diagnostic Drills for Real Decisions](manuscript/field-notes.md)
 
 ## Review status
 
 This is an unpublished working proof. It is intentionally marked `Drafting` and is not cataloged on the released Shelf.
 
-The main manuscript develops the theory of error as a learning signal across cognition, probability, markets, science, strategy, institutions, complex systems, character, and machine learning. The companion casebook applies the framework to aviation, manufacturing, product research, portfolio risk, scientific null results, hospital near misses, software deployment, supply-chain concentration, startup metrics, policy pilots, AI reward design, and institutional memory.
+The book develops the theory of error as a learning signal across cognition, probability, markets, science, strategy, institutions, complex systems, character, and machine learning; applies the framework through twelve case studies; and ends with four diagnostic drills for real decisions.

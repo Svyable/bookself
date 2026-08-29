@@ -130,6 +130,35 @@ function watchAdaptiveStyles(requestRepaginate) {
   observer.observe(document.head, { childList: true });
 }
 
+function installImmersiveChromeToggle() {
+  const wrapper = document.getElementById('pagesWrapper');
+  if (!wrapper) return;
+
+  wrapper.addEventListener('click', (event) => {
+    if (root().dataset.readerDevice !== 'phone') return;
+    if (root().dataset.readerPointer !== 'coarse') return;
+    if (document.body.dataset.stage !== 'read') return;
+    if (event.target.closest('a, button, input, textarea, select, mark, .sel-pop')) return;
+    if (window.getSelection?.().toString().trim()) return;
+    if (document.querySelector('#tocOverlay.active, #progressPanel.active, #settingsPanel.active, #searchOverlay.active, #noteDialog.active, #helpOverlay.active')) return;
+
+    const rect = wrapper.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const ratio = rect.width ? x / rect.width : 0;
+    if (ratio < .34 || ratio > .66) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    document.body.classList.toggle('reader-chrome-hidden');
+  }, true);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.classList.contains('reader-chrome-hidden')) {
+      document.body.classList.remove('reader-chrome-hidden');
+    }
+  }, true);
+}
+
 export function installReadingSurface() {
   const el = root();
   if (el.dataset.readingSurfaceEnhanced === 'true') return;
@@ -145,6 +174,7 @@ export function installReadingSurface() {
 
   syncViewport();
   watchAdaptiveStyles(requestRepaginate);
+  installImmersiveChromeToggle();
 
   const coarseQuery = window.matchMedia?.('(pointer: coarse)');
   coarseQuery?.addEventListener?.('change', syncViewport);
@@ -164,6 +194,13 @@ export function installReadingSurface() {
     if (right) observer.observe(right, { attributes: true, attributeFilter: ['class'] });
     if (current) observer.observe(current, { childList: true, subtree: true, characterData: true });
   }
+
+  const stageObserver = new MutationObserver(() => {
+    if (document.body.dataset.stage !== 'read') {
+      document.body.classList.remove('reader-chrome-hidden');
+    }
+  });
+  stageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-stage'] });
 
   if (document.fonts) {
     el.dataset.readerFonts = document.fonts.status === 'loaded' ? 'ready' : 'loading';

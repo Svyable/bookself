@@ -102,6 +102,12 @@
   text-align: left;
 }
 
+.page-inner img,
+.scroll-document img {
+  max-width: 100%;
+  height: auto;
+}
+
 .page-inner figure,
 .scroll-document figure {
   max-width: 100%;

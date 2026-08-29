@@ -9,7 +9,16 @@ function keepOnly(hidden, start, end, keepStart, keepEnd) {
   for (let i = Math.max(start, keepStart); i < Math.min(end, keepEnd); i += 1) hidden[i] = false;
 }
 
-function hideMarkdownDestinations(markdown, hidden) {
+function hidePairDelimiters(markdown, hidden, pattern, delimiterLength) {
+  let match;
+  while ((match = pattern.exec(markdown))) {
+    const width = typeof delimiterLength === 'function' ? delimiterLength(match) : delimiterLength;
+    markHidden(hidden, match.index, match.index + width);
+    markHidden(hidden, match.index + match[0].length - width, match.index + match[0].length);
+  }
+}
+
+function hideMarkdownSyntax(markdown, hidden) {
   const inlineLink = /(!?)\[([^\]\n]+)\]\(([^)\n]+)\)/g;
   let match;
   while ((match = inlineLink.exec(markdown))) {
@@ -35,6 +44,13 @@ function hideMarkdownDestinations(markdown, hidden) {
     const labelStart = match.index + relative;
     keepOnly(hidden, match.index, match.index + match[0].length, labelStart, labelStart + match[1].length);
   }
+
+  hidePairDelimiters(markdown, hidden, /\*\*([^*\n]+)\*\*/g, 2);
+  hidePairDelimiters(markdown, hidden, /__([^_\n]+)__/g, 2);
+  hidePairDelimiters(markdown, hidden, /~~([^~\n]+)~~/g, 2);
+  hidePairDelimiters(markdown, hidden, /\*([^*\n]+)\*/g, 1);
+  hidePairDelimiters(markdown, hidden, /_([^_\n]+)_/g, 1);
+  hidePairDelimiters(markdown, hidden, /(`+)([^`\n]+)\1/g, (m) => m[1].length);
 }
 
 function lineSyntax(markdown, index) {
@@ -46,7 +62,7 @@ function lineSyntax(markdown, index) {
 export function searchableMarkdown(markdown) {
   const source = String(markdown || '');
   const hidden = new Array(source.length).fill(false);
-  hideMarkdownDestinations(source, hidden);
+  hideMarkdownSyntax(source, hidden);
 
   let text = '';
   const sourceMap = [];
@@ -71,9 +87,8 @@ export function searchableMarkdown(markdown) {
       continue;
     }
 
-    const markdownPunctuation = ch === '*' || ch === '_' || ch === '~' || ch === '`';
     const structuralPunctuation = (ch === '#' || ch === '>' || ch === '-' || ch === '+') && lineSyntax(source, i);
-    if (markdownPunctuation || structuralPunctuation || ch === '\\') continue;
+    if (structuralPunctuation || ch === '\\') continue;
 
     if (pendingSpace) appendSpace(pendingSpaceOffset);
     pendingSpace = false;

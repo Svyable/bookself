@@ -15,7 +15,7 @@ const book = {
     {
       id: 'ch01',
       title: 'Formatting',
-      markdown: '# Formatting\n\nA quiet **reader** follows the café light. Read [the visible label](https://example.com/private-target) without leaving the page.\n\nA [[ch02|second chapter]] waits nearby.\n',
+      markdown: '# Formatting\n\nA quiet **reader** follows the café light. Read [the visible label](https://example.com/private-target) without leaving the page.\n\nA [[ch02|second chapter]] waits nearby.\n\nUse `snake_case` and `a*b` literally.\n',
     },
     {
       id: 'ch02',
@@ -30,8 +30,11 @@ const book = {
   assert.ok(projected.text.includes('quiet reader'));
   assert.ok(projected.text.includes('the visible label'));
   assert.ok(projected.text.includes('second chapter'));
+  assert.ok(projected.text.includes('snake_case'));
+  assert.ok(projected.text.includes('a*b'));
   assert.ok(!projected.text.includes('private-target'));
   assert.ok(!projected.text.includes('**'));
+  assert.ok(!projected.text.includes('`'));
 }
 
 {
@@ -53,6 +56,8 @@ const book = {
   assert.equal(searchBook(book, 'private-target').length, 0);
   assert.equal(searchBook(book, 'visible label').length, 1);
   assert.equal(searchBook(book, 'second chapter').length, 1);
+  assert.equal(searchBook(book, 'snake_case').length, 1);
+  assert.equal(searchBook(book, 'a*b').length, 1);
 }
 
 {

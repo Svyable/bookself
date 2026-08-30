@@ -16,6 +16,37 @@ Rules for AI agents working in this repository.
   applicable root and per-publication `RIGHTS.md` files before changing a real
   publication.
 
+## Agent setup entrypoint
+
+If a user points you at this repository and says **“set this up for me”** or an
+equivalent outcome-level request, treat Bookself setup as an operation you can
+perform, not as documentation to hand back to the user.
+
+- Read `bookself.json` and `docs/agent-first.md`, then optimize for the requested
+  end state.
+- The standard new-instance names are simply **`desk`** and **`shelf`**. Do not
+  invent person-prefixed or personalized repository names unless the user asks
+  for them.
+- Standard setup means a private Desk plus an empty public Shelf. Creating that
+  empty Shelf does **not** authorize publishing manuscript content to it; a
+  Desk → Shelf release remains a separate intent boundary.
+- With a local shell, prefer
+  `python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json`.
+  A normal bootstrap must finish with `pairValidation.setupReady: true`.
+- Validate an existing pair with
+  `python3 scripts/doctor-pair.py <desk-path> <shelf-path>`.
+- With authorized GitHub tools but no local shell, reproduce the same durable
+  Desk/Shelf result using the file contracts in `bookself.json` and
+  `scripts/stamp-instance.py`.
+- If the current toolset cannot create repositories, complete every deterministic
+  step that is available and ask for only the minimum missing external action:
+  create `desk` as private and `shelf` as public. Do not turn that capability
+  gap into a multi-step Git tutorial.
+
+A successful setup report should state durable outcomes—Desk, Shelf,
+`setupReady`, and any genuine blocker—rather than narrating every file copy or
+Git command.
+
 ## Architecture: Bookself, Desk, Shelf, Reader
 
 Bookself is the whole product/ecosystem. It deliberately separates portable
@@ -218,8 +249,8 @@ as `- [Project name](https://example.com/) — a short optional note`. The Reade
 binds the link visually as a book while the linked website remains the source
 of truth.
 
-**Add to the stand.** Under root `## The stand`, add one Markdown link such as
-`- [Project name](https://example.com/) — a short optional note`. The linked
+**Add to the stand.** Under root `## The stand`, add one Markdown link such
+as `- [Project name](https://example.com/) — a short optional note`. The linked
 site remains the source of truth; Bookself presents it as a magazine-style
 curated doorway.
 

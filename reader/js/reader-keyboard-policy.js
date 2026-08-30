@@ -1,5 +1,5 @@
 const READER_KEYS = new Set([
-  'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ',
+  'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ', 'Enter',
   'b', 'B', 's', 'S', 'f', 'F', '/', '?',
 ]);
 
@@ -20,7 +20,7 @@ export function shouldProtectNativeKey({
   if (!readerClaimsKey(key)) return false;
   if (dialogOpen || interactive || composing) return true;
   if (ctrlKey || metaKey || altKey) return true;
-  if (repeat && /^[bBsSfF\/?]$/.test(String(key || ''))) return true;
+  if (repeat && !String(key || '').startsWith('Arrow')) return true;
   return false;
 }
 

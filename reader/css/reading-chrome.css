@@ -281,7 +281,10 @@ body[data-stage="read"].reader-chrome-hidden .proof-ribbon {
     height: 28px;
   }
 
-  .progress-seek::-webkit-slider-runnable-track,
+  .progress-seek::-webkit-slider-runnable-track {
+    height: 28px;
+  }
+
   .progress-seek::-moz-range-track {
     height: 28px;
   }
@@ -322,7 +325,13 @@ body[data-stage="read"].reader-chrome-hidden .proof-ribbon {
 }
 
 @media (forced-colors: active) {
-  .progress-seek::-webkit-slider-thumb,
+  .progress-seek::-webkit-slider-thumb {
+    border-color: Canvas;
+    background: Highlight;
+    box-shadow: none;
+    opacity: 1;
+  }
+
   .progress-seek::-moz-range-thumb {
     border-color: Canvas;
     background: Highlight;
@@ -346,8 +355,14 @@ body[data-stage="read"].reader-chrome-hidden .proof-ribbon {
     transition: none;
   }
 
-  .progress-seek::-webkit-slider-thumb,
-  .progress-seek::-moz-range-thumb,
+  .progress-seek::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .progress-seek::-moz-range-thumb {
+    transition: none;
+  }
+
   .progress-seek-label {
     transition: none;
   }

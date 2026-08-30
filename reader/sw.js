@@ -1,6 +1,6 @@
 importScripts('./js/offline-cache.js');
 
-const CACHE = 'obb-shell-v66';
+const CACHE = 'obb-shell-v67';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -23,6 +23,7 @@ const SHELL = [
   './css/reader-state-backup.css',
   './css/pwa-update.css',
   './css/reading-trail.css',
+  './css/bookmark-atlas.css',
   './css/cover-design.css',
   './css/media.css',
   './css/formats.css',
@@ -67,6 +68,8 @@ const SHELL = [
   './js/router.js',
   './js/reading-trail-model.js',
   './js/reading-trail.js',
+  './js/bookmark-atlas-model.js',
+  './js/bookmark-atlas.js',
   './js/notes.js',
   './js/annotations.js',
   './js/annotation-navigator-model.js',

@@ -1,6 +1,6 @@
 importScripts('./js/offline-cache.js');
 
-const CACHE = 'obb-shell-v63';
+const CACHE = 'obb-shell-v64';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -69,6 +69,7 @@ const SHELL = [
   './js/annotation-navigator-modal.js',
   './js/reader-state-backup.js',
   './js/reader-state-backup-runtime.js',
+  './js/reader-state-transaction.js',
   './js/selection-memory.js',
   './js/selection-marker.js',
   './js/selection-actions.js',
@@ -135,11 +136,9 @@ async function warmPublication(readmeResponse, readmeUrl) {
   } catch {
     return;
   }
-
   const chapters = self.BookselfOfflineCache.chapterLinks(markdown, readmeUrl.href);
   if (!chapters.length) return;
   const cache = await caches.open(CACHE);
-
   await Promise.allSettled(chapters.map(async (href) => {
     const response = await cacheRequest(cache, href);
     if (!response) return;
@@ -154,27 +153,17 @@ self.addEventListener('fetch', (event) => {
   const sameOrigin = url.origin === location.origin;
   const external = cacheableExternal(url);
   if (!sameOrigin && !external) return;
-
-  const network = fetch(req)
-    .then(async (res) => {
-      try {
-        const cache = await caches.open(CACHE);
-        await cache.put(req, res.clone());
-      } catch {
-        // Reading continues from the network response.
-      }
-      return res;
-    });
-
+  const network = fetch(req).then(async (res) => {
+    try {
+      const cache = await caches.open(CACHE);
+      await cache.put(req, res.clone());
+    } catch {
+      // Reading continues from the network response.
+    }
+    return res;
+  });
   if (sameOrigin && self.BookselfOfflineCache.isPublicationReadme(url.href)) {
-    event.waitUntil(
-      network
-        .then((res) => warmPublication(res.clone(), url))
-        .catch(() => {})
-    );
+    event.waitUntil(network.then((res) => warmPublication(res.clone(), url)).catch(() => {}));
   }
-
-  event.respondWith(
-    network.catch(() => caches.match(req, { ignoreSearch: sameOrigin }))
-  );
+  event.respondWith(network.catch(() => caches.match(req, { ignoreSearch: sameOrigin })));
 });

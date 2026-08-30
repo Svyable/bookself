@@ -11,7 +11,6 @@ let installed = false;
 let requestRevision = 0;
 let lastSettledKey = '';
 let lastObservedKey = '';
-let loadingTimer = null;
 let onGeometryReady = null;
 
 function currentFontState() {
@@ -49,13 +48,20 @@ function setStatus(name, status) {
 }
 
 function waitForFont(fontSet, probe, sample, timeoutMs = 2800) {
-  return Promise.race([
-    fontSet.load(probe, sample).then(() => 'loaded').catch(() => 'failed'),
-    new Promise((resolve) => {
-      clearTimeout(loadingTimer);
-      loadingTimer = window.setTimeout(() => resolve('timeout'), timeoutMs);
-    }),
-  ]);
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      resolve(result);
+    };
+    const timer = window.setTimeout(() => finish('timeout'), timeoutMs);
+    fontSet.load(probe, sample).then(
+      () => finish('loaded'),
+      () => finish('failed')
+    );
+  });
 }
 
 function notifyGeometryReady(key, request) {

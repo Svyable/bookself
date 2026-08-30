@@ -47,6 +47,5 @@ export function readingReturnPoint(state, currentRoute) {
 }
 
 export function readingReturnLabel(point) {
-  if (!point) return '';
-  return point.offset > 0 ? 'Return to previous passage' : 'Return to previous chapter';
+  return point ? 'Return to previous reading spot' : '';
 }

@@ -1,4 +1,5 @@
 .search-landing-mark {
+  background: rgba(212, 170, 82, .28);
   background: color-mix(in srgb, currentColor 12%, rgba(212, 170, 82, .5));
   color: inherit;
   border-radius: .18em;
@@ -6,6 +7,7 @@
   -webkit-box-decoration-break: clone;
   padding: .02em .08em;
   margin: 0 -.08em;
+  outline: 1px solid rgba(212, 170, 82, .62);
   outline: 1px solid color-mix(in srgb, currentColor 26%, transparent);
   outline-offset: .08em;
   animation: search-landing-arrive 180ms ease-out both;

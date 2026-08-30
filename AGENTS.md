@@ -249,8 +249,8 @@ as `- [Project name](https://example.com/) — a short optional note`. The Reade
 binds the link visually as a book while the linked website remains the source
 of truth.
 
-**Add to the stand.** Under root `## The stand`, add one Markdown link such
-as `- [Project name](https://example.com/) — a short optional note`. The linked
+**Add to the stand.** Under root `## The stand`, add one Markdown link such as
+`- [Project name](https://example.com/) — a short optional note`. The linked
 site remains the source of truth; Bookself presents it as a magazine-style
 curated doorway.
 

@@ -35,7 +35,7 @@ function installStyles() {
   if (document.querySelector('link[data-screenplay-reader]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/screenplay.css?v=r1', import.meta.url).href;
+  link.href = new URL('../css/screenplay.css?v=r2', import.meta.url).href;
   link.dataset.screenplayReader = 'true';
   document.head.appendChild(link);
 }
@@ -85,7 +85,7 @@ function rehearsalMarkup() {
         <button id="screenplayNextLine" type="button">Next cue</button>
       </div>
       <p class="screenplay-rehearsal-status" id="screenplayRehearsalStatus">Choose a role to begin.</p>
-      <p class="screenplay-rehearsal-hint">Masked lines keep their exact layout. Tap a hidden line to reveal it without shifting the page.</p>
+      <p class="screenplay-rehearsal-hint">Masked lines keep their exact layout. Tap or press Enter on a hidden line to reveal it without shifting the page.</p>
     </section>`;
 }
 
@@ -150,9 +150,18 @@ function syncRoleSelect() {
   const select = $('screenplayRoleSelect');
   if (!select) return;
   const selected = state.roles.includes(state.role) ? state.role : '';
-  select.innerHTML = '<option value="">Choose a role…</option>' + state.roles
-    .map((role) => `<option value="${role.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}">${role.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</option>`)
-    .join('');
+  const fragment = document.createDocumentFragment();
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Choose a role…';
+  fragment.appendChild(placeholder);
+  state.roles.forEach((role) => {
+    const option = document.createElement('option');
+    option.value = role;
+    option.textContent = role;
+    fragment.appendChild(option);
+  });
+  select.replaceChildren(fragment);
   select.value = selected;
   if (!selected && state.role) {
     state.role = '';
@@ -168,13 +177,17 @@ function roleTurns() {
 function currentTurnIndex(turns) {
   const route = parseRoute();
   if (!turns.length) return -1;
+  const chapterIndex = state.turns.find((item) => item.chapter === route.chapter)?.chapterIndex;
   let previous = -1;
   for (let i = 0; i < turns.length; i += 1) {
     const turn = turns[i];
-    const sameChapter = turn.chapter === route.chapter;
-    if (sameChapter && route.offset >= turn.start && route.offset <= turn.end) return i;
-    if (sameChapter && turn.start <= route.offset) previous = i;
-    if (turn.chapterIndex < state.turns.find((item) => item.chapter === route.chapter)?.chapterIndex) previous = i;
+    if (chapterIndex != null && turn.chapterIndex < chapterIndex) {
+      previous = i;
+      continue;
+    }
+    if (turn.chapter !== route.chapter) continue;
+    if (route.offset >= turn.start && route.offset <= turn.end) return i;
+    if (turn.start <= route.offset) previous = i;
   }
   return previous;
 }
@@ -201,13 +214,26 @@ function updateStatus() {
   status.textContent = `${state.role} · ${turns.length} cue${turns.length === 1 ? '' : 's'}${scenes.size ? ` · ${scenes.size} scene${scenes.size === 1 ? '' : 's'}` : ''}`;
 }
 
+function decorateBlock(block) {
+  if (!(block instanceof Element) || !block.matches('.screenplay-dialogue-block')) return;
+  const mine = !!state.role && block.dataset.screenplayCharacter === state.role;
+  block.classList.toggle('is-rehearsal-role', mine);
+  const masked = mine && state.mask;
+  if (!masked) block.classList.remove('is-line-revealed');
+  if (masked) {
+    block.tabIndex = 0;
+    block.setAttribute('role', 'button');
+    block.setAttribute('aria-label', `Reveal line for ${state.role}`);
+  } else {
+    block.removeAttribute('tabindex');
+    block.removeAttribute('role');
+    block.removeAttribute('aria-label');
+  }
+}
+
 function applyRoleClasses(root = document) {
-  const role = state.role;
-  root.querySelectorAll?.('.screenplay-dialogue-block').forEach((block) => {
-    const mine = !!role && block.dataset.screenplayCharacter === role;
-    block.classList.toggle('is-rehearsal-role', mine);
-    if (!mine || !state.mask) block.classList.remove('is-line-revealed');
-  });
+  if (root instanceof Element) decorateBlock(root);
+  root.querySelectorAll?.('.screenplay-dialogue-block').forEach(decorateBlock);
 }
 
 function applyRehearsalState() {
@@ -299,12 +325,28 @@ function jumpRoleTurn(direction) {
   go(readHash(state.slug, target.chapter, target.start));
 }
 
+function toggleReveal(block) {
+  if (!block || !state.isScreenplay || !state.mask || !state.role) return false;
+  if (!block.matches('.screenplay-dialogue-block.is-rehearsal-role')) return false;
+  block.classList.toggle('is-line-revealed');
+  block.setAttribute('aria-label', block.classList.contains('is-line-revealed')
+    ? `Hide line for ${state.role}`
+    : `Reveal line for ${state.role}`);
+  return true;
+}
+
 function bindReveal() {
-  $('bookStage')?.addEventListener('click', (event) => {
-    if (!state.isScreenplay || !state.mask || !state.role) return;
+  const stage = $('bookStage');
+  stage?.addEventListener('click', (event) => {
     const block = event.target.closest?.('.screenplay-dialogue-block.is-rehearsal-role');
-    if (!block) return;
-    block.classList.toggle('is-line-revealed');
+    toggleReveal(block);
+  });
+  stage?.addEventListener('keydown', (event) => {
+    if (!['Enter', ' '].includes(event.key)) return;
+    const block = event.target.closest?.('.screenplay-dialogue-block.is-rehearsal-role');
+    if (!block || !toggleReveal(block)) return;
+    event.preventDefault();
+    event.stopPropagation();
   });
 }
 

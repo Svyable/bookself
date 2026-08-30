@@ -35,12 +35,22 @@ export function hrefMatchesHash(href, hash) {
   }
 }
 
+function ensureStylesheet() {
+  if (document.querySelector('link[data-search-navigation]')) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = new URL('../css/search-navigation.css', import.meta.url).href;
+  link.dataset.searchNavigation = 'true';
+  document.head.appendChild(link);
+}
+
 function installSearchNavigation() {
   const overlay = document.getElementById('searchOverlay');
   const card = overlay?.querySelector('.search-card');
   const input = document.getElementById('bookSearch');
   const list = document.getElementById('searchHits');
   if (!overlay || !card || !input || !list || card.querySelector('.search-session')) return;
+  ensureStylesheet();
 
   const session = document.createElement('div');
   session.className = 'search-session';

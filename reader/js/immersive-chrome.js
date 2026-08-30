@@ -82,6 +82,8 @@ export function installImmersiveChrome() {
 
   let timer = 0;
   let manualImmersive = false;
+  let lastFocusMode = focusMode();
+  let lastStage = body().dataset.stage || '';
 
   const clearTimer = () => {
     window.clearTimeout(timer);
@@ -120,7 +122,9 @@ export function installImmersiveChrome() {
 
   const sync = () => {
     syncFocusButton();
-    if (body().dataset.stage !== 'read') {
+    lastFocusMode = focusMode();
+    lastStage = body().dataset.stage || '';
+    if (lastStage !== 'read') {
       leaveImmersive();
       return;
     }
@@ -128,7 +132,7 @@ export function installImmersiveChrome() {
       reveal({ autoHide: false });
       return;
     }
-    if (focusMode()) {
+    if (lastFocusMode) {
       scheduleHide(500);
       return;
     }
@@ -193,7 +197,14 @@ export function installImmersiveChrome() {
     }, 0);
   });
 
-  const observer = new MutationObserver(sync);
+  const observer = new MutationObserver((records) => {
+    const mode = focusMode();
+    const stage = body().dataset.stage || '';
+    const overlayChanged = records.some((record) => record.target !== body());
+    const meaningfulBodyChange = mode !== lastFocusMode || stage !== lastStage;
+    if (!overlayChanged && !meaningfulBodyChange) return;
+    sync();
+  });
   observer.observe(body(), { attributes: true, attributeFilter: ['class', 'data-stage'] });
   for (const id of ['tocOverlay', 'progressPanel', 'settingsPanel', 'searchOverlay', 'noteDialog', 'helpOverlay']) {
     const overlay = document.getElementById(id);

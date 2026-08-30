@@ -57,7 +57,7 @@ export function parseAnnotationBackup(value, expectedSlug = '') {
     try {
       raw = JSON.parse(raw);
     } catch {
-      return { ok: false, error: 'This file is not valid JSON.' };
+      return { ok: false, error: 'This annotation backup is not valid JSON.' };
     }
   }
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {

@@ -4,6 +4,12 @@ import { installMarkedAcademic, setAcademicContext } from './academic.js';
 import { withSourceRange } from './reading-position.js';
 import { isScreenplayText, screenplayBlocks, screenplayOutline } from './screenplay-format.js';
 
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  import('./screenplay.js').catch((error) => {
+    console.warn('Screenplay rehearsal tools could not be loaded', error);
+  });
+}
+
 const CHAPTER = '(?:manuscript\\/)?((?:ch[\\w-]+|front-matter|back-matter)(?:\\.md)?)';
 let wikiInstalled = false;
 let wikiSlug = '';

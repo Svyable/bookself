@@ -43,6 +43,13 @@ class AgentContractTests(unittest.TestCase):
         self.assertTrue((ROOT / ".agents/skills/bookself-publisher/SKILL.md").is_file())
         self.assertTrue((ROOT / ".agents/skills/human-prose/SKILL.md").is_file())
 
+    def test_setup_entrypoint_is_discoverable(self) -> None:
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8").lower()
+        self.assertIn("set this up for me", agents)
+        self.assertIn("doctor-pair.py", agents)
+        self.assertIn("desk", agents)
+        self.assertIn("shelf", agents)
+
     def test_publication_templates_match_repository(self) -> None:
         formats = self.data["capabilities"]["createPublication"]["formats"]
         self.assertEqual(formats, EXPECTED_TEMPLATES)

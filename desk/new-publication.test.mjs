@@ -14,7 +14,8 @@ import {
 assert.equal(slugifyTitle('  The Café & Moon  '), 'the-cafe-and-moon');
 assert.equal(slugifyTitle('---'), 'my-publication');
 assert.ok(STARTER_PRESETS.some(([id]) => id === 'accessible'));
-assert.equal(Object.keys(PUBLICATION_FORMATS).length, 10);
+assert.ok(STARTER_PRESETS.some(([id]) => id === 'screenplay'));
+assert.equal(Object.keys(PUBLICATION_FORMATS).length, 11);
 
 const bundle = buildPublicationFiles({
   format: 'report',
@@ -40,6 +41,19 @@ assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /model training or fine
 assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /retrieval-augmented generation \(RAG\)/i);
 assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /copyright-management information/i);
 assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /Hosting-provider terms are separate/i);
+
+const screenplay = buildPublicationFiles({
+  format: 'screenplay',
+  title: 'The Last Table Read',
+  author: 'A. Writer',
+});
+assert.equal(screenplay.format, 'Screenplay');
+assert.equal(screenplay.preset, 'screenplay');
+assert.ok(screenplay.files['the-last-table-read/manuscript/script.md']);
+assert.match(screenplay.files['the-last-table-read/README.md'], /\*\*Format\*\* \| Screenplay \|/);
+assert.match(screenplay.files['the-last-table-read/manuscript/script.md'], /INT\. WRITER'S ROOM - DAY/);
+assert.match(screenplay.files['the-last-table-read/manuscript/script.md'], /MARA\nWe can keep arguing/);
+assert.deepEqual(JSON.parse(screenplay.files['the-last-table-read/reader.json']), { version: 1, preset: 'screenplay' });
 
 const manifest = JSON.parse(bundle.files['field-notes-2026/rights.json']);
 assert.equal(manifest.schemaVersion, 1);

@@ -47,13 +47,19 @@
     "bootstrapWorkspace": {
       "kind": "local-command",
       "command": "python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json",
-      "result": "Creates sibling Desk and Shelf directories, stamps roles, and initializes Git repositories.",
+      "result": "Creates sibling Desk and Shelf directories named desk and shelf by default, stamps roles, initializes separate Git repositories, validates the pair, and returns pairValidation.setupReady.",
       "requires": ["python3", "git"]
     },
     "bootstrapSingleInstance": {
       "kind": "local-command",
       "command": "python3 scripts/stamp-instance.py <destination> <desk|shelf> <owner> <repository>",
       "requires": ["python3"]
+    },
+    "validateWorkspacePair": {
+      "kind": "local-command",
+      "command": "python3 scripts/doctor-pair.py <desk-path> <shelf-path>",
+      "result": "Validates Desk/Shelf roles, separate Git worktrees, shared UI parity, Desk starter availability, Shelf release-only content, and distinct instance identity.",
+      "requires": ["python3", "git"]
     },
     "createPublication": {
       "kind": "file-contract",
@@ -109,7 +115,8 @@
     "steps": [
       "Read AGENTS.md, RIGHTS.md, this manifest, and the target publication RIGHTS.md / rights.json when present before editing.",
       "Infer publication format, structure, style, and workflow details from the user's goal when reasonable; ask only when a missing choice materially changes the intended work.",
-      "Create or locate the private Desk and public Shelf. Never expose unpublished Desk content to make preview easier unless the author explicitly chose a working-in-public mode.",
+      "Create or locate the private Desk and public Shelf. Standard setup names are desk and shelf unless the user requests other names. Creating an empty public Shelf as part of Bookself setup does not authorize publishing manuscript content to it.",
+      "Validate the Desk/Shelf installation with validateWorkspacePair when the environment permits. If repository hosting metadata is available, also verify that Desk is private and Shelf is public.",
       "Create the publication on the Desk using the nearest format contract, preserve the default rights files unless the rightsholder requests another license, and add it to the Desk inventory.",
       "Draft requested content in bounded, reviewable changes while preserving the user's voice and factual constraints.",
       "Choose or tune reader.json as an author recommendation, not a reader lock.",
@@ -120,11 +127,12 @@
     ]
   },
   "intentBoundaries": {
-    "mayInferWithoutAsking": ["slug", "starter template", "reasonable chapter filenames", "initial Reader preset", "mechanical metadata needed by Bookself", "commit messages for mechanical steps"],
+    "mayInferWithoutAsking": ["standard repository names desk and shelf for a new Bookself setup", "slug", "starter template", "reasonable chapter filenames", "initial Reader preset", "mechanical metadata needed by Bookself", "commit messages for mechanical steps"],
     "requiresUserIntent": ["making unpublished manuscript content public", "publishing or replacing a Shelf release when publication was not requested", "deleting publication history or repositories", "changing licensing, copyright ownership, AI-use grants, RIGHTS.md, or rights.json permission grants", "asserting or changing Copyright Office registration information", "sending manuscript content to a new external AI service, training corpus, vector store, RAG system, AI index, publisher, or other third party", "adding secrets, credentials, paid services, or mandatory external dependencies"],
     "explicitPublishExamples": ["publish it to my shelf", "release this book", "make the finished version public"]
   },
   "completion": {
+    "setupReady": ["Desk role is valid and Desk is a Git repository.", "Shelf role is valid and Shelf is a separate Git repository.", "Shared reader/ and desk/ software matches byte-for-byte across Desk and Shelf.", "Desk contains the blank publication starter library and Shelf contains no blank starters.", "Every publication present on Shelf is Published and cataloged.", "Desk and Shelf instance identities and browser storage prefixes are distinct.", "When repository hosting metadata is available, Desk visibility is private and Shelf visibility is public."],
     "draftReady": ["Desk role is valid.", "Publication metadata and inventory entry are consistent.", "Requested manuscript content exists on the Desk.", "Publication rights posture is explicit or resolves to the Bookself All Rights Reserved default.", "rights-check reports no blocking rights-manifest errors for a manifest-equipped publication.", "doctor reports no blocking structural errors."],
     "publishedReady": ["All draftReady conditions hold.", "Desk publication state used for release is committed.", "Shelf contains a verified released snapshot with Status Published.", "Shelf preserves the publication RIGHTS.md and rights.json metadata.", "Shelf catalog points to the released publication.", "Public delivery URL or repository location is reported when available."]
   }

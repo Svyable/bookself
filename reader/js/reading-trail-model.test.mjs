@@ -34,7 +34,7 @@ assert.deepEqual(readingReturnPoint(replaced, { ...b, offset: 72 }), {
 });
 assert.equal(readingReturnPoint(replaced, a), null);
 assert.equal(readingReturnPoint(replaced, { ...b, slug: 'other' }), null);
-assert.equal(readingReturnLabel({ slug: 'book', chapter: 'one', offset: 120 }), 'Return to previous passage');
-assert.equal(readingReturnLabel({ slug: 'book', chapter: 'one', offset: 0 }), 'Return to previous chapter');
+assert.equal(readingReturnLabel({ slug: 'book', chapter: 'one', offset: 120 }), 'Return to previous reading spot');
+assert.equal(readingReturnLabel(null), '');
 
 console.log('reading trail model tests ok');

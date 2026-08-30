@@ -21,6 +21,10 @@ PARAGRAPHS = {"compact", "normal", "airy"}
 INDENTS = {"none", "gentle", "classic"}
 MODES = {"paged", "scroll"}
 HYPHENS = {"auto", "off"}
+COVER_LAYOUTS = {"classic", "centered", "lower-third"}
+COVER_ALIGNS = {"left", "center"}
+COVER_FITS = {"cover", "contain"}
+COVER_TONES = {"light", "dark"}
 
 
 @dataclass(frozen=True)
@@ -92,7 +96,7 @@ def validate_presentation(data: Any) -> list[PresentationIssue]:
     if not isinstance(data, dict):
         return [issue("error", "reader_shape", "reader.json must contain a JSON object.")]
 
-    unknown_top = sorted(set(data) - {"version", "appearance", "typography"})
+    unknown_top = sorted(set(data) - {"version", "appearance", "typography", "cover"})
     for name in unknown_top:
         out.append(issue("error", "reader_unknown_setting", f"Unknown reader.json setting: {name}."))
 
@@ -133,6 +137,22 @@ def validate_presentation(data: Any) -> list[PresentationIssue]:
         _number(out, typography, "fontSize", 14, 32, "typography")
         _number(out, typography, "tracking", -0.02, 0.08, "typography")
         _number(out, typography, "leading", 1.3, 2.0, "typography")
+
+    cover = _object_section(
+        out,
+        data,
+        "cover",
+        {"layout", "align", "fit", "positionX", "positionY", "shade", "titleScale", "tone"},
+    )
+    if cover is not None:
+        _enum(out, cover, "layout", COVER_LAYOUTS, "cover")
+        _enum(out, cover, "align", COVER_ALIGNS, "cover")
+        _enum(out, cover, "fit", COVER_FITS, "cover")
+        _enum(out, cover, "tone", COVER_TONES, "cover")
+        _number(out, cover, "positionX", 0, 100, "cover")
+        _number(out, cover, "positionY", 0, 100, "cover")
+        _number(out, cover, "shade", 0, 0.75, "cover")
+        _number(out, cover, "titleScale", 0.8, 1.4, "cover")
 
     if not out:
         out.append(issue("ok", "reader_presentation", "reader.json presentation settings are valid."))

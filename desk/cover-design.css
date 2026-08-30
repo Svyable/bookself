@@ -65,8 +65,8 @@
     linear-gradient(180deg, rgba(0,0,0,var(--cover-preview-shade-top)), rgba(0,0,0,var(--cover-preview-shade))),
     var(--cover-preview-art),
     #342019;
-  background-size: var(--cover-preview-fit), cover;
-  background-position: var(--cover-preview-x) var(--cover-preview-y), center;
+  background-size: cover, var(--cover-preview-fit);
+  background-position: center, var(--cover-preview-x) var(--cover-preview-y);
   background-repeat: no-repeat;
   box-shadow: 8px 18px 42px rgba(0,0,0,.38), inset 0 0 70px rgba(0,0,0,.25);
   text-shadow: 0 2px 12px rgba(0,0,0,.7);

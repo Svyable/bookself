@@ -41,6 +41,20 @@ class ReaderPresentationTests(unittest.TestCase):
         )
         self.assertEqual([(item.level, item.code) for item in findings], [("ok", "reader_presentation")])
 
+    def test_screenplay_preset_and_script_font_are_valid(self):
+        findings = validate_presentation(
+            {
+                "version": 1,
+                "preset": "screenplay",
+                "typography": {"font": "script", "mode": "paged", "hyphens": "off"},
+            }
+        )
+        self.assertEqual([(item.level, item.code) for item in findings], [("ok", "reader_presentation")])
+
+    def test_invalid_preset_is_error(self):
+        codes = self.codes({"version": 1, "preset": "studio-locked-pages"})
+        self.assertIn("reader_preset", codes)
+
     def test_invalid_enum_is_error(self):
         codes = self.codes({"version": 1, "appearance": {"theme": "brand-blue"}})
         self.assertIn("reader_appearance_theme", codes)

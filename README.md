@@ -2,39 +2,34 @@
 
 **Write like a repo. Publish like a book.**
 
-Bookself is a Git-native publishing system for long-form work. Write and revise in the **Desk**, release intentional snapshots to the **Shelf**, and read both through the same beautiful **Reader**.
+Bookself is a Git-native publishing system for long-form work. Write and revise on a **Desk**, release deliberate snapshots to a **Shelf**, and let readers encounter both through the same beautiful **Reader**.
 
-Your manuscript stays plain text. Git keeps the history. The Desk keeps the next edition moving. The Shelf gives readers a clean, deliberate release.
+Your manuscript stays plain text. Git keeps the history. The Desk keeps the next edition moving. The Shelf gives readers a clean public release.
 
-**[✍️ Open the live Desk proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)** · **[📚 Browse the example Shelf →](https://svyable.github.io/bookself/reader/)** · **[🚀 Start writing →](START-HERE.md)**
+**[✍️ Open the Desk proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)** · **[📚 Browse the Shelf demo →](https://svyable.github.io/bookself/reader/)** · **[🧭 Open the Publishing Desk →](https://svyable.github.io/bookself/desk/)** · **[🚀 Start writing →](START-HERE.md)**
 
-## See Bookself in two clicks
+> **16 released demo publications · 1 deliberately unfinished Desk proof · 8 Reader styles · 10 blank publication starters**
 
-No install. No setup. Open these two demos and the model becomes obvious.
+## Bookself in one screen
 
-### ✍️ Desk — where the next edition lives
-
-The Desk is the authoring side of Bookself: the place for drafts, revision, proofing, review, source, history, and whatever comes next. A real Desk is private by default; this public demo is intentionally unfinished so you can see the working state.
-
-**[Open the Desk proof — *Making Bookself* →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)**
-
-Look for the **Draft / Proof** treatment, review links, source access, and revision history. Nothing is pretending to be finished.
-
-### 📚 Shelf — where released editions live
-
-The Shelf is the publishing side: a public bookcase of snapshots the author deliberately chose to release. It uses the same Reader, but the promise is different — this is the edition readers are meant to encounter.
-
-**[Browse the example Shelf →](https://svyable.github.io/bookself/reader/)**
-
-The Shelf demo includes books, textbooks, magazines, newspapers, newsletters, journals, papers, and multiple Reader styles, all built from ordinary repository files.
+| Surface | Promise | Try it | Source |
+|---|---|---|---|
+| **Desk** | *This is the work in motion.* Draft, revise, proof, inspect history, and prepare the next edition. | [Open the live proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/) | [Making Bookself](books/making-bookself/) |
+| **Shelf** | *This snapshot is released.* A public library of editions the publisher deliberately chose to ship. | [Browse the Shelf demo →](https://svyable.github.io/bookself/reader/) | [Released examples](#the-books) |
+| **Reader** | Read plain Markdown like a designed publication: pages or scroll, type controls, notes, search, citations, rights, and history. | [Open Reader →](https://svyable.github.io/bookself/reader/) | [`reader/`](reader/) |
+| **Publishing Desk** | See readiness, publication state, metadata, release mismatches, and the next publishing action without adding a CMS. | [Open Publishing Desk →](https://svyable.github.io/bookself/desk/) | [`desk/`](desk/) |
 
 **Same Reader. Different promise.** Desk means *work in motion*. Shelf means *this snapshot is released*.
 
-Want to jump straight into an example? [*Bookself 101*](https://svyable.github.io/bookself/reader/#/b/bookself-101/) · [*The Bookself Review*](https://svyable.github.io/bookself/reader/#/b/bookself-review/) · [*The Bookself Daily*](https://svyable.github.io/bookself/reader/#/b/bookself-daily/) · [*Bookself Dispatch*](https://svyable.github.io/bookself/reader/#/b/bookself-dispatch/) · [*Open Scholarship Notes*](https://svyable.github.io/bookself/reader/#/b/open-scholarship-notes/) · [*The Example Paper*](https://svyable.github.io/bookself/reader/#/b/the-example-paper/) · [Format gallery](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/) · [Reader styles](https://svyable.github.io/bookself/reader/#/b/style-common-book/)
+That distinction is the heart of Bookself. A release is not “whatever file is newest.” It is an intentional Git event that copies a committed publication snapshot from the working Desk to the public Shelf.
+
+### See a real deployment
+
+Bookself is not only a demo repo. [Svyable Shelf](https://github.com/Svyable/shelf) is a public Bookself library running the same model, and [Svyable Desk](https://github.com/Svyable/desk) is its separate working repository.
+
+**[📖 Read Svyable Shelf →](https://svyable.github.io/shelf/reader/)** · **[📚 Browse the Shelf source →](https://github.com/Svyable/shelf)** · **[✍️ Browse the working Desk repo →](https://github.com/Svyable/desk)**
 
 > **New to Git?** Start with **[START HERE](START-HERE.md)**. Bookself is designed so you can use the publishing model without first becoming a software person.
-
-The platform demos contain **example writing only**. They are there to demonstrate Bookself itself, not an individual author's personal manuscripts or identity.
 
 ## The model
 
@@ -42,115 +37,92 @@ The platform demos contain **example writing only**. They are there to demonstra
 
 | Name | Job |
 |---|---|
-| **Bookself** | The whole product/ecosystem: reusable software, helpers, templates, docs, Desk, Shelf, and Reader |
-| **Desk** | Private writing workspace: drafts, experiments, review, and the next edition |
-| **Shelf** | Public bookcase: released snapshots you intentionally publish |
-| **Reader** | The reading interface used to read a Desk proof or a released Shelf publication |
+| **Bookself** | The whole publishing system: Reader, Desk, Shelf model, templates, scripts, docs, and rights defaults |
+| **Desk** | The working repository: drafts, experiments, research, review, and the next edition |
+| **Shelf** | The public repository: deliberate publication snapshots and release history |
+| **Reader** | The reading interface used for a working proof or released publication |
 
-A release copies a committed publication snapshot from Desk to Shelf. A public Shelf should not point back into a private Desk, and an unlisted draft in a public repository is still public.
+A public Shelf should never need to reach back into a private Desk to render a released book. The snapshot is copied, versioned, and independently readable.
 
-## Open tools. Author-owned words.
+## The books
 
-**Public is a visibility setting. Open is a license. They are not the same thing.**
+This is Bookself's released **example Shelf**. Every row is an ordinary repository publication that can be opened as source or read through the same Reader.
 
-Bookself software and blank underscore-prefixed starters are MIT licensed so people can build with them. A real publication is **All Rights Reserved by default** unless its author deliberately chooses another license in that publication's `RIGHTS.md`.
+### Publication formats
 
-New publications created from a starter or the Publishing Desk include a rights file and explicit metadata. The default grants ordinary public reading when an author publishes an official copy, while reserving broader reproduction, republication, adaptation, commercial exploitation, AI training/fine-tuning, RAG/grounding, AI-specific indexing, synthetic narration/translation, and other generative reuse except where the author separately grants permission or applicable law independently permits the use.
+| Publication | Format | What it demonstrates | Read |
+|---|---|---|---|
+| [**How to Bookself**](books/how-to-bookself/) | Book guide | A conventional long-form guide built from plain Markdown and Bookself metadata. | [Read →](https://svyable.github.io/bookself/reader/#/b/how-to-bookself/) |
+| [**Bookself 101**](books/bookself-101/) | Textbook | Structured teaching material, chapters, academic presentation, and a book-like reading flow. | [Read →](https://svyable.github.io/bookself/reader/#/b/bookself-101/) |
+| [**The Bookself Review**](books/bookself-review/) | Magazine | Editorial hierarchy, illustrated feature-style publishing, and magazine composition. | [Read →](https://svyable.github.io/bookself/reader/#/b/bookself-review/) |
+| [**The Bookself Daily**](books/bookself-daily/) | Newspaper | Headline-driven layout and a newspaper-shaped publication inside the same repository model. | [Read →](https://svyable.github.io/bookself/reader/#/b/bookself-daily/) |
+| [**Bookself Dispatch**](books/bookself-dispatch/) | Newsletter | A compact recurring-publication shape that still gets source, history, and Reader treatment. | [Read →](https://svyable.github.io/bookself/reader/#/b/bookself-dispatch/) |
+| [**Open Scholarship Notes**](books/open-scholarship-notes/) | Journal | Scholarly/editorial structure for journal-like work and research-oriented publishing. | [Read →](https://svyable.github.io/bookself/reader/#/b/open-scholarship-notes/) |
+| [**The Example Paper**](books/the-example-paper/) | Research paper | A paper/whitepaper-shaped publication with the same Git-native release model. | [Read →](https://svyable.github.io/bookself/reader/#/b/the-example-paper/) |
+| [**Bookself Format Gallery**](books/bookself-format-gallery/) | Gallery | A tour of publication shapes and the idea that Bookself is broader than “books only.” | [Read →](https://svyable.github.io/bookself/reader/#/b/bookself-format-gallery/) |
 
-The Reader also carries a machine-readable RSL reservation on the rendered publication surface: conventional search is permitted; AI uses are not licensed by the Bookself default. These signals communicate rights—they are not encryption or a promise that every crawler will comply.
+### Reader style specimens
 
-**Hosting terms are separate.** Copyright ownership and an author's public license do not cancel permissions the author may separately grant a hosting provider by accepting that provider's terms. This matters on services such as GitHub. Authors with strict provider-level requirements should review the current hosting agreement before uploading manuscripts.
+A publication can recommend a starting reading composition without taking control away from the reader.
 
-See **[Rights, copyright, and AI](docs/rights-and-ai.md)** for the full 2026 model, registration guidance, GitHub-hosting caveat, RSL/TDM guidance, and deployment limits. See [RIGHTS.md](RIGHTS.md) for the repository-level boundary.
+| Specimen | Preset | Reading feel | Open |
+|---|---|---|---|
+| [**The Common Book**](books/style-common-book/) | `book` | Ivory, Source Serif 4, balanced paged reading | [Open →](https://svyable.github.io/bookself/reader/#/b/style-common-book/) |
+| [**The Lamplight Room**](books/style-lamplight-room/) | `literary` | Parchment, Literata, classic indents, pages | [Open →](https://svyable.github.io/bookself/reader/#/b/style-lamplight-room/) |
+| [**A Clear Margin**](books/style-clear-margin/) | `modern-essay` | Porcelain, IBM Plex Sans, wide scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-clear-margin/) |
+| [**Field Notes Quarterly**](books/style-field-notes/) | `editorial` | Linen, humanist sans, compact editorial scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-field-notes/) |
+| [**Poems at the Window**](books/style-poems-at-window/) | `poetry` | Ivory, classic serif, airy open scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-poems-at-window/) |
+| [**After Midnight**](books/style-after-midnight/) | `night-story` | Midnight, Lora, narrow warm paged reading | [Open →](https://svyable.github.io/bookself/reader/#/b/style-after-midnight/) |
+| [**Easy Reading**](books/style-easy-reading/) | `accessible` | High contrast, Atkinson Hyperlegible, larger scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-easy-reading/) |
+| [**Study in Green**](books/style-quiet-study/) | `quiet-study` | Sage, Literata, narrow left-aligned study scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-quiet-study/) |
 
-## What is free, and what needs GitHub Pro?
+All entries above are intentionally published demo artifacts. The platform demos contain example writing only; they demonstrate Bookself rather than an individual author's personal manuscripts or identity.
 
-Bookself itself is open source and does not require a paid Bookself plan. GitHub plan requirements depend only on how you choose to host the repositories and Reader.
+## The Desk proof
 
-| Setup | GitHub plan | What you get |
-|---|---|---|
-| **Private Desk + local Reader/Desk** | GitHub Free is enough | Keep the Git repository private and preview locally. No Pages or Actions are required. |
-| **Public Shelf + public GitHub Pages Reader** | GitHub Free is enough | A public repository can publish its released Shelf with GitHub Pages. |
-| **Private Desk + public GitHub Pages working preview** | GitHub Pro for a personal repository, or an eligible Team/Enterprise plan | Keep the Git repository private while deliberately serving the Desk Reader publicly as a working-in-public proof. |
+[**Making Bookself**](books/making-bookself/) is intentionally **not** part of the released catalog above. It is the public teaching stand-in for a private Desk artifact and remains `Status: Drafting` so the Reader can show the Draft/Proof treatment.
 
-The third option is an **optional convenience**, not part of Bookself's core publishing requirement. GitHub Pages sites are public by default even when their source repository is private, so a private Desk repository plus a Pages preview means **private Git history, public website content**. Do not use that mode for material that must remain confidential.
+That gives Bookself a working demonstration of the full lifecycle rather than a showroom containing only finished objects.
 
-A truly private or author-only GitHub Pages site is a separate GitHub Enterprise access-control feature. Bookself does not rely on that feature and does not present a client-side password as a privacy boundary.
+**Shelf catalog = released examples. Desk proof = unfinished on purpose. Blank templates = starting points, not publications.**
 
 ## If you just want to write
 
 1. Open **[START HERE](START-HERE.md)**.
-2. Copy the appropriate blank starter under `books/` to a normal publication slug on your private Desk.
-3. Keep `Status: Drafting` while you work.
-4. Save your changes with a commit.
-5. Proof the work in the Reader.
-6. When ready, release it to the public Shelf.
+2. Create a private Desk and a public Shelf, or start locally with both folders side by side.
+3. Copy the publication starter that matches what you are making.
+4. Write in plain Markdown and commit meaningful revisions.
+5. Proof the working copy in the Reader.
+6. Release a committed snapshot to Shelf when you want readers to encounter that edition.
 
-The starters cover books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics.
+Blank starters cover books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics.
 
-## Local-first publishing
+## Local-first by design
 
-Bookself does not require CI/CD to write, preview, release, or read a publication. A private Desk can work with zero GitHub Actions minutes. The normal release helper runs locally, verifies a committed snapshot, prepares the Shelf diff, and stops before commit or push.
+Bookself does not require a CMS, database, hosted build pipeline, or GitHub Actions workflow to write, preview, release, or read a publication.
 
-Use the cross-platform Python 3 entrypoints below. On systems where Python 3 uses a different launcher name, use the equivalent `python` or `py -3` command. The `.sh` files remain optional convenience wrappers for shell users.
+Stamp a working Desk and public Shelf:
 
 ```bash
 python3 scripts/stamp-instance.py ../desk desk YOUR_GITHUB_OWNER desk
 python3 scripts/stamp-instance.py ../shelf shelf YOUR_GITHUB_OWNER shelf
 ```
 
-Create the Desk repository as **private** and the Shelf repository as **public**. On GitHub Free, preview the private Desk locally and publish the public Shelf with Pages. If you deliberately want a public Pages preview from the private Desk itself, that private-repository Pages feature requires GitHub Pro or another eligible paid GitHub plan.
-
-For a release:
+Release a committed publication snapshot:
 
 ```bash
 python3 scripts/release-book.py your-title ../shelf
 ```
 
-For shared Reader/Desk upgrades:
+Synchronize shared Reader/Desk UI without replacing instance books or identity:
 
 ```bash
 python3 scripts/sync-ui.py
 ```
 
-Only shared UI is replaced; instance publications and identity remain owned by the instance.
+The `.sh` wrappers remain optional conveniences; the Python entrypoints are the cross-platform source of truth.
 
-## The books
-
-This section is the Bookself platform's **released example Shelf catalog**. Draft/Desk specimens do not belong in this list.
-
-| Publication | Format |
-|---|---|
-| [How to Bookself](books/how-to-bookself/) | Book guide specimen |
-| [Bookself 101](books/bookself-101/) | Academic textbook specimen |
-| [The Bookself Review](books/bookself-review/) | Illustrated magazine specimen |
-| [The Bookself Daily](books/bookself-daily/) | Illustrated newspaper specimen |
-| [Bookself Dispatch](books/bookself-dispatch/) | Newsletter specimen |
-| [Open Scholarship Notes](books/open-scholarship-notes/) | Scholarly journal specimen |
-| [The Example Paper](books/the-example-paper/) | Whitepaper / research-paper specimen |
-| [Bookself Format Gallery](books/bookself-format-gallery/) | Publication-format gallery |
-| [The Common Book](books/style-common-book/) | Reader style specimen — book |
-| [The Lamplight Room](books/style-lamplight-room/) | Reader style specimen — literary |
-| [A Clear Margin](books/style-clear-margin/) | Reader style specimen — modern essay |
-| [Field Notes Quarterly](books/style-field-notes/) | Reader style specimen — editorial |
-| [Poems at the Window](books/style-poems-at-window/) | Reader style specimen — poetry |
-| [After Midnight](books/style-after-midnight/) | Reader style specimen — night story |
-| [Easy Reading](books/style-easy-reading/) | Reader style specimen — accessible |
-| [Study in Green](books/style-quiet-study/) | Reader style specimen — quiet study |
-
-All entries above are intentionally published demo artifacts. Their metadata should say `Status: Published`, and their authorship should use neutral Bookself demo/editorial identities rather than personal account handles.
-
-## The Desk demo
-
-[**Making Bookself**](books/making-bookself/) is intentionally **not** in `## The books`. It is a public teaching stand-in for a private Desk artifact, so it remains `Status: Drafting` and should show Proof/Draft UI when opened directly.
-
-That distinction is the point:
-
-- **Shelf catalog** = released example artifacts.
-- **Desk demo** = unfinished example artifact.
-- **Blank templates** = starting points, not publications and not Shelf entries.
-
-## Reader style options
+## Reader presentation
 
 Authors can recommend a starting composition in `reader.json`:
 
@@ -161,43 +133,62 @@ Authors can recommend a starting composition in `reader.json`:
 }
 ```
 
-Available presets include `book`, `literary`, `modern-essay`, `editorial`, `poetry`, `night-story`, `accessible`, and `quiet-study`. The publication can suggest; the reader decides. Reader customizations stay in that browser and do not modify the publication.
+Available presets include `book`, `literary`, `modern-essay`, `editorial`, `poetry`, `night-story`, `accessible`, and `quiet-study`.
 
-See [Publication Reader design](docs/reader-presentation.md) for the complete schema.
+**The publication can suggest. The reader decides.** Reader customizations stay in that browser and do not modify Git or the publication. See [Publication Reader design](docs/reader-presentation.md) for the complete schema.
+
+## Open tools. Author-owned words.
+
+**Public is a visibility setting. Open is a license. They are not the same thing.**
+
+Bookself framework software, documentation, shared UI, scripts, and blank underscore-prefixed starters are MIT licensed. A real publication is **All Rights Reserved by default** unless its author deliberately chooses another license in that publication's rights files.
+
+New publications include `RIGHTS.md` and machine-readable `rights.json`. The default reserves broader reproduction, republication, adaptation, commercial exploitation, AI training/fine-tuning, RAG/grounding, AI-specific indexing, synthetic narration/translation, and other generative reuse except where permission is granted or applicable law independently permits the use.
+
+The Reader can also carry machine-readable rights signals. Those signals communicate permissions and reservations; they are not encryption and they do not override statutory exceptions or separate hosting-provider terms.
+
+See **[Rights, copyright, and AI](docs/rights-and-ai.md)** and [RIGHTS.md](RIGHTS.md) for the full model.
+
+## GitHub hosting choices
+
+Bookself itself has no paid plan requirement. Hosting choices do.
+
+| Setup | GitHub plan | Result |
+|---|---|---|
+| **Private Desk + local preview** | GitHub Free | Private Git history; proof locally; no Pages required |
+| **Public Shelf + public Pages Reader** | GitHub Free | Public repository and public Reader |
+| **Private Desk + public Pages proof** | GitHub Pro for a personal repo, or another eligible paid plan | Private Git repository with an intentionally public Pages surface |
+
+A private repository plus public Pages is not a confidentiality boundary for anything rendered on that Pages site. Material that must remain confidential should not be placed on a public preview surface.
 
 ## What belongs where
 
-Shared Bookself software:
+| Shared Bookself platform | Instance-owned publication state |
+|---|---|
+| `reader/` — reading interface | `books/` — manuscripts/publications |
+| `desk/` — publishing/readiness interface | root `README.md` — catalog/identity |
+| `scripts/` — stamping, release, verification, sync | `imprint.json` — deployment identity and links |
+| `docs/` — workflow and architecture | publication-specific rights and presentation metadata |
 
-- `reader/` — the Reader: reading, navigation, notes, and reading preferences
-- `desk/` — the Publishing Desk UI: author/editor readiness and publishing workspace
-- `scripts/` — local stamping, release, verification, and UI sync helpers
-
-A real Desk or Shelf instance owns its own:
-
-- `books/`
-- root `README.md`
-- `imprint.json`
-
-Shared UI must not contain a personal author name, private Desk URL, or unrelated public Shelf identity.
+Shared UI should not contain a personal author identity, private Desk URL, or unrelated Shelf branding. Instances own their content and identity.
 
 ## Documentation
 
 | Need | Go here |
 |---|---|
 | Start writing | [START HERE](START-HERE.md) |
-| Rights, copyright, and AI | [Rights guide](docs/rights-and-ai.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |
 | Publication formats | [Publication formats](docs/publication-formats.md) |
 | Writing lifecycle | [Writing lifecycle](docs/writing-lifecycle.md) |
 | Revisions and releases | [Revisions and releases](docs/revisions.md) |
+| Reader presentation | [Reader design](docs/reader-presentation.md) |
+| Rights, copyright, and AI | [Rights guide](docs/rights-and-ai.md) |
 | Book anatomy | [Book anatomy](docs/book-anatomy.md) |
 | Editing and review | [Editor guide](docs/editor-guide.md) |
 | Full architecture | [Bookself architecture](docs/bookself.md) |
-| Alternatives | [Alternatives and neighboring tools](docs/alternatives.md) |
 | FAQ | [FAQ](docs/faq.md) |
 | AI project map | [llms.txt](llms.txt) |
-| Contributor instructions | [AGENTS.md](AGENTS.md) |
+| Contributor / agent rules | [AGENTS.md](AGENTS.md) |
 
 ## Local platform demo
 
@@ -209,4 +200,4 @@ Then open `http://127.0.0.1:8000/reader/` or `http://127.0.0.1:8000/desk/`.
 
 ## Citation and license
 
-For citation metadata, see **[CITATION.cff](CITATION.cff)**. Bookself framework code, documentation, shared UI, scripts, and blank underscore-prefixed starters are MIT licensed. Real publication content keeps its authorship and publication-specific rights as described in [LICENSE](LICENSE), [RIGHTS.md](RIGHTS.md), and each publication's own `RIGHTS.md` when present.
+For citation metadata, see **[CITATION.cff](CITATION.cff)**. Framework code is MIT licensed; publication content keeps its authorship and publication-specific rights as described in [LICENSE](LICENSE), [RIGHTS.md](RIGHTS.md), and each publication's own rights files.

@@ -9,7 +9,7 @@ export const READER_PRESENTATION_OPTIONS = Object.freeze({
     'contrast', 'contrast-dark',
   ]),
   warmths: Object.freeze(['off', 'soft', 'golden']),
-  fonts: Object.freeze(['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'system']),
+  fonts: Object.freeze(['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'script', 'system']),
   fontWeights: Object.freeze([400, 500, 600]),
   measures: Object.freeze(['narrow', 'balanced', 'wide']),
   aligns: Object.freeze(['left', 'justify']),
@@ -87,6 +87,14 @@ export const READER_PRESENTATION_PRESETS = Object.freeze({
       fontSize: 18, font: 'literary', fontWeight: 400, tracking: 0,
       leading: 1.65, measure: 'narrow', align: 'left', paragraph: 'normal',
       indent: 'none', mode: 'scroll', hyphens: 'off',
+    }),
+  }),
+  screenplay: Object.freeze({
+    appearance: Object.freeze({ theme: 'porcelain', warmth: 'off' }),
+    typography: Object.freeze({
+      fontSize: 17, font: 'script', fontWeight: 400, tracking: 0,
+      leading: 1.35, measure: 'wide', align: 'left', paragraph: 'compact',
+      indent: 'none', mode: 'paged', hyphens: 'off',
     }),
   }),
 });

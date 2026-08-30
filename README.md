@@ -1,23 +1,23 @@
 # Bookself
 
-**Write like a repo. Publish like a book.**
+**Write like a repo. Publish like a book. Rehearse like a script.**
 
 Bookself is a Git-native publishing system for long-form work. Write and revise on a **Desk**, release deliberate snapshots to a **Shelf**, and let readers encounter both through the same beautiful **Reader**.
 
-Your manuscript stays plain text. Git keeps the history. The Desk keeps the next edition moving. The Shelf gives readers a clean public release.
+Your manuscript stays plain text. Git keeps the history. The Desk keeps the next edition moving. The Shelf gives readers a clean public release. Books can read like books; screenplays can read like scripts and give actors browser-local line rehearsal tools without creating a second source of truth.
 
 **[✍️ Open the Desk proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)** · **[📚 Browse the Shelf demo →](https://svyable.github.io/bookself/reader/)** · **[🧭 Open the Publishing Desk →](https://svyable.github.io/bookself/desk/)** · **[🚀 Start writing →](START-HERE.md)**
 
-> **16 released demo publications · 1 deliberately unfinished Desk proof · 8 Reader styles · 10 blank publication starters**
+> **16 released demo publications · 1 deliberately unfinished Desk proof · 9 Reader styles · 11 blank publication starters**
 
 ## Bookself in one screen
 
 | Surface | Promise | Try it | Source |
 |---|---|---|---|
-| **Desk** | *This is the work in motion.* Draft, revise, proof, inspect history, and prepare the next edition. | [Open the live proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/) | [Making Bookself](books/making-bookself/) |
+| **Desk** | *This is the work in motion.* Draft, revise, proof, inspect history, collaborate, and prepare the next edition. | [Open the live proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/) | [Making Bookself](books/making-bookself/) |
 | **Shelf** | *This snapshot is released.* A public library of editions the publisher deliberately chose to ship. | [Browse the Shelf demo →](https://svyable.github.io/bookself/reader/) | [Released examples](#the-books) |
-| **Reader** | Read plain Markdown like a designed publication: pages or scroll, type controls, notes, search, citations, rights, and history. | [Open Reader →](https://svyable.github.io/bookself/reader/) | [`reader/`](reader/) |
-| **Publishing Desk** | See readiness, publication state, metadata, release mismatches, and the next publishing action without adding a CMS. | [Open Publishing Desk →](https://svyable.github.io/bookself/desk/) | [`desk/`](desk/) |
+| **Reader** | Read plain text like a designed publication: pages or scroll, screenplay typesetting and rehearsal, type controls, notes, search, citations, rights, and history. | [Open Reader →](https://svyable.github.io/bookself/reader/) | [`reader/`](reader/) |
+| **Publishing Desk** | See readiness, publication state, metadata, release mismatches, Reader design, cover design, and the next publishing action without adding a CMS. | [Open Publishing Desk →](https://svyable.github.io/bookself/desk/) | [`desk/`](desk/) |
 
 **Same Reader. Different promise.** Desk means *work in motion*. Shelf means *this snapshot is released*.
 
@@ -38,11 +38,17 @@ Bookself is not only a demo repo. [Svyable Shelf](https://github.com/Svyable/she
 | Name | Job |
 |---|---|
 | **Bookself** | The whole publishing system: Reader, Desk, Shelf model, templates, scripts, docs, and rights defaults |
-| **Desk** | The working repository: drafts, experiments, research, review, and the next edition |
+| **Desk** | The working repository: drafts, experiments, research, review, collaboration, rehearsal, and the next edition |
 | **Shelf** | The public repository: deliberate publication snapshots and release history |
-| **Reader** | The reading interface used for a working proof or released publication |
+| **Reader** | The reading interface used for a working proof or released publication; screenplays also gain actor rehearsal controls |
 
-A public Shelf should never need to reach back into a private Desk to render a released book. The snapshot is copied, versioned, and independently readable.
+A public Shelf should never need to reach back into a private Desk to render a released work. The snapshot is copied, versioned, and independently readable.
+
+### Screenplays belong here too
+
+A screenplay is unusually well suited to the Bookself model: dialogue is plain text, meaningful revisions are easy to diff, alternate scenes can live on branches, review can happen on exact lines, and actors need a reading surface that is very different from a GitHub diff.
+
+Bookself therefore treats `Screenplay`, `Teleplay`, and `Script` as first-class formats. The source uses a Fountain-compatible plain-text core; the Reader supplies Courier screenplay typesetting plus **Lines** rehearsal controls for selecting a role, hiding that role's dialogue, revealing lines, and jumping cue to cue. See [Screenwriting with Bookself](docs/screenwriting.md).
 
 ## The books
 
@@ -76,6 +82,8 @@ A publication can recommend a starting reading composition without taking contro
 | [**Easy Reading**](books/style-easy-reading/) | `accessible` | High contrast, Atkinson Hyperlegible, larger scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-easy-reading/) |
 | [**Study in Green**](books/style-quiet-study/) | `quiet-study` | Sage, Literata, narrow left-aligned study scroll | [Open →](https://svyable.github.io/bookself/reader/#/b/style-quiet-study/) |
 
+`screenplay` is also a Reader preset, but it belongs with the screenplay semantic renderer rather than as a generic visual specimen. Copy [`books/_SCREENPLAY_TEMPLATE/`](books/_SCREENPLAY_TEMPLATE/) or use the New Publication Studio to try it.
+
 All entries above are intentionally published demo artifacts. The platform demos contain example writing only; they demonstrate Bookself rather than an individual author's personal manuscripts or identity.
 
 ## The Desk proof
@@ -90,12 +98,12 @@ That gives Bookself a working demonstration of the full lifecycle rather than a 
 
 1. Open **[START HERE](START-HERE.md)**.
 2. Create a private Desk and a public Shelf, or start locally with both folders side by side.
-3. Copy the publication starter that matches what you are making.
-4. Write in plain Markdown and commit meaningful revisions.
-5. Proof the working copy in the Reader.
+3. Copy the publication starter that matches what you are making—or use the New Publication Studio.
+4. Write in plain text and commit meaningful revisions.
+5. Proof the working copy in the Reader; actors can use screenplay rehearsal controls without modifying the script.
 6. Release a committed snapshot to Shelf when you want readers to encounter that edition.
 
-Blank starters cover books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics.
+Blank starters cover books, papers, screenplays/teleplays, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics.
 
 ## Local-first by design
 
@@ -133,7 +141,7 @@ Authors can recommend a starting composition in `reader.json`:
 }
 ```
 
-Available presets include `book`, `literary`, `modern-essay`, `editorial`, `poetry`, `night-story`, `accessible`, and `quiet-study`.
+Available presets include `book`, `literary`, `modern-essay`, `editorial`, `poetry`, `night-story`, `accessible`, `quiet-study`, and `screenplay`.
 
 **The publication can suggest. The reader decides.** Reader customizations stay in that browser and do not modify Git or the publication. See [Publication Reader design](docs/reader-presentation.md) for the complete schema.
 
@@ -178,6 +186,7 @@ Shared UI should not contain a personal author identity, private Desk URL, or un
 |---|---|
 | Start writing | [START HERE](START-HERE.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |
+| Screenwriting and actor rehearsal | [Screenwriting](docs/screenwriting.md) |
 | Publication formats | [Publication formats](docs/publication-formats.md) |
 | Writing lifecycle | [Writing lifecycle](docs/writing-lifecycle.md) |
 | Revisions and releases | [Revisions and releases](docs/revisions.md) |

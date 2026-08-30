@@ -2,6 +2,7 @@ import { fileUrl } from './base.js';
 import { installMarkedMath, setMathReferenceContext } from './math.js';
 import { installMarkedAcademic, setAcademicContext } from './academic.js';
 import { withSourceRange } from './reading-position.js';
+import { isScreenplayText, screenplayBlocks, screenplayOutline } from './screenplay-format.js';
 
 const CHAPTER = '(?:manuscript\\/)?((?:ch[\\w-]+|front-matter|back-matter)(?:\\.md)?)';
 let wikiInstalled = false;
@@ -92,13 +93,27 @@ function prepareMarkdown(markdown, slug) {
   setAcademicContext(markdown);
 }
 
+function screenplayInline(value) {
+  // Fountain uses underscores for underline rather than italics. Preserve its
+  // plain-text convention while still letting Marked handle links, bold, and
+  // asterisk-based emphasis inside screenplay elements.
+  const source = String(value || '').replace(/(^|[^\\])_([^_\n]+)_/g, '$1<u>$2</u>');
+  return window.marked.parseInline(source, { gfm: true });
+}
+
 export function renderMarkdown(markdown, slug) {
   prepareMarkdown(markdown, slug);
+  if (isScreenplayText(markdown)) {
+    return screenplayBlocks(markdown, screenplayInline)
+      .map((block) => rewriteUrls(block.html, slug))
+      .join('\n');
+  }
   const raw = window.marked.parse(markdown, { gfm: true, breaks: false });
   return rewriteUrls(raw, slug);
 }
 
 export function headingOffsets(markdown) {
+  if (isScreenplayText(markdown)) return screenplayOutline(markdown);
   const heads = [];
   const re = /^(#{1,3})\s+(.+)$/gm;
   let m;
@@ -114,6 +129,16 @@ export function headingOffsets(markdown) {
 
 export function blocksFromMarkdown(markdown, slug) {
   prepareMarkdown(markdown, slug);
+  if (isScreenplayText(markdown)) {
+    const blocks = screenplayBlocks(markdown, screenplayInline).map((block) => ({
+      html: withSourceRange(rewriteUrls(block.html, slug), block.start, block.end),
+      start: block.start,
+      end: block.end,
+      raw: block.raw,
+    }));
+    if (blocks.length) return blocks;
+  }
+
   const tokens = window.marked.lexer(markdown);
   const blocks = [];
   let offset = 0;

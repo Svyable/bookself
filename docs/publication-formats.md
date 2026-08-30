@@ -6,6 +6,14 @@ Bookself can stay simple while publishing more than books. The underlying rule i
 
 Copy `books/_TEMPLATE/` and write chapters as Markdown. A released book appears on the Shelf and opens in the full Reader.
 
+## Screenplays, teleplays, and scripts
+
+Copy `books/_SCREENPLAY_TEMPLATE/` or choose **Screenplay / teleplay** in the New Publication Studio. The script remains plain text in `manuscript/script.md`, using Bookself's deliberately small Fountain-compatible screenplay core for scene headings, action, character cues, dialogue, parentheticals, transitions, centered text, writer-room sections, and explicit page breaks.
+
+The Reader recognizes `Format: Screenplay`, `Teleplay`, or `Script`, recommends the `screenplay` Reader preset, and exposes actor rehearsal controls. An actor can select a role, hide that role's dialogue without changing page geometry, reveal individual lines, and move cue by cue. Rehearsal state is browser-local and never edits the script.
+
+See [Screenwriting with Bookself](screenwriting.md) for the source conventions, collaboration model, actor workflow, print behavior, and the deliberate boundary between Bookself's writing/rehearsal layer and production-locking tools.
+
 ## Papers, whitepapers, and research notes
 
 Copy `books/_PAPER_TEMPLATE/` instead. The generic starter begins with the neutral `Format: Paper` label and uses the same publication folder and Git history as other Bookself work. Change the format to a more specific real form such as `Whitepaper`, `Research Paper`, `Preprint`, `Thesis`, or `Dissertation` when that better describes the publication. Paper metadata can include:
@@ -41,6 +49,7 @@ A publication folder can represent more than a conventional book. Set the `Forma
 
 Recognized format families include:
 
+- `Screenplay`, `Teleplay`, or `Script`
 - `Magazine`, `Periodical`, or `Zine`
 - `Newspaper` or `Gazette`
 - `Journal`, `Proceedings`, or `Conference Proceedings`
@@ -50,7 +59,7 @@ Recognized format families include:
 - `Report`, `Annual Report`, `Field Report`, `Manual`, `Handbook`, `Guide`, `Catalog` / `Catalogue`, `Pamphlet`, or `Brochure`
 - `Thesis` or `Dissertation` using the paper treatment
 
-The underscore-prefixed folders such as `books/_MAGAZINE_TEMPLATE/` and `books/_JOURNAL_TEMPLATE/` are **blank authoring templates, not public Reader examples**. The Reader intentionally does not put those starters on the Shelf. To preview a real issue or edition, copy the appropriate template to a normal publication slug on the private Desk, replace its placeholder content and media, and list that publication in the Desk inventory. It should reach the public Shelf only through a deliberate release.
+The underscore-prefixed folders such as `books/_SCREENPLAY_TEMPLATE/`, `books/_MAGAZINE_TEMPLATE/`, and `books/_JOURNAL_TEMPLATE/` are **blank authoring templates, not public Reader examples**. The Reader intentionally does not put those starters on the Shelf. To preview a real script, issue, or edition, copy the appropriate template to a normal publication slug on the private Desk, replace its placeholder content and media, and list that publication in the Desk inventory. It should reach the public Shelf only through a deliberate release.
 
 These are format families, not rigid schemas. Bookself keeps the author's exact `Format` label for display and maps related forms onto a small number of Reader treatments so the product does not grow a separate application for every publishing noun.
 
@@ -168,6 +177,7 @@ The Reader turns those lines into magazine-style cards that show the title and d
 | Format | Source of truth | Reader behavior |
 |---|---|---|
 | Book | Markdown + media in a publication folder | Opens in Bookself Reader |
+| Screenplay / teleplay / script | Fountain-compatible plain text + optional media in a publication folder | Screenplay typesetting + actor rehearsal controls |
 | Whitepaper / thesis / dissertation | Markdown + media in a publication folder | Opens in Bookself Reader with paper labeling and citation metadata |
 | Magazine / newspaper / journal / newsletter | Markdown + media in a publication folder | Opens in Bookself Reader with format and issue labeling |
 | Comic / anthology / report / manual / catalog | Markdown + media in a publication folder | Opens in Bookself Reader with format labeling |

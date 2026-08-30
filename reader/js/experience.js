@@ -4,7 +4,7 @@ import { blocksFromMarkdown } from './markdown.js';
 import { parseRoute, readHash } from './router.js';
 import { loadNotes, addNote, applyNotes } from './notes.js';
 
-const FONTS = ['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'system'];
+const FONTS = ['book', 'literary', 'warm', 'classic', 'modern', 'clear', 'humanist', 'script', 'system'];
 const DEFAULTS = Object.freeze({
   fontSize: 18,
   font: 'book',
@@ -312,7 +312,7 @@ function markup() {
         </div>
 
         <div class="experience-control">
-          <div class="experience-label-row"><span>Typeface</span><span>8 curated choices</span></div>
+          <div class="experience-label-row"><span>Typeface</span><span>9 curated choices</span></div>
           <div class="experience-fonts" role="group" aria-label="Typeface">
             <button class="experience-font" type="button" data-reader-font-value="book" aria-pressed="false" title="Source Serif 4"><strong>Aa</strong><small>Book</small></button>
             <button class="experience-font" type="button" data-reader-font-value="literary" aria-pressed="false" title="Literata"><strong>Aa</strong><small>Literata</small></button>
@@ -321,6 +321,7 @@ function markup() {
             <button class="experience-font" type="button" data-reader-font-value="modern" aria-pressed="false" title="IBM Plex Sans"><strong>Aa</strong><small>Plex</small></button>
             <button class="experience-font" type="button" data-reader-font-value="clear" aria-pressed="false" title="Atkinson Hyperlegible"><strong>Aa</strong><small>Clear</small></button>
             <button class="experience-font" type="button" data-reader-font-value="humanist" aria-pressed="false" title="Humanist system sans"><strong>Aa</strong><small>Humanist</small></button>
+            <button class="experience-font" type="button" data-reader-font-value="script" aria-pressed="false" title="Courier Prime"><strong>Aa</strong><small>Script</small></button>
             <button class="experience-font" type="button" data-reader-font-value="system" aria-pressed="false" title="Your device system font"><strong>Aa</strong><small>System</small></button>
           </div>
         </div>
@@ -1051,6 +1052,7 @@ function loadEnhancementStyles() {
     [data-reader-font="modern"] .page-inner, [data-reader-font="modern"] .scroll-document, [data-reader-font="modern"] .experience-preview-sample { font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important; }
     [data-reader-font="clear"] .page-inner, [data-reader-font="clear"] .scroll-document, [data-reader-font="clear"] .experience-preview-sample { font-family: "Atkinson Hyperlegible", Verdana, sans-serif !important; }
     [data-reader-font="humanist"] .page-inner, [data-reader-font="humanist"] .scroll-document, [data-reader-font="humanist"] .experience-preview-sample { font-family: "Trebuchet MS", "Segoe UI", sans-serif !important; }
+    [data-reader-font="script"] .page-inner, [data-reader-font="script"] .scroll-document, [data-reader-font="script"] .experience-preview-sample { font-family: "Courier Prime", "Courier New", Courier, monospace !important; font-variant-ligatures: none; }
     [data-reader-font="system"] .page-inner, [data-reader-font="system"] .scroll-document, [data-reader-font="system"] .experience-preview-sample { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
     .page-inner, .scroll-document, .experience-preview-sample { font-weight: var(--reader-font-weight); letter-spacing: var(--reader-tracking); }
     [data-reader-indent="gentle"] .page-inner p + p, [data-reader-indent="gentle"] .scroll-document p + p, [data-reader-indent="gentle"] .experience-preview-sample { text-indent: .85em; }
@@ -1059,13 +1061,14 @@ function loadEnhancementStyles() {
     .experience-font[data-reader-font-value="literary"] strong { font-family: "Literata", Georgia, serif; }
     .experience-font[data-reader-font-value="warm"] strong { font-family: "Lora", Georgia, serif; }
     .experience-font[data-reader-font-value="humanist"] strong { font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+    .experience-font[data-reader-font-value="script"] strong { font-family: "Courier Prime", "Courier New", Courier, monospace; }
     .experience-font[data-reader-font-value="system"] strong { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .experience-presets-expanded { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .experience-save-preset { width: 100%; min-height: 2.5rem; margin-top: .48rem; border: 1px dashed color-mix(in srgb, var(--accent) 60%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--accent-glow) 42%, transparent); color: var(--accent); cursor: pointer; font: 500 .72rem/1.2 "IBM Plex Sans", sans-serif; }
     .experience-save-preset:hover, .experience-save-preset:focus-visible { border-style: solid; background: var(--accent-glow); }
     .experience-preset:disabled { cursor: default; opacity: .48; }
     @media (max-width: 700px) {
-      .experience-fonts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .experience-fonts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .experience-font { min-height: 3.45rem; }
       .experience-presets-expanded { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .experience-preview-title { font-size: .57rem; }

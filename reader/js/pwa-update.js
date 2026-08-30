@@ -25,13 +25,11 @@ function ensureNotice() {
   notice.id = 'readerUpdateNotice';
   notice.className = 'reader-update-notice';
   notice.hidden = true;
-  notice.setAttribute('role', 'status');
-  notice.setAttribute('aria-live', 'polite');
-  notice.setAttribute('aria-atomic', 'true');
+  notice.setAttribute('aria-label', 'Reader update');
   notice.innerHTML = `
     <div class="reader-update-copy">
       <strong>Reader update ready</strong>
-      <span>Refresh when convenient to switch to the new Reader shell.</span>
+      <span id="readerUpdateStatus" aria-live="polite" aria-atomic="true">Refresh when convenient to switch to the new Reader shell.</span>
     </div>
     <div class="reader-update-actions">
       <button type="button" class="ghost-btn" id="readerUpdateLater">Later</button>
@@ -76,8 +74,8 @@ function applyUpdate() {
   const notice = ensureNotice();
   notice.hidden = false;
   notice.dataset.state = 'applying';
-  const copy = notice.querySelector('.reader-update-copy span');
-  if (copy) copy.textContent = 'Applying update…';
+  const status = notice.querySelector('#readerUpdateStatus');
+  if (status) status.textContent = 'Applying update…';
   notice.querySelectorAll('button').forEach((button) => { button.disabled = true; });
   worker.postMessage(activationMessage());
 }

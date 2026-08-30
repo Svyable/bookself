@@ -127,6 +127,12 @@ const newspaper = parseBookReadme(`# Morning Ledger\n\n| **Format** | Newspaper 
 assert.equal(newspaper.format, 'newspaper');
 assert.equal(newspaper.formatLabel, 'Newspaper');
 
+const screenplay = parseBookReadme(`# The Last Table Read\n\n| **Format** | Screenplay |\n`, 'the-last-table-read');
+assert.equal(screenplay.format, 'screenplay');
+assert.equal(screenplay.formatLabel, 'Screenplay');
+const teleplay = parseBookReadme(`# Pilot\n\n| **Format** | Teleplay |\n`, 'pilot');
+assert.equal(teleplay.format, 'screenplay');
+
 const linked = parseBookReadme(
   `# Linked Book\n\n| **Authors** | [Ada Example](https://example.com/ada) |\n| **Author Links** | [Goodreads](https://goodreads.com/ada) |\n| **Links** | [Amazon](https://amazon.com/example) · [WorldCat](https://worldcat.org/example) |\n| **Find elsewhere** | [Open Library](https://openlibrary.org/example) · [WorldCat](https://worldcat.org/example) |\n`,
   'linked-book'

@@ -136,9 +136,11 @@ async function warmPublication(readmeResponse, readmeUrl) {
   } catch {
     return;
   }
+
   const chapters = self.BookselfOfflineCache.chapterLinks(markdown, readmeUrl.href);
   if (!chapters.length) return;
   const cache = await caches.open(CACHE);
+
   await Promise.allSettled(chapters.map(async (href) => {
     const response = await cacheRequest(cache, href);
     if (!response) return;
@@ -153,17 +155,27 @@ self.addEventListener('fetch', (event) => {
   const sameOrigin = url.origin === location.origin;
   const external = cacheableExternal(url);
   if (!sameOrigin && !external) return;
-  const network = fetch(req).then(async (res) => {
-    try {
-      const cache = await caches.open(CACHE);
-      await cache.put(req, res.clone());
-    } catch {
-      // Reading continues from the network response.
-    }
-    return res;
-  });
+
+  const network = fetch(req)
+    .then(async (res) => {
+      try {
+        const cache = await caches.open(CACHE);
+        await cache.put(req, res.clone());
+      } catch {
+        // Reading continues from the network response.
+      }
+      return res;
+    });
+
   if (sameOrigin && self.BookselfOfflineCache.isPublicationReadme(url.href)) {
-    event.waitUntil(network.then((res) => warmPublication(res.clone(), url)).catch(() => {}));
+    event.waitUntil(
+      network
+        .then((res) => warmPublication(res.clone(), url))
+        .catch(() => {})
+    );
   }
-  event.respondWith(network.catch(() => caches.match(req, { ignoreSearch: sameOrigin })));
+
+  event.respondWith(
+    network.catch(() => caches.match(req, { ignoreSearch: sameOrigin }))
+  );
 });

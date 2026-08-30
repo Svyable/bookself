@@ -192,8 +192,26 @@ function bookmarkKey(bookmark) {
   return `${bookmark.chapter}\u001f${bookmark.offset}`;
 }
 
+function normalizeImportedBackup(imported = {}) {
+  if (imported.format === READER_STATE_BACKUP_FORMAT) {
+    return buildReaderStateBackup({
+      slug: imported.publication?.slug,
+      title: imported.publication?.title,
+      exportedAt: imported.exportedAt,
+      legacyPrefs: imported.preferences?.legacy,
+      experience: imported.preferences?.experience,
+      preset: imported.preferences?.preset,
+      progress: imported.reading?.progress,
+      bookmarks: imported.reading?.bookmarks,
+      stats: imported.reading?.stats,
+      notes: imported.annotations,
+    });
+  }
+  return buildReaderStateBackup(imported);
+}
+
 export function restoreReaderState(local = {}, imported = {}) {
-  const importedState = buildReaderStateBackup(imported);
+  const importedState = normalizeImportedBackup(imported);
   const localBookmarks = normalizeReaderBookmarks(local.bookmarks);
   const importedBookmarks = importedState.reading.bookmarks;
   const bookmarkMap = new Map(localBookmarks.map((bookmark) => [bookmarkKey(bookmark), bookmark]));

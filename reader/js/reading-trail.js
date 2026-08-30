@@ -42,10 +42,16 @@ function announce(message) {
   requestAnimationFrame(() => { live.textContent = message; });
 }
 
+function academicReturnActive() {
+  return !!document.querySelector('.reader-academic-return');
+}
+
 function sync() {
   if (!button) return;
   const point = readingReturnPoint(history.state, parseRoute());
-  const available = !!point && document.body.dataset.stage === 'read';
+  const available = !!point
+    && document.body.dataset.stage === 'read'
+    && !academicReturnActive();
   button.hidden = !available;
   button.disabled = !available;
   button.tabIndex = available ? 0 : -1;
@@ -125,6 +131,10 @@ function install() {
     attributes: true,
     attributeFilter: ['data-reader-mode'],
   });
+  const bookStage = document.getElementById('bookStage');
+  if (bookStage) {
+    new MutationObserver(sync).observe(bookStage, { childList: true, subtree: true });
+  }
   sync();
 }
 

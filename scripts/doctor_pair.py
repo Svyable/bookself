@@ -53,6 +53,16 @@ def catalog_slugs(root: Path) -> set[str]:
     return set(doctor.portal_slugs(markdown))
 
 
+def git_common_dir(root: Path) -> Path | None:
+    value = doctor.git_output(root, "rev-parse", "--git-common-dir")
+    if value is None:
+        return None
+    path = Path(value)
+    if not path.is_absolute():
+        path = root / path
+    return path.resolve()
+
+
 def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
     desk_root = desk_root.resolve()
     shelf_root = shelf_root.resolve()
@@ -82,10 +92,14 @@ def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
     if shelf_git is None:
         out.append(doctor.finding("error", "shelf_not_git", "Shelf is not a readable Git worktree."))
     if desk_git is not None and shelf_git is not None:
-        if Path(desk_git).resolve() == Path(shelf_git).resolve():
-            out.append(doctor.finding("error", "shared_git_history", "Desk and Shelf are the same Git worktree; they must have independent histories."))
+        desk_common = git_common_dir(desk_root)
+        shelf_common = git_common_dir(shelf_root)
+        if Path(desk_git).resolve() == Path(shelf_git).resolve() or (
+            desk_common is not None and shelf_common is not None and desk_common == shelf_common
+        ):
+            out.append(doctor.finding("error", "shared_git_history", "Desk and Shelf share one Git repository/history; they must be independent repositories."))
         else:
-            out.append(doctor.finding("ok", "separate_git_histories", "Desk and Shelf use separate Git worktrees."))
+            out.append(doctor.finding("ok", "separate_git_histories", "Desk and Shelf use independent Git repositories."))
 
     for relative in SHARED_DIRS:
         desk_tree = tree_digest(desk_root, relative)

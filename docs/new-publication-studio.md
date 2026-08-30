@@ -7,7 +7,7 @@ The studio asks only for the choices that matter at the beginning:
 - publication format
 - working title
 - author name or handle
-- first piece/chapter title
+- first piece/chapter/script title
 - Reader starting style
 
 From those answers it generates an ordinary Bookself publication folder. There is no private project database and no second authoring format.
@@ -19,20 +19,23 @@ A new starter contains:
 ```text
 my-publication/
   README.md
+  RIGHTS.md
+  rights.json
   reader.json
   manuscript/
     chapter-01.md
 ```
 
-The exact manuscript filename and starter structure vary by format. A paper begins with an abstract/question/evidence/conclusion shape; a report begins with an executive summary/findings/evidence/recommendations; a manual begins with an outcome, prerequisites, steps, and a result check; other formats receive similarly lightweight starting structures.
+The exact manuscript filename and starter structure vary by format. A paper begins with an abstract/question/evidence/conclusion shape; a report begins with an executive summary/findings/evidence/recommendations; a manual begins with an outcome, prerequisites, steps, and a result check; a screenplay uses `manuscript/script.md` with Bookself's Fountain-compatible screenplay core.
 
-The generated files remain plain text. You can immediately edit them in GitHub, a local editor, another Markdown tool, or an AI-assisted coding/writing environment.
+The generated files remain plain text. You can immediately edit them in GitHub, a local editor, another Markdown/plain-text tool, or an AI-assisted coding/writing environment.
 
-## Ten starting formats
+## Eleven starting formats
 
 The studio supports the same broad publication families as Bookself's blank starters:
 
 - Book
+- Screenplay / teleplay
 - Paper / whitepaper
 - Magazine / zine
 - Newspaper
@@ -43,7 +46,13 @@ The studio supports the same broad publication families as Bookself's blank star
 - Manual / handbook
 - Comic / graphic narrative
 
-The starter is intentionally small. It does not try to predict a finished book's full structure before the author has written it.
+The starter is intentionally small. It does not try to predict a finished work's full structure before the author has written it.
+
+### Screenplay behavior
+
+Choosing **Screenplay / teleplay** creates `Format: Screenplay`, `manuscript/script.md`, and recommends the `screenplay` Reader preset unless the author deliberately chooses another style.
+
+The script starter demonstrates scene headings, action, character cues, dialogue, a parenthetical, a transition, and centered text. The Reader then supplies screenplay typesetting and actor rehearsal tools without changing the source. See [Screenwriting with Bookself](screenwriting.md).
 
 ## Reader design at creation time
 
@@ -57,8 +66,11 @@ The studio can start the publication with any named Bookself Reader presentation
 - `night-story`
 - `accessible`
 - `quiet-study`
+- `screenplay`
 
 That choice becomes a normal `reader.json` recommendation. Readers can still override it locally; the publication does not lock their typeface, size, spacing, colors, or reading mode.
+
+When an author changes the format selector to Screenplay / teleplay, the Studio selects the screenplay preset automatically unless the author already made an explicit Reader-style choice.
 
 ## Saving the starter
 
@@ -83,6 +95,8 @@ The studio also generates an inventory line such as:
 ```
 
 Paste that link somewhere under the Desk root README's `## The books` section. The Publishing Desk and Reader discover publication folders from those normal Markdown links; there is no hidden catalog database.
+
+For a screenplay the same line simply uses `— Screenplay`.
 
 ## What the studio does not do
 

@@ -69,7 +69,10 @@ function syncAtlasButton(slug = '') {
   const button = document.getElementById('bookmarkAtlasBtn');
   if (!button) return;
   const total = slug ? normalizeBookmarks(loadBookmarks(slug)).length : 0;
-  if (countBadge) countBadge.textContent = String(total);
+  if (countBadge) {
+    countBadge.textContent = String(total);
+    countBadge.hidden = total === 0;
+  }
   button.setAttribute('aria-label', total ? `Bookmarks, ${total}` : 'Bookmarks');
   button.title = total ? `Bookmarks (${total})` : 'Bookmarks';
 }
@@ -133,10 +136,19 @@ function focusReadingSurface() {
   });
 }
 
+function closeDialog(value = 'close') {
+  if (!dialog) return;
+  if (typeof dialog.close === 'function') dialog.close(value);
+  else {
+    dialog.removeAttribute('open');
+    dialog.dispatchEvent(new Event('close'));
+  }
+}
+
 function goToBookmark(bookmark) {
   const route = parseRoute();
   if (!route.slug || !bookmark) return;
-  dialog?.close('navigate');
+  closeDialog('navigate');
   go(readHash(route.slug, bookmark.chapter, bookmark.offset));
   requestAnimationFrame(() => requestAnimationFrame(focusReadingSurface));
 }
@@ -239,13 +251,13 @@ function ensureDialog() {
   list = dialog.querySelector('.bookmark-atlas-list');
   search = dialog.querySelector('.bookmark-atlas-search');
   status = dialog.querySelector('.bookmark-atlas-status');
-  dialog.querySelector('.bookmark-atlas-close').addEventListener('click', () => dialog.close('close'));
+  dialog.querySelector('.bookmark-atlas-close').addEventListener('click', () => closeDialog('close'));
   dialog.querySelectorAll('[data-bookmark-step]').forEach((button) => {
     button.addEventListener('click', () => stepBookmark(Number(button.dataset.bookmarkStep)));
   });
   search.addEventListener('input', renderEntries);
   dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) dialog.close('backdrop');
+    if (event.target === dialog) closeDialog('backdrop');
   });
   dialog.addEventListener('close', () => {
     if (dialog.returnValue !== 'navigate' && opener?.isConnected) opener.focus({ preventScroll: true });
@@ -257,6 +269,7 @@ function ensureDialog() {
     const cards = [...dialog.querySelectorAll('.bookmark-atlas-card')];
     if (!cards.length) return;
     const index = cards.indexOf(document.activeElement);
+    if (index < 0) return;
     const next = event.key === 'ArrowDown'
       ? (index + 1 + cards.length) % cards.length
       : (index - 1 + cards.length) % cards.length;
@@ -316,8 +329,7 @@ function install() {
     if (dialog?.open && event.key === 'Escape') {
       event.preventDefault();
       event.stopImmediatePropagation();
-      dialog.close?.('close');
-      if (dialog.hasAttribute('open')) dialog.removeAttribute('open');
+      closeDialog('close');
       return;
     }
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;

@@ -68,6 +68,29 @@ class PairDoctorTests(unittest.TestCase):
             codes = {item["code"] for item in result["pair"]["findings"]}
             self.assertIn("shared_ui_drift", codes)
 
+    def test_shared_git_history_blocks_setup(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            desk = parent / "desk"
+            shelf = parent / "shelf"
+            desk.mkdir()
+            self.make_instance(desk, role="desk", repo="desk")
+            subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=desk, check=True)
+            subprocess.run(["git", "config", "user.name", "Bookself Test"], cwd=desk, check=True)
+            subprocess.run(["git", "add", "."], cwd=desk, check=True)
+            subprocess.run(["git", "commit", "-q", "-m", "fixture"], cwd=desk, check=True)
+            subprocess.run(["git", "worktree", "add", "-q", "--detach", str(shelf), "HEAD"], cwd=desk, check=True)
+            shelf_imprint = json.loads((shelf / "imprint.json").read_text(encoding="utf-8"))
+            shelf_imprint["role"] = "shelf"
+            shelf_imprint["storagePrefix"] = "shelf-shelf"
+            shelf_imprint["github"]["repo"] = "shelf"
+            (shelf / "imprint.json").write_text(json.dumps(shelf_imprint), encoding="utf-8")
+
+            result = doctor_pair.inspect_pair(desk, shelf)
+            self.assertFalse(result["setupReady"])
+            codes = {item["code"] for item in result["pair"]["findings"]}
+            self.assertIn("shared_git_history", codes)
+
     def test_unpublished_shelf_content_blocks_setup(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             desk, shelf = self.make_pair(Path(tmp))

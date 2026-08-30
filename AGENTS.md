@@ -11,7 +11,7 @@ Rules for AI agents working in this repository.
 - When you add, rename, or remove a chapter, update that book's README
   table of contents and the Chapters count in the same change.
 - Do not put book prose in `reader/` or `desk/`. Authors and agents edit
-  Markdown under `books/<slug>/`.
+  publication text under `books/<slug>/`.
 - Public source is not permission for unrestricted reuse. Read and preserve the
   applicable root and per-publication `RIGHTS.md` files before changing a real
   publication.
@@ -67,10 +67,11 @@ Bookself must not require CI/CD to write, preview, release, or read a
 publication. The complete private-Desk workflow must work with zero GitHub
 Actions minutes.
 
-The required publishing path is deliberately small: Git + Markdown + a browser,
-with Python's standard library for the release helper. GitHub Actions, hosted
-runners, PR checks, and other automation may be added as optional conveniences,
-but they must never become a prerequisite for the Desk → Shelf release path.
+The required publishing path is deliberately small: Git + plain-text publication
+files + a browser, with Python's standard library for the release helper. GitHub
+Actions, hosted runners, PR checks, and other automation may be added as optional
+conveniences, but they must never become a prerequisite for the Desk → Shelf
+release path.
 
 GitHub Pages is a static public delivery surface for Shelf, not a required
 Actions-based build pipeline. Do not replace the no-build Reader with a hosted
@@ -112,21 +113,32 @@ publication snapshot and should travel with the manuscript.
 
 ## Voice
 
-- For book, essay, narrative, or other voice-sensitive prose tasks, read and apply
-  `.agents/skills/human-prose/SKILL.md` before drafting, reviewing, or editing.
+- For book, essay, narrative, screenplay, or other voice-sensitive prose tasks,
+  read and apply `.agents/skills/human-prose/SKILL.md` before drafting,
+  reviewing, or editing.
 - Preserve the author's voice, tense, and rhythm. Match the surrounding
   sentences, not a house style you brought with you.
 - Do not substitute synonyms "for clarity" unless the author asked for that.
-- Do not add headings, lists, or emphasis the surrounding chapter does not
-  already use.
+- Do not add headings, lists, or emphasis the surrounding work does not already
+  use.
 
-## Markdown
+## Markdown and plain-text publication source
 
 - Book chapters use one `# Title` heading, then prose. Whitepapers and research
   notes may also use `##` section headings inside their manuscript file so the
   Reader can expose Abstract, Methods, Results, Discussion, and References in
   the table of contents. No YAML front matter. No HTML comments in manuscript
   files.
+- **Screenplays are the deliberate exception to book-style Markdown.** A
+  publication with `Format: Screenplay`, `Teleplay`, or `Script` normally keeps
+  `manuscript/script.md` in Bookself's Fountain-compatible plain-text core.
+  Preserve scene headings, action, character cues, parentheticals, dialogue,
+  transitions, centered text, writer-room `#` sections, forced-action `!`,
+  forced-character `@`, explicit `===` page breaks, and supported cue markers.
+  Writer-room `#` sections are outline/navigation metadata and are not printed;
+  use `> ACT ONE <` when an act card should be visible. Read
+  `docs/screenwriting.md` before restructuring screenplay source. Do not convert
+  a screenplay to ordinary prose Markdown merely to make it look familiar.
 - Publication READMEs use the info-table/contents shape supplied by their chosen
   starter and preserve format-specific metadata when applicable. Books may use
   fields such as `Series` and `ISBN`; serials may use `Volume`, `Issue`,
@@ -135,7 +147,8 @@ publication snapshot and should travel with the manuscript.
   and never invent identifiers, dates, ownership, license grants, or publication
   claims.
 - Follow existing naming: `books/<slug>/`, `chNN-slug.md`, `front-matter.md`,
-  `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
+  `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file;
+  screenplays normally use one `manuscript/script.md` file.
 - Images live in that publication's `media/` folder and are referenced with
   relative links (`![alt](../media/figure-1.png)`). PNG, JPG, WebP, and SVG are
   all appropriate Reader assets. A quoted Markdown image title on a standalone
@@ -156,8 +169,9 @@ publication snapshot and should travel with the manuscript.
   be referenced later in that same chapter with `\eqref{...}`. Do not claim
   book-wide TeX reference semantics unless the Reader actually gains a
   book-wide reference registry.
-- See `docs/academic-writing.md` for the scholarly Markdown conventions and
-  `docs/latex.md` for mathematical notation.
+- See `docs/academic-writing.md` for the scholarly Markdown conventions,
+  `docs/latex.md` for mathematical notation, and `docs/screenwriting.md` for
+  screenplay source conventions and rehearsal behavior.
 - The current academic/math layer is not a full `.tex` compiler. Do not
   introduce document classes, package installation, `.bib` parsing,
   BibTeX/Biber, CSL, TikZ, or a required build step unless the task explicitly
@@ -187,13 +201,20 @@ publication snapshot and should travel with the manuscript.
 
 ## Verbs (author and agent)
 
-These are the public lifecycle. Each manuscript change is Markdown (and maybe
+These are the public lifecycle. Each manuscript change is plain text (and maybe
 `media/`).
 
 **Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, `Status: Drafting`, and replace the rights placeholders in
 `RIGHTS.md`. On a private Desk, also list the manuscript under root **The books**
 so the local Publishing Desk can discover it.
+
+**Start a screenplay.** Copy `books/_SCREENPLAY_TEMPLATE/` to `books/<slug>/`
+or choose **Screenplay / teleplay** in the New Publication Studio. Fill title,
+writer, rights placeholders, and keep `Status: Drafting`. Write the script in
+`manuscript/script.md` using the conventions in `docs/screenwriting.md`. The
+Reader provides screenplay typesetting and browser-local actor rehearsal; Git
+remains the source of revision and collaboration history.
 
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, optional venue / DOI, replace the rights placeholders, and keep
@@ -206,10 +227,10 @@ contains mathematical notation.
 **Start another publication format.** Choose the closest blank starter under
 `books/`: `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`,
 `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`,
-`_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`. Copy it to a normal lowercase,
-hyphenated `books/<slug>/` folder on the private Desk, replace the placeholder
-metadata and rights notice, and keep `Status: Drafting` until a deliberate
-Desk → Shelf release. Use [docs/publication-formats.md](docs/publication-formats.md)
+`_MANUAL_TEMPLATE`, `_COMIC_TEMPLATE`, or `_SCREENPLAY_TEMPLATE`. Copy it to a
+normal lowercase, hyphenated `books/<slug>/` folder on the private Desk,
+replace the placeholder metadata and rights notice, and keep `Status: Drafting`
+until a deliberate Desk → Shelf release. Use [docs/publication-formats.md](docs/publication-formats.md)
 when choosing between format families. Do not publish or edit the
 underscore-prefixed starter itself.
 
@@ -223,8 +244,9 @@ of truth.
 site remains the source of truth; Bookself presents it as a magazine-style
 curated doorway.
 
-**Write / edit.** One chapter file per change. If you add, rename, or remove a
-chapter, update that book's README TOC and Chapters count in the same change.
+**Write / edit.** One chapter or script file per change. If you add, rename, or
+remove a chapter, update that publication README TOC and the Chapters count in
+the same change.
 
 **Preview.** On a private Desk, serve locally (`python3 -m http.server`) and
 open `reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not make a
@@ -245,7 +267,7 @@ lower-level file-copy operation. It does not publish, verify a release
 transaction, or create a live relationship between Desk and Shelf. Prefer
 **Release** for normal publishing.
 
-**Publish.** On a public Shelf, a released book has the exact Status
+**Publish.** On a public Shelf, a released publication has the exact Status
 `Published` and one root README row under **The books**. Normally the Release
 command prepares both together; do not change only one side.
 
@@ -253,14 +275,14 @@ command prepares both together; do not change only one side.
 remove the root catalog row. Remember that removing current files does not make
 content already pushed to public Git history private.
 
-**Revise a published book.** Leave the current Shelf edition unchanged. Revise
+**Revise a published work.** Leave the current Shelf edition unchanged. Revise
 and commit the private Desk copy, then Release the replacement when ready. Do
 not change the public Shelf copy to `Drafting` or `Revision in progress` just to
 work on the next edition.
 
-Optional book README rows (omit or leave blank if unused): **Publisher**,
+Optional publication README rows (omit or leave blank if unused): **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,
 **DOI**, **Rights**, **AI use**, **Rights file**. Series groups volumes on the
 public Shelf. Tags are comma-separated. Wiki links `[[ch03-publishing|label]]`
-in chapter Markdown become in-Reader jumps. Do not invent another config file
-for these.
+in ordinary chapter Markdown become in-Reader jumps. Do not invent another
+config file for these.

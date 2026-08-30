@@ -62,15 +62,31 @@ class AgentContractTests(unittest.TestCase):
             self.assertRegex(presentation, pattern)
 
     def test_canonical_commands_point_to_existing_scripts(self) -> None:
-        for capability in ("bootstrapWorkspace", "bootstrapSingleInstance", "validate", "syncSharedUi", "release"):
+        for capability in (
+            "bootstrapWorkspace",
+            "bootstrapSingleInstance",
+            "validateWorkspacePair",
+            "validate",
+            "syncSharedUi",
+            "release",
+        ):
             command = self.data["capabilities"][capability]["command"]
             match = re.search(r"scripts/[A-Za-z0-9._-]+", command)
             self.assertIsNotNone(match, command)
             self.assertTrue((ROOT / match.group(0)).is_file(), command)
 
+    def test_setup_completion_is_explicit(self) -> None:
+        completion = self.data["completion"]
+        self.assertIn("setupReady", completion)
+        setup_text = " ".join(completion["setupReady"]).lower()
+        self.assertIn("separate git", setup_text)
+        self.assertIn("byte-for-byte", setup_text)
+        self.assertIn("published", setup_text)
+
     def test_publication_intent_boundary_is_explicit(self) -> None:
         boundaries = self.data["intentBoundaries"]
         self.assertTrue(any("public" in item.lower() for item in boundaries["requiresUserIntent"]))
+        self.assertTrue(any("desk and shelf" in item.lower() for item in boundaries["mayInferWithoutAsking"]))
         self.assertTrue(boundaries["explicitPublishExamples"])
         self.assertIn("publishedReady", self.data["completion"])
 

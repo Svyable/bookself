@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from dataclasses import asdict
 from pathlib import Path
 
 import doctor
@@ -97,24 +98,54 @@ def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
         if Path(desk_git).resolve() == Path(shelf_git).resolve() or (
             desk_common is not None and shelf_common is not None and desk_common == shelf_common
         ):
-            out.append(doctor.finding("error", "shared_git_history", "Desk and Shelf share one Git repository/history; they must be independent repositories."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "shared_git_history",
+                    "Desk and Shelf share one Git repository/history; they must be independent repositories.",
+                )
+            )
         else:
-            out.append(doctor.finding("ok", "separate_git_histories", "Desk and Shelf use independent Git repositories."))
+            out.append(
+                doctor.finding(
+                    "ok",
+                    "separate_git_histories",
+                    "Desk and Shelf use independent Git repositories.",
+                )
+            )
 
     for relative in SHARED_DIRS:
         desk_tree = tree_digest(desk_root, relative)
         shelf_tree = tree_digest(shelf_root, relative)
         if desk_tree is None or shelf_tree is None:
-            out.append(doctor.finding("error", "shared_ui_missing", f"Shared UI directory {relative}/ must exist in both Desk and Shelf."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "shared_ui_missing",
+                    f"Shared UI directory {relative}/ must exist in both Desk and Shelf.",
+                )
+            )
             continue
         if desk_tree != shelf_tree:
             paths = sorted(set(desk_tree) | set(shelf_tree))
             drift = [path for path in paths if desk_tree.get(path) != shelf_tree.get(path)]
             preview = ", ".join(drift[:5])
             suffix = "" if len(drift) <= 5 else f" (+{len(drift) - 5} more)"
-            out.append(doctor.finding("error", "shared_ui_drift", f"Shared UI differs in {relative}/: {preview}{suffix}."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "shared_ui_drift",
+                    f"Shared UI differs in {relative}/: {preview}{suffix}.",
+                )
+            )
         else:
-            out.append(doctor.finding("ok", f"{relative}_aligned", f"Shared {relative}/ files match byte-for-byte."))
+            out.append(
+                doctor.finding(
+                    "ok",
+                    f"{relative}_aligned",
+                    f"Shared {relative}/ files match byte-for-byte.",
+                )
+            )
 
     missing_templates = [
         name
@@ -122,9 +153,21 @@ def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
         if not (desk_root / "books" / name / "README.md").is_file()
     ]
     if missing_templates:
-        out.append(doctor.finding("error", "desk_templates_missing", "Desk is missing blank publication starters: " + ", ".join(missing_templates) + "."))
+        out.append(
+            doctor.finding(
+                "error",
+                "desk_templates_missing",
+                "Desk is missing blank publication starters: " + ", ".join(missing_templates) + ".",
+            )
+        )
     else:
-        out.append(doctor.finding("ok", "desk_templates", "Desk contains the complete blank publication starter library."))
+        out.append(
+            doctor.finding(
+                "ok",
+                "desk_templates",
+                "Desk contains the complete blank publication starter library.",
+            )
+        )
 
     shelf_templates = [
         name
@@ -132,17 +175,41 @@ def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
         if (shelf_root / "books" / name).exists()
     ]
     if shelf_templates:
-        out.append(doctor.finding("error", "shelf_templates_present", "Shelf contains blank starters that belong only on Desk: " + ", ".join(shelf_templates) + "."))
+        out.append(
+            doctor.finding(
+                "error",
+                "shelf_templates_present",
+                "Shelf contains blank starters that belong only on Desk: " + ", ".join(shelf_templates) + ".",
+            )
+        )
     else:
-        out.append(doctor.finding("ok", "shelf_no_templates", "Shelf contains no blank publication starters."))
+        out.append(
+            doctor.finding(
+                "ok",
+                "shelf_no_templates",
+                "Shelf contains no blank publication starters.",
+            )
+        )
 
     shelf_catalog = catalog_slugs(shelf_root)
     for publication in doctor.iter_publication_dirs(shelf_root):
         status = publication_status(publication)
         if status != "Published":
-            out.append(doctor.finding("error", "shelf_unpublished_publication", f"{publication.name}: Shelf contains Status {status or 'blank'}; Shelf publications must be Published releases."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "shelf_unpublished_publication",
+                    f"{publication.name}: Shelf contains Status {status or 'blank'}; Shelf publications must be Published releases.",
+                )
+            )
         if publication.name not in shelf_catalog:
-            out.append(doctor.finding("error", "shelf_publication_not_cataloged", f"{publication.name}: Shelf publication exists but is not listed under root '## The books'."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "shelf_publication_not_cataloged",
+                    f"{publication.name}: Shelf publication exists but is not listed under root '## The books'.",
+                )
+            )
 
     if desk_imprint is not None and shelf_imprint is not None:
         desk_github = desk_imprint.get("github") if isinstance(desk_imprint.get("github"), dict) else {}
@@ -150,23 +217,53 @@ def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
         desk_repo = str(desk_github.get("repo", "")).strip()
         shelf_repo = str(shelf_github.get("repo", "")).strip()
         if desk_repo and shelf_repo and desk_repo == shelf_repo:
-            out.append(doctor.finding("error", "same_repo_identity", f"Desk and Shelf both claim repository name {desk_repo!r}."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "same_repo_identity",
+                    f"Desk and Shelf both claim repository name {desk_repo!r}.",
+                )
+            )
         elif desk_repo and shelf_repo:
-            out.append(doctor.finding("ok", "repo_identity", f"Repository identities are distinct: {desk_repo} / {shelf_repo}."))
+            out.append(
+                doctor.finding(
+                    "ok",
+                    "repo_identity",
+                    f"Repository identities are distinct: {desk_repo} / {shelf_repo}.",
+                )
+            )
 
         owners = {
             str(desk_github.get("owner", "")).strip().lower(),
             str(shelf_github.get("owner", "")).strip().lower(),
         }
         if "auto" in owners or "" in owners:
-            out.append(doctor.finding("warning", "owner_unresolved", "GitHub owner is unresolved in at least one imprint; edit imprint.json when repository links should resolve."))
+            out.append(
+                doctor.finding(
+                    "warning",
+                    "owner_unresolved",
+                    "GitHub owner is unresolved in at least one imprint; edit imprint.json when repository links should resolve.",
+                )
+            )
 
         desk_prefix = str(desk_imprint.get("storagePrefix", "")).strip()
         shelf_prefix = str(shelf_imprint.get("storagePrefix", "")).strip()
         if desk_prefix and shelf_prefix and desk_prefix == shelf_prefix:
-            out.append(doctor.finding("error", "shared_storage_prefix", "Desk and Shelf use the same browser storagePrefix; reader state could collide."))
+            out.append(
+                doctor.finding(
+                    "error",
+                    "shared_storage_prefix",
+                    "Desk and Shelf use the same browser storagePrefix; reader state could collide.",
+                )
+            )
         elif desk_prefix and shelf_prefix:
-            out.append(doctor.finding("ok", "storage_prefixes", "Desk and Shelf browser storage prefixes are distinct."))
+            out.append(
+                doctor.finding(
+                    "ok",
+                    "storage_prefixes",
+                    "Desk and Shelf browser storage prefixes are distinct.",
+                )
+            )
 
     return out
 
@@ -195,7 +292,7 @@ def inspect_pair(desk_root: Path, shelf_root: Path) -> dict[str, object]:
         "pair": {
             "healthy": pair_summary["error"] == 0,
             "summary": pair_summary,
-            "findings": [doctor.asdict(item) for item in pair],
+            "findings": [asdict(item) for item in pair],
         },
         "setupReady": ready,
     }
@@ -217,10 +314,17 @@ def print_human(result: dict[str, object]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Validate a Bookself Desk + Shelf pair as one installation.")
+    parser = argparse.ArgumentParser(
+        description="Validate a Bookself Desk + Shelf pair as one installation."
+    )
     parser.add_argument("desk", help="path to the private Desk repository")
     parser.add_argument("shelf", help="path to the public Shelf repository")
-    parser.add_argument("--json", action="store_true", dest="as_json", help="emit machine-readable JSON")
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="as_json",
+        help="emit machine-readable JSON",
+    )
     args = parser.parse_args(argv)
     result = inspect_pair(Path(args.desk), Path(args.shelf))
     if args.as_json:

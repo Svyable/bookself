@@ -30,8 +30,11 @@ function ensureFontLibrary() {
     link.dataset.readerFontLibrary = 'true';
     document.head.appendChild(link);
   }
+  if (link.dataset.readerFontReadinessObserved !== 'true') {
+    link.dataset.readerFontReadinessObserved = 'true';
+    link.addEventListener('load', () => settleActiveFont({ reason: 'stylesheet' }), { passive: true });
+  }
   if (link.href !== READER_FONT_LIBRARY_HREF) link.href = READER_FONT_LIBRARY_HREF;
-  link.addEventListener('load', () => settleActiveFont({ reason: 'stylesheet' }), { passive: true });
   return link;
 }
 

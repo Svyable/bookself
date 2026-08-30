@@ -26,13 +26,10 @@ const STYLE_HREF = 'css/reader-state-backup.css?v=r2';
 const MAX_MB = Math.round(MAX_READER_STATE_FILE_BYTES / (1024 * 1024));
 let pendingImport = null;
 
-function storagePrefix() {
-  return window.__IMPRINT?.storagePrefix || 'obb';
-}
+function storagePrefix() { return window.__IMPRINT?.storagePrefix || 'obb'; }
 function experienceKey() { return `${storagePrefix()}:reader-experience`; }
 function presetKey() { return `${storagePrefix()}:reader-experience:preset`; }
 function rollbackKey(slug) { return `${storagePrefix()}:${slug}:reader-state-rollback`; }
-
 function readJsonStorage(key) {
   try {
     const raw = localStorage.getItem(key);
@@ -87,6 +84,11 @@ function safeFilename(value) {
   const base = String(value || 'publication').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80) || 'publication';
   return `bookself-reader-${base}.json`;
 }
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[character]);
+}
 function downloadBackup() {
   const slug = currentSlug();
   if (!slug) return status('Open a publication before exporting Reader state.', 'error');
@@ -128,7 +130,7 @@ function reloadAt(slug, progress) {
 }
 function changeRows(changes) {
   const rows = [];
-  if (changes.position.changed) rows.push(`<li><strong>Reading position</strong><span>${changes.position.before} → ${changes.position.after}</span></li>`);
+  if (changes.position.changed) rows.push(`<li><strong>Reading position</strong><span>${escapeHtml(changes.position.before)} → ${escapeHtml(changes.position.after)}</span></li>`);
   if (changes.appearance.changed || changes.experience.changed || changes.preset.changed) rows.push('<li><strong>Reading appearance</strong><span>Backed-up typography, layout, theme, mode, and preset values will be restored.</span></li>');
   rows.push(`<li><strong>Bookmarks</strong><span>${changes.bookmarks.before} → ${changes.bookmarks.after} (${changes.bookmarks.added} added)</span></li>`);
   rows.push(`<li><strong>Annotations</strong><span>${changes.annotations.before} → ${changes.annotations.after} (${changes.annotations.added} added, ${changes.annotations.updated} updated)</span></li>`);

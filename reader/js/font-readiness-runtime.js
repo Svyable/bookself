@@ -7,10 +7,12 @@ import {
 } from './font-readiness.js';
 
 const root = document.documentElement;
+let installed = false;
 let requestRevision = 0;
 let lastSettledKey = '';
 let lastObservedKey = '';
 let loadingTimer = null;
+let onGeometryReady = null;
 
 function currentFontState() {
   const styles = getComputedStyle(root);
@@ -53,18 +55,14 @@ function waitForFont(fontSet, probe, sample, timeoutMs = 2800) {
   ]);
 }
 
-function requestGeometryRefresh(key, request) {
+function notifyGeometryReady(key, request) {
   if (lastSettledKey === key) return;
   lastSettledKey = key;
   if (!readerFontCanAffectPagination(request.name)) return;
-  if (document.body.dataset.stage !== 'read') return;
-
-  requestAnimationFrame(() => {
-    window.dispatchEvent(new CustomEvent('readerfontready', {
-      detail: { font: request.name, weight: request.weight },
-    }));
-    window.dispatchEvent(new Event('resize'));
-  });
+  onGeometryReady?.({ font: request.name, weight: request.weight });
+  window.dispatchEvent(new CustomEvent('readerfontready', {
+    detail: { font: request.name, weight: request.weight },
+  }));
 }
 
 async function settleActiveFont({ reason = 'state' } = {}) {
@@ -95,7 +93,7 @@ async function settleActiveFont({ reason = 'state' } = {}) {
 
   const ready = document.fonts.check(request.probe, sample);
   setStatus(request.name, ready ? 'ready' : 'fallback');
-  if (ready) requestGeometryRefresh(key, request);
+  if (ready) notifyGeometryReady(key, request);
 }
 
 function observeTypography() {
@@ -116,6 +114,15 @@ function observeTypography() {
   });
 }
 
-ensureFontLibrary();
-observeTypography();
-settleActiveFont({ reason: 'initial' });
+export function installFontReadiness({ onReady } = {}) {
+  if (typeof onReady === 'function') onGeometryReady = onReady;
+  if (installed) {
+    settleActiveFont({ reason: 'install' });
+    return;
+  }
+  installed = true;
+  root.dataset.readerFontReadiness = 'enhanced';
+  ensureFontLibrary();
+  observeTypography();
+  settleActiveFont({ reason: 'initial' });
+}

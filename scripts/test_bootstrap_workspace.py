@@ -44,7 +44,11 @@ class BootstrapWorkspaceTests(unittest.TestCase):
             shelf = workspace / "shelf"
             self.assertEqual(data["desk"]["role"], "desk")
             self.assertEqual(data["shelf"]["role"], "shelf")
+            self.assertEqual(data["desk"]["repository"], "desk")
+            self.assertEqual(data["shelf"]["repository"], "shelf")
             self.assertFalse(data["desk"]["gitInitialized"])
+            self.assertFalse(data["pairValidation"]["setupReady"])
+            self.assertTrue(data["pairValidation"]["skipped"])
 
             desk_imprint = json.loads((desk / "imprint.json").read_text(encoding="utf-8"))
             shelf_imprint = json.loads((shelf / "imprint.json").read_text(encoding="utf-8"))
@@ -63,11 +67,13 @@ class BootstrapWorkspaceTests(unittest.TestCase):
             self.assertNotEqual((desk / "README.md").read_text(), (shelf / "README.md").read_text())
 
     @unittest.skipUnless(shutil.which("git"), "git is not installed")
-    def test_default_bootstrap_initializes_main_git_repositories(self) -> None:
+    def test_default_bootstrap_initializes_and_validates_pair(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workspace = Path(tmp) / "book-workspace"
             result = self.run_bootstrap(workspace, "--json")
             data = json.loads(result.stdout)
+            self.assertTrue(data["pairValidation"]["setupReady"])
+            self.assertEqual(data["pairValidation"]["pair"]["summary"]["error"], 0)
             for role in ("desk", "shelf"):
                 path = workspace / role
                 self.assertTrue((path / ".git").is_dir())

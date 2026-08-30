@@ -49,6 +49,9 @@ Available presets:
 | `night-story` | low-light narrative | midnight, Lora, narrow paged reading |
 | `accessible` | clarity-first reading | high contrast, Atkinson Hyperlegible, 22px, narrow left-aligned scroll |
 | `quiet-study` | calm study / course text | sage, Literata, narrow left-aligned scroll |
+| `screenplay` | script reading and rehearsal | porcelain, Courier Prime, wide ragged-right pages, no hyphenation |
+
+The screenplay preset works with the semantic screenplay renderer rather than replacing it. Scene headings, character cues, dialogue widths, parentheticals, transitions, and actor rehearsal remain screenplay-aware even if a reader later changes typeface, size, palette, or reading mode. See [Screenwriting with Bookself](screenwriting.md).
 
 A preset can be fine-tuned with explicit values. Explicit values win over the preset:
 
@@ -128,7 +131,10 @@ Accepted values are the Reader's curated faces:
 - `modern` — IBM Plex Sans
 - `clear` — Atkinson Hyperlegible
 - `humanist` — humanist system sans
+- `script` — Courier Prime with Courier fallbacks
 - `system` — the reader's device UI font stack
+
+`script` is useful for screenplay-oriented publication defaults but is not restricted to screenplays. Likewise, screenplay semantics do not disappear if a reader changes away from Courier Prime.
 
 ### `fontSize`
 

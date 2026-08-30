@@ -1,6 +1,6 @@
 .cover-front.has-art {
-  background-size: var(--cover-fit, cover);
-  background-position: var(--cover-position-x, 50%) var(--cover-position-y, 50%);
+  background-size: cover, var(--cover-fit, cover);
+  background-position: center, var(--cover-position-x, 50%) var(--cover-position-y, 50%);
   background-repeat: no-repeat;
 }
 

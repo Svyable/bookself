@@ -73,7 +73,7 @@ export function coverStyleState(raw = {}) {
   const cover = resolveCoverPresentation(raw);
   return {
     ...cover,
-    shadeTop: Number(Math.min(cover.shade, cover.shade * 0.29).toFixed(2)),
+    shadeTop: Math.round(cover.shade * 29) / 100,
     titleSize: `clamp(${(1.7 * cover.titleScale).toFixed(2)}rem, ${(4 * cover.titleScale).toFixed(2)}vw, ${(2.8 * cover.titleScale).toFixed(2)}rem)`,
   };
 }

@@ -12,6 +12,7 @@ Turn outcome-level publishing requests into ordinary Bookself artifacts and Git 
 Examples:
 
 - “Set Bookself up for me.”
+- “Set this up for me.”
 - “Make me a Desk and Shelf.”
 - “Write my first book on the Desk.”
 - “Turn these notes into a Bookself course text.”
@@ -37,6 +38,8 @@ Before mutating a Bookself workspace:
 
 If the user has clearly asked for an end-to-end result, perform the mechanical substeps needed to reach it without repeatedly asking them to approve details the agent can safely infer.
 
+For a new standard setup, infer the repository names `desk` and `shelf`. Do not invent person-prefixed names unless the user asks. A normal setup request authorizes creating the private Desk and empty public Shelf, but does not authorize moving manuscript content onto Shelf.
+
 Do not infer across consequential boundaries the user did not authorize. In particular, do not publish private manuscript content merely because a Shelf exists.
 
 ## Environment detection
@@ -48,23 +51,31 @@ When local Git + Python are available, prefer canonical Bookself tools over hand
 For a new workspace:
 
 ```text
-python scripts/bootstrap-workspace.py <workspace> --owner <owner> --json
+python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json
 ```
 
-Consume the returned JSON paths and continue on the Desk.
+Consume the returned JSON paths and require `pairValidation.setupReady` before reporting normal setup complete. The bootstrap defaults to sibling repositories/directories named `desk` and `shelf`.
+
+For an existing pair, run:
+
+```text
+python3 scripts/doctor-pair.py <desk-path> <shelf-path>
+```
 
 ### GitHub-connected agent
 
 When operating through authorized GitHub APIs/tools, reproduce the durable result of the canonical tools:
 
-- Desk should be private by default.
-- Shelf should be public only when the user intends public publication.
-- Stamp `imprint.json` role and repository identity correctly.
-- Keep `reader/` and `desk/` shared.
-- Keep `books/`, root `README.md`, and `imprint.json` instance-owned.
-- Treat Shelf releases as copied snapshots, never live pointers into Desk.
+- create `desk` as private by default;
+- create an empty `shelf` as public by default for a standard setup request;
+- stamp `imprint.json` role and repository identity correctly;
+- keep `reader/` and `desk/` shared and aligned;
+- keep the blank starter library on Desk and off Shelf;
+- keep `books/`, root `README.md`, and `imprint.json` instance-owned;
+- treat Shelf releases as copied snapshots, never live pointers into Desk;
+- when repository metadata is available, verify Desk privacy and Shelf public visibility before declaring setup complete.
 
-If repository creation or another required external action is unavailable in the current toolset, do every deterministic step that is available and state the precise remaining capability gap. Never claim an external resource exists when it does not.
+If repository creation is unavailable, narrow the fallback to the actual capability gap. Complete every deterministic step that is available, then ask for only the missing external action, such as: create `desk` as private and `shelf` as public. Do not turn that one blocker into a Git tutorial, and never claim an external resource exists when it does not.
 
 ## End-to-end protocol
 
@@ -72,6 +83,7 @@ If repository creation or another required external action is unavailable in the
 
 Infer when reasonable:
 
+- standard repository names `desk` and `shelf`
 - publication family
 - slug
 - mechanical metadata
@@ -79,11 +91,13 @@ Infer when reasonable:
 - an initial Reader preset
 - sensible commit messages
 
-Ask only when the missing answer materially changes authorship, facts, rights, audience, public/private intent, or another consequential choice.
+Ask only when the missing answer materially changes authorship, facts, rights, audience, manuscript publication intent, or another consequential choice.
 
-### 2. Establish Desk and Shelf
+### 2. Establish and validate Desk and Shelf
 
 Prefer `scripts/bootstrap-workspace.py` locally. In connected environments, create equivalent repositories/files using available authorized tools.
+
+A complete setup satisfies the `setupReady` contract in `bookself.json`: correct roles, separate Git repositories, aligned shared UI, starters on Desk but not Shelf, no unreleased Shelf publications, and distinct instance identity. Hosting visibility is also checked when the environment exposes it.
 
 Do not expose Desk content for preview. Preview private work locally or through an already-private environment.
 
@@ -108,7 +122,7 @@ For authorial prose, apply the human-prose skill. Do not fabricate sources, quot
 Run:
 
 ```text
-python scripts/doctor.py --root .
+python3 scripts/doctor.py --root .
 ```
 
 When browser/local preview is available, serve the Desk and inspect both Reader and Publishing Desk. Fix structural or presentation problems before declaring the draft ready.
@@ -122,7 +136,7 @@ A normal release must come from a committed Desk publication state. Create clear
 If public release is explicitly in scope:
 
 ```text
-python scripts/release-book.py <slug> <path-to-shelf>
+python3 scripts/release-book.py <slug> <path-to-shelf>
 ```
 
 Review the prepared Shelf diff. The helper stops before commit/push by design.
@@ -133,17 +147,15 @@ If public release was not requested, stop at the Desk.
 
 ### 8. Report outcomes
 
-Prefer a concise result summary containing durable facts:
+For setup-only work, prefer a concise result like:
 
-- Desk location/repository
-- Shelf location/repository
-- publication slug/title
-- what was drafted
-- Reader recommendation
-- validation state
-- relevant commit SHA(s)
-- whether a public Shelf release exists and where
-- any genuine blocker that remains
+- Desk: private `owner/desk`
+- Shelf: public `owner/shelf`, currently empty
+- Pair validation: `setupReady`
+- Rights default: All Rights Reserved for new real publications
+- First publication: not started yet
+
+For publication work, add the publication slug/title, what was drafted, Reader recommendation, relevant commit SHA(s), rights/structural validation state, and whether a public Shelf release exists.
 
 Do not make the final response a transcript of shell commands unless the user asks for one.
 

@@ -7,13 +7,17 @@ from dataclasses import dataclass
 from typing import Any
 
 PRESENTATION_VERSION = 1
+PRESETS = {
+    "book", "literary", "modern-essay", "editorial", "poetry", "night-story",
+    "accessible", "quiet-study", "screenplay",
+}
 THEMES = {
     "light", "linen", "porcelain", "sage", "lavender", "ivory", "sepia", "rose", "sand",
     "dark", "slate", "midnight", "forest", "ember", "deep-sea", "aubergine",
     "contrast", "contrast-dark",
 }
 WARMTHS = {"off", "soft", "golden"}
-FONTS = {"book", "literary", "warm", "classic", "modern", "clear", "humanist", "system"}
+FONTS = {"book", "literary", "warm", "classic", "modern", "clear", "humanist", "system", "script"}
 WEIGHTS = {400, 500, 600}
 MEASURES = {"narrow", "balanced", "wide"}
 ALIGNS = {"left", "justify"}
@@ -96,7 +100,7 @@ def validate_presentation(data: Any) -> list[PresentationIssue]:
     if not isinstance(data, dict):
         return [issue("error", "reader_shape", "reader.json must contain a JSON object.")]
 
-    unknown_top = sorted(set(data) - {"version", "appearance", "typography", "cover"})
+    unknown_top = sorted(set(data) - {"version", "preset", "appearance", "typography", "cover"})
     for name in unknown_top:
         out.append(issue("error", "reader_unknown_setting", f"Unknown reader.json setting: {name}."))
 
@@ -110,6 +114,12 @@ def validate_presentation(data: Any) -> list[PresentationIssue]:
                 f"reader.json version must be {PRESENTATION_VERSION}; found {data['version']!r}.",
             )
         )
+
+    if "preset" in data:
+        preset = data["preset"]
+        if not isinstance(preset, str) or preset not in PRESETS:
+            options = ", ".join(sorted(PRESETS))
+            out.append(issue("error", "reader_preset", f"preset must be one of: {options}."))
 
     appearance = _object_section(out, data, "appearance", {"theme", "warmth"})
     if appearance is not None:

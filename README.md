@@ -25,9 +25,9 @@ That distinction is the heart of Bookself. A release is not “whatever file is 
 
 ### See a real deployment
 
-Bookself is not only a demo repo. [Svyable Shelf](https://github.com/Svyable/shelf) is a public Bookself library running the same model, and [Svyable Desk](https://github.com/Svyable/desk) is its separate working repository.
+Bookself is not only a demo repo. [Svyable Shelf](https://github.com/Svyable/shelf) is a public Bookself library running the same model. Its corresponding working Desk is a separate private repository, which is exactly the separation Bookself is designed to support.
 
-**[📖 Read Svyable Shelf →](https://svyable.github.io/shelf/reader/)** · **[📚 Browse the Shelf source →](https://github.com/Svyable/shelf)** · **[✍️ Browse the working Desk repo →](https://github.com/Svyable/desk)**
+**[📖 Read Svyable Shelf →](https://svyable.github.io/shelf/reader/)** · **[📚 Browse the Shelf source →](https://github.com/Svyable/shelf)** · **[✍️ See the public Desk proof →](https://svyable.github.io/bookself/reader/#/b/making-bookself/)**
 
 > **New to Git?** Start with **[START HERE](START-HERE.md)**. Bookself is designed so you can use the publishing model without first becoming a software person.
 

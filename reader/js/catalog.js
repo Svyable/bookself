@@ -78,6 +78,7 @@ function normalizeFormat(value) {
   if (['journal', 'academic journal', 'research journal', 'proceedings', 'conference proceedings'].includes(raw)) return 'journal';
   if (['newsletter', 'bulletin'].includes(raw)) return 'newsletter';
   if (['comic', 'graphic novel', 'graphic narrative'].includes(raw)) return 'comic';
+  if (['screenplay', 'screen play', 'script', 'teleplay'].includes(raw)) return 'screenplay';
   if (['anthology', 'collection', 'chapbook', 'poetry collection', 'story collection'].includes(raw)) return 'anthology';
   if (['report', 'annual report', 'field report', 'manual', 'handbook', 'guide', 'catalog', 'catalogue', 'pamphlet', 'brochure'].includes(raw)) return 'report';
   return 'book';

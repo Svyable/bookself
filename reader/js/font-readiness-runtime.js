@@ -1,0 +1,121 @@
+import {
+  READER_FONT_LIBRARY_HREF,
+  readerFontCanAffectPagination,
+  readerFontNeedsLibrary,
+  readerFontRequest,
+  readerFontRequestKey,
+} from './font-readiness.js';
+
+const root = document.documentElement;
+let requestRevision = 0;
+let lastSettledKey = '';
+let lastObservedKey = '';
+let loadingTimer = null;
+
+function currentFontState() {
+  const styles = getComputedStyle(root);
+  const name = root.dataset.readerFont || 'book';
+  const weight = Number(styles.getPropertyValue('--reader-font-weight')) || 400;
+  const size = Number.parseFloat(styles.getPropertyValue('--reader-font-size')) || 18;
+  return { name, weight, size };
+}
+
+function ensureFontLibrary() {
+  let link = document.querySelector('link[data-reader-font-library]');
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.dataset.readerFontLibrary = 'true';
+    document.head.appendChild(link);
+  }
+  if (link.href !== READER_FONT_LIBRARY_HREF) link.href = READER_FONT_LIBRARY_HREF;
+  link.addEventListener('load', () => settleActiveFont({ reason: 'stylesheet' }), { passive: true });
+  return link;
+}
+
+function setStatus(name, status) {
+  root.dataset.readerFontStatus = status;
+  document.querySelectorAll('[data-reader-font-value]').forEach((button) => {
+    const active = button.dataset.readerFontValue === name;
+    button.dataset.fontStatus = active ? status : '';
+    if (active) button.setAttribute('aria-busy', String(status === 'loading'));
+    else button.removeAttribute('aria-busy');
+  });
+}
+
+function waitForFont(fontSet, probe, sample, timeoutMs = 2800) {
+  return Promise.race([
+    fontSet.load(probe, sample).then(() => 'loaded').catch(() => 'failed'),
+    new Promise((resolve) => {
+      clearTimeout(loadingTimer);
+      loadingTimer = window.setTimeout(() => resolve('timeout'), timeoutMs);
+    }),
+  ]);
+}
+
+function requestGeometryRefresh(key, request) {
+  if (lastSettledKey === key) return;
+  lastSettledKey = key;
+  if (!readerFontCanAffectPagination(request.name)) return;
+  if (document.body.dataset.stage !== 'read') return;
+
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new CustomEvent('readerfontready', {
+      detail: { font: request.name, weight: request.weight },
+    }));
+    window.dispatchEvent(new Event('resize'));
+  });
+}
+
+async function settleActiveFont({ reason = 'state' } = {}) {
+  const state = currentFontState();
+  const key = readerFontRequestKey(state.name, state.weight);
+  const request = readerFontRequest(state.name, state.weight, state.size);
+
+  if (reason === 'state' && key === lastObservedKey && root.dataset.readerFontStatus === 'ready') return;
+  lastObservedKey = key;
+  const revision = ++requestRevision;
+
+  if (!readerFontCanAffectPagination(request.name)) {
+    setStatus(request.name, 'ready');
+    lastSettledKey = key;
+    return;
+  }
+
+  if (readerFontNeedsLibrary(request.name)) ensureFontLibrary();
+  if (!document.fonts?.load || !document.fonts?.check) {
+    setStatus(request.name, 'fallback');
+    return;
+  }
+
+  setStatus(request.name, 'loading');
+  const sample = 'Bookself reading geometry 0123456789';
+  await waitForFont(document.fonts, request.probe, sample);
+  if (revision !== requestRevision) return;
+
+  const ready = document.fonts.check(request.probe, sample);
+  setStatus(request.name, ready ? 'ready' : 'fallback');
+  if (ready) requestGeometryRefresh(key, request);
+}
+
+function observeTypography() {
+  const observer = new MutationObserver(() => {
+    const state = currentFontState();
+    const key = readerFontRequestKey(state.name, state.weight);
+    if (key === lastObservedKey) return;
+    lastSettledKey = '';
+    settleActiveFont();
+  });
+  observer.observe(root, {
+    attributes: true,
+    attributeFilter: ['data-reader-font', 'style'],
+  });
+
+  document.fonts?.addEventListener?.('loadingdone', () => {
+    if (root.dataset.readerFontStatus !== 'ready') settleActiveFont({ reason: 'fontset' });
+  });
+}
+
+ensureFontLibrary();
+observeTypography();
+settleActiveFont({ reason: 'initial' });

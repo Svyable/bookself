@@ -413,7 +413,9 @@ function installMathNavigation() {
   const observer = new MutationObserver(() => window.requestAnimationFrame(syncMathNavigation));
   observer.observe(root, { childList: true, subtree: true });
   window.addEventListener('resize', syncMathNavigation, { passive: true });
-  document.addEventListener('keydown', onMathKeyDown, true);
+  // Window capture runs before the Reader's document-level page key handler,
+  // so an overflowing equation owns horizontal exploration in both modes.
+  window.addEventListener('keydown', onMathKeyDown, true);
   document.addEventListener('scroll', onMathScroll, true);
 }
 

@@ -12,9 +12,12 @@ import {
 
 assert.ok(READER_PRESENTATION_OPTIONS.themes.includes('contrast-dark'));
 assert.ok(READER_PRESENTATION_OPTIONS.fonts.includes('clear'));
+assert.ok(READER_PRESENTATION_OPTIONS.fonts.includes('script'));
 assert.deepEqual(READER_PRESENTATION_OPTIONS.ranges.fontSize, { min: 14, max: 32, step: 1 });
 assert.equal(READER_PRESENTATION_PRESETS.literary.appearance.theme, 'sepia');
 assert.equal(READER_PRESENTATION_PRESETS.accessible.typography.font, 'clear');
+assert.equal(READER_PRESENTATION_PRESETS.screenplay.typography.font, 'script');
+assert.equal(READER_PRESENTATION_PRESETS.screenplay.typography.hyphens, 'off');
 
 const normalized = normalizeReaderPresentation({
   appearance: { theme: 'sepia', warmth: 'soft', ignored: true },
@@ -57,6 +60,13 @@ assert.equal(preset.typography.font, 'warm');
 assert.equal(preset.typography.fontSize, 21);
 assert.equal(preset.typography.measure, 'balanced');
 assert.equal(preset.typography.mode, 'paged');
+
+const screenplay = normalizeReaderPresentation({ preset: 'screenplay' });
+assert.equal(screenplay.preset, 'screenplay');
+assert.equal(screenplay.typography.font, 'script');
+assert.equal(screenplay.typography.align, 'left');
+assert.equal(screenplay.typography.mode, 'paged');
+assert.equal(screenplay.typography.hyphens, 'off');
 
 const invalid = normalizeReaderPresentation({
   preset: 'unknown-preset',

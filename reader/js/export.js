@@ -77,7 +77,18 @@ export function bookAsHtml(book) {
   .reader-equation::after { content: "(" attr(data-equation-number) ")"; position: absolute; top: 50%; right: .35em; transform: translateY(-50%); color: #665f57; font-size: .82em; font-variant-numeric: tabular-nums; }
   .reader-math-pending code { white-space: pre-wrap; overflow-wrap: anywhere; }
   .reader-citation, .reader-equation-ref, .reader-footnote-ref { color: inherit; text-underline-offset: .15em; }
+  .screenplay-scene, .screenplay-action, .screenplay-dialogue-block, .screenplay-transition, .screenplay-centered { font-family: "Courier Prime", "Courier New", Courier, monospace; font-size: 12pt; line-height: 1.2; }
+  .screenplay-scene { margin: 1.2em 0 .7em; font-weight: 700; text-transform: uppercase; break-after: avoid; }
+  .screenplay-action { margin: .55em 0; }
+  .screenplay-dialogue-block { width: 3.5in; max-width: 78%; margin: .75em auto .85em; break-inside: avoid; }
+  .screenplay-character { width: 70%; margin: 0 auto .12em; font-weight: 700; text-align: center; text-transform: uppercase; }
+  .screenplay-parenthetical { width: 82%; margin: .05em auto .12em; }
+  .screenplay-dialogue-line { margin: 0; }
+  .screenplay-transition { margin: 1em 0; font-weight: 700; text-align: right; text-transform: uppercase; }
+  .screenplay-centered { margin: 1.2em auto; font-weight: 700; text-align: center; }
+  .screenplay-page-break { border: 0; break-after: page; }
   .bookself-rights { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #cfc7bc; font-size: .9em; }
+  @media print { @page { size: Letter; margin: 1in 1in 1in 1.5in; } }
 </style>
 </head>
 <body>

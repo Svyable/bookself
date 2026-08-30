@@ -1,9 +1,9 @@
 import { fetchText } from './base.js';
 import { parsePortalCatalog, parsePortalWebShelf, parsePortalStand, parseBookReadme } from './catalog.js';
 
-const FORMAT_CSS = 'css/formats.css?v=r2';
+const FORMAT_CSS = 'css/formats.css?v=r3';
 const publicationMeta = new Map();
-const FORMAT_CLASSES = ['paper', 'magazine', 'newspaper', 'journal', 'newsletter', 'comic', 'anthology', 'report'];
+const FORMAT_CLASSES = ['paper', 'magazine', 'newspaper', 'journal', 'newsletter', 'comic', 'screenplay', 'anthology', 'report'];
 let initialized = false;
 let webEntries = [];
 let standEntries = [];
@@ -37,6 +37,7 @@ function publicationAction(meta) {
   if (meta.format === 'magazine' || meta.format === 'newsletter' || meta.format === 'journal') return 'Read issue';
   if (meta.format === 'newspaper') return 'Read edition';
   if (meta.format === 'report') return 'Read report';
+  if (meta.format === 'screenplay') return 'Read script';
   return 'Open';
 }
 

@@ -1,0 +1,298 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+/* Screenplay presentation
+   -----------------------
+   Structure follows a Fountain-compatible plain-text core, but the Reader
+   remains reader-controlled. The screenplay preset starts in Courier Prime;
+   readers can switch typefaces, size, mode, and palette like any publication. */
+
+[data-reader-font="script"] .page-inner,
+[data-reader-font="script"] .scroll-document,
+[data-reader-font="script"] .experience-preview p,
+[data-reader-font="script"] .experience-preview-sample {
+  font-family: "Courier Prime", "Courier New", Courier, monospace;
+  --reader-face-tracking: 0;
+  font-variant-ligatures: none;
+  font-optical-sizing: auto;
+}
+
+.experience-font[data-reader-font-value="script"] strong {
+  font-family: "Courier Prime", "Courier New", Courier, monospace;
+}
+
+.screenplay-scene,
+.screenplay-action,
+.screenplay-dialogue-block,
+.screenplay-transition,
+.screenplay-centered {
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+.screenplay-scene {
+  max-width: none !important;
+  margin: 1.45em 0 .72em !important;
+  color: var(--text-primary) !important;
+  font-size: 1em !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
+  text-wrap: pretty !important;
+  break-after: avoid;
+}
+
+.screenplay-scene::after { display: none !important; }
+
+.screenplay-action {
+  margin: .62em 0 !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  text-wrap: pretty;
+}
+
+.screenplay-dialogue-block {
+  width: min(72%, 30rem);
+  max-width: 30rem;
+  margin: .95em auto 1.05em;
+  padding: 0;
+  border: 0;
+  color: var(--text-primary);
+  background: transparent;
+  font-style: normal;
+  text-indent: 0;
+  break-inside: avoid;
+  box-shadow: none;
+}
+
+.screenplay-character {
+  width: 76%;
+  margin: 0 auto .12em !important;
+  color: var(--text-primary);
+  font: 700 1em/1.2 inherit;
+  text-align: center !important;
+  text-indent: 0 !important;
+  text-transform: uppercase;
+}
+
+.screenplay-parenthetical {
+  width: 82%;
+  margin: .05em auto .12em !important;
+  color: var(--text-secondary);
+  font-style: normal;
+  line-height: 1.25;
+  text-align: left !important;
+  text-indent: -.6em !important;
+}
+
+.screenplay-dialogue-line {
+  margin: 0 !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  text-wrap: pretty;
+}
+
+.screenplay-dialogue-line + .screenplay-dialogue-line { margin-top: .05em !important; }
+
+.screenplay-transition {
+  margin: 1.1em 0 !important;
+  font-weight: 700;
+  text-align: right !important;
+  text-indent: 0 !important;
+  text-transform: uppercase;
+  break-before: avoid;
+}
+
+.screenplay-centered {
+  margin: 1.25em auto !important;
+  font-weight: 700;
+  text-align: center !important;
+  text-indent: 0 !important;
+}
+
+.screenplay-page-break {
+  height: 0;
+  margin: 1.8em 0;
+  border: 0;
+  border-top: 1px dashed color-mix(in srgb, var(--text-muted) 42%, transparent);
+  break-after: page;
+}
+
+/* Screenplays should not inherit book-opening ornaments or drop caps. */
+.page-inner:has(.screenplay-scene) h1:first-child,
+.scroll-document:has(.screenplay-scene) h1:first-child {
+  max-width: none;
+  margin: 2em auto;
+  font: 700 1.05em/1.35 "Courier Prime", "Courier New", Courier, monospace;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.page-inner:has(.screenplay-scene) h1:first-child::after,
+.scroll-document:has(.screenplay-scene) h1:first-child::after { display: none; }
+
+.page-inner:has(.screenplay-scene).chapter-open > p:first-of-type::first-letter,
+.scroll-document:has(.screenplay-scene) .scroll-chapter > .scroll-block:first-child:has(> h1) + .scroll-block:has(> p) > p::first-letter {
+  float: none;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+}
+
+/* Actor rehearsal: selected-role lines stay in the script flow. Masking changes
+   paint only, never geometry, so pagination and cue positions remain stable. */
+.screenplay-dialogue-block.is-rehearsal-role {
+  border-radius: 5px;
+  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--accent) 68%, transparent);
+}
+
+body.screenplay-mask-lines .screenplay-dialogue-block.is-rehearsal-role:not(.is-line-revealed) .screenplay-dialogue-line {
+  color: transparent !important;
+  text-shadow: none !important;
+  background:
+    linear-gradient(180deg, transparent 42%, color-mix(in srgb, var(--accent) 18%, var(--bg-page)) 42% 78%, transparent 78%);
+  border-radius: 3px;
+  cursor: pointer;
+  user-select: none;
+}
+
+body.screenplay-mask-lines .screenplay-dialogue-block.is-rehearsal-role:not(.is-line-revealed)::after {
+  content: "tap to reveal";
+  display: block;
+  margin-top: .18em;
+  color: var(--accent);
+  font: 600 .62rem/1.2 "IBM Plex Sans", system-ui, sans-serif;
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.screenplay-rehearse-btn {
+  width: auto;
+  min-width: 2.2rem;
+  padding-inline: .6rem;
+  font: 600 .68rem/1 "IBM Plex Sans", system-ui, sans-serif;
+  letter-spacing: .02em;
+}
+
+.screenplay-rehearsal-tools {
+  display: grid;
+  gap: .75rem;
+  margin-top: 1rem;
+  padding: .9rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg-secondary) 78%, var(--accent) 3%);
+}
+
+.screenplay-rehearsal-tools[hidden] { display: none !important; }
+
+.screenplay-rehearsal-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.screenplay-rehearsal-head h4 {
+  margin: .12rem 0 .2rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.screenplay-rehearsal-head p,
+.screenplay-rehearsal-status,
+.screenplay-rehearsal-hint {
+  margin: 0;
+  color: var(--text-muted);
+  font: 500 .69rem/1.45 "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.screenplay-role-field {
+  display: grid;
+  gap: .35rem;
+  color: var(--text-secondary);
+  font: 600 .7rem/1.2 "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.screenplay-role-field select {
+  width: 100%;
+  min-height: 2.35rem;
+  padding: .45rem .6rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font: 500 .78rem/1.2 "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.screenplay-rehearsal-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, .9fr));
+  gap: .4rem;
+}
+
+.screenplay-rehearsal-actions button {
+  min-height: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font: 600 .67rem/1 "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.screenplay-rehearsal-actions button:hover,
+.screenplay-rehearsal-actions button:focus-visible,
+.screenplay-rehearsal-actions button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border));
+  background: var(--accent-glow);
+  color: var(--accent);
+  outline: none;
+}
+
+@media (max-width: 700px) {
+  .screenplay-dialogue-block { width: min(78%, 27rem); }
+  .screenplay-character { width: 82%; }
+  .screenplay-parenthetical { width: 88%; }
+  .screenplay-rehearse-btn .screenplay-rehearse-label { display: none; }
+  .screenplay-rehearse-btn::before { content: "🎭"; font-size: .85rem; }
+  .screenplay-rehearsal-actions { grid-template-columns: 1fr 1fr; }
+  .screenplay-rehearsal-actions #screenplayMaskBtn { grid-column: 1 / -1; }
+}
+
+@media print {
+  @page { size: Letter; margin: 1in 1in 1in 1.5in; }
+
+  [data-reader-font="script"] .print-root,
+  .print-root .screenplay-scene,
+  .print-root .screenplay-action,
+  .print-root .screenplay-dialogue-block,
+  .print-root .screenplay-transition,
+  .print-root .screenplay-centered {
+    font-family: "Courier Prime", "Courier New", Courier, monospace !important;
+    font-size: 12pt !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .print-root .screenplay-scene { margin: 1.2em 0 .7em !important; }
+  .print-root .screenplay-action { margin: .55em 0 !important; }
+  .print-root .screenplay-dialogue-block {
+    width: 3.5in;
+    max-width: 3.5in;
+    margin: .75em 0 .85em 1in;
+    break-inside: avoid;
+  }
+  .print-root .screenplay-character { width: 2.4in; margin-left: .85in !important; text-align: left !important; }
+  .print-root .screenplay-parenthetical { width: 2.4in; margin-left: .45in !important; }
+  .print-root .screenplay-transition { text-align: right !important; }
+  .screenplay-rehearse-btn,
+  .screenplay-rehearsal-tools { display: none !important; }
+  body.screenplay-mask-lines .screenplay-dialogue-line { color: inherit !important; background: none !important; user-select: auto !important; }
+  body.screenplay-mask-lines .screenplay-dialogue-block::after { display: none !important; }
+}

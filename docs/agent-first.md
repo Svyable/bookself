@@ -4,9 +4,13 @@ Bookself is designed so a person can understand and operate every step, but the 
 
 A capable coding or GitHub-connected agent should be able to receive an outcome-level request such as:
 
+> Set this up for me.
+
+or:
+
 > Use Bookself to create a private Desk and a public Shelf for me. Start my first book from this idea, choose a good reading style, validate it, and publish the first finished version to my Shelf.
 
-and translate that request into the ordinary Bookself lifecycle without asking the person to manually copy folders, edit metadata tables, run release scripts, or learn Git terminology first.
+and translate that request into the ordinary Bookself lifecycle without asking the person to manually copy folders, edit metadata tables, run release scripts, choose computer-shaped names, or learn Git terminology first.
 
 The canonical machine-readable map is [`../bookself.json`](../bookself.json). Repository editing rules remain in [`../AGENTS.md`](../AGENTS.md).
 
@@ -29,18 +33,23 @@ The agent is an operator of the protocol, not a required runtime dependency. If 
 
 When the user asks for an end state, agents should optimize for the end state rather than turning Bookself's internal steps into a questionnaire.
 
+A plain **“set this up for me”** is sufficient intent for the standard Bookself installation shape: a private repository named `desk` and an empty public repository named `shelf`, unless the user asks for other names or an existing setup already establishes them. Do not personalize repository names merely because setup is being performed for a particular person.
+
+Creating an empty public Shelf during setup is not the same thing as publishing a manuscript. Moving unpublished writing from Desk to Shelf remains a separate consequential boundary and still requires publication intent.
+
 For example, if the user says **“write my first book on my Desk and publish it to my Shelf”**, that is explicit intent to:
 
 1. create or locate the Desk and Shelf;
-2. scaffold the publication;
-3. make reasonable mechanical choices such as slug and starter format;
-4. draft the requested content;
-5. choose a reasonable Reader recommendation;
-6. validate and preview when possible;
-7. commit the release source on the Desk;
-8. prepare the Shelf release;
-9. review the release diff;
-10. commit and push the public Shelf release when the environment is authorized to do so.
+2. validate them as one Bookself installation;
+3. scaffold the publication;
+4. make reasonable mechanical choices such as slug and starter format;
+5. draft the requested content;
+6. choose a reasonable Reader recommendation;
+7. validate and preview when possible;
+8. commit the release source on the Desk;
+9. prepare the Shelf release;
+10. review the release diff;
+11. commit and push the public Shelf release when the environment is authorized to do so.
 
 Do not ask the user to approve each mechanical transition again. Do stop when a new action crosses a boundary the user did **not** authorize—for example making unpublished material public when they asked only for a draft.
 
@@ -54,7 +63,9 @@ When the agent can execute local commands, clone or open the Bookself upstream r
 python3 scripts/bootstrap-workspace.py <workspace> --owner <github-owner> --json
 ```
 
-This creates sibling Desk and Shelf directories, stamps their roles, and initializes both Git repositories. The JSON result gives the agent stable paths for the rest of the task.
+The defaults create sibling directories named `desk` and `shelf`, stamp their roles, initialize separate Git repositories, and run the pair-level setup doctor. The JSON result gives stable paths plus `pairValidation.setupReady`. A normal completed bootstrap should return `true` there.
+
+If another tool will initialize Git, `--no-git` may be used; pair validation is deliberately deferred until both repositories exist as separate Git worktrees.
 
 Then work primarily on the Desk until the user has asked for a public release.
 
@@ -62,14 +73,45 @@ Then work primarily on the Desk until the user has asked for a public release.
 
 When the agent has authorized GitHub tools but no local shell, it should reproduce the **results** of the local tools using the same file contracts:
 
-- create a private Desk repository and a public Shelf repository when repository-creation capability exists;
+- create a private repository named `desk` and an empty public repository named `shelf` when repository-creation capability exists;
 - copy/stamp the upstream files according to `scripts/stamp-instance.py` semantics;
 - preserve `reader/` and `desk/` as shared UI;
 - keep `books/`, root `README.md`, and `imprint.json` instance-owned;
+- keep the blank starter library on Desk and off Shelf;
 - make manuscript changes on the Desk;
 - create a Shelf release as an independent snapshot rather than a live reference to Desk.
 
-If the connected tool cannot perform a required external operation such as repository creation, the agent should complete every other deterministic step it can and report the exact remaining capability gap. It should not pretend the repository exists.
+If the connected tool cannot create repositories, the correct fallback is narrow: complete every deterministic step the environment can perform, then ask for only the missing external action—for example, “Create `desk` as private and `shelf` as public, then I can finish the setup.” Do not expand that capability gap into a Git tutorial, and do not pretend the repositories exist.
+
+When repository metadata is available through the connected environment, verify that Desk is actually private and Shelf is actually public before reporting setup complete.
+
+## Validating the installation
+
+Bookself has two levels of health checking.
+
+For one repository:
+
+```text
+python3 scripts/doctor.py --root .
+```
+
+For the installation as a whole:
+
+```text
+python3 scripts/doctor-pair.py <desk-path> <shelf-path>
+```
+
+The pair doctor checks the invariants that matter specifically at the Desk/Shelf boundary:
+
+- exact `desk` and `shelf` roles;
+- separate Git worktrees and histories;
+- byte-for-byte parity for shared `reader/` and `desk/` software;
+- the complete blank starter library on Desk;
+- no blank starters on Shelf;
+- distinct repository/browser-storage identity;
+- every publication present on Shelf is `Published` and cataloged.
+
+Warnings do not by themselves block `setupReady`; structural or boundary errors do.
 
 ## Creating the first publication
 
@@ -135,15 +177,21 @@ The release helper prepares and verifies the Shelf snapshot but intentionally st
 
 If the user requested only drafting or review, do not release.
 
-## A good one-prompt outcome
+## Good one-prompt outcomes
 
-A successful agent session should be able to end with a concise result like:
+A successful setup-only session can end this simply:
 
-- Private Desk created at `owner/my-book-desk`.
-- Public Shelf created at `owner/my-book-shelf`.
+- Private Desk: `owner/desk`.
+- Public Shelf: `owner/shelf`, currently empty.
+- Pair validation: `setupReady`.
+- Rights default for new publications: All Rights Reserved.
+- First publication: not started yet.
+
+A successful end-to-end publishing session can add:
+
 - `books/the-working-title/` contains the drafted first edition.
 - Reader style: `literary`, still fully reader-overridable.
-- Structural validation passed.
+- Structural and rights validation passed.
 - Desk release source committed at `<sha>`.
 - Shelf snapshot published at `<url>`.
 

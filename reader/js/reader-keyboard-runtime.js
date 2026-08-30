@@ -9,7 +9,10 @@ const INTERACTIVE_SELECTOR = [
   '[role="textbox"]', '[role="treeitem"]',
 ].join(',');
 
-const DIALOG_SELECTOR = '.toc-overlay.active, .stats-overlay.active, .search-overlay.active';
+const DIALOG_SELECTOR = [
+  '.toc-overlay.active', '.stats-overlay.active', '.search-overlay.active',
+  'dialog[open]', '[role="dialog"][aria-modal="true"]:not([aria-hidden="true"])',
+].join(',');
 
 function nativeKeyboardTarget(target) {
   return target instanceof Element && !!target.closest(INTERACTIVE_SELECTOR);
@@ -44,9 +47,7 @@ function pageModeActive() {
 
 function syncPageSurface(surface, side) {
   if (!surface) return;
-  const active = pageModeActive()
-    && surface.classList.contains('active')
-    && !!surface.querySelector('.page-inner')?.textContent?.trim();
+  const active = pageModeActive() && surface.classList.contains('active');
 
   if (!active) {
     surface.setAttribute('aria-hidden', 'true');
@@ -102,7 +103,7 @@ function installSemantics() {
   syncReadingSemantics();
 
   const observer = new MutationObserver(syncReadingSemantics);
-  observer.observe(document.body, {
+  observer.observe(document.documentElement, {
     subtree: true,
     childList: true,
     characterData: true,

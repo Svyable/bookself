@@ -27,6 +27,16 @@ class ReaderPresentationTests(unittest.TestCase):
                     "mode": "paged",
                     "hyphens": "auto",
                 },
+                "cover": {
+                    "layout": "lower-third",
+                    "align": "left",
+                    "fit": "cover",
+                    "positionX": 42,
+                    "positionY": 68,
+                    "shade": 0.5,
+                    "titleScale": 1.15,
+                    "tone": "light",
+                },
             }
         )
         self.assertEqual([(item.level, item.code) for item in findings], [("ok", "reader_presentation")])
@@ -47,6 +57,23 @@ class ReaderPresentationTests(unittest.TestCase):
         findings = validate_presentation({"version": 1, "typography": {"leading": 4}})
         self.assertIn("reader_typography_leading_clamped", {item.code for item in findings})
         self.assertIn("warning", {item.level for item in findings})
+
+    def test_cover_invalid_enum_is_error(self):
+        codes = self.codes({"version": 1, "cover": {"layout": "diagonal"}})
+        self.assertIn("reader_cover_layout", codes)
+
+    def test_cover_wrong_numeric_shape_is_error(self):
+        codes = self.codes({"version": 1, "cover": {"shade": "heavy"}})
+        self.assertIn("reader_cover_shade", codes)
+
+    def test_cover_out_of_range_is_warning(self):
+        codes = self.codes({"version": 1, "cover": {"positionY": 140, "titleScale": 2}})
+        self.assertIn("reader_cover_positionY_clamped", codes)
+        self.assertIn("reader_cover_titleScale_clamped", codes)
+
+    def test_cover_unknown_setting_is_error(self):
+        codes = self.codes({"version": 1, "cover": {"logoSize": 2}})
+        self.assertIn("reader_cover_unknown", codes)
 
     def test_missing_version_is_warning(self):
         codes = self.codes({"appearance": {"theme": "light"}})

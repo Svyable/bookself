@@ -11,6 +11,7 @@ export const PUBLICATION_FORMATS = Object.freeze({
   report: Object.freeze({ label: 'Report', format: 'Report', pieceLabel: 'Findings', filename: 'findings.md' }),
   manual: Object.freeze({ label: 'Manual / handbook', format: 'Manual', pieceLabel: 'Getting started', filename: 'getting-started.md' }),
   comic: Object.freeze({ label: 'Comic / graphic narrative', format: 'Comic', pieceLabel: 'Page 1', filename: 'page-01.md' }),
+  screenplay: Object.freeze({ label: 'Screenplay / teleplay', format: 'Screenplay', pieceLabel: 'Script', filename: 'script.md', preset: 'screenplay' }),
 });
 
 export const STARTER_PRESETS = Object.freeze([
@@ -22,6 +23,7 @@ export const STARTER_PRESETS = Object.freeze([
   ['night-story', 'Night story · low-light fiction'],
   ['accessible', 'Accessible · larger high-contrast type'],
   ['quiet-study', 'Quiet study · calm learning text'],
+  ['screenplay', 'Screenplay · Courier pages'],
 ].filter(([id]) => READER_PRESENTATION_PRESETS[id]));
 
 const $ = (id) => document.getElementById(id);
@@ -125,6 +127,8 @@ function starterBody(formatId, title) {
       return `${shared}## What you will accomplish\n\n<!-- Tell the reader what success looks like. -->\n\n## Before you begin\n\n- What you need\n- What you should know\n\n## Step 1\n\nDo the smallest useful thing first.\n\n## Check your result\n\n<!-- Describe how the reader knows the step worked. -->\n`;
     case 'comic':
       return `${shared}## Page 1\n\n**Panel 1.** <!-- Establish place, character, or motion. -->\n\n*Caption:* Add narration only if the image cannot carry it.\n\n**Character:** Dialogue goes here.\n\n**Panel 2.** <!-- Change the information, angle, or emotional beat. -->\n\n**SFX:** *sound*\n`;
+    case 'screenplay':
+      return `# ACT ONE\n\nINT. WRITER'S ROOM - DAY\n\nRain stipples the windows. A half-erased beat sheet covers the wall.\n\nMARA\nWe can keep arguing about the ending.\n\nELI\n(considering)\nOr we can write the scene and find out.\n\nCUT TO:\n\nEXT. CITY STREET - NIGHT\n\nMara steps into the rain with the pages under her coat.\n\n> THE END <\n`;
     case 'book':
     default:
       return `${shared}<!-- Start with a scene, claim, question, or image that gives the reader somewhere to stand. -->\n\nWrite the first paragraph here.\n\n## Next movement\n\n<!-- Use headings only when the reader benefits from a visible turn. -->\n`;
@@ -144,7 +148,8 @@ export function buildPublicationFiles(input = {}) {
   const author = rightsName(authorCell);
   const rightsOwnerCell = markdownCell(author);
   const pieceTitle = safePieceTitle(input.pieceTitle, recipe.pieceLabel);
-  const preset = READER_PRESENTATION_PRESETS[input.preset] ? input.preset : 'book';
+  const requestedPreset = input.preset || recipe.preset || 'book';
+  const preset = READER_PRESENTATION_PRESETS[requestedPreset] ? requestedPreset : (recipe.preset || 'book');
   const year = new Date().getFullYear();
   const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${authorCell} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${rightsOwnerCell} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Rights manifest** | [rights.json](rights.json) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
   const presentation = `${JSON.stringify({ version: 1, preset }, null, 2)}\n`;
@@ -340,7 +345,7 @@ function currentInput() {
     title: $('newPublicationName')?.value || '',
     author: $('newPublicationAuthor')?.value || '',
     pieceTitle: $('newPublicationPiece')?.value || fallback,
-    preset: $('newPublicationPreset')?.value || 'book',
+    preset: $('newPublicationPreset')?.value || PUBLICATION_FORMATS[format]?.preset || 'book',
   };
 }
 
@@ -416,9 +421,17 @@ async function saveStarterFolder() {
 
 function bindUi() {
   $('newPublicationForm')?.addEventListener('input', renderBundle);
-  $('newPublicationFormat')?.addEventListener('change', () => {
+  $('newPublicationPreset')?.addEventListener('change', (event) => {
+    event.target.dataset.touched = 'true';
+  });
+  $('newPublicationFormat')?.addEventListener('change', (event) => {
     const piece = $('newPublicationPiece');
+    const preset = $('newPublicationPreset');
+    const format = event.target.value;
     if (piece && !piece.value.trim()) delete piece.dataset.touched;
+    if (preset && !preset.dataset.touched) {
+      preset.value = PUBLICATION_FORMATS[format]?.preset || 'book';
+    }
     renderBundle();
   });
   $('newPublicationPiece')?.addEventListener('input', (event) => {

@@ -34,6 +34,7 @@ const FONT_META = {
   clear: { label: 'Clear · Atkinson', stack: '"Atkinson Hyperlegible", Verdana, sans-serif' },
   humanist: { label: 'Humanist sans', stack: '"Trebuchet MS", "Segoe UI", sans-serif' },
   system: { label: 'System', stack: 'system-ui, -apple-system, "Segoe UI", sans-serif' },
+  script: { label: 'Script · Courier Prime', stack: '"Courier Prime", "Courier New", Courier, monospace' },
 };
 
 const BASE = Object.freeze({
@@ -48,6 +49,11 @@ const BASE = Object.freeze({
 
 const PRESETS = {
   book: BASE,
+  screenplay: {
+    version: 1,
+    appearance: { theme: 'light', warmth: 'off' },
+    typography: { font: 'script', fontSize: 18, fontWeight: 400, tracking: 0, leading: 1.45, measure: 'wide', align: 'left', paragraph: 'compact', indent: 'none', mode: 'paged', hyphens: 'off' },
+  },
   research: {
     version: 1,
     appearance: { theme: 'porcelain', warmth: 'off' },
@@ -112,6 +118,7 @@ function studioMarkup() {
       <div class="reader-design-presets" role="group" aria-label="Design starting points">
         <span>Starting point</span>
         <button type="button" data-design-preset="book">Literary book</button>
+        <button type="button" data-design-preset="screenplay">Screenplay</button>
         <button type="button" data-design-preset="research">Research</button>
         <button type="button" data-design-preset="editorial">Editorial</button>
         <button type="button" data-design-preset="accessible">Accessible</button>

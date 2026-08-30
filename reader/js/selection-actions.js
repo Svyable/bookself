@@ -3,6 +3,7 @@ import { parseBookReadme } from './catalog.js';
 import { addNote, applyNotes, loadNotes, selectionSourceAnchor } from './notes.js';
 import { parseRoute } from './router.js';
 import {
+  SELECTION_SNAPSHOT_TTL,
   normalizeSelectionSnapshot,
   selectionAnchorTargetIndex,
   selectionSnapshotUsable,
@@ -17,6 +18,7 @@ let remembered = null;
 let fallbackPending = null;
 let resumeArmed = false;
 let resumeTimer = 0;
+let resumeExpiryTimer = 0;
 const chapterCache = new Map();
 
 installSelectionMarkerStyles();
@@ -74,6 +76,7 @@ function rememberLiveSelection() {
   if (next) {
     remembered = next;
     resumeArmed = !!next.anchor;
+    clearTimeout(resumeExpiryTimer);
     clearSelectionMarker();
     setResumedActions(false);
   }
@@ -191,6 +194,18 @@ function positionResumedActions(target) {
   return true;
 }
 
+function armResumeExpiry(snapshot) {
+  clearTimeout(resumeExpiryTimer);
+  const elapsed = Date.now() - Number(snapshot?.createdAt || 0);
+  const remaining = Math.max(0, SELECTION_SNAPSHOT_TTL - elapsed);
+  if (!remaining) {
+    disarmResume();
+    return false;
+  }
+  resumeExpiryTimer = window.setTimeout(disarmResume, remaining + 1);
+  return true;
+}
+
 function resumeSelectionActions() {
   clearTimeout(resumeTimer);
   if (!resumeArmed || document.body.dataset.stage !== 'read') {
@@ -209,7 +224,7 @@ function resumeSelectionActions() {
   const root = activeReadingRoot();
   const marker = paintSelectionMarker(snapshot.anchor, root);
   const target = marker.target || sourceTarget(snapshot);
-  if (positionResumedActions(target)) return true;
+  if (positionResumedActions(target) && armResumeExpiry(snapshot)) return true;
   clearSelectionMarker();
   return false;
 }
@@ -225,6 +240,7 @@ function scheduleResume(delay = 220) {
 function disarmResume() {
   resumeArmed = false;
   clearTimeout(resumeTimer);
+  clearTimeout(resumeExpiryTimer);
   clearSelectionMarker();
   setResumedActions(false);
 }

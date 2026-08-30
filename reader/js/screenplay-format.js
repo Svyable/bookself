@@ -69,17 +69,23 @@ export function screenplayCharacter(value) {
     .trim();
 }
 
+function plausibleCharacterCue(value) {
+  const cue = stripCharacterSyntax(value);
+  if (!cue || cue.length > 48) return false;
+  if (!/[A-Z]/i.test(cue) || cue !== cue.toUpperCase()) return false;
+  if (/[.!?:;]$/.test(cue)) return false;
+  return /^[A-Z0-9][A-Z0-9 ._'’\-()]*$/.test(cue);
+}
+
 function isCharacterAt(lines, index) {
   const raw = clean(lines[index]?.text);
-  if (!raw) return false;
+  if (!raw || raw.startsWith('!')) return false;
   if (screenplaySceneHeading(raw) || transitionText(raw) || centeredText(raw) || sectionText(raw)) return false;
-  if (raw.startsWith('@')) return !!clean(lines[index + 1]?.text);
-  const cue = stripCharacterSyntax(raw);
-  const hasLetter = /[A-Z]/i.test(cue);
-  const uppercase = cue === cue.toUpperCase();
+  const next = clean(lines[index + 1]?.text);
+  if (!next || screenplaySceneHeading(next) || transitionText(next) || centeredText(next) || sectionText(next)) return false;
+  if (raw.startsWith('@')) return true;
   const previousBlank = index === 0 || !clean(lines[index - 1]?.text);
-  const nextNonBlank = !!clean(lines[index + 1]?.text);
-  return previousBlank && nextNonBlank && hasLetter && uppercase;
+  return previousBlank && plausibleCharacterCue(raw);
 }
 
 function isParenthetical(value) {
@@ -210,7 +216,7 @@ export function parseScreenplay(markdown) {
 
 export function isScreenplayText(markdown) {
   const parsed = parseScreenplay(markdown);
-  return parsed.outline.some((item) => !item.section) && parsed.turns.length > 0;
+  return parsed.elements.some((element) => element.type === 'scene');
 }
 
 export function screenplayOutline(markdown) {

@@ -29,7 +29,7 @@ const snapshot = normalizeSelectionSnapshot({
 eq(snapshot.offset, 450);
 eq(snapshot.anchor.start, 450);
 eq(snapshot.anchor.end, 500);
-eq(readHash(snapshot.slug, snapshot.chapter, snapshot.anchor.start), '#read/example-book/chapter-2/450');
+eq(readHash(snapshot.slug, snapshot.chapter, snapshot.anchor.start), '#/b/example-book/chapter-2/450');
 
 const rightPage = normalizeSelectionSnapshot({
   text: 'next chapter passage',
@@ -41,7 +41,7 @@ const rightPage = normalizeSelectionSnapshot({
   createdAt: 1000,
 });
 eq(rightPage.offset, 1234);
-eq(readHash(rightPage.slug, rightPage.chapter, rightPage.offset), '#read/example-book/chapter-3/1234');
+eq(readHash(rightPage.slug, rightPage.chapter, rightPage.offset), '#/b/example-book/chapter-3/1234');
 
 const coarse = normalizeSelectionSnapshot({
   text: 'fallback passage',

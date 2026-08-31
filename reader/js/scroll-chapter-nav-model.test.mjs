@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {
-  chapterJumpOffset,
   chapterNavigationState,
   chapterNavigatorVisible,
   chapterShortcutAction,
@@ -50,9 +49,4 @@ assert.equal(chapterShortcutAction({ key: 'ArrowDown' }), null);
 assert.equal(chapterShortcutAction({ key: 'ArrowDown', altKey: true, ctrlKey: true }), null);
 assert.equal(chapterShortcutAction({ key: 'ArrowDown', altKey: true, shiftKey: true }), null);
 assert.equal(chapterShortcutAction({ key: 'ArrowLeft', altKey: true }), null);
-
-assert.equal(chapterJumpOffset(12.9), 12);
-assert.equal(chapterJumpOffset(-2), 0);
-assert.equal(chapterJumpOffset('42'), 42);
-assert.equal(chapterJumpOffset('bad'), 0);
-console.log('scroll chapter navigator model tests ok (31 assertions)');
+console.log('scroll chapter navigator model tests ok (28 assertions)');

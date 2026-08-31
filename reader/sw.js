@@ -16,7 +16,6 @@ const SHELL = [
   './css/atmosphere-library.css',
   './css/navigation.css',
   './css/reading-surface.css',
-  './css/viewport-stability-runtime.js',
   './css/reading-chrome.css',
   './css/reading-content.css',
   './css/content-scroll-regions.css',

@@ -13,7 +13,7 @@
   "forkLabel": "",
   "homeLabel": "Bookself",
   "storagePrefix": "bookself-demo",
-  "readerStyles": ["reader/css/interface-v2.css"],
+  "readerStyles": ["reader/css/interface-v2.css", "reader/css/interface-v3.css"],
   "steps": [
     { "n": "1", "title": "Stamp", "body": "Create a private Desk and a public Shelf from Bookself" },
     { "n": "2", "title": "Write", "body": "Keep drafts and the next edition on the private Desk" },

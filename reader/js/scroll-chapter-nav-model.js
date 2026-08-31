@@ -1,8 +1,3 @@
-function finite(value, fallback = 0) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
-}
-
 export function normalizeChapterList(contents = []) {
   const seen = new Set();
   const chapters = [];
@@ -41,8 +36,4 @@ export function chapterShortcutAction({ key = '', altKey = false, ctrlKey = fals
   if (key === 'ArrowUp') return 'previous';
   if (key === 'ArrowDown') return 'next';
   return null;
-}
-
-export function chapterJumpOffset(value) {
-  return Math.max(0, Math.floor(finite(value)));
 }

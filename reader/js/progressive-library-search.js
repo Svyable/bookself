@@ -13,6 +13,7 @@ import {
 
 const generations = createQueryGeneration();
 const metadataBySlug = new Map();
+const metadataSeen = new Set();
 const bookCache = new Map();
 let slugsPromise = null;
 let debounceTimer = 0;
@@ -37,7 +38,8 @@ function portalSlugs() {
 }
 
 async function loadMetadata(slug) {
-  if (metadataBySlug.has(slug)) return metadataBySlug.get(slug);
+  if (metadataSeen.has(slug)) return metadataBySlug.get(slug) || null;
+  metadataSeen.add(slug);
   try {
     const hub = await fetchText(`books/${slug}/README.md`);
     const meta = parseBookReadme(hub, slug);
@@ -125,11 +127,11 @@ async function runQuery(box, rawQuery, generation) {
 
   const existing = slugs.map((slug) => metadataBySlug.get(slug)).filter(Boolean);
   if (existing.length) render(box, existing.map((book) => ({ ...book, chapters: [] })), query, {
-    metadataComplete: existing.length === slugs.length,
+    metadataComplete: slugs.every((slug) => metadataSeen.has(slug)),
     passageComplete: false,
   });
 
-  const missing = slugs.filter((slug) => !metadataBySlug.has(slug));
+  const missing = slugs.filter((slug) => !metadataSeen.has(slug));
   await runBounded(missing, async (slug) => {
     await loadMetadata(slug);
     if (!isCurrent()) return;

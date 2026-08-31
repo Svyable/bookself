@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  oneHandedActionAvailable,
   oneHandedActionItems,
   oneHandedActionsEligible,
   oneHandedActionTarget,
@@ -30,6 +31,11 @@ assert.equal(empty.find((item) => item.id === 'bookmarks').badge, '');
 assert.deepEqual(oneHandedMenuState({ eligible: true, open: true, chromeHidden: false }), { eligible: true, open: true });
 assert.deepEqual(oneHandedMenuState({ eligible: true, open: true, chromeHidden: true }), { eligible: false, open: false });
 assert.deepEqual(oneHandedMenuState({ eligible: false, open: true, chromeHidden: false }), { eligible: false, open: false });
+
+assert.equal(oneHandedActionAvailable({ exists: true }), true);
+assert.equal(oneHandedActionAvailable({ exists: false }), false);
+assert.equal(oneHandedActionAvailable({ exists: true, disabled: true }), false);
+assert.equal(oneHandedActionAvailable({ exists: true, hidden: true }), false);
 
 assert.equal(oneHandedActionTarget('contents'), 'tocBtn');
 assert.equal(oneHandedActionTarget('bookmarks'), 'bookmarkAtlasBtn');

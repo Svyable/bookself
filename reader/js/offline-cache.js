@@ -82,18 +82,24 @@
     const queue = [];
     let active = 0;
 
+    function settle(job, outcome, value) {
+      active -= 1;
+      if (pending.get(job.key) === job.promise) pending.delete(job.key);
+      if (outcome === 'resolve') job.resolve(value);
+      else job.reject(value);
+      pump();
+    }
+
     function pump() {
       while (active < limit && queue.length) {
         const job = queue.shift();
         active += 1;
         Promise.resolve()
           .then(job.task)
-          .then(job.resolve, job.reject)
-          .finally(() => {
-            active -= 1;
-            if (pending.get(job.key) === job.promise) pending.delete(job.key);
-            pump();
-          });
+          .then(
+            (value) => settle(job, 'resolve', value),
+            (error) => settle(job, 'reject', error)
+          );
       }
     }
 

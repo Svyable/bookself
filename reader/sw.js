@@ -1,8 +1,9 @@
 importScripts('./js/offline-cache.js');
 importScripts('./js/offline-fetch-policy.js');
 importScripts('./js/offline-storage-budget.js');
+importScripts('./js/offline-shell-install.js');
 
-const CACHE = 'obb-shell-v89';
+const CACHE = 'obb-shell-v90';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -113,9 +114,60 @@ const SHELL = [
   './js/offline-cache.js',
   './js/offline-fetch-policy.js',
   './js/offline-storage-budget.js',
+  './js/offline-shell-install.js',
   './js/progress-position.js',
   './js/semantic-progress.js',
 ];
+
+const CORE_SHELL = [
+  './',
+  './index.html',
+  './css/style.css',
+  './css/experience.css',
+  './css/experience-scroll.css',
+  './css/typesetting.css',
+  './css/atmosphere.css',
+  './css/gui.css',
+  './css/media.css',
+  './css/formats.css',
+  './css/math.css',
+  './css/academic.css',
+  './vendor/marked.min.js',
+  './js/viewport-stability-runtime.js',
+  './js/atmosphere.js',
+  './js/navigation.js',
+  './js/app.js',
+  './js/experience.js',
+  './js/gui.js',
+  './js/media.js',
+  './js/formats.js',
+  './js/math.js',
+  './js/academic.js',
+  './js/base.js',
+  './js/resource-cache.js',
+  './js/navigation-prefetch.js',
+  './js/startup-catalog-primer.js',
+  './js/startup-publication-primer.js',
+  './js/catalog.js',
+  './js/imprint.js',
+  './js/markdown.js',
+  './js/derivation-cache.js',
+  './js/paginate.js',
+  './js/storage.js',
+  './js/router.js',
+  './js/route-queue.js',
+  './js/pagination-scheduler.js',
+  './js/page-drag.js',
+  './js/reader-keyboard-policy.js',
+  './js/reader-keyboard-runtime.js',
+  './js/one-handed-actions-model.js',
+  './js/one-handed-actions.js',
+  './js/notes.js',
+  './js/annotations.js',
+  './js/search.js',
+  './js/export.js',
+];
+
 const SHELL_URLS = self.BookselfOfflineFetchPolicy.shellUrlSet(SHELL, self.location.href);
 const warmScheduler = self.BookselfOfflineCache.createWarmScheduler({ concurrency: 3 });
 const warmBudget = self.BookselfOfflineStorageBudget.createBudgetMonitor({
@@ -126,7 +178,14 @@ const warmBudget = self.BookselfOfflineStorageBudget.createBudgetMonitor({
 });
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => self.BookselfOfflineShellInstall.installShell(
+      cache,
+      SHELL,
+      CORE_SHELL,
+      { concurrency: 4 }
+    ))
+  );
 });
 
 async function publicationReadiness(url) {

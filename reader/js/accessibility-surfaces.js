@@ -24,8 +24,7 @@ function setSurface(element, state, { role = null } = {}) {
 
 function activeContinuousReader() {
   const reader = byId('scrollReader');
-  if (!reader) return false;
-  return !reader.hidden && reader.getAttribute('aria-hidden') !== 'true';
+  return !!reader && !reader.hidden;
 }
 
 function spreadVisible() {
@@ -85,11 +84,12 @@ function scheduleUpdate() {
 
 export function updateAccessibilitySurfaces() {
   const stage = document.body?.dataset.stage || 'library';
+  const rightPageActive = spreadVisible();
   const plan = accessibilitySurfacePlan({
     stage,
     continuous: stage === 'read' && activeContinuousReader(),
-    spread: stage === 'read' && spreadVisible(),
-    rightPageActive: spreadVisible(),
+    spread: stage === 'read' && rightPageActive,
+    rightPageActive,
   });
   updateStageSemantics(plan);
   updatePageSemantics(plan);
@@ -105,7 +105,7 @@ export function installAccessibilitySurfaces() {
   observer.observe(document.body, {
     subtree: true,
     attributes: true,
-    attributeFilter: ['data-stage', 'class', 'hidden', 'aria-hidden'],
+    attributeFilter: ['data-stage', 'class', 'hidden'],
     childList: false,
     characterData: false,
   });

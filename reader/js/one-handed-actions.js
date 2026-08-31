@@ -1,4 +1,5 @@
 import {
+  oneHandedActionAvailable,
   oneHandedActionItems,
   oneHandedActionsEligible,
   oneHandedActionTarget,
@@ -63,6 +64,14 @@ function actionIcon(id) {
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${icons[id] || ''}</svg>`;
 }
 
+function targetAvailability(target) {
+  return oneHandedActionAvailable({
+    exists: !!target,
+    disabled: !!target?.disabled,
+    hidden: !!target?.hidden,
+  });
+}
+
 function ensureUi() {
   if (root?.isConnected) return;
   const app = document.querySelector('.app');
@@ -92,7 +101,7 @@ function ensureUi() {
     if (!button || button.disabled) return;
     const targetId = oneHandedActionTarget(button.dataset.readerOneHandedAction);
     const target = targetId ? document.getElementById(targetId) : null;
-    if (!target || target.disabled || target.hidden) return;
+    if (!targetAvailability(target)) return;
     setOpen(false, { restoreFocus: false });
     target.click();
   });
@@ -102,8 +111,7 @@ function renderActions() {
   if (!menu) return;
   const items = oneHandedActionItems(bookmarkState());
   menu.innerHTML = items.map((item) => {
-    const target = document.getElementById(item.targetId);
-    const available = !!target && !target.disabled && !target.hidden;
+    const available = targetAvailability(document.getElementById(item.targetId));
     return `
       <button class="reader-one-handed-action" type="button" data-reader-one-handed-action="${item.id}"${item.id === 'bookmark' ? ` aria-pressed="${item.pressed}"` : ''}${available ? '' : ' disabled aria-disabled="true"'}>
         <span class="reader-one-handed-icon">${actionIcon(item.id)}${item.badge ? `<span class="reader-one-handed-badge" aria-hidden="true">${item.badge}</span>` : ''}</span>

@@ -89,29 +89,27 @@ function ensureUi() {
 
   menu.addEventListener('click', (event) => {
     const button = event.target.closest('[data-reader-one-handed-action]');
-    if (!button) return;
-    const actionId = button.dataset.readerOneHandedAction;
-    const targetId = oneHandedActionTarget(actionId);
+    if (!button || button.disabled) return;
+    const targetId = oneHandedActionTarget(button.dataset.readerOneHandedAction);
     const target = targetId ? document.getElementById(targetId) : null;
+    if (!target || target.disabled || target.hidden) return;
     setOpen(false, { restoreFocus: false });
-    if (target && !target.disabled && !target.hidden) {
-      target.click();
-      return;
-    }
-    if (actionId === 'bookmarks') {
-      document.getElementById('tocBtn')?.click();
-    }
+    target.click();
   });
 }
 
 function renderActions() {
   if (!menu) return;
   const items = oneHandedActionItems(bookmarkState());
-  menu.innerHTML = items.map((item) => `
-    <button class="reader-one-handed-action" type="button" data-reader-one-handed-action="${item.id}"${item.id === 'bookmark' ? ` aria-pressed="${item.pressed}"` : ''}>
-      <span class="reader-one-handed-icon">${actionIcon(item.id)}${item.badge ? `<span class="reader-one-handed-badge" aria-hidden="true">${item.badge}</span>` : ''}</span>
-      <span>${item.label}</span>
-    </button>`).join('');
+  menu.innerHTML = items.map((item) => {
+    const target = document.getElementById(item.targetId);
+    const available = !!target && !target.disabled && !target.hidden;
+    return `
+      <button class="reader-one-handed-action" type="button" data-reader-one-handed-action="${item.id}"${item.id === 'bookmark' ? ` aria-pressed="${item.pressed}"` : ''}${available ? '' : ' disabled aria-disabled="true"'}>
+        <span class="reader-one-handed-icon">${actionIcon(item.id)}${item.badge ? `<span class="reader-one-handed-badge" aria-hidden="true">${item.badge}</span>` : ''}</span>
+        <span>${item.label}</span>
+      </button>`;
+  }).join('');
 }
 
 function setOpen(next, { restoreFocus = false } = {}) {
@@ -129,7 +127,7 @@ function setOpen(next, { restoreFocus = false } = {}) {
   root.classList.toggle('is-open', menuOpen);
   if (menuOpen) {
     renderActions();
-    requestAnimationFrame(() => menu.querySelector('button')?.focus({ preventScroll: true }));
+    requestAnimationFrame(() => menu.querySelector('button:not(:disabled)')?.focus({ preventScroll: true }));
   } else if (restoreFocusOnClose && toggle.isConnected) {
     restoreFocusOnClose = false;
     requestAnimationFrame(() => toggle.focus({ preventScroll: true }));
@@ -159,7 +157,7 @@ function onKeydown(event) {
     return;
   }
   if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-  const buttons = [...menu.querySelectorAll('button')];
+  const buttons = [...menu.querySelectorAll('button:not(:disabled)')];
   if (!buttons.length || !buttons.includes(document.activeElement)) return;
   event.preventDefault();
   const current = buttons.indexOf(document.activeElement);

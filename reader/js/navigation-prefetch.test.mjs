@@ -12,7 +12,9 @@ const ok = (value, message) => { assert.ok(value, message); assertions += 1; };
 eq(routeFromHref('#/b/long-book/ch09-notes/120'), { slug: 'long-book', chapter: 'ch09-notes' });
 eq(routeFromHref('#/b/long-book/'), { slug: 'long-book', chapter: null });
 eq(routeFromHref('#/'), null);
-eq(routeFromHref('https://example.com/reader/#/b/a%20book/ch%201/0'), { slug: 'a book', chapter: 'ch 1' });
+eq(routeFromHref('https://example.com/reader/#/b/a%20book/ch%201/0', { base: 'https://example.com/reader/' }), { slug: 'a book', chapter: 'ch 1' });
+eq(routeFromHref('https://elsewhere.example/reader/#/b/book/ch1/0', { base: 'https://example.com/reader/' }), null);
+eq(routeFromHref('https://example.com/other/#/b/book/ch1/0', { base: 'https://example.com/reader/' }), null);
 eq(routeFromHref('#/b/%E0%A4%A'), null);
 
 eq(shouldPrefetchIntent('hover', {}), true);

@@ -32,9 +32,7 @@ function hideMarkdownSyntax(markdown, hidden) {
   const wikiLink = /\[\[([^\]|\n]+)(?:\|([^\]\n]+))?\]\]/g;
   while ((match = wikiLink.exec(markdown))) {
     const visible = match[2] || match[1];
-    const relative = match[2]
-      ? match[0].lastIndexOf(match[2])
-      : match[0].indexOf(match[1]);
+    const relative = match[2] ? match[0].lastIndexOf(match[2]) : match[0].indexOf(match[1]);
     const labelStart = match.index + relative;
     keepOnly(hidden, match.index, match.index + match[0].length, labelStart, labelStart + visible.length);
   }
@@ -65,21 +63,17 @@ export function searchableMarkdown(markdown) {
   const source = String(markdown || '');
   const hidden = new Array(source.length).fill(false);
   hideMarkdownSyntax(source, hidden);
-
   let text = '';
   const sourceMap = [];
   let pendingSpace = false;
   let pendingSpaceOffset = 0;
-
   function appendSpace(offset) {
     if (!text || text.endsWith(' ')) return;
     text += ' ';
     sourceMap.push(offset);
   }
-
   for (let i = 0; i < source.length; i += 1) {
     if (hidden[i]) continue;
-
     const ch = source[i];
     if (/\s/.test(ch)) {
       if (text && !text.endsWith(' ')) {
@@ -88,34 +82,19 @@ export function searchableMarkdown(markdown) {
       }
       continue;
     }
-
     const structuralPunctuation = (ch === '#' || ch === '>' || ch === '-' || ch === '+') && lineSyntax(source, i);
     if (structuralPunctuation || ch === '\\') continue;
-
     if (pendingSpace) appendSpace(pendingSpaceOffset);
     pendingSpace = false;
     text += ch;
     sourceMap.push(i);
   }
-
   return { text: text.trim(), sourceMap: sourceMap.slice(0, text.trimEnd().length) };
 }
 
 function foldCharacter(ch) {
-  const punctuation = {
-    '’': "'",
-    '‘': "'",
-    '“': '"',
-    '”': '"',
-    '‐': '-',
-    '‑': '-',
-    '–': '-',
-    '—': '-',
-  };
-  return (punctuation[ch] || ch)
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase();
+  const punctuation = { '’': "'", '‘': "'", '“': '"', '”': '"', '‐': '-', '‑': '-', '–': '-', '—': '-' };
+  return (punctuation[ch] || ch).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
 }
 
 export function foldSearchText(text, sourceMap = null) {
@@ -124,7 +103,6 @@ export function foldSearchText(text, sourceMap = null) {
   const foldedSourceMap = [];
   const foldedTextMap = [];
   let sourceIndex = 0;
-
   for (const ch of value) {
     const part = foldCharacter(ch);
     const mappedSource = sourceMap ? sourceMap[sourceIndex] : sourceIndex;
@@ -135,7 +113,6 @@ export function foldSearchText(text, sourceMap = null) {
     }
     sourceIndex += ch.length;
   }
-
   return { folded, sourceMap: foldedSourceMap, textMap: foldedTextMap };
 }
 
@@ -197,37 +174,28 @@ export function bestTermWindow(haystack, terms) {
   if (!terms.length) return null;
   const occurrences = terms.map((term) => positionsForTerm(haystack, term));
   if (occurrences.some((rows) => rows.length === 0)) return null;
-
   const events = [];
-  occurrences.forEach((rows, termIndex) => {
-    rows.forEach((index) => events.push({ index, termIndex, length: terms[termIndex].length }));
-  });
+  occurrences.forEach((rows, termIndex) => rows.forEach((index) => events.push({ index, termIndex, length: terms[termIndex].length })));
   events.sort((a, b) => a.index - b.index || a.termIndex - b.termIndex);
-
   const counts = new Array(terms.length).fill(0);
   let covered = 0;
   let left = 0;
   let best = null;
-
   for (let right = 0; right < events.length; right += 1) {
     const event = events[right];
     if (counts[event.termIndex] === 0) covered += 1;
     counts[event.termIndex] += 1;
-
     while (covered === terms.length && left <= right) {
       const first = events[left];
       const last = events[right];
       const end = last.index + last.length;
       const span = end - first.index;
-      if (!best || span < best.length || (span === best.length && first.index < best.index)) {
-        best = { index: first.index, length: span, exact: false };
-      }
+      if (!best || span < best.length || (span === best.length && first.index < best.index)) best = { index: first.index, length: span, exact: false };
       counts[first.termIndex] -= 1;
       if (counts[first.termIndex] === 0) covered -= 1;
       left += 1;
     }
   }
-
   if (!best) return null;
   const queryWidth = terms.reduce((sum, term) => sum + term.length, 0);
   const gap = Math.max(0, best.length - queryWidth);
@@ -242,7 +210,6 @@ function chapterMatches(ch, query) {
   const folded = foldSearchText(projected.text, projected.sourceMap);
   const exact = exactMatches(folded, needle);
   const matches = exact.length ? exact : [bestTermWindow(folded.folded, terms)].filter(Boolean);
-
   return matches.map((match) => {
     const range = foldedRange(folded, match.index, match.length);
     const headingBoost = range.textStart < Math.max(120, (ch.title || '').length + 8) ? 180 : 0;
@@ -277,20 +244,8 @@ export function searchLibrary(books, query) {
   const hits = [];
   for (const book of books) {
     const score = metadataScore(book, query);
-    if (score) {
-      hits.push({
-        type: 'book',
-        book,
-        chapter: null,
-        offset: 0,
-        title: book.title,
-        snippet: [book.authors, book.publisher, book.series].filter(Boolean).join(' · '),
-        score,
-      });
-    }
-    for (const pass of searchBook(book, query)) {
-      hits.push({ type: 'passage', book, ...pass });
-    }
+    if (score) hits.push({ type: 'book', book, chapter: null, offset: 0, title: book.title, snippet: [book.authors, book.publisher, book.series].filter(Boolean).join(' · '), score });
+    for (const pass of searchBook(book, query)) hits.push({ type: 'passage', book, ...pass });
   }
   hits.sort((a, b) => b.score - a.score || a.book.title.localeCompare(b.book.title) || (a.offset || 0) - (b.offset || 0));
   return hits.slice(0, SEARCH_LIMIT);
@@ -306,10 +261,7 @@ export function searchBook(book, query) {
 
 export function wordCount(book) {
   let n = 0;
-  for (const ch of book.chapters || []) {
-    const parts = (ch.markdown || '').trim().split(/\s+/).filter(Boolean);
-    n += parts.length;
-  }
+  for (const ch of book.chapters || []) n += (ch.markdown || '').trim().split(/\s+/).filter(Boolean).length;
   return n;
 }
 

@@ -47,6 +47,10 @@ export function oneHandedMenuState({ eligible = false, open = false, chromeHidde
   });
 }
 
+export function oneHandedActionAvailable({ exists = false, disabled = false, hidden = false } = {}) {
+  return !!exists && !disabled && !hidden;
+}
+
 export function oneHandedActionTarget(actionId) {
   return ACTIONS.find((action) => action.id === actionId)?.targetId || '';
 }

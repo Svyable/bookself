@@ -1,11 +1,14 @@
 export function routeFromHref(href, { base = 'https://example.invalid/reader/' } = {}) {
   if (!href) return null;
   let url;
+  let baseUrl;
   try {
-    url = new URL(href, base);
+    baseUrl = new URL(base);
+    url = new URL(href, baseUrl);
   } catch {
     return null;
   }
+  if (url.origin !== baseUrl.origin || url.pathname !== baseUrl.pathname) return null;
   const raw = (url.hash || '').replace(/^#/, '');
   const parts = raw.split('/').filter(Boolean);
   if (parts[0] !== 'b' || !parts[1]) return null;

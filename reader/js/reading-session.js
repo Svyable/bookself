@@ -228,6 +228,13 @@ function onProgress(event) {
   else updateEstimate(latestAnchor);
 }
 
+function syncEstimateFromRoute() {
+  const anchor = routeAnchor();
+  if (!anchor) return;
+  latestAnchor = anchor;
+  if (anchor.slug === currentSlug) updateEstimate(anchor);
+}
+
 export function installReadingSession() {
   if (installed) return;
   installed = true;
@@ -250,6 +257,15 @@ export function installReadingSession() {
     if (!document.hidden) lastActivityAt = now;
     resetClock(now);
   });
+
+  const progress = document.getElementById('progressPercent');
+  if (progress) {
+    new MutationObserver(syncEstimateFromRoute).observe(progress, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  }
 
   const stageObserver = new MutationObserver(refreshContext);
   stageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-stage'] });

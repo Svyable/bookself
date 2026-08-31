@@ -46,7 +46,7 @@ function liveSelection() {
   if (!readingNode || !route.slug) return null;
   const scroll = readingNode.closest?.('.scroll-block');
   const anchor = selectionSourceAnchor(selection);
-  const offset = anchor?.start ?? Number(scroll?.dataset.offset) || Number(route.offset) || 0;
+  const offset = anchor?.start ?? (Number(scroll?.dataset.offset) || Number(route.offset) || 0);
   return normalizeSelectionSnapshot({
     text,
     slug: route.slug,

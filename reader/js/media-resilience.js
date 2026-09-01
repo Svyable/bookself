@@ -81,7 +81,7 @@ function currentIntrinsic(element, kind) {
   };
 }
 
-function settleIntrinsic(element, kind) {
+function settleIntrinsic(element, kind, { initial = false } = {}) {
   const previousAspect = Number(element.dataset.readerMediaAspect) || null;
   const previousWidth = Number(element.dataset.readerMediaWidth) || 0;
   const previousHeight = Number(element.dataset.readerMediaHeight) || 0;
@@ -102,8 +102,8 @@ function settleIntrinsic(element, kind) {
     nextWidth: next.width,
     nextHeight: next.height,
   });
-  if (element.dataset.readerMediaSettled === 'true') scheduleRefresh(kind, changed);
   element.dataset.readerMediaSettled = 'true';
+  if (!initial) scheduleRefresh(kind, changed);
 }
 
 function imageCaption(image) {
@@ -127,7 +127,7 @@ function closeInspector({ restoreFocus = true } = {}) {
 }
 
 function openImageInspector(image) {
-  if (!(image instanceof HTMLImageElement) || !image.currentSrc && !image.src) return false;
+  if (!(image instanceof HTMLImageElement) || (!image.currentSrc && !image.src)) return false;
   closeInspector({ restoreFocus: false });
 
   const dialog = document.createElement('div');
@@ -220,19 +220,19 @@ function prepareMedia(element) {
     element.addEventListener('error', () => {
       element.dataset.readerMediaFailed = 'true';
     }, { passive: true });
-    if (element.complete && element.naturalWidth) settleIntrinsic(element, kind);
+    if (element.complete && element.naturalWidth) settleIntrinsic(element, kind, { initial: true });
     return;
   }
 
   if (kind === 'video') {
     element.setAttribute('playsinline', '');
     element.addEventListener('loadedmetadata', () => settleIntrinsic(element, kind), { passive: true });
-    if (element.readyState >= 1) settleIntrinsic(element, kind);
+    if (element.readyState >= 1) settleIntrinsic(element, kind, { initial: true });
     return;
   }
 
-  // Native media and embeds own pointer gestures. This marker is consumed by
-  // the Reader's generic interactive-target checks without inventing a route.
+  // Native media and embeds own pointer gestures. This marker is available to
+  // generic interactive-target checks without inventing a routing contract.
   element.dataset.readerInteractive = 'true';
 }
 

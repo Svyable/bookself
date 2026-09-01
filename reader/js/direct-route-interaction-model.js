@@ -54,7 +54,10 @@ export function normalizePreviewSelection(text, anchor) {
 }
 
 export function previewInteractionState({ stage, hasPreview, routeMatches, selection } = {}) {
-  const active = stage === 'read' && !!hasPreview && routeMatches !== false;
+  const active = !!hasPreview
+    && routeMatches !== false
+    && stage !== 'cover'
+    && stage !== 'end';
   return {
     active,
     canBookmark: active,

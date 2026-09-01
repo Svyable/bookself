@@ -35,12 +35,9 @@ function ensureNotice() {
   notice.id = 'offlineReadinessNotice';
   notice.className = 'offline-readiness-notice';
   notice.hidden = true;
-  notice.setAttribute('role', 'status');
-  notice.setAttribute('aria-live', 'polite');
-  notice.setAttribute('aria-atomic', 'true');
   notice.innerHTML = `
     <span class="offline-readiness-dot" aria-hidden="true"></span>
-    <span class="offline-readiness-copy">
+    <span class="offline-readiness-copy" role="status" aria-live="polite" aria-atomic="true">
       <span class="offline-readiness-label"></span>
       <span class="offline-readiness-meter" aria-hidden="true"><span></span></span>
     </span>

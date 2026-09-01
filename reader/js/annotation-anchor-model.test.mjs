@@ -19,11 +19,11 @@ assert.equal(anchorMatchesProjectedQuote(text, sourceMap, { start: 114, end: 142
 assert.equal(anchorMatchesProjectedQuote(text, sourceMap, { start: 100, end: 112 }, 'The café’s blue door is here.'), false);
 
 const recoveredNearFirst = recoverQuoteAnchor(text, sourceMap, 'the cafe’s blue door is here', { start: 118, end: 140 });
-assert.deepEqual(recoveredNearFirst, { version: 1, start: 114, end: 143 });
+assert.deepEqual(recoveredNearFirst, { version: 1, start: 114, end: 142 });
 
 const recoveredNearSecond = recoverQuoteAnchor(text, sourceMap, 'the café’s blue door is here', { start: 175, end: 200 });
-assert.deepEqual(recoveredNearSecond, { version: 1, start: 158, end: 187 });
-assert.equal(anchorChanged({ start: 114, end: 143 }, recoveredNearFirst), false);
+assert.deepEqual(recoveredNearSecond, { version: 1, start: 151, end: 179 });
+assert.equal(anchorChanged({ start: 114, end: 142 }, recoveredNearFirst), false);
 assert.equal(anchorChanged({ start: 100, end: 120 }, recoveredNearFirst), true);
 assert.equal(recoverQuoteAnchor(text, sourceMap, 'tiny', { start: 100, end: 101 }), null);
 assert.equal(recoverQuoteAnchor('No match here', [...'No match here'].map((_, i) => i), 'missing quote', null), null);

@@ -33,7 +33,6 @@ function dialogStates(root) {
 function prepareDialog(dialog) {
   const heading = dialog.querySelector('h1, h2, h3, h4');
   dialog.setAttribute('role', 'dialog');
-  dialog.setAttribute('aria-modal', 'true');
   if (heading) {
     if (!heading.id) heading.id = dialogTitleId(dialog.id);
     dialog.setAttribute('aria-labelledby', heading.id);
@@ -41,6 +40,17 @@ function prepareDialog(dialog) {
     dialog.setAttribute('aria-label', 'Reader dialog');
   }
   if (!dialog.hasAttribute('tabindex')) dialog.tabIndex = -1;
+}
+
+function syncDialogSemantics(root, activeId) {
+  for (const id of READER_DIALOG_IDS) {
+    const dialog = root.getElementById(id);
+    if (!dialog) continue;
+    const active = id === activeId;
+    dialog.setAttribute('aria-hidden', String(!active));
+    if (active) dialog.setAttribute('aria-modal', 'true');
+    else dialog.removeAttribute('aria-modal');
+  }
 }
 
 export function installDialogFocusRuntime(root = document) {
@@ -52,10 +62,11 @@ export function installDialogFocusRuntime(root = document) {
   dialogs.forEach(prepareDialog);
   const origins = new Map();
   let currentId = activeDialogId(dialogStates(root));
+  syncDialogSemantics(root, currentId);
 
   const focusInto = (dialog) => {
     requestAnimationFrame(() => {
-      if (!dialog.classList.contains('active')) return;
+      if (!dialog?.classList.contains('active')) return;
       if (dialog.contains(root.activeElement)) return;
       const items = visibleFocusable(dialog);
       (items[0] || dialog).focus({ preventScroll: true });
@@ -66,24 +77,28 @@ export function installDialogFocusRuntime(root = document) {
     const nextId = activeDialogId(dialogStates(root));
     if (nextId === currentId) return;
     const previousId = currentId;
+    const previousOrigin = previousId ? origins.get(previousId) : null;
     currentId = nextId;
+    syncDialogSemantics(root, nextId);
 
     if (nextId) {
       const next = root.getElementById(nextId);
       const active = root.activeElement;
-      if (next && active && !next.contains(active)) origins.set(nextId, active);
+      if (next && active && !next.contains(active) && !origins.has(nextId)) {
+        origins.set(nextId, active);
+      }
+      if (previousId && previousId !== nextId) origins.delete(previousId);
       if (next) focusInto(next);
       return;
     }
 
     if (previousId) {
-      const origin = origins.get(previousId);
       origins.delete(previousId);
       if (shouldRestoreFocus({
-        dialogStillActive: !!activeDialogId(dialogStates(root)),
-        originConnected: !!origin?.isConnected,
+        dialogStillActive: false,
+        originConnected: !!previousOrigin?.isConnected,
       })) {
-        queueMicrotask(() => origin.focus?.({ preventScroll: true }));
+        queueMicrotask(() => previousOrigin.focus?.({ preventScroll: true }));
       }
     }
   };
@@ -108,7 +123,9 @@ export function installDialogFocusRuntime(root = document) {
     }
     const index = items.indexOf(root.activeElement);
     const nextIndex = tabDestination({ currentIndex: index, count: items.length, shiftKey: event.shiftKey });
-    if (index < 0 || nextIndex === 0 && !event.shiftKey || nextIndex === items.length - 1 && event.shiftKey) {
+    const wrapsForward = index === items.length - 1 && !event.shiftKey;
+    const wrapsBackward = index === 0 && event.shiftKey;
+    if (index < 0 || wrapsForward || wrapsBackward) {
       event.preventDefault();
       items[nextIndex].focus({ preventScroll: true });
     }

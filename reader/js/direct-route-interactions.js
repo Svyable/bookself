@@ -207,8 +207,10 @@ function installSelectionTools(region) {
     const normalized = selectionInside(region);
     const selection = window.getSelection?.();
     if (!normalized || !selection?.rangeCount) {
-      if (!tools.contains(document.activeElement)) tools.hidden = true;
-      current = null;
+      if (!tools.contains(document.activeElement)) {
+        tools.hidden = true;
+        current = null;
+      }
       return;
     }
     current = normalized;
@@ -241,12 +243,13 @@ function installSelectionTools(region) {
     tools.hidden = true;
   });
 
+  const parent = region.parentElement;
   const cleanup = new MutationObserver(() => {
     if (region.isConnected) return;
     document.removeEventListener('selectionchange', update);
     cleanup.disconnect();
   });
-  cleanup.observe(document.body, { childList: true, subtree: true });
+  if (parent) cleanup.observe(parent, { childList: true });
 }
 
 function bindPreview(region) {
@@ -292,10 +295,18 @@ function bindPreview(region) {
   updateBookmark(region, bookmark, status);
 }
 
+function bindAddedPreview(node) {
+  if (!(node instanceof Element)) return;
+  if (node.id === 'directRoutePreview') bindPreview(node);
+  node.querySelectorAll?.('#directRoutePreview').forEach(bindPreview);
+}
+
 function install() {
   document.querySelectorAll('#directRoutePreview').forEach(bindPreview);
-  const observer = new MutationObserver(() => {
-    document.querySelectorAll('#directRoutePreview').forEach(bindPreview);
+  const observer = new MutationObserver((records) => {
+    for (const record of records) {
+      record.addedNodes.forEach(bindAddedPreview);
+    }
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }

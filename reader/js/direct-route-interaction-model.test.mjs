@@ -43,7 +43,9 @@ eq(long.quote.length, PREVIEW_SELECTION_MAX);
 
 eq(previewInteractionState({ stage: 'read', hasPreview: true, routeMatches: true, selection }), { active: true, canBookmark: true, canAnnotate: true });
 eq(previewInteractionState({ stage: 'read', hasPreview: true, routeMatches: true }), { active: true, canBookmark: true, canAnnotate: false });
-eq(previewInteractionState({ stage: 'library', hasPreview: true, routeMatches: true, selection }), { active: false, canBookmark: false, canAnnotate: false });
+eq(previewInteractionState({ stage: 'library', hasPreview: true, routeMatches: true, selection }), { active: true, canBookmark: true, canAnnotate: true });
+eq(previewInteractionState({ stage: 'cover', hasPreview: true, routeMatches: true, selection }), { active: false, canBookmark: false, canAnnotate: false });
+eq(previewInteractionState({ stage: 'end', hasPreview: true, routeMatches: true, selection }), { active: false, canBookmark: false, canAnnotate: false });
 eq(previewInteractionState({ stage: 'read', hasPreview: true, routeMatches: false, selection }), { active: false, canBookmark: false, canAnnotate: false });
 
 console.log(`direct-route interaction model tests ok (${assertions} assertions)`);

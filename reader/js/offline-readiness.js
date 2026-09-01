@@ -107,9 +107,10 @@ async function savePublicationOffline(slug) {
   let completedChapters = 0;
   let completedMedia = 0;
   let discoveredMedia = 0;
-  const scheduler = helpers.createWarmScheduler({ concurrency: 3 });
+  const chapterScheduler = helpers.createWarmScheduler({ concurrency: 3 });
+  const mediaScheduler = helpers.createWarmScheduler({ concurrency: 3 });
 
-  await Promise.allSettled(chapters.map((href) => scheduler.run(href, async () => {
+  await Promise.allSettled(chapters.map((href) => chapterScheduler.run(href, async () => {
     const chapterResponse = await fetchForOffline(href);
     const markdown = await chapterResponse.clone().text();
     const media = helpers.mediaLinks(markdown, href, readmeUrl);
@@ -123,7 +124,7 @@ async function savePublicationOffline(slug) {
       cachedMedia: completedMedia,
     });
     render('online-saving', lastReadiness);
-    await Promise.allSettled(media.map((mediaHref) => scheduler.run(mediaHref, async () => {
+    await Promise.allSettled(media.map((mediaHref) => mediaScheduler.run(mediaHref, async () => {
       await fetchForOffline(mediaHref);
       completedMedia += 1;
       lastReadiness = normalizeOfflineReadiness({

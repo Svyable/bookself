@@ -162,27 +162,29 @@ export function fileUrl(relativePath) {
 
 export function fetchDocument(relativePath) {
   const url = fileUrl(relativePath);
-  return documentCache.load(url, async () => {
-    let res;
-    try {
-      res = await fetch(url, { cache: 'no-cache' });
-    } catch (error) {
-      reportChapterAcquisitionFailure(relativePath, error);
-      throw error;
-    }
+  const acquisition = documentCache.load(url, async () => {
+    const res = await fetch(url, { cache: 'no-cache' });
     if (!res.ok) {
       const err = new Error(`Could not load ${relativePath} (${res.status})`);
       err.status = res.status;
       err.url = url;
-      reportChapterAcquisitionFailure(relativePath, err);
       throw err;
     }
-    reportChapterAcquisitionSuccess(relativePath);
     return Object.freeze({
       text: await res.text(),
       modified: res.headers.get('Last-Modified'),
     });
   });
+  return acquisition.then(
+    (documentResult) => {
+      reportChapterAcquisitionSuccess(relativePath);
+      return documentResult;
+    },
+    (error) => {
+      reportChapterAcquisitionFailure(relativePath, error);
+      throw error;
+    }
+  );
 }
 
 export async function fetchText(relativePath) {

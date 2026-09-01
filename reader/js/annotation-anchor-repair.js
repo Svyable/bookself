@@ -22,15 +22,16 @@ async function publicationContents(slug) {
   return contentMaps.get(slug);
 }
 
-function refreshVisibleChapter(slug, chapter, notes) {
+function refreshVisibleChapter(slug, chapter, notes, contents) {
   document.querySelectorAll(`.scroll-chapter[data-chapter="${CSS.escape(chapter)}"]`)
     .forEach((root) => applyNotes(root, notes, chapter));
+  const chapterByTitle = new Map((contents || []).map((entry) => [entry.title, entry.id]));
   document.querySelectorAll('.page-surface .page-inner').forEach((root) => {
     const running = root.closest('.page-surface')?.querySelector('.page-running')?.textContent?.trim();
-    if (!running) return;
-    const route = parseRoute();
-    if (route.slug !== slug) return;
-    applyNotes(root, notes, chapter);
+    const pageChapter = chapterByTitle.get(running);
+    if (!pageChapter) return;
+    if (parseRoute().slug !== slug) return;
+    applyNotes(root, notes, pageChapter);
   });
 }
 
@@ -84,7 +85,7 @@ async function runRepair(run) {
   if (!changed || !isCurrent()) return;
   saveNotes(route.slug, notes);
   const current = parseRoute();
-  if (current.chapter) refreshVisibleChapter(route.slug, current.chapter, notes);
+  if (current.chapter) refreshVisibleChapter(route.slug, current.chapter, notes, contents);
   window.dispatchEvent(new CustomEvent('bookself:annotation-anchors-repaired', {
     detail: { slug: route.slug },
   }));

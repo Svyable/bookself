@@ -9,6 +9,10 @@ import { createAsyncResourceCache } from './resource-cache.js';
 import { installNavigationPrefetch } from './navigation-prefetch.js';
 import { createStartupCatalogPrimer, catalogCoverCandidates } from './startup-catalog-primer.js';
 import { createStartupPublicationPrimer, startupAcquisitionPlan } from './startup-publication-primer.js';
+import {
+  reportChapterAcquisitionFailure,
+  reportChapterAcquisitionSuccess,
+} from './chapter-availability.js';
 
 queueMicrotask(() => {
   import('./semantic-progress.js').catch((error) => {
@@ -159,13 +163,21 @@ export function fileUrl(relativePath) {
 export function fetchDocument(relativePath) {
   const url = fileUrl(relativePath);
   return documentCache.load(url, async () => {
-    const res = await fetch(url, { cache: 'no-cache' });
+    let res;
+    try {
+      res = await fetch(url, { cache: 'no-cache' });
+    } catch (error) {
+      reportChapterAcquisitionFailure(relativePath, error);
+      throw error;
+    }
     if (!res.ok) {
       const err = new Error(`Could not load ${relativePath} (${res.status})`);
       err.status = res.status;
       err.url = url;
+      reportChapterAcquisitionFailure(relativePath, err);
       throw err;
     }
+    reportChapterAcquisitionSuccess(relativePath);
     return Object.freeze({
       text: await res.text(),
       modified: res.headers.get('Last-Modified'),

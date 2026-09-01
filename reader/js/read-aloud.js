@@ -113,7 +113,7 @@ function render() {
   const launch = document.getElementById('readAloudBtn');
   const toggle = document.getElementById('readAloudToggle');
   const rate = document.getElementById('readAloudRate');
-  const stop = document.getElementById('readAloudStop');
+  const stopButton = document.getElementById('readAloudStop');
   const ready = availability() === 'ready';
 
   if (launch) {
@@ -129,7 +129,7 @@ function render() {
     toggle.setAttribute('aria-label', state.paused ? 'Resume read aloud' : 'Pause read aloud');
   }
   if (rate) rate.textContent = `${state.rate.toFixed(1)}×`;
-  if (stop) stop.disabled = !state.active;
+  if (stopButton) stopButton.disabled = !state.active;
   document.body?.toggleAttribute('data-read-aloud', state.active);
 }
 
@@ -223,6 +223,12 @@ function nextScrollUnit() {
   };
 }
 
+function nextVisiblePageUnit() {
+  const units = pageUnits();
+  const currentIndex = units.findIndex((unit) => unit.key === state.unit?.key);
+  return currentIndex >= 0 ? units[currentIndex + 1] || null : null;
+}
+
 function advanceUnit() {
   if (!state.active) return;
   if (state.selectedOnly) {
@@ -242,6 +248,12 @@ function advanceUnit() {
     return;
   }
 
+  const secondPage = nextVisiblePageUnit();
+  if (secondPage) {
+    beginUnit(secondPage);
+    return;
+  }
+
   if (!pagedAdvance()) {
     stop({ announce: false });
     status('End of publication');
@@ -252,8 +264,7 @@ function advanceUnit() {
   requestAnimationFrame(() => requestAnimationFrame(() => {
     state.advancing = false;
     if (!state.active) return;
-    const unit = pageUnits()[0];
-    beginUnit(unit);
+    beginUnit(pageUnits()[0]);
   }));
 }
 

@@ -61,11 +61,11 @@ function installPaginationReflowGuard(root = document) {
         transition: opacity 120ms ease-out;
       }
       #pagesWrapper[aria-busy="true"],
-      body[data-reader-reflowing="true"] #pageNav {
+      body[data-reader-reflowing] #pageNav {
         cursor: progress;
       }
       #pagesWrapper[aria-busy="true"] .page-surface,
-      body[data-reader-reflowing="true"] #pageNav {
+      body[data-reader-reflowing] #pageNav {
         pointer-events: none;
       }
       @media (prefers-reduced-motion: reduce) {

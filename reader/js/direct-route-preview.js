@@ -41,8 +41,8 @@ function removePreview() {
 function appendBlock(body, block, chapter) {
   const wrapper = document.createElement('div');
   wrapper.className = 'direct-route-preview-block';
-  wrapper.dataset.sourceStart = String(Math.max(0, Number(block?.start) || 0));
-  wrapper.dataset.sourceEnd = String(Math.max(Number(block?.start) || 0, Number(block?.end) || 0));
+  wrapper.dataset.previewSourceStart = String(Math.max(0, Number(block?.start) || 0));
+  wrapper.dataset.previewSourceEnd = String(Math.max(Number(block?.start) || 0, Number(block?.end) || 0));
   wrapper.dataset.chapter = chapter;
   wrapper.innerHTML = block?.html || '';
   body.appendChild(wrapper);
@@ -57,7 +57,7 @@ function visibleSourceOffset(paper, fallback) {
   const entries = [...paper.querySelectorAll('.direct-route-preview-block')].map((block) => {
     const rect = block.getBoundingClientRect();
     return {
-      start: Number(block.dataset.sourceStart),
+      start: Number(block.dataset.previewSourceStart),
       top: rect.top,
       bottom: rect.bottom,
     };

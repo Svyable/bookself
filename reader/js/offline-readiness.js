@@ -11,7 +11,6 @@ import {
 
 const STYLE_HREF = 'css/offline-readiness.css?v=r2';
 const QUERY_TYPE = 'BOOKSELF_OFFLINE_READINESS';
-const SAVE_TYPE = 'BOOKSELF_SAVE_PUBLICATION';
 let pollTimer = null;
 let hideTimer = null;
 let requestSerial = 0;
@@ -66,23 +65,18 @@ async function activeWorker() {
   }
 }
 
-async function workerRequest(type, slug, timeoutMs = 1800) {
+async function queryReadiness(slug) {
   const worker = await activeWorker();
   if (!worker || typeof MessageChannel === 'undefined') return null;
   return new Promise((resolve) => {
     const channel = new MessageChannel();
-    const timeout = window.setTimeout(() => resolve(null), timeoutMs);
+    const timeout = window.setTimeout(() => resolve(null), 1800);
     channel.port1.onmessage = (event) => {
       window.clearTimeout(timeout);
-      resolve(event.data || null);
+      resolve(event.data?.readiness || null);
     };
-    worker.postMessage({ type, url: publicationReadme(slug) }, [channel.port2]);
+    worker.postMessage({ type: QUERY_TYPE, url: publicationReadme(slug) }, [channel.port2]);
   });
-}
-
-async function queryReadiness(slug) {
-  const response = await workerRequest(QUERY_TYPE, slug);
-  return response?.readiness || null;
 }
 
 async function requestPersistentStorage() {
@@ -93,6 +87,57 @@ async function requestPersistentStorage() {
   } catch {
     return null;
   }
+}
+
+async function fetchForOffline(href) {
+  const response = await fetch(href, { credentials: 'same-origin' });
+  if (!response.ok) throw new Error(`Offline fetch failed: ${response.status}`);
+  return response;
+}
+
+async function savePublicationOffline(slug) {
+  await import('./offline-cache.js');
+  const helpers = globalThis.BookselfOfflineCache;
+  if (!helpers) throw new Error('Offline cache helpers unavailable');
+
+  const readmeUrl = publicationReadme(slug);
+  const readmeResponse = await fetchForOffline(readmeUrl);
+  const readme = await readmeResponse.clone().text();
+  const chapters = helpers.chapterLinks(readme, readmeUrl);
+  let completedChapters = 0;
+  let completedMedia = 0;
+  let discoveredMedia = 0;
+  const scheduler = helpers.createWarmScheduler({ concurrency: 3 });
+
+  await Promise.allSettled(chapters.map((href) => scheduler.run(href, async () => {
+    const chapterResponse = await fetchForOffline(href);
+    const markdown = await chapterResponse.clone().text();
+    const media = helpers.mediaLinks(markdown, href, readmeUrl);
+    discoveredMedia += media.length;
+    completedChapters += 1;
+    lastReadiness = normalizeOfflineReadiness({
+      hasReadme: true,
+      totalChapters: chapters.length,
+      cachedChapters: completedChapters,
+      totalMedia: discoveredMedia,
+      cachedMedia: completedMedia,
+    });
+    render('online-saving', lastReadiness);
+    await Promise.allSettled(media.map((mediaHref) => scheduler.run(mediaHref, async () => {
+      await fetchForOffline(mediaHref);
+      completedMedia += 1;
+      lastReadiness = normalizeOfflineReadiness({
+        hasReadme: true,
+        totalChapters: chapters.length,
+        cachedChapters: completedChapters,
+        totalMedia: discoveredMedia,
+        cachedMedia: completedMedia,
+      });
+      render('online-saving', lastReadiness);
+    })));
+  })));
+
+  return queryReadiness(slug);
 }
 
 function clearTimers() {
@@ -149,15 +194,20 @@ async function keepCurrentPublicationOffline() {
   render('online-saving', lastReadiness);
 
   const persistPromise = requestPersistentStorage();
-  const response = await workerRequest(SAVE_TYPE, route.slug, 45000);
+  let raw = null;
+  try {
+    raw = await savePublicationOffline(route.slug);
+  } catch {
+    raw = await queryReadiness(route.slug);
+  }
   storagePersisted = await persistPromise;
   if (savingSlug !== route.slug || parseRoute().slug !== route.slug) return;
 
   savingSlug = null;
-  const readiness = normalizeOfflineReadiness(response?.readiness || {});
+  const readiness = normalizeOfflineReadiness(raw || {});
   lastReadiness = readiness;
-  saveResult = response?.ok && readiness.complete ? 'complete' : response ? 'partial' : 'failed';
-  render(offlineReadinessState({ supported: !!response, online: navigator.onLine, readiness }), readiness);
+  saveResult = readiness.complete ? 'complete' : raw ? 'partial' : 'failed';
+  render(offlineReadinessState({ supported: !!raw, online: navigator.onLine, readiness }), readiness);
   hideTimer = window.setTimeout(() => {
     saveResult = 'idle';
     if (readiness.complete && navigator.onLine) hideNotice();

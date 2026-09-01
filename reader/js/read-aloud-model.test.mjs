@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   READ_ALOUD_RATES,
   canAdvancePaged,
@@ -54,5 +55,11 @@ equal(readAloudAvailability({ supported: false, stage: 'read' }), 'unsupported',
 equal(readAloudAvailability({ supported: true, stage: 'cover' }), 'inactive', 'speech is limited to reading stage');
 equal(readAloudAvailability({ supported: true, stage: 'read', overlayOpen: true }), 'blocked', 'open Reader controls block speech start');
 equal(readAloudAvailability({ supported: true, stage: 'read' }), 'ready', 'active reading is speech-ready');
+
+const runtime = readFileSync(new URL('./read-aloud.js', import.meta.url), 'utf8');
+const base = readFileSync(new URL('./base.js', import.meta.url), 'utf8');
+equal(runtime.includes('const secondPage = nextVisiblePageUnit();'), true, 'spread handoff reads the second visible page before turning');
+equal(runtime.includes("event.altKey") && runtime.includes("event.key.toLowerCase() === 'r'"), true, 'keyboard shortcut remains explicit and modifier-safe');
+equal(base.includes("import('./read-aloud.js')"), true, 'read-aloud remains a lazy enhancement');
 
 console.log(`read-aloud model tests ok (${assertions} assertions)`);

@@ -1,6 +1,10 @@
 import { fetchText } from './base.js';
 import { parsePortalCatalog, parsePortalWebShelf, parsePortalStand, parseBookReadme } from './catalog.js';
 
+import('./library-quick-look.js').catch((error) => {
+  console.warn('Shelf quick look could not be loaded', error);
+});
+
 const FORMAT_CSS = 'css/formats.css?v=r2';
 const publicationMeta = new Map();
 const FORMAT_CLASSES = ['paper', 'magazine', 'newspaper', 'journal', 'newsletter', 'comic', 'anthology', 'report'];

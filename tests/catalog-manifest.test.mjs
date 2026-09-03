@@ -18,7 +18,7 @@ assert.doesNotMatch(overlaid, /books\/old/);
 
 const empty = catalog.applyPortalCatalogManifest(legacy, { version: 1, books: [] });
 assert.deepEqual(catalog.parsePortalCatalog(empty), []);
-assert.match(empty, /## The books\n## The stand/);
+assert.match(empty, /## The books\n\n## The stand/);
 
 const fallback = catalog.applyPortalCatalogManifest(legacy, '{bad-json');
 assert.equal(fallback, legacy);

@@ -147,7 +147,6 @@ body[data-stage="end"] .reader-context {
   background: transparent;
   transition: opacity 180ms ease;
 }
-
 .progress-bar { box-shadow: 0 0 10px var(--accent-glow); }
 
 .page-nav {
@@ -297,7 +296,6 @@ body.gui-toc-open .gui-toc-scrim {
   border-bottom-color: color-mix(in srgb, var(--border) 74%, transparent);
   border-radius: 6px;
 }
-
 .toc-link:hover {
   padding-left: .45rem;
   background: color-mix(in srgb, var(--accent-glow) 48%, transparent);
@@ -517,4 +515,29 @@ body.gui-overlay-open .binder-view {
   .gui-toc-scrim,
   .header-btn,
   .nav-btn { transition: none !important; }
+}
+
+/* Shelf volumes are shown front-on: binding at left, fore-edge pages at right. */
+.volume-spine {
+  order: 1;
+}
+
+.volume-cover {
+  order: 2;
+  position: relative;
+  z-index: 1;
+}
+
+.volume-block {
+  order: 3;
+  align-self: stretch;
+  margin-block: .18rem;
+  margin-left: -1px;
+  border-radius: 0 2px 2px 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #e8d5a4 0 1px,
+      #c4a265 1px 2px
+    );
 }

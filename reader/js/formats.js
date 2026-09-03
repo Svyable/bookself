@@ -68,7 +68,7 @@ function annotateVolume(volume) {
   }
 
   const open = volume.querySelector('.volume-open');
-  if (open && decorated) {
+  if (open && decorated && volume.dataset.hasReadingProgress !== 'true') {
     const nextAction = publicationAction(meta);
     if (open.textContent !== nextAction) open.textContent = nextAction;
   }

@@ -3,6 +3,7 @@ import './reader-keyboard-runtime.js';
 import './one-handed-actions.js';
 import './dialog-focus-runtime.js';
 import './font-settlement.js';
+import './read-next.js';
 import { applyPortalCatalogManifest, parseBookReadme, parsePortalCatalog } from './catalog.js';
 import { parseRoute } from './router.js';
 import { createAsyncResourceCache } from './resource-cache.js';

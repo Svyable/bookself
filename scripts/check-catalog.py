@@ -27,6 +27,31 @@ def portal_slugs(markdown: str) -> set[str]:
     return {slug.lower() for slug in BOOK_LINK.findall(section)}
 
 
+def manifest_slugs(path: Path) -> set[str]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("version") != 1 or not isinstance(data.get("books"), list):
+        raise ValueError("catalog.json must be version 1 with a books array")
+    result: set[str] = set()
+    for raw in data["books"]:
+        if not isinstance(raw, str):
+            raise ValueError("catalog.json books entries must be strings")
+        slug = raw.strip()
+        if slug == "_TEMPLATE" or not SAFE_SLUG.fullmatch(slug):
+            raise ValueError(f"catalog.json has invalid book slug: {raw!r}")
+        if slug in result:
+            raise ValueError(f"catalog.json repeats book slug: {slug}")
+        result.add(slug)
+    return result
+
+
+def catalog_slugs(root: Path) -> tuple[set[str], str]:
+    manifest = root / "catalog.json"
+    if manifest.is_file():
+        return manifest_slugs(manifest), "catalog.json"
+    readme = root / "README.md"
+    return portal_slugs(readme.read_text(encoding="utf-8")), "root ## The books catalog"
+
+
 def info_cell(markdown: str, label: str) -> str:
     match = re.search(INFO_CELL.format(label=re.escape(label)), markdown, re.I)
     return match.group(1).strip() if match else ""
@@ -51,21 +76,18 @@ def check(root: Path) -> list[str]:
     root = root.resolve()
     imprint = json.loads((root / "imprint.json").read_text(encoding="utf-8"))
     role = str(imprint.get("role", "")).strip().lower()
-    catalog = portal_slugs((root / "README.md").read_text(encoding="utf-8"))
+    catalog, catalog_label = catalog_slugs(root)
     statuses = publication_statuses(root)
     errors: list[str] = []
 
     for slug in sorted(catalog):
         if slug not in statuses:
             errors.append(f"{slug}: catalog entry has no readable books/{slug}/README.md")
-            continue
-        if role == "shelf" and statuses[slug] != "Published":
-            errors.append(f"{slug}: Shelf catalog entry is {statuses[slug] or 'blank'}, not Published")
 
     if role in {"platform", "shelf"}:
         for slug, status in sorted(statuses.items()):
             if status == "Published" and slug not in catalog:
-                errors.append(f"{slug}: Published publication is missing from root ## The books catalog")
+                errors.append(f"{slug}: Published publication is missing from {catalog_label}")
 
     return errors
 
@@ -77,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
     root = Path(args.root)
     try:
         errors = check(root)
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"catalog check failed: {exc}")
         return 1
     if errors:

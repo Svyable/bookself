@@ -147,6 +147,7 @@ body[data-stage="end"] .reader-context {
   background: transparent;
   transition: opacity 180ms ease;
 }
+
 .progress-bar { box-shadow: 0 0 10px var(--accent-glow); }
 
 .page-nav {
@@ -296,6 +297,7 @@ body.gui-toc-open .gui-toc-scrim {
   border-bottom-color: color-mix(in srgb, var(--border) 74%, transparent);
   border-radius: 6px;
 }
+
 .toc-link:hover {
   padding-left: .45rem;
   background: color-mix(in srgb, var(--accent-glow) 48%, transparent);

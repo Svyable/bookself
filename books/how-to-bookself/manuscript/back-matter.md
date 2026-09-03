@@ -18,4 +18,4 @@ This guide exists so authors and agents can inspect the whole loop: files, Reade
 
 ## About the Author
 
-Svyable maintains Bookself. Publications made with Bookself remain the work of their authors; Bookself is only the Desk, the Shelf, the Reader, and the memory between revisions.
+Sven Hardy Benson maintains Bookself. Publications made with Bookself remain the work of their authors; Bookself is only the Desk, the Shelf, the Reader, and the memory between revisions.

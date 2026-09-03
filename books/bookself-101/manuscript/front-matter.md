@@ -2,7 +2,7 @@
 
 Git-Native Publishing for Teaching, Scholarship, and Course Texts
 
-© 2026 Svyable. All rights reserved.
+© 2026 Sven Hardy Benson. All rights reserved.
 
 ## For instructors
 

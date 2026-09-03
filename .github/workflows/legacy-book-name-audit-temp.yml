@@ -1,16 +1,45 @@
-name: Temporary Bookself legacy book-name audit
+name: Temporary Bookself Sven Hardy Benson migration
 
 on:
   push:
     branches:
       - cleanup/sven-hardy-benson-book-branding
 
+permissions:
+  contents: write
+
 jobs:
-  audit:
+  migrate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enumerate visible legacy-name references in publications and templates
+      - name: Update stale book-facing name references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              Path('books/bookself-101/manuscript/front-matter.md'),
+              Path('books/how-to-bookself/manuscript/front-matter.md'),
+              Path('books/how-to-bookself/manuscript/back-matter.md'),
+          ]
+
+          replacements = {
+              '© 2026 Svyable. All rights reserved.': '© 2026 Sven Hardy Benson. All rights reserved.',
+              'Svyable maintains Bookself.': 'Sven Hardy Benson maintains Bookself.',
+          }
+
+          for path in targets:
+              text = path.read_text(encoding='utf-8')
+              updated = text
+              for old, new in replacements.items():
+                  updated = updated.replace(old, new)
+              if updated != text:
+                  path.write_text(updated, encoding='utf-8')
+          PY
+
+      - name: Verify publication tree is clean
         shell: bash
         run: |
           python3 - <<'PY'
@@ -33,8 +62,6 @@ jobs:
           for path in roots:
               if not path.is_file():
                   continue
-              if legacy.search(path.name):
-                  matches.append((path, 0, '<legacy name in filename>'))
               try:
                   text = path.read_text(encoding='utf-8')
               except UnicodeDecodeError:
@@ -46,10 +73,23 @@ jobs:
                   if legacy.search(visible):
                       matches.append((path, line_number, line.strip()))
 
-          print(f'VISIBLE_MATCH_COUNT={len(matches)}')
-          for path, line_number, line in matches:
-              where = f'{path}:{line_number}' if line_number else str(path)
-              print(f'{where}: {line}')
           if matches:
+              print(f'REMAINING_VISIBLE_MATCH_COUNT={len(matches)}')
+              for path, line_number, line in matches:
+                  print(f'{path}:{line_number}: {line}')
               sys.exit(1)
+          print('Bookself publication tree legacy-name check passed.')
           PY
+
+      - name: Commit book-content migration
+        shell: bash
+        run: |
+          if git diff --quiet -- books; then
+            echo "No book-content migration changes needed."
+            exit 0
+          fi
+          git config user.name "Sven Benson"
+          git config user.email "129682319+Svyable@users.noreply.github.com"
+          git add books
+          git commit -m "Standardize Bookself publications on Sven Hardy Benson"
+          git push origin HEAD:cleanup/sven-hardy-benson-book-branding

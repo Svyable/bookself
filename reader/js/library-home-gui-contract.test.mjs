@@ -5,6 +5,7 @@ const css = fs.readFileSync(new URL('../css/library-home.css', import.meta.url),
 const atmosphere = fs.readFileSync(new URL('../css/atmosphere-library.css', import.meta.url), 'utf8');
 const app = fs.readFileSync(new URL('./app.js', import.meta.url), 'utf8');
 const index = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const worker = fs.readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
 let assertions = 0;
 const check = (run) => {
@@ -44,5 +45,7 @@ check(() => assert.match(app, /function renderPublisherFilters\(entries\)/));
 check(() => assert.match(app, /function renderShelf\(entries\)/));
 check(() => assert.match(app, /function sortEntries\(list\)/));
 check(() => assert.match(app, /async function runLibrarySearch\(query\)/));
+check(() => assert.match(worker, /const CACHE = 'obb-shell-v103';/));
+check(() => assert.match(worker, /'\.\/css\/library-home\.css'/));
 
-console.log(`Library home GUI contract: ${assertions}/30 assertions passed`);
+console.log(`Library home GUI contract: ${assertions}/32 assertions passed`);

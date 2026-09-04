@@ -17,6 +17,8 @@ check(() => assert.match(css, /body\[data-stage="read"\] \.reading-time \{\s*dis
 check(() => assert.match(css, /\.page-nav \.view-toggle \{\s*display: none !important;/));
 check(() => assert.match(css, /\.progress-bar-container\[data-reader-seekable="true"\] \{/));
 check(() => assert.match(css, /bottom: calc\(var\(--reader-app-rail-offset\) \+ env\(safe-area-inset-bottom\)\)/));
+check(() => assert.match(css, /\.progress-bar-container\[data-reader-seekable="true"\] \+ \.stage \{\s*border-top: 2px solid transparent;/));
+check(() => assert.match(css, /\[data-reader-mode="scroll"\] body\[data-stage="read"\] \.progress-bar-container[\s\S]*bottom: calc\(\.8rem \+ env\(safe-area-inset-bottom\)\)/));
 check(() => assert.match(css, /reader-chrome-hidden \.progress-bar-container/));
 check(() => assert.match(css, /#settingsPanel \{\s*place-items: end center;/));
 check(() => assert.match(css, /#settingsPanel \.settings-card::before/));
@@ -37,4 +39,4 @@ check(() => assert.match(progress, /seekControl\.type = 'range'/));
 check(() => assert.match(progress, /seekControl\.setAttribute\('aria-label', 'Seek through book'\)/));
 check(() => assert.match(progress, /positionAtProgress/));
 
-console.log(`Reading app GUI contract: ${assertions}/24 assertions passed`);
+console.log(`Reading app GUI contract: ${assertions}/26 assertions passed`);

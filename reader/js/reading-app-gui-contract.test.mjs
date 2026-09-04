@@ -26,6 +26,8 @@ check(() => assert.match(css, /@media \(max-width: 700px\)/));
 check(() => assert.match(css, /@media \(pointer: coarse\)/));
 check(() => assert.match(css, /@media \(forced-colors: active\)/));
 check(() => assert.match(css, /@media \(prefers-reduced-motion: reduce\)/));
+check(() => assert.doesNotMatch(css, /--reader-page-(?:top|bottom|pad|radius)/));
+check(() => assert.doesNotMatch(css, /\.page-inner\s*\{/));
 
 check(() => assert.match(immersive, /centerChromeIntent/));
 check(() => assert.match(immersive, /ratio >= 0\.34 && ratio <= 0\.66/));
@@ -35,4 +37,4 @@ check(() => assert.match(progress, /seekControl\.type = 'range'/));
 check(() => assert.match(progress, /seekControl\.setAttribute\('aria-label', 'Seek through book'\)/));
 check(() => assert.match(progress, /positionAtProgress/));
 
-console.log(`Reading app GUI contract: ${assertions}/22 assertions passed`);
+console.log(`Reading app GUI contract: ${assertions}/24 assertions passed`);

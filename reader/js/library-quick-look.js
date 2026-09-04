@@ -2,6 +2,7 @@ import { fetchText } from './base.js';
 import { parseBookReadme, parsePortalCatalog } from './catalog.js';
 import { loadProgress } from './storage.js';
 import { buildLibraryBookPreview } from './library-book-preview-model.js';
+import { installGlobalThemeControls } from './theme-controls.js';
 
 const STYLE_HREF = 'css/library-quick-look.css?v=r1';
 const metadata = new Map();
@@ -120,6 +121,7 @@ export async function installLibraryQuickLook(root = document) {
 }
 
 function installWhenReady() {
+  installGlobalThemeControls();
   void installLibraryQuickLook();
 }
 

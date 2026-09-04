@@ -8,6 +8,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const readerRoot = path.resolve(here, '..');
 const baseSource = fs.readFileSync(path.join(here, 'base.js'), 'utf8');
 const formatsSource = fs.readFileSync(path.join(here, 'formats.js'), 'utf8');
+const quickLookSource = fs.readFileSync(path.join(here, 'library-quick-look.js'), 'utf8');
 const swSource = fs.readFileSync(path.join(readerRoot, 'sw.js'), 'utf8');
 
 function listSource(source, name) {
@@ -48,6 +49,7 @@ const quickLookAssets = [
   './css/library-quick-look.css',
   './js/library-book-preview-model.js',
   './js/library-quick-look.js',
+  './js/theme-controls.js',
 ];
 
 const removedOfflineReadinessAssets = [
@@ -89,8 +91,9 @@ test('recent optional enhancements include their model/style companions', () => 
   }
 });
 
-test('library quick look is an offline-safe optional enhancement', () => {
+test('library quick look and global theme controls are offline-safe optional enhancements', () => {
   assert.match(formatsSource, /import\(\s*['"]\.\/library-quick-look\.js['"]\s*\)/);
+  assert.match(quickLookSource, /from\s+['"]\.\/theme-controls\.js['"]/);
   for (const asset of quickLookAssets) {
     assert.equal(shell.has(asset), true, `${asset} should be in SHELL`);
     assert.equal(optional.has(asset), true, `${asset} should be best-effort optional`);
@@ -104,8 +107,8 @@ test('removed offline readiness surface is absent from the install shell', () =>
   }
 });
 
-test('offline shell generation advances for library quick look', () => {
-  assert.match(swSource, /const\s+CACHE\s*=\s*['"]obb-shell-v100['"]/);
+test('offline shell generation advances for global theme controls', () => {
+  assert.match(swSource, /const\s+CACHE\s*=\s*['"]obb-shell-v101['"]/);
 });
 
 console.log('offline shell contract tests cover dynamic enhancement parity');

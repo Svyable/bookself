@@ -412,6 +412,26 @@ body[data-stage="read"] .progress-bar {
   --fireside-edge: var(--border);
 }
 
+[data-theme="contrast"] body,
+[data-theme="contrast-dark"] body,
+[data-theme="contrast"] body[data-stage="library"] .library-view,
+[data-theme="contrast-dark"] body[data-stage="library"] .library-view,
+[data-theme="contrast"] body[data-stage="cover"] .book-stage,
+[data-theme="contrast-dark"] body[data-stage="cover"] .book-stage,
+[data-theme="contrast"] body[data-stage="end"] .book-stage,
+[data-theme="contrast-dark"] body[data-stage="end"] .book-stage,
+[data-theme="contrast"] body[data-stage="read"] .stage,
+[data-theme="contrast-dark"] body[data-stage="read"] .stage {
+  background: var(--bg-primary);
+}
+
+[data-theme="contrast"] body[data-stage="read"] .page-surface,
+[data-theme="contrast-dark"] body[data-stage="read"] .page-surface,
+[data-theme="contrast"] [data-reader-mode="scroll"] body[data-stage="read"] .scroll-reader,
+[data-theme="contrast-dark"] [data-reader-mode="scroll"] body[data-stage="read"] .scroll-reader {
+  background: var(--bg-page);
+}
+
 [data-theme="contrast"] body[data-stage="library"] .shelf,
 [data-theme="contrast-dark"] body[data-stage="library"] .shelf {
   background: var(--bg-secondary);

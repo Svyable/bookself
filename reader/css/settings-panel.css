@@ -260,6 +260,16 @@ body[data-stage="read"] .progress-bar-container[data-reader-seekable="true"] {
   transition: opacity 180ms ease, transform 220ms cubic-bezier(.2,.72,.2,1);
 }
 
+/* Moving the 2px rail out of flex flow must not silently increase the page
+   measurement viewport. Preserve the old vertical budget at the stage edge. */
+body[data-stage="read"] .progress-bar-container[data-reader-seekable="true"] + .stage {
+  border-top: 2px solid transparent;
+}
+
+[data-reader-mode="scroll"] body[data-stage="read"] .progress-bar-container[data-reader-seekable="true"] {
+  bottom: calc(.8rem + env(safe-area-inset-bottom));
+}
+
 body[data-stage="read"] .progress-bar-container[data-reader-seekable="true"]::before {
   content: "";
   position: absolute;

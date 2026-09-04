@@ -1,4 +1,4 @@
-import { parsePortalCatalog, parsePortalWebShelf, parsePortalStand, parseBookReadme, extractSection } from './catalog.js';
+import { catalogEntryVisible, parsePortalCatalog, parsePortalWebShelf, parsePortalStand, parseBookReadme, extractSection } from './catalog.js';
 import assert from 'node:assert/strict';
 
 const portal = `# bookself
@@ -150,6 +150,11 @@ assert.equal(tagged.series, 'Field Notes');
 assert.deepEqual(tagged.tags, ['guide', 'git']);
 
 const drafting = parseBookReadme(`# T\n\n| **Status** | Drafting |\n`, 't');
+assert.equal(drafting.published, false);
+assert.equal(catalogEntryVisible(book, 'shelf'), true);
+assert.equal(catalogEntryVisible(drafting, 'shelf'), false);
+assert.equal(catalogEntryVisible(drafting, 'desk'), true);
+assert.equal(catalogEntryVisible(drafting, 'DESK'), true);
 assert.equal(drafting.published, false);
 
 assert.ok(extractSection(portal, 'The books').includes('the-example-book'));

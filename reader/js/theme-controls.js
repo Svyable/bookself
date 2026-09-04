@@ -51,15 +51,31 @@ function updateButton(button, theme) {
   button.innerHTML = themeIcon(state.current);
 }
 
-function removeLegacyPaperTheme(root) {
+function hideLegacyPaperTheme(root) {
   const row = root.querySelector?.('[data-paper]')?.closest('.setting-row');
-  row?.remove();
+  if (row) {
+    row.hidden = true;
+    row.setAttribute('aria-hidden', 'true');
+  }
 
   const help = root.getElementById?.('appearanceResetHelp');
   if (help) {
     const text = 'Restores lamp, type size, typeface, and line height. Theme, your place, notes, bookmarks, reading mode, and focus setting stay put.';
     if (help.textContent !== text) help.textContent = text;
   }
+}
+
+function setThemeThroughReader(root, theme) {
+  const next = normalizeReaderTheme(theme);
+  const legacyButton = root.querySelector?.(`[data-paper="${next}"]`);
+  if (legacyButton) {
+    legacyButton.click();
+  } else {
+    const currentPrefs = loadPrefs();
+    savePrefs({ ...currentPrefs, theme: next });
+  }
+  applyReaderTheme(next, root);
+  return next;
 }
 
 export function installGlobalThemeControls(root = document) {
@@ -79,15 +95,13 @@ export function installGlobalThemeControls(root = document) {
   const prefs = loadPrefs();
   const theme = applyReaderTheme(prefs.theme, root);
   updateButton(button, theme);
-  removeLegacyPaperTheme(root);
+  hideLegacyPaperTheme(root);
 
   if (button.dataset.themeControl !== 'installed') {
     button.dataset.themeControl = 'installed';
     button.addEventListener('click', () => {
       const currentPrefs = loadPrefs();
-      const next = nextReaderTheme(currentPrefs.theme);
-      savePrefs({ ...currentPrefs, theme: next });
-      applyReaderTheme(next, root);
+      const next = setThemeThroughReader(root, nextReaderTheme(currentPrefs.theme));
       updateButton(button, next);
     });
   }
@@ -95,7 +109,7 @@ export function installGlobalThemeControls(root = document) {
   const settingsPanel = root.getElementById?.('settingsPanel');
   if (settingsPanel && settingsPanel.dataset.themeCleanup !== 'installed') {
     settingsPanel.dataset.themeCleanup = 'installed';
-    const observer = new MutationObserver(() => removeLegacyPaperTheme(root));
+    const observer = new MutationObserver(() => hideLegacyPaperTheme(root));
     observer.observe(settingsPanel, { childList: true, subtree: true });
   }
 

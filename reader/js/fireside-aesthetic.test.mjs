@@ -24,6 +24,7 @@ check(() => assert.match(fireside, /\[data-reader-mode="scroll"\] body\[data-sta
 check(() => assert.match(fireside, /body\[data-stage="read"\] \.app-header \{/));
 check(() => assert.match(fireside, /\[data-reader-device="phone"\] body\[data-stage="read"\] \.page-surface/));
 check(() => assert.match(fireside, /\[data-theme="contrast-dark"\]/));
+check(() => assert.match(fireside, /\[data-theme="contrast"\] body,[\s\S]*background: var\(--bg-primary\);/));
 check(() => assert.match(fireside, /@media \(prefers-reduced-motion: reduce\)/));
 check(() => assert.match(fireside, /@media \(forced-colors: active\)/));
 check(() => assert.doesNotMatch(fireside, /--reader-page-(?:top|bottom|pad|radius)/));
@@ -31,4 +32,4 @@ check(() => assert.doesNotMatch(fireside, /\.page-inner\s*\{/));
 check(() => assert.match(worker, /const CACHE = 'obb-shell-v102';/));
 check(() => assert.match(worker, /'\.\/css\/fireside-library\.css'/));
 
-console.log(`Fireside aesthetic contract: ${assertions}/19 assertions passed`);
+console.log(`Fireside aesthetic contract: ${assertions}/20 assertions passed`);

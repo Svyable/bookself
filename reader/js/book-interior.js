@@ -5,14 +5,6 @@ export function interiorStyleHref() {
   return STYLE_HREF;
 }
 
-export function prefersHighContrast(matchMedia = globalThis.matchMedia) {
-  try {
-    return !!matchMedia?.('(prefers-contrast: more)')?.matches;
-  } catch {
-    return false;
-  }
-}
-
 function ensureStyles() {
   if (styleReady) return styleReady;
   const existing = document.querySelector(`link[href="${STYLE_HREF}"]`);

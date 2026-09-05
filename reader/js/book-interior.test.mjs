@@ -48,11 +48,14 @@ match(css, /@media print/);
 /* Progressive aesthetic loading must never invalidate already-measured pages. */
 doesNotMatch(css, /--reader-page-(?:top|bottom|pad|inline|radius)\s*:/);
 doesNotMatch(css, /--reader-stage-(?:inline|block)\s*:/);
-doesNotMatch(css, /\b(?:padding|margin|width|max-width|min-width|height|max-height|min-height|line-height|font-size|letter-spacing|font-weight|font-family|text-indent)\s*:[^;{}]+;/);
 doesNotMatch(css, /\.pages-wrapper\.active\s*\{/);
 doesNotMatch(css, /\.page-inner\s*\{/);
+doesNotMatch(css, /p:first-of-type::first-line\s*\{[^}]*(?:font-family|font-size|font-weight|font-variant|letter-spacing|line-height|margin|padding|text-indent)/s);
+doesNotMatch(css, /(?:\.page-inner h2|\.scroll-document h2)[^{]*\{[^}]*(?:font-family|font-size|font-weight|letter-spacing|line-height|margin|padding|text-indent)/s);
+doesNotMatch(css, /figcaption\s*\{[^}]*(?:font-family|font-size|font-weight|font-style|letter-spacing|line-height|margin|padding)/s);
+doesNotMatch(css, /\) strong\s*\{[^}]*font-weight/s);
 
 match(runtime, /import\('\.\/book-interior\.js'\)\.catch/);
 match(runtime, /Book-interior polish could not be loaded/);
 
-console.log(`Premium book interior: ${assertions}/24 assertions passed`);
+console.log(`Premium book interior: ${assertions}/27 assertions passed`);

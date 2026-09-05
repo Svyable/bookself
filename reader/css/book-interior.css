@@ -1,8 +1,8 @@
 /* Premium book interior
    ---------------------
-   Editorial finish for the reading surface. These rules deliberately avoid
-   Reader geometry variables and pagination controls; any content-affecting
-   typography applies equally to visible and measured page content. */
+   Paint-only editorial finish for the reading surface. This layer must not
+   change manuscript line breaks, page counts, Reader geometry variables, or
+   pagination controls when it arrives after the base Reader has rendered. */
 
 html[data-book-interior="true"] {
   --book-interior-rule: color-mix(in srgb, var(--accent) 46%, transparent);
@@ -11,8 +11,7 @@ html[data-book-interior="true"] {
   --book-interior-shadow: color-mix(in srgb, var(--shadow) 42%, transparent);
 }
 
-/* Paper finish: subtle edge light and fibre-like tonal variation without
-   changing the page box used by pagination. */
+/* Paper finish: tonal variation and edge depth without changing the page box. */
 html[data-book-interior="true"] [data-reader-mode="paged"] .page-surface {
   background-image:
     linear-gradient(90deg,
@@ -40,17 +39,9 @@ html[data-book-interior="true"] [data-reader-mode="paged"] .page-surface.right {
     var(--reader-paper-shadow);
 }
 
-/* Running furniture should feel typeset into the book instead of painted on
-   top of it. Outer alignment also reinforces left/right page identity. */
+/* Running furniture sits at the physical outside edge of each leaf. */
 html[data-book-interior="true"] .page-running {
   color: color-mix(in srgb, var(--text-secondary) 82%, var(--accent));
-  font-family: var(--font-accent);
-  font-size: .62rem;
-  font-style: normal;
-  font-variant-caps: all-small-caps;
-  font-variant-numeric: lining-nums tabular-nums;
-  font-weight: 500;
-  letter-spacing: .16em;
   opacity: .66;
 }
 
@@ -64,10 +55,6 @@ html[data-book-interior="true"] .page-surface.right .page-running {
 
 html[data-book-interior="true"] .page-num {
   color: color-mix(in srgb, var(--text-muted) 88%, var(--accent));
-  font-family: var(--font-accent);
-  font-size: .64rem;
-  font-variant-numeric: lining-nums tabular-nums;
-  letter-spacing: .08em;
   opacity: .74;
 }
 
@@ -75,16 +62,13 @@ html[data-book-interior="true"] .page-num::before,
 html[data-book-interior="true"] .page-num::after {
   color: var(--book-interior-rule-soft);
   content: "·";
-  padding-inline: .45em;
 }
 
-/* Chapter openings: stronger ceremony, still compact enough to paginate like
-   a book rather than a title slide. */
+/* Chapter openings gain ceremony through ink and ornaments only. */
 html[data-book-interior="true"] .page-inner.chapter-open > h1:first-child,
 html[data-book-interior="true"] .scroll-document h1 {
   position: relative;
   color: var(--book-interior-ink-soft);
-  font-optical-sizing: auto;
   text-shadow: 0 1px color-mix(in srgb, var(--bg-page) 70%, transparent);
 }
 
@@ -101,7 +85,6 @@ html[data-book-interior="true"] .scroll-document h1::before {
 
 html[data-book-interior="true"] .page-inner.chapter-open > h1:first-child::after,
 html[data-book-interior="true"] .scroll-document h1::after {
-  width: 3.2rem;
   border-top-color: var(--book-interior-rule);
 }
 
@@ -118,11 +101,10 @@ html[data-book-interior="true"] .scroll-chapter > .scroll-block:first-child:has(
 
 html[data-book-interior="true"] .page-inner.chapter-open > p:first-of-type::first-line,
 html[data-book-interior="true"] .scroll-chapter > .scroll-block:first-child:has(> h1) + .scroll-block:has(> p) > p::first-line {
-  font-variant-caps: small-caps;
-  letter-spacing: .015em;
+  color: color-mix(in srgb, var(--text-primary) 94%, var(--accent) 6%);
 }
 
-/* Section hierarchy: quieter than chapter titles, but visibly editorial. */
+/* Section hierarchy becomes more editorial without changing metrics. */
 html[data-book-interior="true"] .page-inner :is(h2, h3),
 html[data-book-interior="true"] .scroll-document :is(h2, h3) {
   color: var(--book-interior-ink-soft);
@@ -130,37 +112,16 @@ html[data-book-interior="true"] .scroll-document :is(h2, h3) {
 
 html[data-book-interior="true"] .page-inner h2,
 html[data-book-interior="true"] .scroll-document h2 {
-  padding-bottom: .22em;
   background:
     linear-gradient(90deg, var(--book-interior-rule), transparent 74%)
     left bottom / min(7.5rem, 48%) 1px no-repeat;
 }
 
-html[data-book-interior="true"] .page-inner h3,
-html[data-book-interior="true"] .scroll-document h3 {
-  font-variant-caps: small-caps;
-  letter-spacing: .045em;
-}
-
-/* Long-form body text gets richer book typography without changing the chosen
-   family, size, alignment, measure, or line-height preference. */
-html[data-book-interior="true"] :is(.page-inner, .scroll-document) p {
-  font-kerning: normal;
-  font-optical-sizing: auto;
-  font-variant-ligatures: common-ligatures contextual;
-  text-decoration-skip-ink: auto;
-}
-
 html[data-book-interior="true"] :is(.page-inner, .scroll-document) strong {
   color: color-mix(in srgb, var(--text-primary) 96%, var(--accent) 4%);
-  font-weight: 600;
 }
 
-html[data-book-interior="true"] :is(.page-inner, .scroll-document) em {
-  text-decoration-skip-ink: auto;
-}
-
-/* Quotes read as inset literary objects rather than generic web callouts. */
+/* Quotes read as literary objects rather than generic web callouts. */
 html[data-book-interior="true"] :is(.page-inner, .scroll-document) blockquote {
   position: relative;
   border-left-color: var(--book-interior-rule);
@@ -180,11 +141,10 @@ html[data-book-interior="true"] :is(.page-inner, .scroll-document) blockquote::b
   pointer-events: none;
 }
 
-/* Section breaks become small book ornaments. */
+/* Section breaks get a small book ornament without resizing the rule. */
 html[data-book-interior="true"] :is(.page-inner, .scroll-document) hr {
   position: relative;
   overflow: visible;
-  width: 4.9rem;
   border-top-color: var(--book-interior-rule-soft);
 }
 
@@ -194,14 +154,13 @@ html[data-book-interior="true"] :is(.page-inner, .scroll-document) hr::after {
   left: 50%;
   top: 0;
   transform: translate(-50%, -52%) scale(.58);
-  padding-inline: .5em;
   background: var(--bg-page);
   color: color-mix(in srgb, var(--accent) 72%, var(--text-secondary));
   font-size: .72rem;
   line-height: 1;
 }
 
-/* Figures feel tipped into the page. Existing media sizing remains canonical. */
+/* Figures feel tipped into the paper while media dimensions remain canonical. */
 html[data-book-interior="true"] :is(.page-inner, .scroll-document) figure {
   position: relative;
 }
@@ -216,9 +175,6 @@ html[data-book-interior="true"] :is(.page-inner, .scroll-document) p:has(> img:o
 
 html[data-book-interior="true"] :is(.page-inner, .scroll-document) figcaption {
   color: color-mix(in srgb, var(--text-secondary) 90%, var(--accent));
-  font-family: var(--font-accent);
-  font-style: italic;
-  letter-spacing: .015em;
 }
 
 html[data-book-interior="true"] :is(.page-inner, .scroll-document) figcaption::before {
@@ -226,8 +182,7 @@ html[data-book-interior="true"] :is(.page-inner, .scroll-document) figcaption::b
   color: var(--book-interior-rule);
 }
 
-/* Continuous mode should feel like an unbroken roll of the same paper, not a
-   separate web article. */
+/* Continuous mode reads as the same paper extended vertically. */
 html[data-book-interior="true"] [data-reader-mode="scroll"] .scroll-reader {
   background:
     radial-gradient(ellipse 58% 18% at 50% 0%, color-mix(in srgb, var(--accent) 3.5%, transparent), transparent 80%),
@@ -244,12 +199,10 @@ html[data-book-interior="true"] .scroll-chapter + .scroll-chapter {
 }
 
 html[data-book-interior="true"] .scroll-chapter + .scroll-chapter::before {
-  width: 4.6rem;
   border-top-color: var(--book-interior-rule);
 }
 
-/* Phones need ink, not decoration. Keep the editorial hierarchy while flattening
-   expensive physical effects on the viewport-sized page. */
+/* Phones keep editorial ink but lose expensive physical shadowing. */
 @media (max-width: 700px) {
   html[data-book-interior="true"] [data-reader-mode="paged"] .page-surface,
   html[data-book-interior="true"] [data-reader-mode="paged"] .page-surface.left,
@@ -258,7 +211,6 @@ html[data-book-interior="true"] .scroll-chapter + .scroll-chapter::before {
   }
 
   html[data-book-interior="true"] .page-running {
-    letter-spacing: .12em;
     opacity: .58;
   }
 
@@ -296,7 +248,7 @@ html[data-book-interior="true"] .scroll-chapter + .scroll-chapter::before {
 
   html[data-book-interior="true"] :is(.page-inner, .scroll-document) figure > img,
   html[data-book-interior="true"] :is(.page-inner, .scroll-document) p:has(> img:only-child) > img {
-    border: 1px solid CanvasText;
+    border-color: CanvasText;
     box-shadow: none;
   }
 }

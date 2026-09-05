@@ -12,6 +12,10 @@ import('./library-current-book.js').catch((error) => {
   console.warn('Current-book polish could not be loaded', error);
 });
 
+import('./book-opening-handoff.js').catch((error) => {
+  console.warn('Book-opening polish could not be loaded', error);
+});
+
 function snapshot(vv = globalThis.visualViewport) {
   if (!vv) return null;
   return {

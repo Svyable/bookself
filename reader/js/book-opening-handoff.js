@@ -102,7 +102,11 @@ function cleanupPending() {
   clearTimeout(cleanupTimer);
   cleanupTimer = 0;
   pending?.clone?.remove?.();
-  document.body.classList.remove('book-handoff-cover-arriving', 'book-handoff-resume-arriving');
+  document.body.classList.remove(
+    'book-handoff-cover-arriving',
+    'book-handoff-cover-reveal',
+    'book-handoff-resume-arriving'
+  );
   pending = null;
 }
 
@@ -153,7 +157,7 @@ function captureSource(event) {
     clone,
     sourceRect: rect,
   };
-  cleanupTimer = window.setTimeout(cleanupPending, 2600);
+  cleanupTimer = window.setTimeout(cleanupPending, 2800);
 }
 
 function destinationFor(kind) {
@@ -172,6 +176,23 @@ function syncCoverMaterial() {
   if (!page || !face) return;
   const cloth = face.style.getPropertyValue('--cloth').trim();
   if (cloth) page.style.setProperty('--book-handoff-cloth', cloth);
+}
+
+async function finishAnimation(clone, kind) {
+  if (pending?.clone !== clone) return;
+  if (kind !== 'shelf' || typeof clone.animate !== 'function') {
+    cleanupPending();
+    return;
+  }
+
+  document.body.classList.add('book-handoff-cover-reveal');
+  document.body.classList.remove('book-handoff-cover-arriving');
+  const fade = clone.animate(
+    [{ opacity: 0.94 }, { opacity: 0 }],
+    { duration: 240, easing: 'ease-out', fill: 'forwards' }
+  );
+  await fade.finished.catch(() => {});
+  if (pending?.clone === clone) cleanupPending();
 }
 
 async function settlePending() {
@@ -203,15 +224,14 @@ async function settlePending() {
     cleanupPending();
     return;
   }
-  const frames = handoffFrames(pending.sourceRect, targetRect, pending.kind);
+  const kind = pending.kind;
+  const frames = handoffFrames(pending.sourceRect, targetRect, kind);
   const animation = clone.animate(frames, {
-    duration: pending.kind === 'shelf' ? 430 : 360,
+    duration: kind === 'shelf' ? 430 : 360,
     easing: 'cubic-bezier(.2,.82,.24,1)',
     fill: 'forwards',
   });
-  animation.finished.catch(() => {}).then(() => {
-    if (pending?.clone === clone) cleanupPending();
-  });
+  animation.finished.catch(() => {}).then(() => finishAnimation(clone, kind));
 }
 
 function installCoverDockHierarchy() {

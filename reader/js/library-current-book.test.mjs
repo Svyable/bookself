@@ -51,6 +51,8 @@ match(source, /document\.body\.dataset\.stage !== 'library'/);
 match(source, /card\.dataset\.currentBookReady = 'fallback'/);
 match(source, /setAttribute\('aria-label'/);
 match(source, /MutationObserver/);
+match(source, /const stylesAvailable = await installStyles\(\)/);
+match(source, /requestIdleCallback/);
 
 match(css, /\.continue-book-object/);
 match(css, /\.continue-book-meter-fill/);
@@ -65,4 +67,4 @@ doesNotMatch(css, /--reader-page-/);
 match(runtime, /import\('\.\/library-current-book\.js'\)\.catch/);
 match(runtime, /Current-book polish could not be loaded/);
 
-console.log(`Current-book resume polish: ${assertions}/27 assertions passed`);
+console.log(`Current-book resume polish: ${assertions}/29 assertions passed`);

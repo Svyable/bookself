@@ -41,7 +41,7 @@ html[data-book-opening-handoff="true"] .cover-page::after {
   border-radius: 6px 0 0 6px;
   background:
     linear-gradient(90deg, rgba(0,0,0,.56), rgba(255,255,255,.05) 58%, rgba(0,0,0,.2)),
-    var(--cloth, #2a1814);
+    var(--book-handoff-cloth, #2a1814);
   box-shadow: inset -1px 0 color-mix(in srgb, var(--accent) 30%, transparent);
 }
 

@@ -8,6 +8,10 @@ import {
   textEntryTarget,
 } from './viewport-stability.js';
 
+import('./library-current-book.js').catch((error) => {
+  console.warn('Current-book polish could not be loaded', error);
+});
+
 function snapshot(vv = globalThis.visualViewport) {
   if (!vv) return null;
   return {
@@ -144,9 +148,9 @@ export function createReaderLifecycleGuard({
 
   window?.addEventListener?.('pagehide', onPageHide, true);
   window?.addEventListener?.('pageshow', onPageShow, true);
-  document?.addEventListener?.('visibilitychange', onVisibility, true);
-  document?.addEventListener?.('freeze', onFreeze, true);
-  document?.addEventListener?.('resume', onResume, true);
+  document?.addEventListener('visibilitychange', onVisibility, true);
+  document?.addEventListener('freeze', onFreeze, true);
+  document?.addEventListener('resume', onResume, true);
 
   return Object.freeze({
     capture,
@@ -157,9 +161,9 @@ export function createReaderLifecycleGuard({
       cancelAnimationFrame(rafB);
       window?.removeEventListener?.('pagehide', onPageHide, true);
       window?.removeEventListener?.('pageshow', onPageShow, true);
-      document?.removeEventListener?.('visibilitychange', onVisibility, true);
-      document?.removeEventListener?.('freeze', onFreeze, true);
-      document?.removeEventListener?.('resume', onResume, true);
+      document?.removeEventListener('visibilitychange', onVisibility, true);
+      document?.removeEventListener('freeze', onFreeze, true);
+      document?.removeEventListener('resume', onResume, true);
     },
   });
 }

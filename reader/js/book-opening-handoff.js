@@ -166,6 +166,14 @@ function destinationFor(kind) {
   return document.getElementById('bookStage');
 }
 
+function syncCoverMaterial() {
+  const page = document.getElementById('coverPage');
+  const face = document.getElementById('coverFront');
+  if (!page || !face) return;
+  const cloth = face.style.getPropertyValue('--cloth').trim();
+  if (cloth) page.style.setProperty('--book-handoff-cloth', cloth);
+}
+
 async function settlePending() {
   if (!pending) return;
   const stage = document.body.dataset.stage;
@@ -179,6 +187,9 @@ async function settlePending() {
 
   const target = destinationFor(pending.kind);
   if (!target) return;
+  document.body.classList.add(
+    pending.kind === 'shelf' ? 'book-handoff-cover-arriving' : 'book-handoff-resume-arriving'
+  );
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   if (!pending || !target.isConnected) return;
   const targetRect = target.getBoundingClientRect();
@@ -187,9 +198,6 @@ async function settlePending() {
     return;
   }
 
-  document.body.classList.add(
-    pending.kind === 'shelf' ? 'book-handoff-cover-arriving' : 'book-handoff-resume-arriving'
-  );
   const clone = pending.clone;
   if (typeof clone.animate !== 'function') {
     cleanupPending();
@@ -245,8 +253,12 @@ async function initialize() {
   if (!ready) return;
   document.documentElement.dataset.bookOpeningHandoff = 'true';
   installCoverDockHierarchy();
+  syncCoverMaterial();
   document.addEventListener('click', captureSource, true);
-  const stageObserver = new MutationObserver(settlePending);
+  const stageObserver = new MutationObserver(() => {
+    syncCoverMaterial();
+    void settlePending();
+  });
   stageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-stage'] });
   window.addEventListener('popstate', cleanupPending);
 }

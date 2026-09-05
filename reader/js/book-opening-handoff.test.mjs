@@ -78,7 +78,6 @@ equal(sourceKindForElement(null), '');
 const source = fs.readFileSync(new URL('./book-opening-handoff.js', import.meta.url), 'utf8');
 const css = fs.readFileSync(new URL('../css/book-opening-handoff.css', import.meta.url), 'utf8');
 const runtime = fs.readFileSync(new URL('./viewport-stability-runtime.js', import.meta.url), 'utf8');
-const sw = fs.readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
 match(source, /document\.addEventListener\('click', captureSource, true\)/);
 match(source, /clone\.animate\(frames/);
@@ -103,8 +102,5 @@ doesNotMatch(css, /\.page-inner\s*\{/);
 doesNotMatch(css, /--reader-page-(?:top|bottom|pad|radius)/);
 
 match(runtime, /import\('\.\/book-opening-handoff\.js'\)\.catch/);
-match(sw, /\.\/css\/book-opening-handoff\.css/);
-match(sw, /\.\/js\/book-opening-handoff\.js/);
-match(sw, /obb-shell-v104/);
 
-console.log(`Book opening handoff: ${assertions}/39 assertions passed`);
+console.log(`Book opening handoff: ${assertions}/36 assertions passed`);

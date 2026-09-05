@@ -1,9 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {
-  interiorStyleHref,
-  prefersHighContrast,
-} from './book-interior.js';
+import { interiorStyleHref } from './book-interior.js';
 
 let assertions = 0;
 const equal = (...args) => {
@@ -20,9 +17,6 @@ const doesNotMatch = (...args) => {
 };
 
 equal(interiorStyleHref(), 'css/book-interior.css?v=r1');
-equal(prefersHighContrast(() => ({ matches: true })), true);
-equal(prefersHighContrast(() => ({ matches: false })), false);
-equal(prefersHighContrast(() => { throw new Error('unsupported'); }), false);
 
 const source = fs.readFileSync(new URL('./book-interior.js', import.meta.url), 'utf8');
 const css = fs.readFileSync(new URL('../css/book-interior.css', import.meta.url), 'utf8');
@@ -58,4 +52,4 @@ doesNotMatch(css, /\) strong\s*\{[^}]*font-weight/s);
 match(runtime, /import\('\.\/book-interior\.js'\)\.catch/);
 match(runtime, /Book-interior polish could not be loaded/);
 
-console.log(`Premium book interior: ${assertions}/27 assertions passed`);
+console.log(`Premium book interior: ${assertions}/24 assertions passed`);

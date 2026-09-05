@@ -125,6 +125,18 @@ function setAccessibleLabel(link, meta, chapter, saved, percent) {
   link.setAttribute('aria-label', parts.join('. '));
 }
 
+function paintSemanticProgress(meta, slug, progress, currentRun, link, chapter, saved) {
+  semanticProgress(meta, slug, progress).then((result) => {
+    if (!result || currentRun !== runId) return;
+    const meter = document.getElementById('continueCardMeter');
+    const fill = document.getElementById('continueCardProgress');
+    const percent = Math.max(0, Math.min(100, Number(result.percent) || 0));
+    if (fill) fill.style.width = `${percent}%`;
+    if (meter) meter.hidden = false;
+    setAccessibleLabel(link, meta, chapter, saved, percent);
+  }).catch(() => {});
+}
+
 async function enhanceCard() {
   scheduled = false;
   const card = document.getElementById('continueCard');
@@ -137,7 +149,7 @@ async function enhanceCard() {
   if (!slug || !progress) return;
 
   const key = `${href}|${progress.savedAt || ''}`;
-  if (key === lastKey && card.dataset.currentBookReady === 'true') return;
+  if (key === lastKey && ['loading', 'true'].includes(card.dataset.currentBookReady)) return;
   lastKey = key;
   const currentRun = ++runId;
 
@@ -167,15 +179,9 @@ async function enhanceCard() {
     setAccessibleLabel(link, meta, chapter, saved, null);
     card.dataset.currentBookReady = 'true';
 
-    semanticProgress(meta, slug, progress).then((result) => {
-      if (!result || currentRun !== runId) return;
-      const meter = document.getElementById('continueCardMeter');
-      const fill = document.getElementById('continueCardProgress');
-      const percent = Math.max(0, Math.min(100, Number(result.percent) || 0));
-      if (fill) fill.style.width = `${percent}%`;
-      if (meter) meter.hidden = false;
-      setAccessibleLabel(link, meta, chapter, saved, percent);
-    }).catch(() => {});
+    const enrich = () => paintSemanticProgress(meta, slug, progress, currentRun, link, chapter, saved);
+    if ('requestIdleCallback' in window) window.requestIdleCallback(enrich, { timeout: 1200 });
+    else window.setTimeout(enrich, 120);
   } catch {
     card.dataset.currentBookReady = 'fallback';
     lastKey = '';

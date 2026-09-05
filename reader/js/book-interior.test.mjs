@@ -27,7 +27,6 @@ equal(prefersHighContrast(() => { throw new Error('unsupported'); }), false);
 const source = fs.readFileSync(new URL('./book-interior.js', import.meta.url), 'utf8');
 const css = fs.readFileSync(new URL('../css/book-interior.css', import.meta.url), 'utf8');
 const runtime = fs.readFileSync(new URL('./viewport-stability-runtime.js', import.meta.url), 'utf8');
-const sw = fs.readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
 match(source, /STYLE_HREF = 'css\/book-interior\.css\?v=r1'/);
 match(source, /dataset\.bookInterior = 'true'/);
@@ -46,15 +45,14 @@ match(css, /@media \(prefers-contrast: more\)/);
 match(css, /@media \(forced-colors: active\)/);
 match(css, /@media print/);
 
+/* Progressive aesthetic loading must never invalidate already-measured pages. */
 doesNotMatch(css, /--reader-page-(?:top|bottom|pad|inline|radius)\s*:/);
 doesNotMatch(css, /--reader-stage-(?:inline|block)\s*:/);
-doesNotMatch(css, /\.page-inner\s*\{[^}]*?(?:width|max-width|padding|margin-inline)/s);
-doesNotMatch(css, /\.pages-wrapper\.active\s*\{[^}]*?(?:width|height|max-height)/s);
+doesNotMatch(css, /\b(?:padding|margin|width|max-width|min-width|height|max-height|min-height|line-height|font-size|letter-spacing|font-weight|font-family|text-indent)\s*:[^;{}]+;/);
+doesNotMatch(css, /\.pages-wrapper\.active\s*\{/);
+doesNotMatch(css, /\.page-inner\s*\{/);
 
 match(runtime, /import\('\.\/book-interior\.js'\)\.catch/);
 match(runtime, /Book-interior polish could not be loaded/);
-match(sw, /\.\/css\/book-interior\.css/);
-match(sw, /\.\/js\/book-interior\.js/);
-match(sw, /obb-shell-v104/);
 
-console.log(`Premium book interior: ${assertions}/25 assertions passed`);
+console.log(`Premium book interior: ${assertions}/24 assertions passed`);

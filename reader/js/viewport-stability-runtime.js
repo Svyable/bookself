@@ -8,6 +8,10 @@ import {
   textEntryTarget,
 } from './viewport-stability.js';
 
+import('./global-reader-controls.js').catch((error) => {
+  console.warn('Global Reader controls could not be loaded', error);
+});
+
 import('./library-current-book.js').catch((error) => {
   console.warn('Current-book polish could not be loaded', error);
 });

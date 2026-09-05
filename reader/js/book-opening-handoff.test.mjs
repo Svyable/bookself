@@ -88,9 +88,11 @@ match(source, /summary\.textContent = 'More'/);
 match(source, /menu\.appendChild\(control\)/);
 match(source, /prefers-reduced-motion: reduce/);
 match(source, /styleReady/);
+match(source, /--book-handoff-cloth/);
 
 match(css, /\.cover-page::before/);
 match(css, /\.cover-page::after/);
+match(css, /var\(--book-handoff-cloth/);
 match(css, /@keyframes bookCoverSettle/);
 match(css, /@keyframes bookPagesArrive/);
 match(css, /\.book-handoff-clone/);
@@ -103,4 +105,4 @@ doesNotMatch(css, /--reader-page-(?:top|bottom|pad|radius)/);
 
 match(runtime, /import\('\.\/book-opening-handoff\.js'\)\.catch/);
 
-console.log(`Book opening handoff: ${assertions}/36 assertions passed`);
+console.log(`Book opening handoff: ${assertions}/38 assertions passed`);

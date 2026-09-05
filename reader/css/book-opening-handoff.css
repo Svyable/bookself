@@ -78,6 +78,11 @@ html[data-book-opening-handoff="true"]:not([data-reader-mode="scroll"]) body[dat
 /* While the shelf object is flying into place, avoid seeing two covers. */
 body.book-handoff-cover-arriving[data-stage="cover"] #coverPage:not(.opened) {
   opacity: 0;
+  transition: none;
+}
+
+body.book-handoff-cover-reveal[data-stage="cover"] #coverPage:not(.opened) {
+  transition: opacity 240ms ease-out;
 }
 
 .book-handoff-clone {

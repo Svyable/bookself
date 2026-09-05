@@ -7,6 +7,7 @@ const STYLE_HREF = 'css/library-current-book.css?v=r1';
 let scheduled = false;
 let lastKey = '';
 let runId = 0;
+let styleReady = null;
 
 function storagePrefix() {
   return window.__IMPRINT?.storagePrefix || 'bookself';
@@ -57,11 +58,22 @@ export function slugFromContinueHref(href) {
 }
 
 function installStyles() {
-  if (document.querySelector(`link[href="${STYLE_HREF}"]`)) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = STYLE_HREF;
-  document.head.appendChild(link);
+  if (styleReady) return styleReady;
+  const existing = document.querySelector(`link[href="${STYLE_HREF}"]`);
+  if (existing) {
+    styleReady = Promise.resolve(true);
+    return styleReady;
+  }
+
+  styleReady = new Promise((resolve) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = STYLE_HREF;
+    link.addEventListener('load', () => resolve(true), { once: true });
+    link.addEventListener('error', () => resolve(false), { once: true });
+    document.head.appendChild(link);
+  });
+  return styleReady;
 }
 
 function ensureMarkup(link) {
@@ -153,7 +165,11 @@ async function enhanceCard() {
   lastKey = key;
   const currentRun = ++runId;
 
-  installStyles();
+  const stylesAvailable = await installStyles();
+  if (!stylesAvailable || currentRun !== runId) {
+    lastKey = '';
+    return;
+  }
   ensureMarkup(link);
   card.dataset.currentBookReady = 'loading';
 

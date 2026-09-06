@@ -7,6 +7,8 @@ import argparse
 import shutil
 from pathlib import Path
 
+from instance_identity import stamp_reader_identity
+
 
 def replace_tree(source: Path, destination: Path) -> None:
     if destination.exists():
@@ -19,12 +21,13 @@ def sync_one(root: Path, destination: Path) -> None:
         raise SystemExit(f"instance not found: {destination}")
     replace_tree(root / "reader", destination / "reader")
     replace_tree(root / "desk", destination / "desk")
-    print(f"Synced shared UI -> {destination} (reader/ + desk/)")
+    stamp_reader_identity(destination)
+    print(f"Synced shared UI -> {destination} (reader/ + desk/; identity re-stamped from imprint.json)")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Sync Bookself's shared Reader and Desk into Desk/Shelf instances."
+        description="Sync Bookself's shared Reader and Desk into Desk/Shelf instances without replacing instance identity or manuscripts."
     )
     parser.add_argument("destinations", nargs="*", help="instance directories to update")
     args = parser.parse_args()

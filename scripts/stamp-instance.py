@@ -9,6 +9,8 @@ import re
 import shutil
 from pathlib import Path
 
+from instance_identity import stamp_reader_identity
+
 
 def storage_prefix(role: str, repo: str) -> str:
     value = f"{role}-{repo}".lower().replace("_", " ")
@@ -103,17 +105,19 @@ def main() -> int:
         json.dumps(imprint, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+    stamp_reader_identity(destination)
 
     print(f"Stamped {args.role} -> {destination}")
     print("Shared UI included: reader/ + desk/")
     print("Instance-owned files: books/, README.md, imprint.json")
+    print("Reader install identity: stamped from imprint.json")
     if args.role == "shelf":
         print("Publication content starts empty; the first release creates books/<slug>/.")
         print("Enable GitHub Pages for the public Shelf.")
     else:
         templates = sorted(path.name for path in (destination / "books").iterdir() if path.is_dir())
         print(f"Blank starters included: {', '.join(templates)}")
-        print("Keep the Desk private. Do not enable public Pages for unpublished manuscripts.")
+        print("Keep the Desk private. Do not enable public Pages for unpublished manuscripts unless that exposure is deliberate.")
     if args.owner == "auto":
         print("Optional: edit imprint.json and set github.owner for repository edit/history links.")
     return 0

@@ -11,8 +11,8 @@ const check = (run) => {
   assertions += 1;
 };
 
-check(() => assert.match(css, /#settingsBtn::before/));
-check(() => assert.match(css, /content: "Aa"/));
+check(() => assert.doesNotMatch(css, /#settingsBtn::before/));
+check(() => assert.doesNotMatch(css, /content:\s*["']Aa["']/));
 check(() => assert.match(css, /body\[data-stage="read"\] \.reading-time \{\s*display: none;/));
 check(() => assert.match(css, /\.page-nav \.view-toggle \{\s*display: none !important;/));
 check(() => assert.match(css, /\.progress-bar-container\[data-reader-seekable="true"\] \{/));

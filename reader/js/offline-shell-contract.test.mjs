@@ -8,7 +8,9 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const readerRoot = path.resolve(here, '..');
 const baseSource = fs.readFileSync(path.join(here, 'base.js'), 'utf8');
 const formatsSource = fs.readFileSync(path.join(here, 'formats.js'), 'utf8');
+const viewportSource = fs.readFileSync(path.join(here, 'viewport-stability-runtime.js'), 'utf8');
 const quickLookSource = fs.readFileSync(path.join(here, 'library-quick-look.js'), 'utf8');
+const globalControlsSource = fs.readFileSync(path.join(here, 'global-reader-controls.js'), 'utf8');
 const swSource = fs.readFileSync(path.join(readerRoot, 'sw.js'), 'utf8');
 
 function listSource(source, name) {
@@ -45,11 +47,12 @@ const recentCompanions = [
   './css/settings-panel.css',
 ];
 
-const quickLookAssets = [
+const libraryAndThemeAssets = [
   './css/library-quick-look.css',
   './js/library-book-preview-model.js',
   './js/library-quick-look.js',
   './js/theme-controls.js',
+  './js/global-reader-controls.js',
 ];
 
 const removedOfflineReadinessAssets = [
@@ -91,10 +94,12 @@ test('recent optional enhancements include their model/style companions', () => 
   }
 });
 
-test('library quick look and global theme controls are offline-safe optional enhancements', () => {
+test('library quick look and global controls are independently offline-safe', () => {
   assert.match(formatsSource, /import\(\s*['"]\.\/library-quick-look\.js['"]\s*\)/);
-  assert.match(quickLookSource, /from\s+['"]\.\/theme-controls\.js['"]/);
-  for (const asset of quickLookAssets) {
+  assert.doesNotMatch(quickLookSource, /theme-controls\.js|installGlobalThemeControls/);
+  assert.match(viewportSource, /import\(\s*['"]\.\/global-reader-controls\.js['"]\s*\)/);
+  assert.match(globalControlsSource, /from\s+['"]\.\/theme-controls\.js['"]/);
+  for (const asset of libraryAndThemeAssets) {
     assert.equal(shell.has(asset), true, `${asset} should be in SHELL`);
     assert.equal(optional.has(asset), true, `${asset} should be best-effort optional`);
   }
@@ -107,8 +112,8 @@ test('removed offline readiness surface is absent from the install shell', () =>
   }
 });
 
-test('offline shell generation advances for global theme controls', () => {
-  assert.match(swSource, /const\s+CACHE\s*=\s*['"]obb-shell-v101['"]/);
+test('offline shell generation advances for canonical global controls', () => {
+  assert.match(swSource, /const\s+CACHE\s*=\s*['"]obb-shell-v104['"]/);
 });
 
 console.log('offline shell contract tests cover dynamic enhancement parity');

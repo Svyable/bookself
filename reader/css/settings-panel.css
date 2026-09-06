@@ -203,24 +203,6 @@ body[data-stage="read"] .reading-time {
   display: none;
 }
 
-/* Kindle's Aa convention is immediately legible for reading appearance. */
-body[data-stage="read"] #settingsBtn svg,
-body[data-stage="cover"] #settingsBtn svg,
-body[data-stage="end"] #settingsBtn svg {
-  display: none;
-}
-
-body[data-stage="read"] #settingsBtn::before,
-body[data-stage="cover"] #settingsBtn::before,
-body[data-stage="end"] #settingsBtn::before {
-  content: "Aa";
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: -.04em;
-  line-height: 1;
-}
-
 body[data-stage="read"] .header-btn,
 body[data-stage="read"] .logo {
   width: 2.7rem;
@@ -331,7 +313,7 @@ body[data-stage="read"].reader-chrome-hidden .progress-bar-container[data-reader
   pointer-events: none !important;
 }
 
-/* Page controls become a compact footer. Reading mode lives in Aa settings,
+/* Page controls become a compact footer. Reading mode lives in Settings,
    so the bottom bar no longer repeats a second Pages/Continuous control. */
 body[data-stage="read"] .page-nav {
   position: relative;
@@ -383,7 +365,7 @@ body[data-stage="read"] .page-chapter {
   letter-spacing: .08em;
 }
 
-/* Aa settings behave as a reading tray rather than a generic modal. */
+/* Reading settings behave as a bottom tray rather than a generic modal. */
 #settingsPanel {
   place-items: end center;
   padding: 0;

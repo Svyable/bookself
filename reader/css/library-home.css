@@ -10,7 +10,7 @@
   --library-home-shadow: 0 16px 44px color-mix(in srgb, var(--shadow) 38%, transparent);
 }
 
-/* The home header is navigation, not a dormant in-book toolbar. */
+/* The home header keeps app-level controls while hiding book-only tools. */
 body[data-stage="library"] .app-header {
   min-height: 3.35rem;
   padding-block: .35rem;
@@ -20,7 +20,21 @@ body[data-stage="library"] .app-header {
 }
 
 body[data-stage="library"] .app-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: .08rem;
+}
+
+body[data-stage="library"] #bookmarkBtn,
+body[data-stage="library"] #searchBtn,
+body[data-stage="library"] #tocBtn,
+body[data-stage="library"] .reading-time {
   display: none;
+}
+
+body[data-stage="library"] #themeModeBtn,
+body[data-stage="library"] #settingsBtn {
+  display: inline-flex;
 }
 
 body[data-stage="library"] .logo {

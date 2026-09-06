@@ -1,0 +1,555 @@
+/* Reader app-shell polish
+   -----------------------
+   A paint-first cohesion layer for a calmer, more tactile reading application.
+   It intentionally avoids manuscript, page, and pagination geometry. */
+
+:root {
+  --app-shell-glass: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
+  --app-shell-glass-strong: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  --app-shell-line: color-mix(in srgb, var(--border) 64%, var(--text-primary) 7%);
+  --app-shell-line-strong: color-mix(in srgb, var(--border) 58%, var(--text-primary) 13%);
+  --app-shell-highlight: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  --app-shell-shadow: 0 16px 44px color-mix(in srgb, var(--shadow) 36%, transparent);
+  --app-shell-shadow-soft: 0 8px 24px color-mix(in srgb, var(--shadow) 24%, transparent);
+  --app-shell-focus: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+/* The header is one transparent plane containing three deliberate control
+   islands: home/status, context, and actions. Nothing here changes its layout. */
+.app-header {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--header-bg) 74%, transparent), color-mix(in srgb, var(--header-bg) 50%, transparent));
+  border-bottom-color: transparent;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--text-primary) 4%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.08);
+  backdrop-filter: blur(22px) saturate(1.08);
+}
+
+.header-left,
+.header-right,
+.reader-context {
+  position: relative;
+}
+
+.header-left::before,
+.header-right::before,
+.reader-context::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--app-shell-highlight), transparent 72%),
+    var(--app-shell-glass);
+  box-shadow:
+    inset 0 0 0 1px var(--app-shell-line),
+    0 8px 22px color-mix(in srgb, var(--shadow) 18%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.06);
+  backdrop-filter: blur(18px) saturate(1.06);
+}
+
+.header-left::before,
+.header-right::before {
+  inset: -.08rem -.12rem;
+  border-radius: 999px;
+}
+
+.reader-context::before {
+  inset: -.28rem -.8rem;
+  border-radius: 999px;
+  opacity: .82;
+}
+
+body[data-stage="library"] .reader-context::before {
+  opacity: 0;
+}
+
+.header-btn,
+.logo,
+.nav-btn,
+.view-toggle,
+.toc-close,
+.stats-close,
+.ghost-btn,
+.pill,
+.settings-reset {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.header-btn,
+.logo,
+.nav-btn,
+.view-toggle {
+  position: relative;
+  overflow: visible;
+  box-shadow: none;
+  transition:
+    color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease,
+    opacity 140ms ease,
+    transform 100ms ease;
+}
+
+.header-btn,
+.logo {
+  color: color-mix(in srgb, var(--text-secondary) 92%, var(--text-primary));
+}
+
+.header-btn:hover,
+.logo:hover,
+.header-btn:focus-visible,
+.logo:focus-visible {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 7%, transparent);
+}
+
+.header-btn.active,
+.header-btn[aria-pressed="true"],
+.header-btn[aria-expanded="true"] {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent-glow) 72%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 38%, transparent),
+    0 5px 14px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.header-btn:active,
+.logo:active,
+.nav-btn:active,
+.view-toggle:active {
+  transform: scale(.94);
+}
+
+.header-btn:focus-visible,
+.logo:focus-visible,
+.nav-btn:focus-visible,
+.view-toggle:focus-visible,
+.toc-close:focus-visible,
+.stats-close:focus-visible,
+.ghost-btn:focus-visible,
+.pill:focus-visible,
+.settings-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: var(--app-shell-focus);
+}
+
+.reader-context-title {
+  color: color-mix(in srgb, var(--text-primary) 94%, var(--accent));
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-primary) 34%, transparent);
+}
+
+.reader-context-chapter {
+  color: color-mix(in srgb, var(--text-muted) 82%, var(--text-secondary));
+}
+
+/* Fine-pointer tooltips make icon-only chrome self-explanatory without leaving
+   labels permanently on the page. Runtime supplies data-reader-label. */
+@media (hover: hover) and (pointer: fine) {
+  .app-header [data-reader-label]::after,
+  .page-nav [data-reader-label]::after {
+    content: attr(data-reader-label);
+    position: absolute;
+    z-index: 120;
+    left: 50%;
+    top: calc(100% + .52rem);
+    padding: .34rem .52rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--bg-elevated) 96%, #000 4%);
+    box-shadow:
+      inset 0 0 0 1px var(--app-shell-line-strong),
+      0 8px 24px color-mix(in srgb, var(--shadow) 46%, transparent);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -3px) scale(.98);
+    transition: opacity 120ms ease, transform 120ms ease;
+  }
+
+  .app-header [data-reader-label]:hover::after,
+  .app-header [data-reader-label]:focus-visible::after,
+  .page-nav [data-reader-label]:hover::after,
+  .page-nav [data-reader-label]:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  .page-nav [data-reader-label]::after {
+    top: auto;
+    bottom: calc(100% + .5rem);
+  }
+}
+
+/* Bottom navigation reads as the same physical control language as the header. */
+body[data-stage="read"] .page-nav .nav-btn,
+body[data-stage="read"] .page-nav .nav-center {
+  background:
+    linear-gradient(180deg, var(--app-shell-highlight), transparent 78%),
+    var(--app-shell-glass);
+  box-shadow:
+    inset 0 0 0 1px var(--app-shell-line),
+    var(--app-shell-shadow-soft);
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+
+body[data-stage="read"] .page-nav .nav-btn {
+  color: color-mix(in srgb, var(--text-secondary) 90%, var(--text-primary));
+}
+
+body[data-stage="read"] .page-nav .nav-btn:hover,
+body[data-stage="read"] .page-nav .nav-btn:focus-visible {
+  color: var(--accent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 78%),
+    color-mix(in srgb, var(--app-shell-glass-strong) 90%, var(--accent-glow));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 42%, transparent),
+    0 9px 24px color-mix(in srgb, var(--shadow) 26%, transparent);
+}
+
+body[data-stage="read"] .page-nav .nav-center {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 76%, transparent),
+    0 8px 22px color-mix(in srgb, var(--shadow) 20%, transparent);
+}
+
+body[data-stage="read"] .page-indicator {
+  color: color-mix(in srgb, var(--text-primary) 96%, var(--accent));
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-primary) 26%, transparent);
+}
+
+body[data-stage="read"] .page-chapter {
+  color: color-mix(in srgb, var(--text-muted) 88%, var(--text-secondary));
+}
+
+/* The semantic timeline feels connected to the dock instead of like a stray
+   browser range control. Its hit-area geometry remains owned elsewhere. */
+body[data-stage="read"] .progress-bar-container[data-reader-seekable="true"]::before {
+  background: color-mix(in srgb, var(--text-muted) 32%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 5%, transparent),
+    0 2px 8px color-mix(in srgb, var(--shadow) 12%, transparent);
+}
+
+body[data-stage="read"] .progress-bar-container[data-reader-seekable="true"] .progress-bar {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-dim) 84%, var(--accent)), var(--accent));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+body[data-stage="read"] .progress-seek-label {
+  background:
+    linear-gradient(180deg, var(--app-shell-highlight), transparent 72%),
+    var(--app-shell-glass-strong);
+  box-shadow:
+    inset 0 0 0 1px var(--app-shell-line-strong),
+    var(--app-shell-shadow-soft);
+}
+
+/* Library discovery keeps the same visual material as the reading controls. */
+body[data-stage="library"] .library-bar,
+body[data-stage="library"] #libraryHits,
+body[data-stage="library"] .continue-card {
+  background:
+    linear-gradient(180deg, var(--app-shell-highlight), transparent 76%),
+    color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1px var(--app-shell-line),
+    var(--app-shell-shadow-soft);
+  -webkit-backdrop-filter: blur(18px) saturate(1.04);
+  backdrop-filter: blur(18px) saturate(1.04);
+}
+
+body[data-stage="library"] .continue-card {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, var(--app-shell-line)),
+    0 14px 34px color-mix(in srgb, var(--shadow) 28%, transparent);
+}
+
+body[data-stage="library"] .library-bar:focus-within,
+body[data-stage="library"] .continue-card:focus-within {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 48%, var(--app-shell-line)),
+    var(--app-shell-focus),
+    var(--app-shell-shadow-soft);
+}
+
+body[data-stage="library"] .library-bar .pill.active,
+body[data-stage="library"] .pub-filters button.active {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent),
+    0 4px 12px color-mix(in srgb, var(--shadow) 18%, transparent);
+}
+
+/* Covers inherit the same quieter app furniture without competing with the book. */
+body[data-stage="cover"] .cover-dock,
+body[data-stage="end"] .cover-dock {
+  background:
+    linear-gradient(180deg, var(--app-shell-highlight), transparent 76%),
+    var(--app-shell-glass);
+  box-shadow:
+    inset 0 0 0 1px var(--app-shell-line),
+    var(--app-shell-shadow-soft);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+  backdrop-filter: blur(18px) saturate(1.05);
+}
+
+.cover-dock button:hover,
+.cover-dock button:focus-visible,
+.cover-dock a:hover,
+.cover-dock a:focus-visible {
+  color: var(--accent);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* All dialogs and bottom sheets now share one material and one depth model. */
+.toc-overlay,
+.stats-card,
+.search-card,
+#settingsPanel .settings-card,
+.note-dialog > *,
+.help-overlay > * {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--text-primary) 4%, transparent), transparent 8rem),
+    var(--app-shell-glass-strong);
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1px var(--app-shell-line-strong),
+    0 28px 80px color-mix(in srgb, var(--shadow) 54%, transparent);
+  -webkit-backdrop-filter: blur(26px) saturate(1.06);
+  backdrop-filter: blur(26px) saturate(1.06);
+}
+
+.toc-header,
+#settingsPanel .settings-section-head {
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-primary) 22%, transparent);
+}
+
+.toc-close,
+.stats-close,
+#settingsPanel .stats-close,
+.settings-reset,
+.ghost-btn {
+  background: color-mix(in srgb, var(--bg-secondary) 48%, transparent);
+  border-color: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 86%, transparent);
+  transition:
+    color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease,
+    transform 100ms ease;
+}
+
+.toc-close:hover,
+.stats-close:hover,
+#settingsPanel .stats-close:hover,
+.settings-reset:hover,
+.ghost-btn:hover,
+.toc-close:focus-visible,
+.stats-close:focus-visible,
+#settingsPanel .stats-close:focus-visible,
+.settings-reset:focus-visible,
+.ghost-btn:focus-visible {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent-glow) 64%, var(--bg-secondary));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 34%, transparent),
+    0 7px 18px color-mix(in srgb, var(--shadow) 18%, transparent);
+}
+
+.toc-close:active,
+.stats-close:active,
+#settingsPanel .stats-close:active,
+.settings-reset:active,
+.ghost-btn:active {
+  transform: scale(.97);
+}
+
+#settingsPanel .pill,
+#settingsPanel .experience-mode,
+#settingsPanel .atmosphere-filter,
+#settingsPanel .atmosphere-option,
+#settingsPanel .atmosphere-warmth {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 76%, transparent);
+}
+
+#settingsPanel .pill.active,
+#settingsPanel .pill[aria-pressed="true"],
+#settingsPanel .experience-mode[aria-pressed="true"],
+#settingsPanel .atmosphere-filter[aria-pressed="true"],
+#settingsPanel .atmosphere-option[aria-pressed="true"],
+#settingsPanel .atmosphere-warmth[aria-pressed="true"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 46%, transparent),
+    0 5px 16px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* Inputs receive the same quiet inset material and a precise focus state. */
+.toc-search input,
+.search-card input,
+.library-bar input,
+#noteBody {
+  background: color-mix(in srgb, var(--bg-secondary) 62%, transparent);
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 84%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 3%, transparent);
+}
+
+.toc-search input:focus,
+.search-card input:focus,
+.library-bar input:focus,
+#noteBody:focus {
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 68%, transparent),
+    var(--app-shell-focus);
+  outline: none;
+}
+
+/* Dark and light retain the same depth hierarchy instead of simply swapping ink. */
+[data-theme="light"] {
+  --app-shell-glass: color-mix(in srgb, #fff 74%, transparent);
+  --app-shell-glass-strong: color-mix(in srgb, #fff 92%, transparent);
+  --app-shell-line: color-mix(in srgb, #6d5b45 18%, transparent);
+  --app-shell-line-strong: color-mix(in srgb, #4c3e30 24%, transparent);
+  --app-shell-highlight: color-mix(in srgb, #fff 54%, transparent);
+}
+
+[data-theme="dark"] {
+  --app-shell-highlight: color-mix(in srgb, #fff 5%, transparent);
+}
+
+/* Touch layouts keep the same material but avoid hover-dependent decoration. */
+@media (pointer: coarse) {
+  .header-btn:hover,
+  .logo:hover,
+  .nav-btn:hover {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .header-btn:active,
+  .logo:active,
+  .nav-btn:active,
+  .view-toggle:active,
+  .ghost-btn:active {
+    background: color-mix(in srgb, var(--accent-glow) 58%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+
+  body[data-stage="read"] .page-nav .nav-btn,
+  body[data-stage="read"] .page-nav .nav-center {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 88%, transparent),
+      0 6px 18px color-mix(in srgb, var(--shadow) 20%, transparent);
+  }
+}
+
+@media (max-width: 700px) {
+  .reader-context::before {
+    opacity: 0;
+  }
+
+  .header-left::before,
+  .header-right::before {
+    background: color-mix(in srgb, var(--bg-elevated) 76%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 82%, transparent);
+  }
+
+  .toc-overlay,
+  .stats-card,
+  .search-card,
+  #settingsPanel .settings-card,
+  .note-dialog > *,
+  .help-overlay > * {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--app-shell-line) 82%, transparent),
+      0 -18px 52px color-mix(in srgb, var(--shadow) 52%, transparent);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .app-header,
+  .header-left::before,
+  .header-right::before,
+  .reader-context::before,
+  body[data-stage="read"] .page-nav .nav-btn,
+  body[data-stage="read"] .page-nav .nav-center,
+  body[data-stage="library"] .library-bar,
+  body[data-stage="library"] #libraryHits,
+  body[data-stage="library"] .continue-card,
+  .toc-overlay,
+  .stats-card,
+  .search-card,
+  #settingsPanel .settings-card {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--bg-elevated);
+  }
+}
+
+@media (forced-colors: active) {
+  .app-header,
+  .header-left::before,
+  .header-right::before,
+  .reader-context::before,
+  body[data-stage="read"] .page-nav .nav-btn,
+  body[data-stage="read"] .page-nav .nav-center,
+  body[data-stage="library"] .library-bar,
+  body[data-stage="library"] #libraryHits,
+  body[data-stage="library"] .continue-card,
+  .toc-overlay,
+  .stats-card,
+  .search-card,
+  #settingsPanel .settings-card {
+    background: Canvas;
+    box-shadow: inset 0 0 0 1px CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .header-btn,
+  .logo,
+  .nav-btn,
+  .ghost-btn,
+  .pill,
+  .settings-reset {
+    color: ButtonText;
+  }
+
+  .header-btn:focus-visible,
+  .logo:focus-visible,
+  .nav-btn:focus-visible,
+  .ghost-btn:focus-visible,
+  .pill:focus-visible,
+  .settings-reset:focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-btn,
+  .logo,
+  .nav-btn,
+  .view-toggle,
+  .toc-close,
+  .stats-close,
+  .ghost-btn,
+  .pill,
+  .settings-reset,
+  .app-header [data-reader-label]::after,
+  .page-nav [data-reader-label]::after {
+    transition: none !important;
+  }
+}

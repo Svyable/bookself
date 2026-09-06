@@ -1,0 +1,169 @@
+name: Build subtitle-aware Reader catalog
+
+on:
+  push:
+    branches:
+      - reader-subtitle-aware-catalog
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: reader-subtitle-aware-catalog
+
+      - name: Add subtitle metadata and catalog presentation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          catalog = Path('reader/js/catalog.js')
+          text = catalog.read_text(encoding='utf-8')
+          anchor = """function plainInlineText(value) {
+            return String(value || '')
+              .replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^)\\s]+\\)/gi, '$1')
+              .replace(/\\s+/g, ' ')
+              .trim();
+          }
+"""
+          helper = anchor + """
+
+          function readmeSubtitle(markdown, titleMatch) {
+            if (!titleMatch) return '';
+            const tail = String(markdown || '').slice(titleMatch.index + titleMatch[0].length);
+            for (const raw of tail.split(/\\n/)) {
+              const line = raw.trim();
+              if (!line) continue;
+              if (line.startsWith('|') || /^##\\s+/.test(line)) return '';
+              const italic = line.match(/^\\*([^*].*?)\\*$/) || line.match(/^_([^_].*?)_$/);
+              return italic ? italic[1].trim() : '';
+            }
+            return '';
+          }
+"""
+          if anchor not in text:
+              raise SystemExit('catalog helper anchor not found')
+          text = text.replace(anchor, helper, 1)
+          old = """  const titleMatch = markdown.match(/^#\\s+(.+)$/m);
+            const title = titleMatch ? titleMatch[1].trim() : slug;
+            const status = cell(markdown, 'Status');
+"""
+          new = """  const titleMatch = markdown.match(/^#\\s+(.+)$/m);
+            const title = titleMatch ? titleMatch[1].trim() : slug;
+            const subtitle = readmeSubtitle(markdown, titleMatch);
+            const status = cell(markdown, 'Status');
+"""
+          if old not in text:
+              raise SystemExit('parseBookReadme title anchor not found')
+          text = text.replace(old, new, 1)
+          old = """    slug,
+              title,
+              status,
+"""
+          new = """    slug,
+              title,
+              subtitle,
+              status,
+"""
+          if old not in text:
+              raise SystemExit('parseBookReadme return anchor not found')
+          catalog.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          app = Path('reader/js/app.js')
+          text = app.read_text(encoding='utf-8')
+          old = """        <span class=\"volume-title\">${escapeHtml(book.title)}</span>
+                <span class=\"volume-author\">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
+"""
+          new = """        <span class=\"volume-title\">${escapeHtml(book.title)}</span>
+                ${book.subtitle ? `<span class=\"volume-subtitle\">${escapeHtml(book.subtitle)}</span>` : ''}
+                <span class=\"volume-author\">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
+"""
+          if old not in text:
+              raise SystemExit('volume card anchor not found')
+          app.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          css = Path('reader/css/style.css')
+          text = css.read_text(encoding='utf-8')
+          old = """.volume.has-art .volume-title,
+          .volume.has-art .volume-author,
+          .volume.has-art .volume-imprint {
+"""
+          new = """.volume.has-art .volume-title,
+          .volume.has-art .volume-subtitle,
+          .volume.has-art .volume-author,
+          .volume.has-art .volume-imprint {
+"""
+          if old not in text:
+              raise SystemExit('art shadow anchor not found')
+          text = text.replace(old, new, 1)
+          anchor = """.volume-author {
+"""
+          subtitle_css = """.volume-subtitle {
+            max-width: 100%;
+            margin-top: 0.45rem;
+            color: var(--text-secondary);
+            font-family: var(--font-accent);
+            font-size: 0.78rem;
+            font-style: italic;
+            letter-spacing: 0.02em;
+            line-height: 1.28;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+          }
+
+          .volume-author {
+"""
+          if anchor not in text:
+              raise SystemExit('volume author anchor not found')
+          css.write_text(text.replace(anchor, subtitle_css, 1), encoding='utf-8')
+          PY
+
+          cat > reader/js/catalog-subtitle.test.mjs <<'EOF'
+          import assert from 'node:assert/strict';
+          import test from 'node:test';
+          import fs from 'node:fs';
+          import { parseBookReadme } from './catalog.js';
+
+          test('parseBookReadme carries an italic subtitle directly below the H1', () => {
+            const meta = parseBookReadme(`# The Risk Pool\n\n*How Insurance Quietly Decides What Can Be Built*\n\n| | |\n|---|---|\n| **Authors** | Sven Hardy Benson |\n| **Status** | Published |\n`, 'the-risk-pool');
+            assert.equal(meta.title, 'The Risk Pool');
+            assert.equal(meta.subtitle, 'How Insurance Quietly Decides What Can Be Built');
+          });
+
+          test('parseBookReadme does not mistake metadata or prose for a subtitle', () => {
+            const tableFirst = parseBookReadme(`# Plain Book\n\n| | |\n|---|---|\n| **Authors** | Sven Hardy Benson |\n`, 'plain-book');
+            assert.equal(tableFirst.subtitle, '');
+
+            const proseFirst = parseBookReadme(`# Plain Book\n\nOpening prose.\n\n| | |\n`, 'plain-book');
+            assert.equal(proseFirst.subtitle, '');
+          });
+
+          test('catalog cards render subtitle metadata when present', () => {
+            const app = fs.readFileSync(new URL('./app.js', import.meta.url), 'utf8');
+            const css = fs.readFileSync(new URL('../css/style.css', import.meta.url), 'utf8');
+            assert.match(app, /volume-subtitle/);
+            assert.match(css, /\.volume-subtitle\s*\{/);
+          });
+          EOF
+
+      - name: Validate subtitle-aware Reader
+        run: |
+          node --check reader/js/catalog.js
+          node --check reader/js/app.js
+          node --test reader/js/catalog-subtitle.test.mjs
+          git diff --check
+
+      - name: Commit Reader subtitle support
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reader/js/catalog.js reader/js/app.js reader/css/style.css reader/js/catalog-subtitle.test.mjs
+          git commit -m "Show book subtitles in the Reader catalog"
+          git push origin HEAD:reader-subtitle-aware-catalog

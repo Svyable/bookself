@@ -8,7 +8,7 @@ python3 scripts/doctor.py --root .
 python3 scripts/doctor-pair.py <desk-path> <shelf-path>
 python3 scripts/check-catalog.py
 python3 scripts/sync-ui.py
-python3 scripts/release-book.py <slug> [path-to-shelf]
+python3 scripts/release.py <slug> [path-to-shelf]
 python3 scripts/promote-book.py <slug> [path-to-shelf]
 python3 scripts/stamp-instance.py <destination> <desk|shelf> <owner> <repository>
 ```
@@ -21,7 +21,7 @@ python3 scripts/stamp-instance.py <destination> <desk|shelf> <owner> <repository
 
 `check-catalog.py` is a focused, read-only check for the Reader's root `## The books` catalog. On a public Shelf it verifies that cataloged publications are actually `Published` and that every published publication is listed. On the Bookself platform it also catches published example specimens that exist under `books/` but are invisible because their catalog row was forgotten.
 
-`release-book.py` is the normal Desk → Shelf release transaction. `promote-book.py` is only a lower-level copy primitive and does not publish or verify a release.
+`release.py` is the normal Desk → Shelf release transaction. It calls the proven `release-book.py` snapshot core and then, in the same transaction, regenerates the released Shelf's canonical `publication/<slug>/` pages, publication index, and sitemap. If web generation fails, it restores the affected Shelf paths to their clean pre-release state instead of leaving a half-prepared release. `generate-publication-pages.py` remains available for explicit maintenance and `--check`, but it is not a second release step. `promote-book.py` is only a lower-level copy primitive and does not publish or verify a release.
 
 On Windows, `py` may be used instead of `python3` when that is how Python is installed.
 

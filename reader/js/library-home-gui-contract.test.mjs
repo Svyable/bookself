@@ -14,7 +14,9 @@ const check = (run) => {
 };
 
 check(() => assert.match(atmosphere, /@import url\('\.\/library-home\.css\?v=r1'\);/));
-check(() => assert.match(css, /body\[data-stage="library"\] \.app-header \.header-right \{\s*display: none;/));
+check(() => assert.match(css, /body\[data-stage="library"\] \.app-header \.header-right \{[\s\S]*display: flex;/));
+check(() => assert.match(css, /body\[data-stage="library"\] #bookmarkBtn,[\s\S]*#searchBtn,[\s\S]*#tocBtn,[\s\S]*\.reading-time \{[\s\S]*display: none;/));
+check(() => assert.match(css, /body\[data-stage="library"\] #themeModeBtn,[\s\S]*#settingsBtn \{[\s\S]*display: inline-flex;/));
 check(() => assert.match(css, /body\[data-stage="library"\] \.continue-card \{/));
 check(() => assert.match(css, /#continueCardLink::after \{/));
 check(() => assert.match(css, /content: "Resume  ›"/));
@@ -45,7 +47,7 @@ check(() => assert.match(app, /function renderPublisherFilters\(entries\)/));
 check(() => assert.match(app, /function renderShelf\(entries\)/));
 check(() => assert.match(app, /function sortEntries\(list\)/));
 check(() => assert.match(app, /async function runLibrarySearch\(query\)/));
-check(() => assert.match(worker, /const CACHE = 'obb-shell-v103';/));
+check(() => assert.match(worker, /const CACHE = 'obb-shell-v104';/));
 check(() => assert.match(worker, /'\.\/css\/library-home\.css'/));
 
-console.log(`Library home GUI contract: ${assertions}/32 assertions passed`);
+console.log(`Library home GUI contract: ${assertions}/34 assertions passed`);

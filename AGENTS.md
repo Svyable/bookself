@@ -11,7 +11,10 @@ Rules for AI agents working in this repository.
 - When you add, rename, or remove a chapter, update that book's README
   table of contents and the Chapters count in the same change.
 - Do not put book prose in `reader/` or `desk/`. Authors and agents edit
-  Markdown under `books/<slug>/`.
+  publication content under `books/<slug>/`.
+- Treat `books/<slug>/research/` as canonical publication content. Read the
+  existing trail before repeating research and preserve material provenance when
+  factual evidence changes the manuscript.
 - Public source is not permission for unrestricted reuse. Read and preserve the
   applicable root and per-publication `RIGHTS.md` files before changing a real
   publication.
@@ -27,9 +30,11 @@ perform, not as documentation to hand back to the user.
 - The standard new-instance names are simply **`desk`** and **`shelf`**. Do not
   invent person-prefixed or personalized repository names unless the user asks
   for them.
-- Standard setup means a private Desk plus an empty public Shelf. Creating that
-  empty Shelf does **not** authorize publishing manuscript content to it; a
-  Desk → Shelf release remains a separate intent boundary.
+- Standard setup means a private-by-default Desk plus an empty public Shelf.
+  A Desk may deliberately be public or lower-profile; visibility is an authoring
+  policy, not the definition of the `desk` role. Creating the empty Shelf does
+  **not** authorize publishing manuscript content to it; a Desk → Shelf release
+  remains a separate intent boundary.
 - With a local shell, prefer
   `python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json`.
   A normal bootstrap must finish with `pairValidation.setupReady: true`.
@@ -39,13 +44,12 @@ perform, not as documentation to hand back to the user.
   Desk/Shelf result using the file contracts in `bookself.json` and
   `scripts/stamp-instance.py`.
 - If the current toolset cannot create repositories, complete every deterministic
-  step that is available and ask for only the minimum missing external action:
-  create `desk` as private and `shelf` as public. Do not turn that capability
-  gap into a multi-step Git tutorial.
+  step that is available and ask for only the minimum missing external action.
+  Do not turn that capability gap into a multi-step Git tutorial.
 
 A successful setup report should state durable outcomes—Desk, Shelf,
-`setupReady`, and any genuine blocker—rather than narrating every file copy or
-Git command.
+`setupReady`, actual visibility when relevant, and any genuine blocker—rather
+than narrating every file copy or Git command.
 
 ## Architecture: Bookself, Desk, Shelf, Reader
 
@@ -54,17 +58,17 @@ software from user-owned writing and releases:
 
 - **Bookself upstream / `platform` role** — this repository; source of truth for
   shared software, templates, docs, and neutral demos
-- **Desk / `desk` role** — private authoring instance; unpublished manuscripts
-  and the next revision of published books live here
-- **Shelf / `shelf` role** — public publishing instance; deliberately released
-  manuscript snapshots live here
+- **Desk / `desk` role** — authoring instance; manuscripts, research, experiments,
+  and the next revision of published books live here. Private is the standard
+  setup default, not a semantic requirement.
+- **Shelf / `shelf` role** — public publishing instance and canonical promoted
+  release surface; deliberately released publication snapshots live here
 - **Reader** — the reading interface, shared by Desk proofs and Shelf releases
 
 Desk and Shelf are separate Git repositories with separate histories. A release
 copies a publication snapshot from Desk to Shelf. It is not a live reference,
-submodule, symlink, shared branch, or runtime dependency on the private
-repository. After release, the two copies are independent until the next
-release.
+submodule, symlink, shared branch, or runtime dependency on the Desk repository.
+After release, the two copies are independent until the next release.
 
 Current authoring instances use `role: "desk"`.
 
@@ -94,9 +98,9 @@ into shared `reader/` or `desk/` code. Instance identity belongs in
 
 ## Local-first publishing invariant
 
-Bookself must not require CI/CD to write, preview, release, or read a
-publication. The complete private-Desk workflow must work with zero GitHub
-Actions minutes.
+Bookself must not require CI/CD to write, research, preview, release, or read a
+publication. The complete Desk workflow must work with zero GitHub Actions
+minutes.
 
 The required publishing path is deliberately small: Git + Markdown + a browser,
 with Python's standard library for the release helper. GitHub Actions, hosted
@@ -107,6 +111,54 @@ GitHub Pages is a static public delivery surface for Shelf, not a required
 Actions-based build pipeline. Do not replace the no-build Reader with a hosted
 build step unless a human explicitly asks to change that architecture.
 
+## Research and provenance
+
+`books/<slug>/research/` is the canonical publication research component. Every
+blank starter includes `research/README.md` as its human- and agent-readable
+entry point. See `docs/research.md` for the full contract.
+
+The manuscript is the reader-facing work. The research trail records the deeper
+evidence and provenance behind factual claims: source ledgers, claim checks,
+calculations, counterevidence, methodological boundaries, dated update notes,
+and release fact-checks.
+
+When research materially informs a writing or revision task:
+
+1. Read the relevant manuscript and existing `research/` trail before searching.
+2. Identify the factual claim, uncertainty, missing mechanism, or counterexample
+   that needs evidence.
+3. Prefer primary and authoritative sources when they can answer the question;
+   use secondary sources for synthesis, discovery, context, or competing views.
+4. Record source identity, date/version, URL or stable identifier, access date
+   for changing web sources, manuscript use, limitations, and any calculations.
+5. Record counterevidence and argument boundaries; do not collect only support
+   for the current draft.
+6. Change the manuscript only to the extent justified by the evidence.
+7. Promote evidence readers need while reading into manuscript citations,
+   footnotes, references, figures, methodology, or back matter.
+8. Mark fast-aging claims for recheck before release and perform that recheck
+   before a deliberate Shelf release.
+
+Research files are durable publication artifacts, not disposable agent
+scratchpads. Leave enough context for another human or agent to reproduce,
+update, or disagree with the work without reconstructing the whole conversation.
+
+On Desk, research may move ahead of the released edition. On Shelf, research is
+edition-bound and should remain frozen with the released manuscript until the
+next deliberate release. The release helper already copies and verifies the
+complete publication tree, so committed `research/` files travel automatically.
+
+A research trail is provenance, not a source dump. Prefer links, bibliographic
+metadata, lawful short quotations, hashes, and original notes. Do not commit
+third-party PDFs, article copies, datasets, images, transcripts, or other source
+artifacts merely because an agent can access them. Include third-party files
+only when redistribution is clearly authorized and preserve provenance/license
+metadata. Never put secrets, credentials, confidential material, or personal
+data that should not be public into the publication trail.
+
+Desk visibility is a security/publication fact. If a Desk is public, committed
+research is public immediately even if the Desk is not promoted or advertised.
+
 ## Rights, copyright, and external AI
 
 Bookself separates open software from author-owned publication content.
@@ -115,9 +167,9 @@ Bookself separates open software from author-owned publication content.
   publication starters are MIT licensed.
 - A real `books/<slug>/` publication is **All Rights Reserved by default** unless
   its own `RIGHTS.md` expressly grants another license.
-- A public repository or public Reader URL does not turn a manuscript into open
-  source or grant a general right to republish, adapt, commercialize, train on,
-  or ingest it into generative systems.
+- A public repository or public Reader URL does not turn a manuscript or
+  research trail into open source or grant a general right to republish, adapt,
+  commercialize, train on, or ingest it into generative systems.
 - Publication README rows such as `Rights`, `AI use`, and `Rights file` are
   rights metadata. Preserve them unless the rightsholder explicitly asks for a
   licensing change.
@@ -136,10 +188,14 @@ Bookself separates open software from author-owned publication content.
   permissions the author separately granted the host by contract.
 - Rights notices and machine-readable reservations are not secrecy controls.
   Confidential work must remain behind actual access control.
+- The publication's rights files do not silently relicense third-party research
+  sources. Preserve source-specific licenses/provenance where third-party files
+  are legitimately included.
 
 Read `RIGHTS.md` and `docs/rights-and-ai.md` for the current product policy. When
-releasing a publication, its publication-specific rights file is part of the
-publication snapshot and should travel with the manuscript.
+releasing a publication, its publication-specific rights files and committed
+research trail are part of the publication snapshot and should travel with the
+manuscript.
 
 ## Voice
 
@@ -167,6 +223,9 @@ publication snapshot and should travel with the manuscript.
   claims.
 - Follow existing naming: `books/<slug>/`, `chNN-slug.md`, `front-matter.md`,
   `back-matter.md`. Whitepapers normally use one `manuscript/paper.md` file.
+- Keep `research/README.md` as the canonical research index. Additional research
+  files may be organized by claim, chapter, method, dataset, or release check.
+  Do not invent a second mandatory metadata database.
 - Images live in that publication's `media/` folder and are referenced with
   relative links (`![alt](../media/figure-1.png)`). PNG, JPG, WebP, and SVG are
   all appropriate Reader assets. A quoted Markdown image title on a standalone
@@ -187,8 +246,9 @@ publication snapshot and should travel with the manuscript.
   be referenced later in that same chapter with `\eqref{...}`. Do not claim
   book-wide TeX reference semantics unless the Reader actually gains a
   book-wide reference registry.
-- See `docs/academic-writing.md` for the scholarly Markdown conventions and
-  `docs/latex.md` for mathematical notation.
+- See `docs/academic-writing.md` for the scholarly Markdown conventions,
+  `docs/research.md` for publication provenance, and `docs/latex.md` for
+  mathematical notation.
 - The current academic/math layer is not a full `.tex` compiler. Do not
   introduce document classes, package installation, `.bib` parsing,
   BibTeX/Biber, CSL, TikZ, or a required build step unless the task explicitly
@@ -205,13 +265,14 @@ publication snapshot and should travel with the manuscript.
 - Do not reformat a file wholesale as a drive-by.
 - Do not add a build step, CODEOWNERS, or branch protection unless a human
   asked for that by name.
-- Do not make private-Desk publishing depend on GitHub Actions, CI runners,
-  hosted build artifacts, or paid automation minutes. Optional CI must remain
-  optional to the complete authoring and release lifecycle.
+- Do not make Desk publishing depend on GitHub Actions, CI runners, hosted build
+  artifacts, or paid automation minutes. Optional CI must remain optional to the
+  complete authoring and release lifecycle.
 - Do not change GitHub Pages source away from the repository root, or add a
   custom domain, unless a human asked.
-- Do not commit secrets, credentials, or unpublished manuscripts copied from
-  outside this repository.
+- Do not commit secrets, credentials, confidential research, or unpublished
+  manuscripts copied from outside this repository without authorization.
+- Do not treat an unadvertised public Desk as private.
 - Do not revise the next edition of a published book on the public Shelf by
   default. Keep the released Shelf snapshot stable and revise the Desk copy.
   A live public hotfix or public proof requires explicit human intent.
@@ -219,30 +280,37 @@ publication snapshot and should travel with the manuscript.
 ## Verbs (author and agent)
 
 These are the public lifecycle. Each manuscript change is Markdown (and maybe
-`media/`).
+`research/` or `media/`).
 
 **Start a book.** Copy `books/_TEMPLATE/` to `books/<slug>/`. Fill title,
 authors, `Status: Drafting`, and replace the rights placeholders in
-`RIGHTS.md`. On a private Desk, also list the manuscript under root **The books**
-so the local Publishing Desk can discover it.
+`RIGHTS.md`. Preserve the starter's `research/README.md`. On a Desk, also list
+the manuscript under root **The books** so the local Publishing Desk can
+discover it.
 
 **Start a paper.** Copy `books/_PAPER_TEMPLATE/` to `books/<slug>/`. Fill title,
-authors, optional venue / DOI, replace the rights placeholders, and keep
-`Status: Drafting` while the work is in progress. The same Git history, review,
-media, preview, and release flow applies. Use
+authors, optional venue / DOI, replace the rights placeholders, preserve the
+research trail, and keep `Status: Drafting` while the work is in progress. The
+same Git history, review, media, research, preview, and release flow applies. Use
 [docs/academic-writing.md](docs/academic-writing.md) for citations, footnotes,
-figures, and references, and [docs/latex.md](docs/latex.md) when the paper
-contains mathematical notation.
+figures, and references, [docs/research.md](docs/research.md) for provenance,
+and [docs/latex.md](docs/latex.md) when the paper contains mathematical
+notation.
 
 **Start another publication format.** Choose the closest blank starter under
 `books/`: `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`,
 `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`,
 `_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`. Copy it to a normal lowercase,
-hyphenated `books/<slug>/` folder on the private Desk, replace the placeholder
-metadata and rights notice, and keep `Status: Drafting` until a deliberate
-Desk → Shelf release. Use [docs/publication-formats.md](docs/publication-formats.md)
-when choosing between format families. Do not publish or edit the
-underscore-prefixed starter itself.
+hyphenated `books/<slug>/` folder on the Desk, replace the placeholder metadata
+and rights notice, preserve `research/README.md`, and keep `Status: Drafting`
+until a deliberate Desk → Shelf release. Use
+[docs/publication-formats.md](docs/publication-formats.md) when choosing between
+format families. Do not publish or edit the underscore-prefixed starter itself.
+
+**Research / fact-check.** Read the existing publication research trail first.
+Add or update source provenance, manuscript use, limitations, counterevidence,
+and recheck notes as needed. Research can be a useful standalone change even
+when the evidence shows the manuscript should not change.
 
 **Add a web volume.** Under root `## The web shelf`, add one Markdown link such
 as `- [Project name](https://example.com/) — a short optional note`. The Reader
@@ -256,20 +324,23 @@ curated doorway.
 
 **Write / edit.** One chapter file per change. If you add, rename, or remove a
 chapter, update that book's README TOC and Chapters count in the same change.
+When factual research materially changes the prose, update the relevant
+`research/` trail in the same coherent change or in a preceding research change.
 
-**Preview.** On a private Desk, serve locally (`python3 -m http.server`) and
-open `reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not make a
-private Desk public just to preview it.
+**Preview.** Serve the Desk locally (`python3 -m http.server`) and open
+`reader/#/b/<slug>/`. Use `desk/` for manuscript readiness. Do not change
+repository visibility merely to preview work.
 
 **Release.** Normal Desk → Shelf publication. Commit the Desk publication, then
 run `scripts/release-book.sh <slug> [path-to-shelf]`. The command runs locally;
 it does not require GitHub Actions or a hosted build. It refuses uncommitted
 release-path changes, verifies Desk/Shelf roles, prepares an exact replacement
-Shelf snapshot including publication rights metadata/files, sets the Shelf copy
-to `Published`, updates the Shelf catalog row, verifies copied publication files
-against the committed Desk snapshot, and stops before commit or push. Review and
-land the Shelf change through its normal Git workflow; a pull request is useful
-but not required by Bookself itself.
+Shelf snapshot including manuscript, research, media, presentation, and
+publication rights files, sets the Shelf copy to `Published`, updates the Shelf
+catalog row, verifies copied publication files against the committed Desk
+snapshot, and stops before commit or push. Review and land the Shelf change
+through its normal Git workflow; a pull request is useful but not required by
+Bookself itself.
 
 **Promote / copy only.** `scripts/promote-book.sh <slug> [path-to-shelf]` is the
 lower-level file-copy operation. It does not publish, verify a release
@@ -285,9 +356,9 @@ remove the root catalog row. Remember that removing current files does not make
 content already pushed to public Git history private.
 
 **Revise a published book.** Leave the current Shelf edition unchanged. Revise
-and commit the private Desk copy, then Release the replacement when ready. Do
-not change the public Shelf copy to `Drafting` or `Revision in progress` just to
-work on the next edition.
+and commit the Desk copy, including its evolving research trail, then Release
+the replacement when ready. Do not change the public Shelf copy to `Drafting`
+or `Revision in progress` just to work on the next edition.
 
 Optional book README rows (omit or leave blank if unused): **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,

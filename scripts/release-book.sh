@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prepare a committed Desk publication for release to a local Shelf checkout.
+# Prepare a committed Desk publication and its canonical Shelf web identity.
 # Usage: scripts/release-book.sh <slug> [path-to-shelf]
 set -eu
 
@@ -12,4 +12,4 @@ if [ -z "$SLUG" ] || [ "$SLUG" = "-h" ] || [ "$SLUG" = "--help" ]; then
   exit 1
 fi
 
-exec python3 "$ROOT/scripts/release-book.py" "$SLUG" "$DEST"
+exec python3 "$ROOT/scripts/release.py" "$SLUG" "$DEST"

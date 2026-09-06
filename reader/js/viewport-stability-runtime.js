@@ -24,6 +24,10 @@ import('./book-interior.js').catch((error) => {
   console.warn('Book-interior polish could not be loaded', error);
 });
 
+import('./app-shell-polish.js').catch((error) => {
+  console.warn('Reader app-shell polish could not be loaded', error);
+});
+
 function snapshot(vv = globalThis.visualViewport) {
   if (!vv) return null;
   return {

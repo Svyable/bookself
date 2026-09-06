@@ -30,9 +30,8 @@ jobs:
               .replace(/\\s+/g, ' ')
               .trim();
           }
-"""
+          """
           helper = anchor + """
-
           function readmeSubtitle(markdown, titleMatch) {
             if (!titleMatch) return '';
             const tail = String(markdown || '').slice(titleMatch.index + titleMatch[0].length);
@@ -45,31 +44,33 @@ jobs:
             }
             return '';
           }
-"""
+          """
           if anchor not in text:
               raise SystemExit('catalog helper anchor not found')
           text = text.replace(anchor, helper, 1)
+
           old = """  const titleMatch = markdown.match(/^#\\s+(.+)$/m);
             const title = titleMatch ? titleMatch[1].trim() : slug;
             const status = cell(markdown, 'Status');
-"""
+          """
           new = """  const titleMatch = markdown.match(/^#\\s+(.+)$/m);
             const title = titleMatch ? titleMatch[1].trim() : slug;
             const subtitle = readmeSubtitle(markdown, titleMatch);
             const status = cell(markdown, 'Status');
-"""
+          """
           if old not in text:
               raise SystemExit('parseBookReadme title anchor not found')
           text = text.replace(old, new, 1)
+
           old = """    slug,
               title,
               status,
-"""
+          """
           new = """    slug,
               title,
               subtitle,
               status,
-"""
+          """
           if old not in text:
               raise SystemExit('parseBookReadme return anchor not found')
           catalog.write_text(text.replace(old, new, 1), encoding='utf-8')
@@ -78,11 +79,11 @@ jobs:
           text = app.read_text(encoding='utf-8')
           old = """        <span class=\"volume-title\">${escapeHtml(book.title)}</span>
                 <span class=\"volume-author\">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
-"""
+          """
           new = """        <span class=\"volume-title\">${escapeHtml(book.title)}</span>
                 ${book.subtitle ? `<span class=\"volume-subtitle\">${escapeHtml(book.subtitle)}</span>` : ''}
                 <span class=\"volume-author\">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
-"""
+          """
           if old not in text:
               raise SystemExit('volume card anchor not found')
           app.write_text(text.replace(old, new, 1), encoding='utf-8')
@@ -92,17 +93,17 @@ jobs:
           old = """.volume.has-art .volume-title,
           .volume.has-art .volume-author,
           .volume.has-art .volume-imprint {
-"""
+          """
           new = """.volume.has-art .volume-title,
           .volume.has-art .volume-subtitle,
           .volume.has-art .volume-author,
           .volume.has-art .volume-imprint {
-"""
+          """
           if old not in text:
               raise SystemExit('art shadow anchor not found')
           text = text.replace(old, new, 1)
-          anchor = """.volume-author {
-"""
+
+          anchor = ".volume-author {\n"
           subtitle_css = """.volume-subtitle {
             max-width: 100%;
             margin-top: 0.45rem;
@@ -119,7 +120,7 @@ jobs:
           }
 
           .volume-author {
-"""
+          """
           if anchor not in text:
               raise SystemExit('volume author anchor not found')
           css.write_text(text.replace(anchor, subtitle_css, 1), encoding='utf-8')
@@ -140,7 +141,6 @@ jobs:
           test('parseBookReadme does not mistake metadata or prose for a subtitle', () => {
             const tableFirst = parseBookReadme(`# Plain Book\n\n| | |\n|---|---|\n| **Authors** | Sven Hardy Benson |\n`, 'plain-book');
             assert.equal(tableFirst.subtitle, '');
-
             const proseFirst = parseBookReadme(`# Plain Book\n\nOpening prose.\n\n| | |\n`, 'plain-book');
             assert.equal(proseFirst.subtitle, '');
           });

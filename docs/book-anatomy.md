@@ -15,14 +15,24 @@ Each book lives at `books/<slug>/`:
     │   ├── ch01-<short-slug>.md
     │   ├── ch02-<short-slug>.md
     │   └── back-matter.md
+    ├── research/
+    │   └── README.md      # Canonical evidence / provenance trail
     └── media/             # Cover art and figures (optional files)
 
-Start a book by copying `books/_TEMPLATE/` on the private Desk and renaming the copy.
+Start a book by copying `books/_TEMPLATE/` on the Desk and renaming the copy.
+The standard setup keeps Desk private by default, but a Desk may deliberately be
+public or lower-profile. Repository visibility is separate from the `desk` role.
 
 `reader.json` is presentation guidance, not manuscript content. It can recommend
 a starting atmosphere, type treatment, measure, paragraph rhythm, and Pages or
 Scroll mode. Readers can override those choices in their own browser without
 editing the publication.
+
+`research/` is publication content, but not automatically Reader narrative. It
+holds the deeper source and provenance trail behind factual work. Its canonical
+entry point is `research/README.md`; larger publications may add chapter notes,
+methods, calculations, source ledgers, counterevidence, or release fact-checks.
+See [Publication research](research.md).
 
 ## Naming rules
 
@@ -39,6 +49,11 @@ zero-padded files (`ch99-…` then `ch100-…`). Do not switch schemes.
 **Front and back matter.** Always named `front-matter.md` and
 `back-matter.md`. Do not number them. They will not sort into reading order
 in the file list; the README table of contents is the reading order.
+
+**Research notes.** Keep `research/README.md` as the index. Other research
+filenames should describe the claim, chapter, method, dataset, or check they
+cover, for example `ch06-mortgage-lockin.md` or `release-review.md`. Bookself
+does not require a second metadata database for research.
 
 ## The book README (hub)
 
@@ -74,9 +89,10 @@ Chapters count when it drifts.
   the Shelf root `## The books` catalog links `books/<slug>/`. The normal
   Desk → Shelf release helper prepares those two public states together.
 
-A Desk is private by default. An intentionally public proof is a separate
-visibility choice; an unlisted file in a public repository is still public.
-See [Bookself architecture](bookself.md) for the repository boundary.
+A Desk is private by default, not private by definition. An intentionally public
+Desk is valid working history, but an unlisted file in a public repository is
+still public. Shelf remains the canonical promoted release surface. See
+[Bookself architecture](bookself.md) for the repository boundary.
 
 Optional cover art: `media/cover.png` (or `.jpg` / `.webp`). The Reader
 uses it on the generated cover. If it is missing, the Reader makes a cloth
@@ -98,6 +114,31 @@ the files, not a database dump.
   and an optional dedication.
 - Back matter holds epilogue, acknowledgments, and about-the-author —
   use `##` headings for those sections.
+- Reader-facing evidence belongs here when readers need it in context: citations,
+  footnotes, references, figures, or enough methodology to understand the claim.
+
+## Research
+
+The manuscript asks the reader to follow the work. `research/` lets a later
+reader, reviewer, researcher, author, or agent inspect why factual claims were
+made and how they should be updated.
+
+For material sources, preserve source identity, date/version, URL or stable
+identifier, access date for changing web sources, manuscript use, limitations,
+counterevidence, and any calculations or transformations needed to reproduce a
+derived claim. Mark fast-aging facts for recheck before release.
+
+Research notes are not disposable agent scratchpads. Read the existing trail
+before repeating searches, and leave enough context for the next person or agent
+to continue without reconstructing the whole session.
+
+A research trail is also not a source dump. Prefer links, bibliographic metadata,
+lawful short quotations, hashes, and original notes. Put third-party files in
+the publication only when redistribution is clearly authorized and provenance /
+license information is preserved.
+
+On Desk, research may move ahead of the released edition. On Shelf, the research
+tree is frozen with the release snapshot until the next deliberate release.
 
 ## Media and relative links
 

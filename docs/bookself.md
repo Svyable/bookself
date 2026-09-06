@@ -2,8 +2,8 @@
 
 **Bookself is the whole product and publishing ecosystem.** It has three human-facing places:
 
-- **Desk** — where publications are written, revised, reviewed, and prepared for release.
-- **Shelf** — where deliberately released publication snapshots live.
+- **Desk** — where publications are written, researched, revised, reviewed, and prepared for release.
+- **Shelf** — where deliberately released publication snapshots live and where Bookself treats the public release as canonical.
 - **Reader** — the reading interface for a Desk proof or a released Shelf publication.
 
 The upstream `bookself` repository is the reusable software source of truth. Its technical `platform` role is an implementation detail for shared software, templates, documentation, and neutral demos; it is not a fourth place authors need to learn.
@@ -12,53 +12,57 @@ The upstream `bookself` repository is the reusable software source of truth. Its
 
 | | Bookself upstream | Desk | Shelf |
 |---|---|---|---|
-| **Purpose** | Reusable product/software source | Private writing and revision | Public publishing |
+| **Purpose** | Reusable product/software source | Writing, research, and revision | Public publishing |
 | **Runtime role** | `platform` | `desk` | `shelf` |
-| **Visibility** | Public upstream/fork | Private repository by default | Public |
-| **Pages** | Optional neutral demo | Local by default; optional public Pages proof on an eligible paid GitHub plan | On from repo root, no build required |
+| **Visibility** | Public upstream/fork | Private by default; may deliberately be public/lower-profile | Public |
+| **Promotion** | Product/project docs | Working authoring surface, not canonical release | Canonical promoted release surface |
+| **Pages** | Optional neutral demo | Local by default; optional public Pages proof when desired/eligible | On from repo root, no build required |
 | **Shared UI** | `reader/` + `desk/` | synced copy | synced copy |
-| **Publications** | examples/templates only | drafts and working editions | released editions |
+| **Publications** | examples/templates only | drafts, research, and working editions | released editions with edition-bound research |
 | **Identity** | neutral/demo `imprint.json` | Desk `imprint.json` | Shelf `imprint.json` |
-| **Root README** | product docs / demo catalog | private manuscript inventory | public release catalog |
+| **Root README** | product docs / demo catalog | working publication inventory | public release catalog |
 
-Visibility is per repository. Unlisted drafts on a public repository are not private. A Desk repository can stay private while its Reader is deliberately public, but that is a separate hosting choice with its own GitHub plan requirement.
+Visibility is per repository and is not the definition of the `desk` role. Unlisted drafts or research in a public Desk repository are public even if the Desk is lower-profile and only Shelf is advertised. The standard setup keeps Desk private by default because that is a useful authoring posture, not because Bookself requires secrecy for a repository to be a Desk.
 
 ## GitHub plans and hosting modes
 
-Bookself itself is open source. There is no paid Bookself tier required to write, preview, release, or publish. The GitHub plan question only affects which repository can serve GitHub Pages.
+Bookself itself is open source. There is no paid Bookself tier required to write, research, preview, release, or publish. The GitHub plan question only affects which repository can serve GitHub Pages.
 
 | Author setup | GitHub plan | Privacy / publication behavior |
 |---|---|---|
 | **Private Desk + local Reader/Desk** | GitHub Free is enough | The Desk repository stays private. Preview from the local checkout. No Pages, Actions, or hosted build is required. |
-| **Public Shelf + public Pages Reader** | GitHub Free is enough | The released Shelf lives in a public repository and can be served with GitHub Pages. This is Bookself's normal public release path. |
-| **Private Desk + public Pages working proof** | GitHub Pro for a personal repository, or an eligible Team/Enterprise plan | The Git repository stays private, but the Pages site is deliberately public. This is an optional write-in-public preview mode. |
+| **Public/lower-profile Desk** | GitHub Free is enough | Working manuscripts and research are public Git content immediately, but the repository may remain outside the promoted Shelf experience. |
+| **Public Shelf + public Pages Reader** | GitHub Free is enough | The released Shelf lives in a public repository and can be served with GitHub Pages. This is Bookself's canonical promoted release path. |
+| **Private Desk + public Pages working proof** | GitHub Pro for a personal repository, or an eligible Team/Enterprise plan | The Git repository stays private, but the Pages site is deliberately public. This is an optional working-proof mode. |
 
 GitHub Pages is available for public repositories on GitHub Free and for private repositories on eligible paid plans. A public Pages site backed by a private repository is still **public on the web by default**. Repository privacy does not make the website author-only. True private Pages access control is a separate GitHub Enterprise capability and is not part of Bookself's core architecture.
 
 The product boundary is simple:
 
-> **GitHub Free covers private writing on the Desk plus public releases on the Shelf. A paid plan is only needed if you also want the private Desk repository itself to serve a public GitHub Pages proof.**
+> **Shelf is the canonical public release surface. Desk visibility is an authoring choice. Whatever is committed to a public Desk is public even when it is not promoted.**
 
 ## Repository relationship
 
-Desk and Shelf are **separate Git repositories with separate histories**. Shelf does not mount, reference, submodule, symlink, or fetch manuscript files from Desk at runtime.
+Desk and Shelf are **separate Git repositories with separate histories**. Shelf does not mount, reference, submodule, symlink, or fetch manuscript or research files from Desk at runtime.
 
 The normal data flow is one-way:
 
 ```text
 Bookself upstream
-  reader/ + desk/
-       | sync copies
+  reader/ + desk/ + starters
+       | sync / stamp copies
        +-------------> Desk
-       +-------------> Shelf
+       +-------------> Shelf shared UI
 
 Desk
-  private committed working edition
+  committed working publication
+  manuscript/ + research/ + media/ + metadata + rights
        |
-       | release = verified file snapshot
+       | release = verified publication snapshot
        v
 Shelf
   public committed released edition
+  manuscript/ + research/ + media/ + metadata + rights
        |
        v
 GitHub Pages / Reader
@@ -68,18 +72,35 @@ A release copies files. After that copy, Desk and Shelf are independent until th
 
 The lifecycle rule is:
 
-> **Write and revise the next edition on the Desk. Keep the current edition on the Shelf until the replacement is ready.**
+> **Write, research, and revise the next edition on the Desk. Keep the current manuscript and evidence trail on the Shelf until the replacement is ready.**
 
-See [revisions.md](revisions.md) for the release and rollback model.
+See [revisions.md](revisions.md) for the release and rollback model and [research.md](research.md) for publication provenance.
+
+## Publication anatomy
+
+A real publication is a directory at `books/<slug>/`. Its canonical components are:
+
+- `README.md` — publication metadata and reading order;
+- `manuscript/` — reader-facing prose / paper / issue content;
+- `research/` — evidence, provenance, claim checks, calculations, counterevidence, and release fact-check notes;
+- `media/` — cover art and figures when present;
+- `reader.json` — optional presentation recommendation;
+- `RIGHTS.md` and `rights.json` — publication rights posture.
+
+Every blank starter includes `research/README.md` as the research entry point. The full trail may remain one file or grow into chapter notes, methods, ledgers, calculations, or release reviews.
+
+`research/` is publication content without automatically being Reader narrative. Evidence a reader needs in context should be promoted into manuscript citations, footnotes, references, figures, methodology, or back matter. The deeper trail stays inspectable in the repository and travels with the edition.
+
+A research trail is provenance, not permission to redistribute third-party works. Prefer links, bibliographic metadata, lawful short quotations, hashes, and original notes. Include third-party source files only when redistribution is clearly authorized and preserve their source/license metadata.
 
 ## Local-first publishing contract
 
-Bookself's complete authoring and publishing lifecycle must work **without CI/CD**. In particular, a private Desk must remain fully usable with zero GitHub Actions minutes.
+Bookself's complete authoring and publishing lifecycle must work **without CI/CD**. In particular, a Desk must remain fully usable with zero GitHub Actions minutes.
 
 The required path is intentionally ordinary:
 
 ```text
-Markdown + media
+Markdown + research + media
       |
       v
 local Git commits
@@ -100,7 +121,7 @@ GitHub Pages serves the public Shelf files directly
 
 The release helper uses Python's standard library and local Git. It does not call the GitHub API, start a hosted runner, produce a build artifact, or require a GitHub Actions workflow.
 
-Pull requests, CI checks, hosted automation, and Actions can still be useful around the platform project or an individual publisher's process. They are **optional conveniences**, not part of Bookself's publishing contract. A publication must still be writable, previewable, releasable, recoverable, and readable when those services are absent or their budget is exhausted.
+Pull requests, CI checks, hosted automation, and Actions can still be useful around the platform project or an individual publisher's process. They are **optional conveniences**, not part of Bookself's publishing contract. A publication must still be writable, researchable, previewable, releasable, recoverable, and readable when those services are absent or their budget is exhausted.
 
 GitHub Pages is the public static delivery surface for a Shelf. Bookself should keep that path no-build by default rather than introducing an Actions-based Pages build merely to deploy Markdown and the shared Reader.
 
@@ -115,9 +136,9 @@ After an upgrade, these two directories should be identical in the upstream repo
 
 Everything else is instance-owned unless explicitly documented otherwise. Most importantly, UI sync must never overwrite:
 
-- `books/`
-- root `README.md`
-- `imprint.json`
+- `books/`, including each publication's manuscript, research, media, rights, and presentation files;
+- root `README.md`;
+- `imprint.json`.
 
 That boundary lets one open-source Bookself installation serve many independent authors and publishers without carrying an upstream developer's identity into their work.
 
@@ -128,10 +149,10 @@ The upstream project has a first real implementation used while Bookself is bein
 | Role | Reference |
 |---|---|
 | Bookself upstream | `Svyable/bookself` |
-| Private Desk | the private Svyable authoring repository |
+| Desk | the Svyable authoring repository; visibility may be public while remaining lower-profile than Shelf |
 | Public Shelf | `Svyable/shelf` |
 
-The repository name of an individual implementation is instance identity, not product vocabulary. Shared `reader/` and `desk/` code must not hard-code a personal owner, repository name, private Desk URL, or public Shelf identity.
+The repository name and visibility of an individual implementation are instance identity/policy, not product vocabulary. Shared `reader/` and `desk/` code must not hard-code a personal owner, repository name, Desk URL, or public Shelf identity.
 
 ## Start
 
@@ -145,16 +166,16 @@ Without an agent:
    scripts/stamp-instance.sh ../shelf shelf YOUR_GITHUB_OWNER shelf
    ```
 
-3. Create the Desk repository as **private**.
+3. Create the Desk repository. **Private is the standard default**; deliberately public/lower-profile is also a valid authoring mode.
 4. Create the Shelf repository as **public** and enable GitHub Pages from the repository root.
 5. Customize each generated `imprint.json`. The stamp already supplies role, safe defaults, and GitHub repo identity when owner/repo arguments are given.
 
-On GitHub Free, that is the complete default setup: preview the private Desk locally and serve the public Shelf with Pages. If you explicitly want the private Desk itself to have a public Pages Reader URL, enable that only on an eligible paid GitHub plan.
+On GitHub Free, the privacy-preserving default is private Desk + local preview + public Shelf. A public Desk also works on GitHub Free but makes its committed manuscripts and research public immediately. If you explicitly want a private Desk repository itself to have a public Pages Reader URL, enable that only on an eligible paid GitHub plan.
 
 The generated starting state is role-specific:
 
-- **Desk:** Reader + Publishing Desk UI, local publishing tooling, and all blank underscore-prefixed publication starters under `books/` (book, paper, magazine, newspaper, journal, newsletter, anthology, report, manual/handbook, and comic). No platform example manuscripts are copied.
-- **Shelf:** Reader + Publishing Desk UI and local publishing tooling, but no publication folders at all. The first deliberate release creates `books/<slug>/`.
+- **Desk:** Reader + Publishing Desk UI, local publishing tooling, and all blank underscore-prefixed publication starters under `books/` (book, paper, magazine, newspaper, journal, newsletter, anthology, report, manual/handbook, and comic). Every starter includes canonical `research/README.md`. No platform example manuscripts are copied.
+- **Shelf:** Reader + Publishing Desk UI and local publishing tooling, but no publication folders at all. The first deliberate release creates `books/<slug>/` with the complete release snapshot.
 - **Both:** no platform GitHub Actions workflows are copied into the user-owned repositories.
 
 A stamped instance already includes both the Reader and Publishing Desk UI. No CI workflow is required to make either one work.
@@ -172,35 +193,34 @@ scripts/sync-ui.sh
 With the conventional sibling layout, this updates `../desk` and `../shelf` when they exist. Explicit paths also work:
 
 ```bash
-scripts/sync-ui.sh /path/to/my-private-desk /path/to/my-public-shelf
+scripts/sync-ui.sh /path/to/my-desk /path/to/my-public-shelf
 ```
 
 Only `reader/` and `desk/` are replaced. `scripts/sync-reader.sh` remains a compatibility alias for the complete UI sync command.
 
 Commit the Desk and Shelf updates separately so each instance has its own clear history. UI sync is a copy operation; the instances do not import shared UI from the upstream repository at runtime.
 
-## Write on the Desk
+## Write and research on the Desk
 
 1. Copy `books/_TEMPLATE/` to `books/your-title/`.
 2. Fill in the publication README and write one chapter at a time.
-3. Add the manuscript to the Desk root **The books** table. On a Desk, that table is an inventory, not a publication declaration.
-4. Preview locally:
+3. Preserve `research/README.md`. Before repeating research, read the existing trail; add material source provenance, claim linkage, caveats, counterevidence, calculations, and recheck notes as the work evolves.
+4. Add the manuscript to the Desk root **The books** table. On a Desk, that table is an inventory, not a Shelf publication declaration.
+5. Preview locally when appropriate:
 
    ```bash
    python3 -m http.server
    ```
 
-5. Open:
+6. Open:
    - `/reader/#/b/your-title/` to read/proof the manuscript.
    - `/desk/` for readiness and chapter structure.
 
-The Publishing Desk UI reads the local Desk repository directly. It does not need a GitHub token to inspect private manuscripts when served from the Desk checkout. It also does not need a private-repository Actions run.
-
-If an author chooses the optional paid GitHub Pages mode for the private Desk, the same Reader can be served as a public working proof. That does not change Desk statuses to `Published`, does not release anything to Shelf, and should be described clearly as working in public.
+The Publishing Desk UI reads the local Desk repository directly. It does not need a GitHub token for same-origin inspection. A deliberately public Desk may also be remotely inspectable, but that does not change its publication statuses to `Published` and does not create a Shelf release.
 
 ## Release from Desk to Shelf
 
-When a manuscript is meant to become public, commit the Desk publication first, then run:
+When a manuscript is meant to become a Shelf release, recheck material time-sensitive research for the intended edition, commit the Desk publication, then run:
 
 ```bash
 scripts/release-book.sh your-title ../shelf
@@ -208,20 +228,20 @@ scripts/release-book.sh your-title ../shelf
 
 The release command runs locally. It refuses to proceed if the publication has uncommitted Desk changes, if the destination Shelf release paths are dirty, or if the source/destination roles are wrong.
 
-It prepares a replacement Shelf snapshot, sets the Shelf copy to `Status: Published`, adds or updates the root **The books** row, verifies the copied publication files against the committed Desk snapshot, and stops before commit or push.
+It prepares a replacement Shelf snapshot of the complete publication tree, sets the Shelf copy to `Status: Published`, adds or updates the root **The books** row, verifies the copied files—including research—against the committed Desk snapshot, and stops before commit or push.
 
-Review the Shelf diff and commit/push it with your normal Git workflow. A pull request is a useful review boundary, but Bookself itself does not require one. Until the Shelf change lands on the deployed branch, readers keep seeing the previous released edition.
+Review the Shelf diff and commit/push it with your normal Git workflow. A pull request is a useful review boundary, but Bookself itself does not require one. Until the Shelf change lands on the deployed branch, readers keep seeing the previous released edition and its previous research trail.
 
 `scripts/promote-book.sh` remains a lower-level copy-only command. It does not publish, verify a release transaction, or create a live relationship between Desk and Shelf.
 
-Leave the Desk copy in place. The Desk remains the private working history and becomes the home of the next revision.
+Leave the Desk copy in place. The Desk remains the working history and becomes the home of the next revision and the next round of research.
 
 ## Publish semantics differ by role
 
 This distinction matters to the Publishing Desk UI and to agents:
 
-- On a **Desk**, root **The books** means “manuscripts in this private workspace.” A Drafting book may and should appear there.
-- On a **Shelf**, root **The books** means “books released to this public catalog.” A listed book must have `Status: Published`.
+- On a **Desk**, root **The books** means “publications in this working authoring repository.” A Drafting book may and should appear there. If the Desk repository is public, those files are public working content, not a Shelf release.
+- On a **Shelf**, root **The books** means “publications released to this public catalog.” A listed book must have `Status: Published`.
 
 The same Publishing Desk UI understands both roles from `imprint.json`.
 
@@ -229,15 +249,15 @@ The same Publishing Desk UI understands both roles from `imprint.json`.
 
 The normal revision path is:
 
-1. Keep the current Shelf edition unchanged.
-2. Revise the Desk copy privately, or deliberately in public if that Desk uses the optional public Pages proof mode.
+1. Keep the current Shelf edition and its research trail unchanged.
+2. Revise and research the Desk copy; the Desk may be private or deliberately public depending on the author's working mode.
 3. Commit the Desk revision.
-4. Run `scripts/release-book.sh <slug> ../shelf` when the replacement is ready.
+4. Run `scripts/release-book.sh <slug> ../shelf` when the replacement manuscript + research package is ready.
 5. Review and land the resulting Shelf release change.
 
 Do not change a public Shelf book to a drafting status merely to work on its next edition. That can make it disappear from the visible Shelf without making its files private.
 
-An intentionally public proof is a separate, explicit publishing choice. A public website is never a privacy boundary, even when its source Git repository is private.
+A public website or public repository is never a privacy boundary merely because it is lower-profile or unlisted.
 
 ## Imprint configuration
 
@@ -249,26 +269,29 @@ An intentionally public proof is a separate, explicit publishing choice. A publi
 - `github.owner`, `github.repo`, optional `github.branch`
 - optional Reader links/labels
 
-GitHub Pages instances may use `"auto"` owner/repo values and let the browser infer them from the Pages URL. Private/local Desks should usually record their actual GitHub owner/repo if edit/history links are desired.
+GitHub Pages instances may use `"auto"` owner/repo values and let the browser infer them from the Pages URL. Desks should usually record their actual GitHub owner/repo if edit/history links are desired.
 
 Current authoring repositories use `role: "desk"`; release and doctor tooling accept only `platform`, `desk`, or `shelf`.
 
 ## What not to expect
 
-- The public Shelf does not need access to the private Desk.
-- Private Desk authoring and release do not require GitHub Pro, GitHub Actions, or CI minutes.
+- The public Shelf does not need access to the Desk.
+- Desk authoring, research, and release do not require GitHub Pro, GitHub Actions, or CI minutes.
 - A public Pages preview from a private Desk does require an eligible paid GitHub plan.
+- A public Desk repository is public even if its Reader is not promoted.
 - A Pages site sourced from a private repository is public by default; private-repository visibility does not make the website private.
 - The Reader does not password-gate public repositories or public Pages sites.
 - The browser Publishing Desk never asks for a GitHub token.
 - Remote Publishing Desk inspection works for public repositories; private Desks use same-origin local instance mode.
 - Blank publication templates belong on the Desk; a freshly stamped Shelf has no publication folders until the first release.
-- Do not edit shared UI to add a book. Add Markdown.
+- `research/` is canonical publication provenance, not automatically Reader chapter navigation.
+- Do not edit shared UI to add a book. Add publication files.
 - Do not store real unpublished manuscripts in the Bookself upstream repository.
-- Removing a manuscript from the current public Shelf branch does not erase copies already present in public Git history, clones, forks, or caches.
+- Removing a publication from the current public Shelf branch does not erase copies already present in public Git history, clones, forks, or caches.
 
 ## Next
 
+- Publication research: [research.md](research.md)
 - Revisions and releases: [revisions.md](revisions.md)
 - Agents: [skills/bookself/SKILL.md](../skills/bookself/SKILL.md)
 - Authors: [author-guide.md](author-guide.md)

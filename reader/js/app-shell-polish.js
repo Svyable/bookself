@@ -11,6 +11,8 @@ const LABELED_CONTROLS = [
   '#nextBtn',
 ];
 
+let controlObserver = null;
+
 export function controlLabel(element) {
   if (!element) return '';
   return (
@@ -36,11 +38,29 @@ export function decorateAppShell(document = globalThis.document) {
   return { decorated };
 }
 
+export function watchAppShellControls(document = globalThis.document) {
+  controlObserver?.disconnect?.();
+  const MutationObserverCtor = document?.defaultView?.MutationObserver || globalThis.MutationObserver;
+  if (!MutationObserverCtor) return null;
+
+  const roots = [
+    document.getElementById?.('readerChrome'),
+    document.getElementById?.('pageNav'),
+  ].filter(Boolean);
+  if (!roots.length) return null;
+
+  const observer = new MutationObserverCtor(() => decorateAppShell(document));
+  roots.forEach((root) => observer.observe(root, { childList: true, subtree: true }));
+  controlObserver = observer;
+  return observer;
+}
+
 export function installAppShellStyles(document = globalThis.document) {
   if (!document?.head) return Promise.resolve(false);
   const existing = document.querySelector(`link[href="${STYLE_HREF}"]`);
   if (existing) {
     decorateAppShell(document);
+    watchAppShellControls(document);
     return Promise.resolve(true);
   }
 
@@ -51,6 +71,7 @@ export function installAppShellStyles(document = globalThis.document) {
     link.dataset.readerAppShell = 'true';
     link.addEventListener('load', () => {
       decorateAppShell(document);
+      watchAppShellControls(document);
       resolve(true);
     }, { once: true });
     link.addEventListener('error', () => resolve(false), { once: true });

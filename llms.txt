@@ -1,17 +1,45 @@
 # Bookself
 
-> Bookself is open-source, Git-native publishing software for books, papers, course texts, and other long-form work. It keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from public releases, and includes a browser Reader plus a Publishing Desk. The normal publishing path is local-first and does not require CI/CD.
+> Bookself is open-source, Git-native publishing software for books, papers, course texts, and other long-form work. It keeps manuscripts and their evidence trails as plain files, uses Git history for revision and review, separates working authoring state from canonical public releases, and includes a browser Reader plus a Publishing Desk. The normal publishing path is local-first and does not require CI/CD.
 
-Bookself's core lifecycle is: idea -> shape -> draft -> read -> revise -> review -> release -> revise again.
+Bookself's core lifecycle is: idea -> shape -> research -> draft -> read -> revise -> review -> release -> revise again.
 
 Bookself is the whole product/ecosystem. Its repository roles are:
 - Platform: reusable Bookself software, templates, documentation, and setup tooling.
-- Desk: a private Git repository where drafts, experiments, and the next edition are written and revised.
-- Shelf: a public Git repository containing intentionally released publication snapshots.
+- Desk: an authoring Git repository where drafts, research, experiments, and the next edition are written and revised. Private is the standard default; deliberately public/lower-profile Desks are valid too.
+- Shelf: a public Git repository containing intentionally released publication snapshots and the canonical promoted release surface.
 
 The Reader is the reading interface for either a Desk proof or a released Shelf publication.
 
-A release copies a committed Desk snapshot into the Shelf. Desk and Shelf are separate repositories with separate histories; the Shelf does not point back into the private Desk.
+A release copies a committed Desk publication snapshot into the Shelf. Desk and Shelf are separate repositories with separate histories; the Shelf does not point back into Desk. The complete publication tree travels, including `manuscript/`, `research/`, `media/`, presentation files, and rights metadata.
+
+## Canonical publication research
+
+Every Bookself starter includes `books/<slug>/research/README.md`. `research/` is the canonical publication evidence and provenance component.
+
+Use it for:
+- source ledgers and claim-to-source mapping;
+- chapter or claim research notes;
+- calculations and transformations behind derived numbers;
+- limitations, uncertainty, counterevidence, and competing interpretations;
+- dated update notes and `recheck before release` reminders;
+- methods and reproducibility context;
+- release fact-check / evidence review notes.
+
+Agents should read existing research before repeating searches. When evidence materially informs a manuscript change, leave durable provenance: source identity, date/version, URL or stable identifier, access date for changing web sources, manuscript use, limitations, counterevidence, and calculations as relevant.
+
+Research notes are ordinary publication artifacts, not hidden chain-of-thought or disposable conversational scratchpads. Preserve concise evidence and provenance another human or agent can inspect, reproduce, update, or disagree with.
+
+Reader-facing evidence still belongs in the manuscript when readers need it in context: citations, footnotes, references, figures, methodology, or back matter. Keep the deeper evidence apparatus in `research/`; it is not automatically Reader chapter navigation.
+
+A research trail is provenance, not permission to redistribute source material. Prefer links, bibliographic metadata, lawful short quotations, hashes, and original notes over copied third-party files. Include third-party PDFs, datasets, images, transcripts, or other source files only when redistribution is clearly authorized and preserve source/license provenance.
+
+On Desk, research may move ahead of the released edition. On Shelf, research is frozen with the released manuscript until the next deliberate release.
+
+Read:
+- [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md)
+- [Book anatomy](https://github.com/Svyable/bookself/blob/main/docs/book-anatomy.md)
+- [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md)
 
 ## Rights boundary
 
@@ -22,10 +50,12 @@ Public source is not the same thing as an open-content license.
 - New publications include `RIGHTS.md` plus README rows for `Rights`, `AI use`, and `Rights file`.
 - The Bookself default reserves reproduction, republication, commercial exploitation, adaptation, AI training/fine-tuning, RAG/grounding, AI-specific indexing, synthetic narration/translation, and other generative reuse except where the rightsholder separately licenses the use or applicable law independently permits it.
 - The Reader carries an element-scoped RSL signal over the rendered publication surface: conventional search is permitted; AI uses are not licensed by the default.
-- Rights signals are not secrecy controls. Confidential manuscripts need actual access control.
+- Rights signals are not secrecy controls. Confidential manuscripts or research need actual access control.
+- A public Desk is public even when it is unadvertised or lower-profile than Shelf.
 - Hosting-provider terms are a separate contractual rights layer. Do not claim a Bookself notice cancels permissions the author separately granted the host.
+- Publication rights files do not silently relicense underlying third-party research sources.
 
-Agents must read the applicable root and per-publication `RIGHTS.md` before making a consequential publication, licensing, ingestion, export, or external-service decision. Do not add manuscript text to a new training corpus, vector store, RAG system, AI-specific index, publisher, or third-party service without explicit authorization for that external use.
+Agents must read the applicable root and per-publication `RIGHTS.md` before making a consequential publication, licensing, ingestion, export, redistribution, or external-service decision. Do not add manuscript text to a new training corpus, vector store, RAG system, AI-specific index, publisher, or third-party service without explicit authorization for that external use.
 
 Read:
 - [Rights, copyright, and AI](https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md)
@@ -34,13 +64,14 @@ Read:
 
 ## Agent-first operation
 
-Bookself's documented human workflow is also an executable protocol for capable agents. If a user gives you this repository and asks for an outcome such as “set this up for me,” “write my first book on my Desk,” or “publish it to my Shelf,” do not turn the mechanical Bookself steps back into a checklist for the user.
+Bookself's documented human workflow is also an executable protocol for capable agents. If a user gives you this repository and asks for an outcome such as “set this up for me,” “research and strengthen this book,” “write my first book on my Desk,” or “publish it to my Shelf,” do not turn the mechanical Bookself steps back into a checklist for the user.
 
 Read these before acting:
 
-- [Machine-readable capabilities](https://github.com/Svyable/bookself/blob/main/bookself.json): roles, file contracts, canonical commands, intent boundaries, and completion states.
+- [Machine-readable capabilities](https://github.com/Svyable/bookself/blob/main/bookself.json): roles, file contracts, research contract, canonical commands, intent boundaries, and completion states.
 - [Agent-first Bookself](https://github.com/Svyable/bookself/blob/main/docs/agent-first.md): end-to-end orchestration model for local and GitHub-connected agents.
-- [Bookself publisher skill](https://github.com/Svyable/bookself/blob/main/.agents/skills/bookself-publisher/SKILL.md): portable execution instructions for setup, drafting, validation, release, and outcome reporting.
+- [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md): source/provenance, reader evidence, agent handoff, release recheck, and source-material rights rules.
+- [Bookself publisher skill](https://github.com/Svyable/bookself/blob/main/.agents/skills/bookself-publisher/SKILL.md): portable execution instructions for setup, research, drafting, validation, release, and outcome reporting.
 - [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository invariants and editing rules.
 
 Local agents can create sibling Desk + Shelf workspaces with:
@@ -49,17 +80,18 @@ Local agents can create sibling Desk + Shelf workspaces with:
 
 The JSON result gives stable paths for subsequent operations. GitHub-connected agents without a shell should reproduce the same durable repository/file results with whatever authorized GitHub capabilities they have.
 
-Optimize for the requested end state. Infer mechanical details such as slug, template, filenames, and a reasonable Reader preset when safe. Do not infer across consequential boundaries the user did not authorize: especially public release of unpublished work, destructive history changes, licensing changes, secrets, new external manuscript ingestion, or new mandatory external services.
+Optimize for the requested end state. Infer mechanical details such as slug, template, filenames, research-note organization, and a reasonable Reader preset when safe. Do not infer across consequential boundaries the user did not authorize: especially public Shelf release of working content, repository visibility changes, destructive history changes, licensing changes, secrets, redistribution of third-party research files without clear rights, new external manuscript ingestion, or new mandatory external services.
 
 ## Start here
 
-- [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, examples, and neighboring tools.
+- [README](https://github.com/Svyable/bookself/blob/main/README.md): project overview, concepts, workflow, and publication research contract.
 - [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md): beginner path for authors who do not already know GitHub.
+- [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md): canonical `research/` semantics for authors, readers, researchers, and agents.
 - [Rights, copyright, and AI](https://github.com/Svyable/bookself/blob/main/docs/rights-and-ai.md): default publication rights, AI reservations, GitHub-hosting caveat, RSL/TDM guidance, and deployment limitations.
-- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. In a real workflow these belong on the private Desk; a public Shelf should contain only intentionally released publications unless the author explicitly chooses to write in public.
+- [Publication template library](https://github.com/Svyable/bookself/tree/main/books): blank starters for books, papers, magazines, newspapers, journals, newsletters, anthologies, reports, manuals/handbooks, and comics. Every starter carries `research/README.md` on the Desk; a Shelf should contain only intentionally released publications.
 - [FAQ](https://github.com/Svyable/bookself/blob/main/docs/faq.md): direct answers about Git-based books, version-controlled textbooks, Markdown papers, private/public publishing, CI/CD, interoperability, and comparisons with common alternatives.
-- [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing and publishing workflow in plain language.
-- [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): Bookself, private Desk, public Shelf, Reader, and release model.
+- [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md): writing, research, and publishing workflow in plain language.
+- [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md): Bookself, Desk, Shelf, Reader, research, and release model.
 - [Writing lifecycle](https://github.com/Svyable/bookself/blob/main/docs/writing-lifecycle.md): how software-development ideas map to books and papers.
 - [Publication formats](https://github.com/Svyable/bookself/blob/main/docs/publication-formats.md): books, papers, serials, comics, anthologies, reports/manuals, figures, and external web creations.
 - [Revisions and releases](https://github.com/Svyable/bookself/blob/main/docs/revisions.md): safe revision and edition workflow.
@@ -68,8 +100,9 @@ Optimize for the requested end state. Infer mechanical details such as slug, tem
 ## Academic and course-text writing
 
 - [Academic writing](https://github.com/Svyable/bookself/blob/main/docs/academic-writing.md): the supported plain-Markdown conventions for footnotes, citations and bibliography entries, semantic figure captions, numbered equations, and chapter-local references.
+- [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md): deeper provenance and reproducibility around those reader-facing scholarly conventions.
 - [LaTeX math](https://github.com/Svyable/bookself/blob/main/docs/latex.md): supported math delimiters and display environments for mathematical notation inside Markdown manuscripts.
-- [Blank paper template](https://github.com/Svyable/bookself/tree/main/books/_PAPER_TEMPLATE): starter structure for a Markdown-first paper or research note.
+- [Blank paper template](https://github.com/Svyable/bookself/tree/main/books/_PAPER_TEMPLATE): starter structure for a Markdown-first paper or research note, including canonical research provenance.
 
 The scholarly layer stays intentionally local-first: core Bookself does not require BibTeX/Biber, CSL, TeX packages, a hosted compiler, or CI. Agents should not invent those dependencies or claim book-wide reference semantics that the Reader does not provide.
 
@@ -77,7 +110,7 @@ The scholarly layer stays intentionally local-first: core Bookself does not requ
 
 - [Bookself alternatives and neighboring tools](https://github.com/Svyable/bookself/blob/main/docs/alternatives.md): practical comparisons with Overleaf, Manubot, Quarto, Jupyter Book, MyST Markdown, bookdown, Pressbooks, PubPub, Leanpub, GitBook, mdBook, Antora, Typst, Zettlr, HedgeDoc, and Pandoc.
 
-Bookself's closest conceptual neighbor is Manubot because both use Git and Markdown as useful infrastructure for scholarly writing. Bookself differentiates around an approachable publication lifecycle, general books and papers, local-first release tooling, an explicit private Desk/public Shelf boundary, and a Reader plus Publishing Desk.
+Bookself's closest conceptual neighbor is Manubot because both use Git and Markdown as useful infrastructure for scholarly writing. Bookself differentiates around an approachable publication lifecycle, general books and papers, local-first release tooling, an explicit Desk/Shelf release boundary, edition-bound research provenance, and a Reader plus Publishing Desk.
 
 ## Cite Bookself
 
@@ -102,29 +135,33 @@ No DOI or semantic version is claimed unless the project actually publishes one.
 Use this when the request is broad, exploratory, or asks how Bookself itself could improve:
 
 1. [Read the Making Bookself working proof](https://svyable.github.io/bookself/reader/#/b/making-bookself/) as a reader.
-2. [Read its review map](https://github.com/Svyable/bookself/blob/main/books/making-bookself/REVIEW.md) for active questions and the distinction between personal notes, shared review feedback, and source changes.
+2. [Read its review map](https://github.com/Svyable/bookself/blob/main/books/making-bookself/REVIEW.md) for active questions and the distinction between personal notes, shared review feedback, publication research, and source changes.
 3. [Read the public review thread](https://github.com/Svyable/bookself/issues/35).
-4. Read `AGENTS.md`, `RIGHTS.md`, and the target publication's `RIGHTS.md` when present before modifying the repository.
+4. Read `AGENTS.md`, `RIGHTS.md`, `docs/research.md`, and the target publication's `RIGHTS.md` when present before modifying the repository.
 5. Scan open pull requests and the newest review-thread comments before choosing a lane. If the same problem is already being addressed, review or avoid that lane rather than opening a competing change from stale `main`.
-6. Choose one bounded improvement, verify the relevant behavior, and leave a durable explanation in the commit or pull request.
+6. Choose one bounded improvement, verify the relevant behavior, and leave a durable explanation plus research provenance when factual evidence informed it.
 7. Compare the working-proof experience with the [reference released Shelf Reader](https://svyable.github.io/shelf/reader/), while treating the [Bookself example Shelf Reader](https://svyable.github.io/bookself/reader/) as the platform-owned specimen surface.
 
-The target loop is: read -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real authors choose whether their Desk stays private or uses an explicit working-in-public mode.
+The target loop is: read -> research -> locate -> understand -> propose -> review -> revise -> read again. The public specimen is intentionally visible for teaching; real authors choose whether their Desk stays private or deliberately works in public.
 
 ## For contributors and agents
 
-- [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository architecture, invariants, editing rules, and cross-agent instructions.
+- [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md): repository architecture, invariants, research rules, editing rules, and cross-agent instructions.
 - [RIGHTS.md](https://github.com/Svyable/bookself/blob/main/RIGHTS.md): framework/publication rights boundary.
-- [bookself.json](https://github.com/Svyable/bookself/blob/main/bookself.json): machine-readable capability and outcome contract.
+- [bookself.json](https://github.com/Svyable/bookself/blob/main/bookself.json): machine-readable capability, research, and outcome contract.
+- [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md): canonical publication evidence/provenance model.
 - [Agent-first guide](https://github.com/Svyable/bookself/blob/main/docs/agent-first.md): orchestration guidance for end-to-end agent operation.
 - [.github/copilot-instructions.md](https://github.com/Svyable/bookself/blob/main/.github/copilot-instructions.md): GitHub Copilot repository onramp.
-- [.github/instructions/publications.instructions.md](https://github.com/Svyable/bookself/blob/main/.github/instructions/publications.instructions.md): path-specific publication editing rules for GitHub agents.
+- [.github/instructions/publications.instructions.md](https://github.com/Svyable/bookself/blob/main/.github/instructions/publications.instructions.md): path-specific publication and research editing rules for GitHub agents.
 - [Contributing](https://github.com/Svyable/bookself/blob/main/CONTRIBUTING.md): contribution workflow.
 
 Important constraints:
 - Keep books and papers as plain files under books/.
-- Do not require CI/CD for the private Desk authoring or release path.
+- Treat `books/<slug>/research/` as canonical publication content and preserve it across release snapshots.
+- Do not require CI/CD for Desk authoring, research, or release.
 - Shared UI is reader/ and desk/; instance identity belongs in imprint.json.
-- Do not hard-code an author's private repository or identity into shared UI.
+- Do not hard-code an author's repository or identity into shared UI.
+- Do not mistake a public lower-profile Desk for private content.
 - Do not change publication licensing or AI-use rights without explicit rightsholder approval.
-- Bookself framework and blank starters are MIT licensed; real publication manuscripts are All Rights Reserved by default unless their own `RIGHTS.md` says otherwise.
+- Do not redistribute third-party research source files merely because they are accessible.
+- Bookself framework and blank starters are MIT licensed; real publication manuscripts and author/agent-authored research are All Rights Reserved by default unless their own `RIGHTS.md` says otherwise, while underlying third-party source rights remain their own.

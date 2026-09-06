@@ -8,11 +8,11 @@ A capable coding or GitHub-connected agent should be able to receive an outcome-
 
 or:
 
-> Use Bookself to create a private Desk and a public Shelf for me. Start my first book from this idea, choose a good reading style, validate it, and publish the first finished version to my Shelf.
+> Use Bookself to create a Desk and a public Shelf for me. Start my first book from this idea, research the claims that need evidence, choose a good reading style, validate it, and publish the first finished version to my Shelf.
 
 and translate that request into the ordinary Bookself lifecycle without asking the person to manually copy folders, edit metadata tables, run release scripts, choose computer-shaped names, or learn Git terminology first.
 
-The canonical machine-readable map is [`../bookself.json`](../bookself.json). Repository editing rules remain in [`../AGENTS.md`](../AGENTS.md).
+The canonical machine-readable map is [`../bookself.json`](../bookself.json). Repository editing rules remain in [`../AGENTS.md`](../AGENTS.md). The publication research contract is [`research.md`](research.md).
 
 ## The product boundary
 
@@ -21,37 +21,41 @@ Agent-first does **not** mean agent-owned.
 The durable artifacts remain:
 
 - plain Markdown manuscript files;
+- a canonical `research/` evidence and provenance trail inside each publication;
 - normal Git repositories and history;
-- a private Desk for unpublished work and revision;
+- a Desk for working drafts, research, and revision, private by default but optionally public or lower-profile;
 - a public Shelf containing deliberate release snapshots;
 - ordinary `README.md`, `imprint.json`, and optional `reader.json` files;
 - the same Reader and Publishing Desk a human can inspect directly.
 
-The agent is an operator of the protocol, not a required runtime dependency. If the original agent disappears tomorrow, the publication should still be readable, editable, diffable, exportable, and releasable.
+The agent is an operator of the protocol, not a required runtime dependency. If the original agent disappears tomorrow, the publication should still be readable, editable, researchable, diffable, exportable, and releasable.
 
 ## Outcome-oriented behavior
 
 When the user asks for an end state, agents should optimize for the end state rather than turning Bookself's internal steps into a questionnaire.
 
-A plain **“set this up for me”** is sufficient intent for the standard Bookself installation shape: a private repository named `desk` and an empty public repository named `shelf`, unless the user asks for other names or an existing setup already establishes them. Do not personalize repository names merely because setup is being performed for a particular person.
+A plain **“set this up for me”** is sufficient intent for the standard Bookself installation shape: a private-by-default repository named `desk` and an empty public repository named `shelf`, unless the user asks for other names or an existing setup already establishes them. A Desk may deliberately be public or lower-profile; that visibility choice does not turn it into a Shelf. Shelf is the canonical promoted release surface.
 
-Creating an empty public Shelf during setup is not the same thing as publishing a manuscript. Moving unpublished writing from Desk to Shelf remains a separate consequential boundary and still requires publication intent.
+Creating an empty public Shelf during setup is not the same thing as publishing a manuscript. Moving working publication content from Desk to Shelf remains a separate consequential boundary and still requires publication intent.
 
 For example, if the user says **“write my first book on my Desk and publish it to my Shelf”**, that is explicit intent to:
 
 1. create or locate the Desk and Shelf;
 2. validate them as one Bookself installation;
-3. scaffold the publication;
+3. scaffold the publication, including its canonical `research/` trail;
 4. make reasonable mechanical choices such as slug and starter format;
-5. draft the requested content;
-6. choose a reasonable Reader recommendation;
-7. validate and preview when possible;
-8. commit the release source on the Desk;
-9. prepare the Shelf release;
-10. review the release diff;
-11. commit and push the public Shelf release when the environment is authorized to do so.
+5. research material factual claims as needed and preserve durable provenance;
+6. draft the requested content;
+7. promote reader-relevant evidence into manuscript citations, references, figures, methodology, or back matter;
+8. choose a reasonable Reader recommendation;
+9. validate and preview when possible;
+10. recheck time-sensitive evidence for the intended edition;
+11. commit the release source on the Desk;
+12. prepare the Shelf release;
+13. review the release diff, including research and rights files;
+14. commit and push the public Shelf release when the environment is authorized to do so.
 
-Do not ask the user to approve each mechanical transition again. Do stop when a new action crosses a boundary the user did **not** authorize—for example making unpublished material public when they asked only for a draft.
+Do not ask the user to approve each mechanical transition again. Do stop when a new action crosses a boundary the user did **not** authorize—for example making working material public when they asked only for a draft, changing repository visibility, changing rights, or redistributing third-party source files without a clear basis.
 
 ## Two execution environments
 
@@ -73,17 +77,18 @@ Then work primarily on the Desk until the user has asked for a public release.
 
 When the agent has authorized GitHub tools but no local shell, it should reproduce the **results** of the local tools using the same file contracts:
 
-- create a private repository named `desk` and an empty public repository named `shelf` when repository-creation capability exists;
+- create a private-by-default repository named `desk` and an empty public repository named `shelf` when repository-creation capability exists;
+- honor an existing or explicitly requested public/lower-profile Desk rather than treating privacy as the definition of the role;
 - copy/stamp the upstream files according to `scripts/stamp-instance.py` semantics;
 - preserve `reader/` and `desk/` as shared UI;
 - keep `books/`, root `README.md`, and `imprint.json` instance-owned;
-- keep the blank starter library on Desk and off Shelf;
-- make manuscript changes on the Desk;
+- keep the blank starter library, including canonical `research/README.md` scaffolds, on Desk and off Shelf;
+- make manuscript and research changes on the Desk;
 - create a Shelf release as an independent snapshot rather than a live reference to Desk.
 
-If the connected tool cannot create repositories, the correct fallback is narrow: complete every deterministic step the environment can perform, then ask for only the missing external action—for example, “Create `desk` as private and `shelf` as public, then I can finish the setup.” Do not expand that capability gap into a Git tutorial, and do not pretend the repositories exist.
+If the connected tool cannot create repositories, the correct fallback is narrow: complete every deterministic step the environment can perform, then ask for only the missing external action. Do not expand that capability gap into a Git tutorial, and do not pretend the repositories exist.
 
-When repository metadata is available through the connected environment, verify that Desk is actually private and Shelf is actually public before reporting setup complete.
+When repository metadata is available through the connected environment, verify that Shelf is public and record the Desk's actual visibility before reporting setup complete. Never treat an unadvertised public Desk as private.
 
 ## Validating the installation
 
@@ -130,9 +135,27 @@ Infer the closest publication family from the request:
 | manual, handbook, guide | `_MANUAL_TEMPLATE` |
 | comic or graphic narrative | `_COMIC_TEMPLATE` |
 
-A user does not need to choose the computer-shaped details. Agents may infer a lowercase hyphenated slug, filenames, an initial Reader preset, and ordinary mechanical metadata.
+Every starter includes `research/README.md`. Preserve it when copying a starter into a real publication.
+
+A user does not need to choose the computer-shaped details. Agents may infer a lowercase hyphenated slug, filenames, an initial Reader preset, ordinary mechanical metadata, and sensible organization within `research/`.
 
 The user **does** own consequential editorial choices: claims, voice, facts, rights, attribution, intended audience, and whether work should become public. Ask only when those cannot safely be inferred from the conversation or supplied source material.
+
+## Researching with an agent
+
+Research is part of the publication, not hidden chain-of-thought and not a disposable browser session.
+
+Before searching, read the relevant manuscript and existing `research/` trail. When new evidence materially informs the work, leave behind a durable record that identifies the source, explains what manuscript claim or question it bears on, distinguishes evidence from inference, preserves limitations and counterevidence, and notes when a fast-aging fact needs to be checked again.
+
+Prefer primary and authoritative sources when they answer the question. Secondary sources are useful for synthesis, discovery, context, and competing interpretations. Do not confuse the prestige of a source with the strength of the specific inference being made.
+
+A strong research change can conclude that the manuscript should **not** change. Recording a boundary, failed hypothesis, stale statistic, or useful counterexample is productive work because it prevents a later agent from repeating the same mistake.
+
+Promote evidence a reader needs while reading into the manuscript: citations, footnotes, references, figures, methodology, or back matter. Keep the deeper ledger, claim checks, calculations, alternatives, and release review in `research/`.
+
+Do not use `research/` as a copyright dump. Prefer links, bibliographic metadata, lawful short quotations, hashes, and original notes. Commit third-party source files only when redistribution is clearly authorized and provenance/license information is preserved.
+
+See [`research.md`](research.md) for the complete contract.
 
 ## Writing with an agent
 
@@ -141,10 +164,12 @@ The goal is not to generate a giant disposable manuscript in one opaque write.
 Prefer bounded, recoverable progress:
 
 - establish the publication shape;
+- read the relevant research trail;
 - write a strong first chapter/piece;
 - validate structure;
 - continue in coherent chapter-sized changes;
 - keep the publication README contents/count accurate;
+- keep material factual provenance current as claims evolve;
 - use Git history as checkpoints;
 - read the result in Reader when the environment permits;
 - revise based on the publication experience, not only the source text.
@@ -157,6 +182,8 @@ An agent may choose a named `reader.json` preset as a reasonable default when th
 
 A reader's browser-local choices still win. An agent must not “solve” design consistency by disabling reader controls or persisting one reader's choices into repository content.
 
+The deeper research trail is not automatically part of Reader chapter navigation. Keep the narrative experience intentional and move the evidence readers need in context into the manuscript. The repository remains the inspectable source of truth for the fuller trail and can support richer research surfaces later without changing the publication contract.
+
 ## Validation and release
 
 On the Desk:
@@ -165,7 +192,7 @@ On the Desk:
 python3 scripts/doctor.py --root .
 ```
 
-Before release, commit the Desk publication state that is being released.
+Before release, recheck time-sensitive evidence that materially affects the intended edition and commit the Desk publication state that is being released.
 
 Then from the Desk:
 
@@ -173,7 +200,7 @@ Then from the Desk:
 python3 scripts/release-book.py <slug> <path-to-shelf>
 ```
 
-The release helper prepares and verifies the Shelf snapshot but intentionally stops before commit/push. If the user's outcome request explicitly includes publishing and the agent has authorized Git/GitHub write capability, the agent may review that prepared diff and complete the Shelf commit/push without asking the user to execute those mechanics.
+The release helper prepares and verifies the complete Shelf publication snapshot—including `research/`—but intentionally stops before commit/push. If the user's outcome request explicitly includes publishing and the agent has authorized Git/GitHub write capability, the agent may review that prepared diff and complete the Shelf commit/push without asking the user to execute those mechanics.
 
 If the user requested only drafting or review, do not release.
 
@@ -181,7 +208,7 @@ If the user requested only drafting or review, do not release.
 
 A successful setup-only session can end this simply:
 
-- Private Desk: `owner/desk`.
+- Desk: `owner/desk`, with its actual visibility stated when relevant.
 - Public Shelf: `owner/shelf`, currently empty.
 - Pair validation: `setupReady`.
 - Rights default for new publications: All Rights Reserved.
@@ -189,25 +216,27 @@ A successful setup-only session can end this simply:
 
 A successful end-to-end publishing session can add:
 
-- `books/the-working-title/` contains the drafted first edition.
+- `books/the-working-title/` contains the drafted first edition plus its research trail.
 - Reader style: `literary`, still fully reader-overridable.
+- Material time-sensitive claims were rechecked for the release.
 - Structural and rights validation passed.
 - Desk release source committed at `<sha>`.
-- Shelf snapshot published at `<url>`.
+- Shelf snapshot published at `<url>` with manuscript, research, and rights provenance preserved.
 
-The person should not need a transcript of every `mkdir`, metadata edit, or Git command unless they ask for it.
+The person should not need a transcript of every `mkdir`, metadata edit, or Git command unless they ask for one.
 
 ## Why keep the human workflow at all?
 
 Because the scaffold is the specification.
 
-The visual Studio, templates, scripts, docs, Reader, and Publishing Desk make the protocol:
+The visual Studio, templates, scripts, docs, research trail, Reader, and Publishing Desk make the protocol:
 
 - inspectable by humans;
 - executable by local agents;
 - reproducible by GitHub-connected agents;
+- researchable and fact-checkable across agent handoffs;
 - testable in CI without becoming dependent on CI;
 - recoverable when an agent makes a bad choice;
 - portable to future agent systems that do not exist yet.
 
-The long-term goal is not “AI buttons everywhere.” It is a durable publishing system whose mechanics are explicit enough that a capable agent can reliably operate them on a person's behalf.
+The long-term goal is not “AI buttons everywhere.” It is a durable publishing system whose mechanics are explicit enough that a capable agent can reliably operate them on a person's behalf while leaving the reasoning-relevant evidence in ordinary files another person or agent can inspect.

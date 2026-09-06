@@ -8,22 +8,34 @@ Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the
 >
 > This is a real public Bookself instance using the shared Reader and release model, so you can experience the product before setting up your own Desk and Shelf.
 
-- **Desk** owns working manuscripts, drafts, research, revisions, and the next edition.
-- **Shelf** owns deliberately released publication snapshots.
+- **Desk** owns working manuscripts, drafts, research, revisions, and the next edition. It is private by default, but may deliberately be public or lower-profile.
+- **Shelf** owns deliberately released publication snapshots and is the canonical promoted public release surface.
 - **Bookself** owns the reusable Reader, Publishing Desk, templates, release tools, validation, documentation, and the upgrade path that keeps Desk and Shelf current.
 
-**[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Upgrade shared UI](#upgrade-desk-and-shelf)**
+**[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Research trail](docs/research.md)** · **[Upgrade shared UI](#upgrade-desk-and-shelf)**
 
 ## The contract
 
 | Layer | Owns | Does not own |
 |---|---|---|
 | **Bookself** | `reader/`, `desk/`, reusable scripts, templates, schemas, docs | An author's live catalog or released library |
-| **Desk** | Working `books/`, root catalog, instance identity, draft/revision state | A released public edition merely because it is newest |
+| **Desk** | Working `books/`, root catalog, instance identity, draft/revision state | A released edition merely because it is newest |
 | **Shelf** | Released `books/`, public catalog, instance identity, release history | Unreleased Desk work |
 | **Reader** | Presentation, navigation, search, notes, citation, accessibility | Manuscript truth or publication state |
 
 A normal release is **Desk → Shelf**. Shelf never reaches back into Desk at runtime. A released snapshot remains independently readable and versioned until a later deliberate release replaces it.
+
+## Research is publication content
+
+Every Bookself publication has a canonical `research/` component alongside `manuscript/` and `media/`. Its entry point is `books/<slug>/research/README.md`.
+
+The manuscript is the reader-facing work. The research trail is the inspectable evidence and provenance behind it: source ledgers, claim checks, calculations, counterevidence, methodological boundaries, dated update notes, and release fact-checks. Agents should read existing research before repeating searches and leave durable source context behind when research materially informs a change.
+
+Reader-facing evidence still belongs in the manuscript when it helps the reading experience—citations, footnotes, references, figures, and necessary methodology. `research/` carries the deeper apparatus without making the narrative table of contents a research notebook.
+
+On Desk, the research trail may move ahead of the current edition. On Shelf, it is frozen with the released edition. The release helper copies and verifies the complete publication tree, so committed research travels with the manuscript automatically.
+
+Research is provenance, not permission to redistribute sources. Prefer links, bibliographic metadata, lawful short quotations, hashes, and author/agent notes over copied third-party files unless redistribution rights are clear. See **[Publication research](docs/research.md)**.
 
 ## Upgrade Desk and Shelf
 
@@ -58,27 +70,29 @@ python3 scripts/stamp-instance.py ../shelf shelf YOUR_GITHUB_OWNER shelf
 
 A new Desk receives blank publication starters. A new Shelf starts without manuscript content. Instance identity is stamped from each instance's `imprint.json` rather than inherited as Bookself branding.
 
+The standard bootstrap keeps Desk private by default, but visibility is an authoring-policy choice rather than the definition of the `desk` role. A deliberately public Desk is still a Desk; it is simply public working history and should be treated as such. Shelf remains the canonical promoted release surface.
+
 ## Write and release
 
-Write on Desk in plain Markdown, commit meaningful revisions, and preview through the shared Reader. When an edition is deliberately ready for release:
+Write on Desk in plain Markdown, keep research and provenance with the publication, commit meaningful revisions, and preview through the shared Reader. When an edition is deliberately ready for release:
 
 ```bash
 python3 scripts/release-book.py your-title ../shelf
 ```
 
-The release helper copies a committed publication snapshot from Desk to Shelf, preserves publication rights metadata, updates Shelf publication state/catalog data, verifies the prepared copy, and stops before commit or push.
+The release helper copies a committed publication snapshot from Desk to Shelf—including `manuscript/`, `research/`, `media/`, rights, and presentation files—updates Shelf publication state/catalog data, verifies the prepared copy, and stops before commit or push.
 
 ## What belongs where
 
 | Shared Bookself platform | Instance-owned state |
 |---|---|
-| `reader/` — reading interface | `books/` — manuscripts/publications |
+| `reader/` — reading interface | `books/` — manuscripts, research trails, media, and publication metadata |
 | `desk/` — publishing/readiness interface | root `README.md` — catalog and human-facing instance context |
 | `scripts/` — bootstrap, release, validation, synchronization | `imprint.json` — instance name, role, links, Reader identity |
 | `docs/` — architecture and workflow | publication-specific rights/presentation metadata |
-| blank `_..._TEMPLATE` starters | real author content |
+| blank `_..._TEMPLATE` starters | real author content and evidence trails |
 
-Bookself should remain portable: shared code must not hard-code a person's identity, private Desk URL, or unrelated Shelf branding.
+Bookself should remain portable: shared code must not hard-code a person's identity, Desk URL, or unrelated Shelf branding.
 
 ## Reader and Publishing Desk
 
@@ -90,7 +104,7 @@ Publication presentation can be recommended with `reader.json`; the reader's own
 
 ## Local-first invariant
 
-Writing, previewing, validating, releasing, and reading must work without GitHub Actions or a hosted build pipeline. The required path is deliberately small: Git, Markdown, a browser, and Python's standard library for Bookself helpers.
+Writing, researching, previewing, validating, releasing, and reading must work without GitHub Actions or a hosted build pipeline. The required path is deliberately small: Git, Markdown, a browser, and Python's standard library for Bookself helpers.
 
 GitHub Pages can deliver a public Shelf or an intentionally public Desk preview, but Pages is a delivery surface, not the publishing engine.
 
@@ -98,7 +112,7 @@ GitHub Pages can deliver a public Shelf or an intentionally public Desk preview,
 
 Bookself's framework software, documentation, shared UI, scripts, and blank starters are MIT licensed. Real publications are **All Rights Reserved by default** unless their own rights files deliberately grant another license.
 
-Public visibility is not the same as an open license. Publication-specific `RIGHTS.md` and `rights.json` travel with a release and remain author-controlled. See [Rights, copyright, and AI](docs/rights-and-ai.md).
+Public visibility is not the same as an open license. Publication-specific `RIGHTS.md` and `rights.json` travel with a release and remain author-controlled. Research notes and source metadata can travel with the publication without changing the rights of underlying third-party works. See [Rights, copyright, and AI](docs/rights-and-ai.md).
 
 ## The books
 
@@ -112,6 +126,7 @@ Bookself does not publish or promote an author library here. The `books/` direct
 | Start a workspace | [START HERE](START-HERE.md) |
 | Architecture | [Bookself architecture](docs/bookself.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |
+| Research and provenance | [Publication research](docs/research.md) |
 | Publication formats | [Publication formats](docs/publication-formats.md) |
 | Writing lifecycle | [Writing lifecycle](docs/writing-lifecycle.md) |
 | Revisions and releases | [Revisions and releases](docs/revisions.md) |

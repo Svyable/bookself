@@ -3,7 +3,7 @@ importScripts('./js/offline-fetch-policy.js');
 importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
-const CACHE = 'obb-shell-v103';
+const CACHE = 'obb-shell-v104';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -50,6 +50,7 @@ const SHELL = [
   './js/reading-surface.js',
   './js/viewport-stability.js',
   './js/viewport-stability-runtime.js',
+  './js/global-reader-controls.js',
   './js/immersive-chrome.js',
   './js/font-readiness.js',
   './js/font-readiness-runtime.js',
@@ -196,6 +197,7 @@ const OPTIONAL_SHELL = new Set([
   './js/library-book-preview-model.js',
   './js/library-quick-look.js',
   './js/theme-controls.js',
+  './js/global-reader-controls.js',
   './js/progress-position.js',
   './js/semantic-progress.js',
 ]);

@@ -77,16 +77,12 @@ jobs:
 
           app = Path('reader/js/app.js')
           text = app.read_text(encoding='utf-8')
-          old = """        <span class=\"volume-title\">${escapeHtml(book.title)}</span>
-                <span class=\"volume-author\">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
-          """
-          new = """        <span class=\"volume-title\">${escapeHtml(book.title)}</span>
-                ${book.subtitle ? `<span class=\"volume-subtitle\">${escapeHtml(book.subtitle)}</span>` : ''}
-                <span class=\"volume-author\">${escapeHtml((book.authors || '').replace(/@/g, ''))}</span>
-          """
-          if old not in text:
-              raise SystemExit('volume card anchor not found')
-          app.write_text(text.replace(old, new, 1), encoding='utf-8')
+          title_line = '<span class="volume-title">${escapeHtml(book.title)}</span>'
+          if text.count(title_line) != 1:
+              raise SystemExit(f'expected one volume title anchor, found {text.count(title_line)}')
+          subtitle_line = '${book.subtitle ? `<span class="volume-subtitle">${escapeHtml(book.subtitle)}</span>` : \'\'}'
+          text = text.replace(title_line, title_line + '\n        ' + subtitle_line, 1)
+          app.write_text(text, encoding='utf-8')
 
           css = Path('reader/css/style.css')
           text = css.read_text(encoding='utf-8')

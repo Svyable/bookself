@@ -4,6 +4,10 @@
 
 Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the shared **Reader** used by both. It is infrastructure, not an author catalog.
 
+> **See Bookself in action:** [Open the live example Shelf →](https://svyable.github.io/shelf/reader/)
+>
+> This is a real public Bookself instance using the shared Reader and release model, so you can experience the product before setting up your own Desk and Shelf.
+
 - **Desk** owns working manuscripts, drafts, research, revisions, and the next edition.
 - **Shelf** owns deliberately released publication snapshots.
 - **Bookself** owns the reusable Reader, Publishing Desk, templates, release tools, validation, documentation, and the upgrade path that keeps Desk and Shelf current.
@@ -104,6 +108,7 @@ Bookself does not publish or promote an author library here. The `books/` direct
 
 | Need | Go here |
 |---|---|
+| See the live product | [Example Shelf](https://svyable.github.io/shelf/reader/) |
 | Start a workspace | [START HERE](START-HERE.md) |
 | Architecture | [Bookself architecture](docs/bookself.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |

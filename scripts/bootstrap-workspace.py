@@ -115,7 +115,7 @@ def bootstrap(
             "Run python3 scripts/doctor.py --root . inside the Desk after meaningful structural changes.",
             "Run python3 scripts/doctor-pair.py . ../shelf after setup or shared-UI changes.",
             "Commit the Desk publication before release.",
-            "Release with python3 scripts/release-book.py <slug> <path-to-shelf>.",
+            "Release with python3 scripts/release.py <slug> <path-to-shelf>; the canonical publication page and sitemap are prepared in the same transaction.",
             "Review, commit, and push the Shelf snapshot only when public publication is intended.",
         ],
     }

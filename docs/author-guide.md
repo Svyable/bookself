@@ -14,6 +14,7 @@ Your **Desk** is a writing workspace with an excellent memory:
 
 - a **book** is a folder
 - a **chapter** is a plain-text file
+- **research** is the book's evidence notebook and provenance trail
 - a **commit** is a saved version with a note
 - **history** is all those saved versions in order
 - a **pull request** is a proposed change with a conversation attached
@@ -26,10 +27,11 @@ That is enough vocabulary for quite a while.
 2. Open a chapter.
 3. Click the pencil icon: **Edit this file**.
 4. Write.
-5. Click **Commit changes** — read that as **Save this version**.
-6. Preview the book in the Reader.
-7. Revise.
-8. Repeat until the chapter stops making faces at you.
+5. If a factual claim depends on research, preserve the useful source trail in the book's `research/` folder.
+6. Click **Commit changes** — read that as **Save this version**.
+7. Preview the book in the Reader.
+8. Revise.
+9. Repeat until the chapter stops making faces at you.
 
 That loop is Bookself in miniature.
 
@@ -50,21 +52,68 @@ Inside the book:
 
 - `README.md` — title, author, status, and reading order
 - `manuscript/` — the writing
+- `research/` — the canonical source/evidence trail behind factual work
 - `media/` — optional cover art and images
 
 Structurally, you now have a book. Whether it is any good remains charmingly
 outside the scope of the file system.
 
-On a private Desk, also add one row for the new folder under the repository
-root README's `## The books` section, for example:
+On a Desk, also add one row for the new folder under the repository root README's
+`## The books` section, for example:
 
 `| [The Long Way Home](books/the-long-way-home/) | Book |`
 
 That Desk inventory entry is how the Publishing Desk and Reader discover the
-working publication. It does **not** publish the draft: the Desk remains private
-and the publication can remain `Status: Drafting`. On a public Shelf, by
-contrast, `## The books` should list only deliberately released publications
-with `Status: Published`; the release helper prepares that Shelf entry for you.
+working publication. It does **not** make the publication a Shelf release.
+A Desk is private by default in Bookself's standard setup, but it may deliberately
+be public or lower-profile. If the repository is public, the draft and its
+research files are public even when nobody advertises them. On a public Shelf,
+`## The books` should list only deliberately released publications with
+`Status: Published`; the release helper prepares that Shelf entry for you.
+
+## Research without turning the book into homework
+
+Every starter includes `research/README.md`. Think of it as the book's durable
+evidence notebook: not necessarily something a casual reader must read, but
+something Future You, an editor, a researcher, or an agent can inspect when a
+claim needs to be checked or updated.
+
+A useful research entry says more than “here is a link.” It records enough to
+recover why the source mattered:
+
+- who published or authored it and what it is called;
+- its date or version when that matters;
+- a URL, DOI, report number, dataset version, or other identifier;
+- when a changing web source was accessed;
+- which chapter, claim, figure, or calculation it informed;
+- what the source actually established;
+- what remained uncertain, conditional, disputed, or easy to overstate;
+- any calculation needed to get from the source to the number in the book;
+- whether the fact should be checked again before the next release.
+
+The goal is not maximum citations. A memoir might need almost none. A book about
+public policy, science, economics, medicine, technology, or history may need a
+substantial trail. The useful question is: **could someone later understand why
+we believed this strongly enough to print it?**
+
+Keep reader-facing evidence in the reading experience when it belongs there.
+Citations, footnotes, references, figures, and necessary methodology should go
+in the manuscript when they help the reader follow or trust the argument. Keep
+the deeper source ledger, claim checks, calculations, counterevidence, and dated
+fact-check notes in `research/`.
+
+Research files are part of the publication snapshot. When you release the book,
+the committed research trail travels to Shelf with the manuscript. Your Desk can
+then keep researching the next edition while the Shelf preserves the evidence
+package that belonged to the released one.
+
+A source trail is not permission to copy the source itself. Prefer links,
+bibliographic information, lawful short quotations, hashes, and your own notes
+over copied PDFs, articles, datasets, images, or transcripts. Include third-party
+files only when redistribution is clearly allowed and preserve their provenance
+and license information.
+
+For the complete convention, see [Publication research](research.md).
 
 ## Making an edit on GitHub
 
@@ -97,6 +146,7 @@ GitHub asks for a short message. Write what Future You would want to know:
 
 - `Draft the opening scene`
 - `Make chapter 2 less repetitive`
+- `Add the CBO source trail behind chapter 3`
 - `Try the version where the argument starts later`
 - `Fix two typos and an overconfident semicolon`
 
@@ -119,7 +169,9 @@ do we want to keep it?”
 Version history is the point.
 
 Yesterday's wording is still there. A deleted paragraph is not spiritually
-lost. A failed experiment can be compared with the version before it.
+lost. A failed experiment can be compared with the version before it. The same
+is true for research notes: a source that turned out to be weak can be corrected
+without pretending nobody ever relied on it.
 
 That does not make every mistake effortless to undo, but it makes ordinary
 rewrites much less scary than overwriting one giant document forever.
@@ -143,6 +195,9 @@ To mark something drafted:
 The Contents list is also the official reading order. Trust it more than the
 alphabetical file list.
 
+`research/` does not automatically join that reading order. It is publication
+provenance, not another chapter sequence.
+
 ## Read while you write
 
 The Bookself Reader is not only for finished books. It is part of revision.
@@ -156,7 +211,8 @@ inside an editor. Preview early enough to be annoyed usefully.
 
 The Reader needs the repository to be served over HTTP. On a public Shelf that
 usually means GitHub Pages. On a private Desk, the Publishing Desk and Reader
-can be served locally from the checkout.
+can be served locally from the checkout. A deliberately public Desk can also be
+served publicly, but public is public even if you do not advertise the URL.
 
 ## Personal Reader notes stay personal
 
@@ -170,12 +226,15 @@ device or browser profile, and clearing site data can remove it. For notes you
 want to keep, open **Type and tools** and choose **Export notes**. The Reader
 downloads them as a Markdown file you can save wherever you keep your own work.
 
+A Reader note is also different from a publication research note. Reader notes
+are personal. `books/<slug>/research/` is committed, shared publication context.
+
 ## Desk, Shelf, and Reader
 
 Bookself has a simple publishing geography:
 
-- **Desk** — where you write, revise, and keep working history; private by default
-- **Shelf** — where deliberately released publications live for readers
+- **Desk** — where you write, research, revise, and keep working history; private by default, optionally public or lower-profile
+- **Shelf** — where deliberately released publications live for readers and where Bookself treats the release as canonical
 - **Reader** — the reading interface for a Desk proof or Shelf release
 
 This separation is deliberate. A draft hidden from the Shelf list but stored in
@@ -183,7 +242,7 @@ a public repository is still public.
 
 So the normal lifecycle is:
 
-**write and revise on the Desk → review → release to the Shelf → keep revising on the Desk**
+**write + research + revise on the Desk → review → release manuscript + research to the Shelf → keep revising on the Desk**
 
 The [Writing lifecycle](writing-lifecycle.md) explains the larger loop.
 
@@ -191,10 +250,10 @@ The [Writing lifecycle](writing-lifecycle.md) explains the larger loop.
 
 Release should answer a simple question:
 
-**Do I mean for strangers to be able to read this version?**
+**Do I mean for strangers to be able to read this version and inspect the publication files that travel with it?**
 
-If yes, first save the finished Desk version as a commit. Then, from the Desk
-checkout, run:
+If yes, first save the finished Desk version as a commit. Recheck any fast-aging
+facts that materially affect this edition. Then, from the Desk checkout, run:
 
 ```bash
 scripts/release-book.sh <your-book-folder> ../shelf
@@ -202,8 +261,9 @@ scripts/release-book.sh <your-book-folder> ../shelf
 
 The release helper works locally. It checks that the Desk copy you are releasing
 is committed, verifies that the source is a Desk and the destination is a Shelf,
-copies that exact publication snapshot, sets the Shelf copy to `Published`, and
-adds or updates the Shelf catalog row.
+copies that exact publication snapshot—including manuscript, research, media,
+presentation, and rights files—sets the Shelf copy to `Published`, and adds or
+updates the Shelf catalog row.
 
 It **stops before commit or push**. That pause is intentional: review the Shelf
 diff and make sure you really mean for those files to become public. When it
@@ -211,13 +271,15 @@ looks right, commit and push the Shelf change through your normal Git workflow.
 A pull request is useful when you want another person to review the release, but
 Bookself does not require one.
 
-The Desk copy stays in place as your private working history and the home of the
-next revision. The Shelf copy is an independent public snapshot; it does not
-point back into the private Desk.
+The Desk copy stays in place as your working history and the home of the next
+revision. The Shelf copy is an independent public snapshot; it does not point
+back into the Desk. Research can immediately move ahead on Desk without changing
+the evidence trail attached to the released edition.
 
 Nothing in `reader/` should be edited to release a book. Publication is
-manuscript and catalog state, not a JavaScript ceremony, and the normal release
-path does not require GitHub Actions or a hosted build.
+manuscript, research, metadata, rights, and catalog state—not a JavaScript
+ceremony—and the normal release path does not require GitHub Actions or a hosted
+build.
 
 To unpublish, remove the Shelf catalog row and change the public copy's status
 away from `Published`. Remember that content already pushed to public Git
@@ -232,6 +294,9 @@ You have several levels of ceremony available.
 **Please comment on a passage:** use a GitHub issue or the Reader's feedback
 flow when available.
 
+**Please check the evidence:** point a reviewer or researcher at the publication's
+`research/README.md` plus the relevant chapter.
+
 **Please propose exact edits:** open a pull request. Reviewers can comment on
 specific lines and suggest replacements.
 
@@ -245,7 +310,8 @@ request rather than saving straight into the main version.
 
 Keep editorial changes narrow. Preserve the author's voice. A precise change
 with a reason is much easier to review than a surprise rewrite of half the
-chapter.
+chapter. When factual evidence is part of the reason, update or cite the
+research trail so the review does not depend on an ephemeral chat transcript.
 
 The [Editor guide](editor-guide.md) goes deeper on review.
 
@@ -286,6 +352,7 @@ You do not need to memorize this table. It will still be here later.
 ## Where next?
 
 - [START HERE](../START-HERE.md) — the shortest path
+- [Publication research](research.md) — evidence, provenance, and agent handoffs
 - [Writing lifecycle](writing-lifecycle.md) — the authorship model
 - [Book anatomy](book-anatomy.md) — what files make up a book
 - [Editor guide](editor-guide.md) — review and proposed changes

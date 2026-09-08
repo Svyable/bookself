@@ -5,6 +5,11 @@ const source = await readFile(new URL('../reader/js/base.js', import.meta.url), 
 
 assert.match(
   source,
+  /queueMicrotask\(\(\) => \{[\s\S]*import\('\.\/accessibility-surfaces\.js'\)[\s\S]*import\('\.\/direct-route-preview\.js'\)/,
+  'accessibility and direct-route first-paint helpers should stay eager',
+);
+assert.match(
+  source,
   /window\.addEventListener\('load', begin, \{ once: true \}\)/,
   'nonessential Reader enhancements should wait until the core page load completes',
 );
@@ -15,8 +20,8 @@ assert.match(
 );
 assert.doesNotMatch(
   source,
-  /queueMicrotask\(\(\) => \{\s*import\('\.\/semantic-progress\.js'\)/,
-  'enhancement imports must not compete with the critical startup path',
+  /queueMicrotask\(\(\) => \{[\s\S]*import\('\.\/semantic-progress\.js'\)/,
+  'nonessential enhancement imports must not compete with the critical startup path',
 );
 assert.match(
   source,

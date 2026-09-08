@@ -14,6 +14,15 @@ import {
   reportChapterAcquisitionSuccess,
 } from './chapter-availability.js';
 
+queueMicrotask(() => {
+  import('./accessibility-surfaces.js').catch((error) => {
+    console.warn('Accessibility surface isolation could not be loaded', error);
+  });
+  import('./direct-route-preview.js').catch((error) => {
+    console.warn('Direct-route first paint could not be loaded', error);
+  });
+});
+
 function loadDeferredEnhancements() {
   import('./semantic-progress.js').catch((error) => {
     console.warn('Semantic reading progress could not be loaded', error);
@@ -38,12 +47,6 @@ function loadDeferredEnhancements() {
   });
   import('./progressive-library-search.js').catch((error) => {
     console.warn('Progressive library search could not be loaded', error);
-  });
-  import('./accessibility-surfaces.js').catch((error) => {
-    console.warn('Accessibility surface isolation could not be loaded', error);
-  });
-  import('./direct-route-preview.js').catch((error) => {
-    console.warn('Direct-route first paint could not be loaded', error);
   });
   import('./reading-mode-transition.js').catch((error) => {
     console.warn('Reading-mode transition continuity could not be loaded', error);

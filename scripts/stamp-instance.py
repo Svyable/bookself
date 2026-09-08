@@ -28,7 +28,7 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         rel = current.relative_to(root)
         skipped = {".DS_Store"}
         if rel == Path("."):
-            skipped.update({".git", "imprint.json", "README.md"})
+            skipped.update({".git", "imprint.json", "README.md", "catalog.json", "shelf"})
         elif rel == Path(".github"):
             skipped.add("workflows")
         elif rel == Path("books"):
@@ -43,7 +43,7 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Copy this Bookself tree into an empty destination and stamp instance identity."
+        description="Copy this Bookself tree into an empty destination and stamp Desk/Shelf identity."
     )
     parser.add_argument("destination", help="empty directory to create or populate")
     parser.add_argument("role", choices=("desk", "shelf"))

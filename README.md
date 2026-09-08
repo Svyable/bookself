@@ -2,15 +2,15 @@
 
 **Write like a repo. Publish like a book.**
 
-Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the shared **Reader** used by both. It is infrastructure, not an author catalog.
+Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the shared **Reader** used by both. It is infrastructure, not an author's catalog.
 
-> **See Bookself in action:** [Open the live example Shelf →](https://svyable.github.io/shelf/reader/)
+> **See Bookself in action:** [Open the embedded demo Shelf →](https://svyable.github.io/bookself/shelf/reader/)
 >
-> This is a real public Bookself instance using the shared Reader and release model, so you can experience the product before setting up your own Desk and Shelf.
+> This demo is self-contained in the Bookself repository. It uses deliberately published, neutral platform specimens from `books/` and the same shared Reader used by real Desk and Shelf instances. It does not route through an author's personal Shelf.
 
 - **Desk** owns working manuscripts, drafts, research, revisions, and the next edition. It is private by default, but may deliberately be public or lower-profile.
 - **Shelf** owns deliberately released publication snapshots and is the canonical promoted public release surface.
-- **Bookself** owns the reusable Reader, Publishing Desk, templates, release tools, validation, documentation, and the upgrade path that keeps Desk and Shelf current.
+- **Bookself** owns the reusable Reader, Publishing Desk, templates, release tools, validation, documentation, neutral platform specimens, and the upgrade path that keeps Desk and Shelf current.
 
 **[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Research trail](docs/research.md)** · **[Upgrade shared UI](#upgrade-desk-and-shelf)**
 
@@ -18,12 +18,14 @@ Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the
 
 | Layer | Owns | Does not own |
 |---|---|---|
-| **Bookself** | `reader/`, `desk/`, reusable scripts, templates, schemas, docs | An author's live catalog or released library |
+| **Bookself** | `reader/`, `desk/`, reusable scripts, templates, schemas, docs, neutral platform demos | An author's live catalog or released library |
 | **Desk** | Working `books/`, root catalog, instance identity, draft/revision state | A released edition merely because it is newest |
 | **Shelf** | Released `books/`, public catalog, instance identity, release history | Unreleased Desk work |
 | **Reader** | Presentation, navigation, search, notes, citation, accessibility | Manuscript truth or publication state |
 
 A normal release is **Desk → Shelf**. Shelf never reaches back into Desk at runtime. A released snapshot remains independently readable and versioned until a later deliberate release replaces it.
+
+The `shelf/` directory in this upstream repository is a deliberately small **embedded demo surface**, not a production author Shelf. It reuses the platform's neutral fixture corpus so the open-source project can demonstrate Shelf behavior without duplicating those fixtures or depending on somebody else's deployment. Real author Shelves remain separate repositories with their own content and history.
 
 ## Research is publication content
 
@@ -90,7 +92,7 @@ The release helper copies a committed publication snapshot from Desk to Shelf—
 | `desk/` — publishing/readiness interface | root `README.md` — catalog and human-facing instance context |
 | `scripts/` — bootstrap, release, validation, synchronization | `imprint.json` — instance name, role, links, Reader identity |
 | `docs/` — architecture and workflow | publication-specific rights/presentation metadata |
-| blank `_..._TEMPLATE` starters | real author content and evidence trails |
+| blank `_..._TEMPLATE` starters and neutral demo specimens | real author content and evidence trails |
 
 Bookself should remain portable: shared code must not hard-code a person's identity, Desk URL, or unrelated Shelf branding.
 
@@ -116,13 +118,15 @@ Public visibility is not the same as an open license. Publication-specific `RIGH
 
 ## The books
 
-Bookself does not publish or promote an author library here. The `books/` directory contains blank starters and compatibility/test fixtures used to exercise publication formats and Reader behavior. Real working manuscripts belong in an author's Desk; deliberate releases belong in that author's Shelf.
+Bookself keeps a deliberately published **neutral demo catalog** in this repository so the Reader, media handling, publication formats, and Shelf experience can be exercised without using an author's personal library. The catalog is defined in [`catalog.json`](catalog.json) and includes specimens such as *Bookself 101*, *The Bookself Daily*, *The Bookself Review*, the format gallery, scholarly examples, and Reader style specimens.
+
+Those platform specimens remain under root `books/` as their single source of truth, including their existing media assets. They are shown through the embedded [`shelf/reader/`](shelf/reader/) demo surface. Blank underscore-prefixed starters remain authoring templates. Real working manuscripts belong in an author's Desk; deliberate author releases belong in that author's separate Shelf.
 
 ## Documentation
 
 | Need | Go here |
 |---|---|
-| See the live product | [Example Shelf](https://svyable.github.io/shelf/reader/) |
+| See the live product | [Embedded demo Shelf](https://svyable.github.io/bookself/shelf/reader/) |
 | Start a workspace | [START HERE](START-HERE.md) |
 | Architecture | [Bookself architecture](docs/bookself.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |
@@ -141,7 +145,7 @@ Bookself does not publish or promote an author library here. The `books/` direct
 python3 -m http.server
 ```
 
-The platform Reader and Publishing Desk remain available for software development at `reader/` and `desk/`, but the Bookself platform itself does not expose its fixture publications as a promoted catalog.
+The shared Reader and Publishing Desk remain available for software development at `reader/` and `desk/`. The same neutral catalog is exposed as the embedded demo Shelf at `shelf/reader/`, so local and GitHub Pages examples stay inside this repository.
 
 ## Citation and license
 

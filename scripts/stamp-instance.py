@@ -28,7 +28,7 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         rel = current.relative_to(root)
         skipped = {".DS_Store"}
         if rel == Path("."):
-            skipped.update({".git", "imprint.json", "README.md"})
+            skipped.update({".git", "imprint.json", "README.md", "catalog.json", "shelf"})
         elif rel == Path(".github"):
             skipped.add("workflows")
         elif rel == Path("books"):

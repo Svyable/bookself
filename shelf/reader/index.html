@@ -6,15 +6,30 @@
   <title>Bookself Demo Shelf</title>
   <meta name="description" content="The self-contained Bookself demo Shelf, backed by neutral platform specimen publications in this repository.">
   <meta name="theme-color" content="#0c0b0a">
+  <link rel="preload" href="../../reader/css/style.css?v=r11" as="style">
+  <link rel="modulepreload" href="../../reader/js/app.js?v=r3">
   <style>
     html, body { width: 100%; height: 100%; margin: 0; background: #0c0b0a; }
-    iframe { display: block; width: 100%; height: 100%; border: 0; background: #0c0b0a; }
+    iframe { position: relative; z-index: 1; display: block; width: 100%; height: 100%; border: 0; background: #0c0b0a; }
+    .loading {
+      position: fixed;
+      z-index: 2;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: #0c0b0a;
+      color: #d8cdbb;
+      font: 500 14px/1.4 system-ui, sans-serif;
+      letter-spacing: .04em;
+    }
+    .ready .loading { display: none; }
     .fallback { font: 16px/1.5 system-ui, sans-serif; color: white; padding: 2rem; }
     .fallback a { color: inherit; }
   </style>
 </head>
 <body>
-  <iframe src="../../reader/" title="Bookself demo Shelf"></iframe>
+  <div class="loading" role="status">Opening the Bookself demo Shelf…</div>
+  <iframe src="../../reader/" title="Bookself demo Shelf" onload="document.body.classList.add('ready')"></iframe>
   <noscript>
     <p class="fallback">JavaScript is required for the Bookself Reader. <a href="../../reader/">Open the shared Reader directly.</a></p>
   </noscript>

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "books": [
+    "bookself-101",
+    "bookself-daily",
+    "bookself-dispatch",
+    "bookself-format-gallery",
+    "bookself-review",
+    "how-to-bookself",
+    "open-scholarship-notes",
+    "the-example-paper",
+    "style-after-midnight",
+    "style-clear-margin",
+    "style-common-book",
+    "style-easy-reading",
+    "style-field-notes",
+    "style-lamplight-room",
+    "style-poems-at-window",
+    "style-quiet-study"
+  ]
+}

@@ -43,7 +43,7 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Copy this Bookself tree into an empty destination and stamp Desk/Shelf identity."
+        description="Copy this Bookself tree into an empty destination and stamp instance identity."
     )
     parser.add_argument("destination", help="empty directory to create or populate")
     parser.add_argument("role", choices=("desk", "shelf"))

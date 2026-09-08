@@ -14,7 +14,7 @@ import {
   reportChapterAcquisitionSuccess,
 } from './chapter-availability.js';
 
-queueMicrotask(() => {
+function loadDeferredEnhancements() {
   import('./semantic-progress.js').catch((error) => {
     console.warn('Semantic reading progress could not be loaded', error);
   });
@@ -59,7 +59,21 @@ queueMicrotask(() => {
     .catch((error) => {
       console.warn('Active reading-time enhancement could not be loaded', error);
     });
-});
+}
+
+function scheduleDeferredEnhancements() {
+  const begin = () => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(loadDeferredEnhancements, { timeout: 2000 });
+      return;
+    }
+    window.setTimeout(loadDeferredEnhancements, 250);
+  };
+  if (document.readyState === 'complete') begin();
+  else window.addEventListener('load', begin, { once: true });
+}
+
+scheduleDeferredEnhancements();
 
 /** Repo-root URL prefix so fetches work at / and at /<repo>/ */
 
@@ -235,21 +249,23 @@ export async function fileExists(relativePath) {
 async function existingUrl(relativePath) {
   const url = fileUrl(relativePath);
   return existenceCache.load(url, async () => {
-    const res = await fetch(url, { method: 'GET', cache: 'no-cache' });
-    return res.ok ? url : null;
+    const head = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+    if (head.ok) return url;
+    if (head.status !== 405 && head.status !== 501) return null;
+    const get = await fetch(url, { method: 'GET', cache: 'no-cache' });
+    return get.ok ? url : null;
   });
 }
 
 export async function firstExisting(relativePaths) {
-  for (const path of relativePaths) {
+  const candidates = await Promise.all(relativePaths.map(async (path) => {
     try {
-      const url = await existingUrl(path);
-      if (url) return url;
+      return await existingUrl(path);
     } catch {
-      // Transient probe failures stay retryable and do not block later candidates.
+      return null;
     }
-  }
-  return null;
+  }));
+  return candidates.find(Boolean) || null;
 }
 
 const startupPlan = startupAcquisitionPlan(navigator.connection || {});

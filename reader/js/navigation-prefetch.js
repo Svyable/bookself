@@ -238,17 +238,23 @@ function installFastCoverPreview(root, { base } = {}) {
     if (!route || route.slug !== state.slug || route.chapter != null) restore();
   };
 
-  const loaderObserver = loader && typeof MutationObserver !== 'undefined'
+  const startButton = document.getElementById('startBtn');
+  const loaderObserver = typeof MutationObserver !== 'undefined'
     ? new MutationObserver(() => {
       if (!state.slug) return;
-      if (!loader.hidden) {
+      if (startButton?.dataset.coverPreviewDisabled === 'true' && startButton.textContent !== 'Opening…') {
+        restore();
+        return;
+      }
+      if (loader && !loader.hidden) {
         state.sawLoaderBusy = true;
         return;
       }
-      if (state.sawLoaderBusy) restore();
+      if (loader?.hidden && state.sawLoaderBusy) restore();
     })
     : null;
-  loaderObserver?.observe(loader, { attributes: true, attributeFilter: ['hidden'] });
+  if (loader) loaderObserver?.observe(loader, { attributes: true, attributeFilter: ['hidden'] });
+  if (startButton) loaderObserver?.observe(startButton, { childList: true, characterData: true, subtree: true });
 
   root.addEventListener('click', onClickCapture, true);
   root.addEventListener('pointerenter', onPointerEnterCapture, true);

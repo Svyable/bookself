@@ -108,7 +108,7 @@ export function parsePortalStand(markdown) {
 
 function cell(markdown, label) {
   const re = new RegExp(
-    `\\|\\s*\\*\\*${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\*\\*\\s*\\|\\s*([^|\\n]+)\\|`,
+    `\\|\\s*\\*\\*${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\*\\*\\s*\\|\\s*([^|\n]+)\\|`,
     'i'
   );
   const m = markdown.match(re);
@@ -218,7 +218,7 @@ export function parseBookReadme(markdown, slug) {
   const title = titleMatch ? titleMatch[1].trim() : slug;
   const subtitle = readmeSubtitle(markdown, titleMatch);
   const status = cell(markdown, 'Status');
-  const authorsRaw = cell(markdown, 'Authors');
+  const authorsRaw = cell(markdown, 'Authors') || cell(markdown, 'Author');
   const authors = plainInlineText(authorsRaw);
   const chaptersCell = cell(markdown, 'Chapters');
   const formatLabel = cell(markdown, 'Format');

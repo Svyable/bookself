@@ -13,7 +13,7 @@
   "forkLabel": "See the architecture",
   "homeLabel": "Bookself",
   "storagePrefix": "bookself-demo",
-  "readerStyles": ["reader/css/interface-v2.css", "reader/css/interface-v3.css?v=r4"],
+  "readerStyles": ["reader/css/interface-v2.css", "reader/css/interface-v3.css?v=r5"],
   "steps": [],
   "github": {
     "owner": "auto",

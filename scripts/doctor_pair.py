@@ -4,15 +4,11 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from dataclasses import asdict
 from pathlib import Path
 
 import doctor
-
-
-SHARED_DIRS = ("reader", "desk")
 
 
 def load_imprint(root: Path) -> dict[str, object] | None:
@@ -21,21 +17,6 @@ def load_imprint(root: Path) -> dict[str, object] | None:
     except (OSError, json.JSONDecodeError):
         return None
     return data if isinstance(data, dict) else None
-
-
-def tree_digest(root: Path, relative: str) -> dict[str, str] | None:
-    base = root / relative
-    if not base.is_dir():
-        return None
-    result: dict[str, str] = {}
-    for path in sorted(item for item in base.rglob("*") if item.is_file()):
-        rel = path.relative_to(base).as_posix()
-        try:
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        except OSError:
-            return None
-        result[rel] = digest
-    return result
 
 
 def publication_status(path: Path) -> str:
@@ -114,38 +95,54 @@ def pair_findings(desk_root: Path, shelf_root: Path) -> list[doctor.Finding]:
                 )
             )
 
-    for relative in SHARED_DIRS:
-        desk_tree = tree_digest(desk_root, relative)
-        shelf_tree = tree_digest(shelf_root, relative)
-        if desk_tree is None or shelf_tree is None:
-            out.append(
-                doctor.finding(
-                    "error",
-                    "shared_ui_missing",
-                    f"Shared UI directory {relative}/ must exist in both Desk and Shelf.",
-                )
+    # Role-aware software boundary. Desk owns authoring UI; Shelf explicitly does not.
+    if (desk_root / "reader" / "index.html").is_file():
+        out.append(doctor.finding("ok", "desk_reader", "Desk has a local Reader."))
+    else:
+        out.append(doctor.finding("error", "desk_reader_missing", "Desk Reader is missing."))
+    if (desk_root / "desk" / "index.html").is_file():
+        out.append(doctor.finding("ok", "desk_authoring", "Desk has the Publishing Desk application."))
+    else:
+        out.append(doctor.finding("error", "desk_authoring_missing", "Desk Publishing Desk application is missing."))
+
+    if (shelf_root / "reader" / "index.html").is_file():
+        out.append(doctor.finding("ok", "shelf_reader", "Shelf has a local Reader."))
+    else:
+        out.append(doctor.finding("error", "shelf_reader_missing", "Shelf Reader is missing."))
+    if (shelf_root / "desk").exists():
+        out.append(
+            doctor.finding(
+                "error",
+                "shelf_authoring_present",
+                "Shelf contains a Publishing Desk application tree; authoring UI belongs only on Desk.",
             )
-            continue
-        if desk_tree != shelf_tree:
-            paths = sorted(set(desk_tree) | set(shelf_tree))
-            drift = [path for path in paths if desk_tree.get(path) != shelf_tree.get(path)]
-            preview = ", ".join(drift[:5])
-            suffix = "" if len(drift) <= 5 else f" (+{len(drift) - 5} more)"
-            out.append(
-                doctor.finding(
-                    "error",
-                    "shared_ui_drift",
-                    f"Shared UI differs in {relative}/: {preview}{suffix}.",
-                )
+        )
+    else:
+        out.append(
+            doctor.finding(
+                "ok",
+                "shelf_release_only",
+                "Shelf is release-only and contains no Publishing Desk application tree.",
             )
-        else:
-            out.append(
-                doctor.finding(
-                    "ok",
-                    f"{relative}_aligned",
-                    f"Shared {relative}/ files match byte-for-byte.",
-                )
+        )
+    if (shelf_root / "reader" / "js" / "app.js").is_file() and (
+        shelf_root / "reader" / "js" / "app-core.js"
+    ).is_file():
+        out.append(
+            doctor.finding(
+                "ok",
+                "shelf_local_core",
+                "Shelf has an instance Reader adapter and local framework core.",
             )
+        )
+    else:
+        out.append(
+            doctor.finding(
+                "error",
+                "shelf_local_core_missing",
+                "Shelf Reader must have reader/js/app.js and local reader/js/app-core.js.",
+            )
+        )
 
     missing_templates = [
         name
@@ -314,17 +311,10 @@ def print_human(result: dict[str, object]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Validate a Bookself Desk + Shelf pair as one installation."
-    )
-    parser.add_argument("desk", help="path to the private Desk repository")
+    parser = argparse.ArgumentParser(description="Validate a Bookself Desk + Shelf pair as one installation.")
+    parser.add_argument("desk", help="path to the Desk repository")
     parser.add_argument("shelf", help="path to the public Shelf repository")
-    parser.add_argument(
-        "--json",
-        action="store_true",
-        dest="as_json",
-        help="emit machine-readable JSON",
-    )
+    parser.add_argument("--json", action="store_true", dest="as_json", help="emit machine-readable JSON")
     args = parser.parse_args(argv)
     result = inspect_pair(Path(args.desk), Path(args.shelf))
     if args.as_json:

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {
   normalizeLibrarySort,
+  shelfIndexLetters,
+  shelfLetter,
   sortByLastRead,
   volumeSlug,
 } from './library-sort-model.js';
@@ -9,6 +11,16 @@ assert.equal(normalizeLibrarySort('title'), 'title');
 assert.equal(normalizeLibrarySort('updated'), 'updated');
 assert.equal(normalizeLibrarySort('last-read'), 'last-read');
 assert.equal(normalizeLibrarySort('bogus'), 'title');
+
+assert.equal(shelfLetter('Alpha'), 'A');
+assert.equal(shelfLetter("'beta"), 'B');
+assert.equal(shelfLetter('Élan'), 'E');
+assert.equal(shelfLetter('1984'), '#');
+assert.equal(shelfLetter('東京'), '#');
+assert.deepEqual(
+  shelfIndexLetters(['Zed', 'Alpha', 'Élan', '1984', 'Another']),
+  ['A', 'E', 'Z', '#']
+);
 
 assert.equal(volumeSlug('#/b/alpha-book/'), 'alpha-book');
 assert.equal(volumeSlug('#/b/A%20Book/'), 'A Book');
@@ -36,4 +48,4 @@ assert.deepEqual(rows.map((row) => row.title), [
   'Same A',
 ]);
 
-console.log('Library sort model: 9/9 assertions passed');
+console.log('Library sort model: 15/15 assertions passed');

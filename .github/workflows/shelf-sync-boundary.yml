@@ -1,19 +1,23 @@
-name: Shelf-safe sync boundary
+name: Shelf instance boundary
 
 on:
   pull_request:
     paths:
       - "scripts/sync-ui.py"
+      - "scripts/stamp-instance.py"
       - "scripts/instance_identity.py"
       - "tests/test_sync_ui.py"
+      - "tests/test_stamp_instance.py"
       - ".github/workflows/shelf-sync-boundary.yml"
   push:
     branches:
       - main
     paths:
       - "scripts/sync-ui.py"
+      - "scripts/stamp-instance.py"
       - "scripts/instance_identity.py"
       - "tests/test_sync_ui.py"
+      - "tests/test_stamp_instance.py"
       - ".github/workflows/shelf-sync-boundary.yml"
   workflow_dispatch:
 
@@ -25,5 +29,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify Shelf-safe sync ownership
+      - name: Verify Shelf creation and safe-sync ownership
         run: python3 -m unittest discover -s tests -p 'test_*.py'

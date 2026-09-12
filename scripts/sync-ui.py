@@ -115,25 +115,35 @@ def sync_one(root: Path, destination: Path, *, shelf_safe: bool = False) -> None
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Sync Bookself UI into instances. Use --shelf-safe for public Shelf repositories."
+        description="Sync Bookself UI into one or more explicit instances. Use --shelf-safe for public Shelf repositories."
     )
     parser.add_argument(
         "--shelf-safe",
         action="store_true",
         help="sync Reader engine into a Shelf while preserving Shelf-owned shell, identity, and publication state",
     )
-    parser.add_argument("destinations", nargs="*", help="instance directories to update")
+    parser.add_argument("destinations", nargs="+", help="explicit instance directories to update")
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parent.parent
     destinations = [Path(item).expanduser().resolve() for item in args.destinations]
-    if not destinations:
-        destinations = [path for path in (root.parent / "desk", root.parent / "shelf") if path.is_dir()]
 
-    if not destinations:
-        parser.error("no sibling desk or shelf found; pass one or more instance paths")
-    if args.shelf_safe and not args.destinations:
-        parser.error("--shelf-safe requires an explicit Shelf destination")
+    # Preflight every destination before mutating any of them. This prevents a
+    # multi-target invocation from partially updating one instance before a
+    # later destination is rejected by the ownership boundary.
+    for destination in destinations:
+        if not destination.is_dir():
+            parser.error(f"instance not found: {destination}")
+        role = str(read_imprint(destination).get("role") or "").strip().lower()
+        if role == "shelf" and not args.shelf_safe:
+            parser.error(
+                f"refusing whole-tree sync into Shelf instance {destination}; "
+                "use --shelf-safe with an explicit Shelf destination"
+            )
+        if args.shelf_safe and role != "shelf":
+            parser.error(
+                f"--shelf-safe may only target role=shelf instances: {destination}"
+            )
 
     for destination in destinations:
         sync_one(root, destination, shelf_safe=args.shelf_safe)

@@ -72,28 +72,44 @@ After release, the two copies are independent until the next release.
 
 Current authoring instances use `role: "desk"`.
 
-Shared UI consists of **both** `reader/` and `desk/`. Those directories must
-remain byte-for-byte aligned across the upstream platform, Desk, and Shelf after
-sync.
+Shared software sync is **role-aware**, not a whole-tree mirroring contract.
+Bookself owns reusable Reader/Desk framework code; each instance owns its
+integration boundary and publication state.
 
-Instance-owned files are never overwritten by UI sync:
+- A **Desk** may receive shared Reader and Desk framework updates through its
+  instance-specific local sync contract. Desk-owned identity, adapters,
+  manuscripts, catalog/release state, and authoring policy remain instance data.
+- A **Shelf must never receive Bookself's `desk/` tree**. A Shelf framework
+  update uses `--shelf-safe`, preserves the Shelf-owned Reader shell, service
+  worker, adapter, identity-specific styles, and publication state, and
+  materializes upstream `reader/js/app.js` locally as `reader/js/app-core.js`.
+- A Shelf must never execute Reader code from the Bookself Pages deployment at
+  runtime. Framework updates are copied into the instance and committed there;
+  `/bookself/` is not a production CDN for `/shelf/`.
+- Unsafe whole-tree sync into a destination whose imprint role is `shelf` must
+  fail before mutation.
+
+Instance-owned files are never overwritten by framework sync:
 - `books/`
 - root `README.md`
+- `catalog.json`
 - `imprint.json`
 - instance-specific collaboration/configuration files
+- Shelf-owned Reader integration files protected by the `--shelf-safe` contract
 
-After changing anything under `reader/` or `desk/`:
+Framework sync requires explicit destinations. Do not rely on sibling
+auto-discovery:
 
 ```bash
-scripts/sync-ui.sh
+scripts/sync-ui.sh ../desk
+scripts/sync-ui.sh --shelf-safe ../shelf
 ```
 
-With no arguments, sibling `../desk` and `../shelf` are synced when present.
-Explicit destination paths are also accepted. Commit each instance separately.
-`scripts/sync-reader.sh` is only a compatibility alias for `sync-ui.sh`.
+Preflight all destinations before mutation. `scripts/sync-reader.sh` is only a
+compatibility alias where retained; it must not weaken these ownership rules.
 
 Do not hard-code a person, organization, repository name, Shelf URL, or Desk URL
-into shared `reader/` or `desk/` code. Instance identity belongs in
+into portable shared `reader/` or `desk/` code. Instance identity belongs in
 `imprint.json`. Platform defaults must remain portable.
 
 ## Local-first publishing invariant

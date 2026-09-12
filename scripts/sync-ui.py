@@ -95,6 +95,14 @@ def sync_shelf_safe(root: Path, destination: Path) -> None:
 def sync_one(root: Path, destination: Path, *, shelf_safe: bool = False) -> None:
     if not destination.is_dir():
         raise SystemExit(f"instance not found: {destination}")
+
+    imprint = read_imprint(destination)
+    role = str(imprint.get("role") or "").strip().lower()
+    if role == "shelf" and not shelf_safe:
+        raise SystemExit(
+            f"refusing whole-tree sync into Shelf instance {destination}; "
+            "rerun with --shelf-safe so publication state and Shelf-owned integration files are preserved"
+        )
     if shelf_safe:
         sync_shelf_safe(root, destination)
         return

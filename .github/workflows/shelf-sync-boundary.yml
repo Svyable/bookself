@@ -5,12 +5,14 @@ on:
     paths:
       - "scripts/sync-ui.py"
       - "scripts/stamp-instance.py"
+      - "scripts/bootstrap-workspace.py"
       - "scripts/instance_identity.py"
       - "scripts/doctor.py"
       - "scripts/doctor_pair.py"
       - "tests/test_sync_ui.py"
       - "tests/test_stamp_instance.py"
       - "tests/test_doctor_roles.py"
+      - "tests/test_bootstrap_workspace.py"
       - ".github/workflows/shelf-sync-boundary.yml"
   push:
     branches:
@@ -18,12 +20,14 @@ on:
     paths:
       - "scripts/sync-ui.py"
       - "scripts/stamp-instance.py"
+      - "scripts/bootstrap-workspace.py"
       - "scripts/instance_identity.py"
       - "scripts/doctor.py"
       - "scripts/doctor_pair.py"
       - "tests/test_sync_ui.py"
       - "tests/test_stamp_instance.py"
       - "tests/test_doctor_roles.py"
+      - "tests/test_bootstrap_workspace.py"
       - ".github/workflows/shelf-sync-boundary.yml"
   workflow_dispatch:
 
@@ -35,5 +39,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify Shelf creation, health, and safe-sync ownership
+      - name: Verify role-aware creation, bootstrap, health, and safe sync
         run: python3 -m unittest discover -s tests -p 'test_*.py'

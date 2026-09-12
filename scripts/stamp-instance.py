@@ -11,6 +11,12 @@ from pathlib import Path
 
 from instance_identity import stamp_reader_identity
 
+SHELF_ADAPTER = """// Shelf-owned Reader boundary.
+// Bookself framework code is copied locally into app-core.js; a Shelf never
+// executes the Bookself Pages deployment as a runtime dependency.
+import './app-core.js';
+"""
+
 
 def storage_prefix(role: str, repo: str) -> str:
     value = f"{role}-{repo}".lower().replace("_", " ")
@@ -29,6 +35,10 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         skipped = {".DS_Store"}
         if rel == Path("."):
             skipped.update({".git", "imprint.json", "README.md", "catalog.json", "shelf"})
+            if role == "shelf":
+                # The Publishing Desk is an authoring application. A public
+                # release-only Shelf must never contain a copied Desk tree.
+                skipped.add("desk")
         elif rel == Path(".github"):
             skipped.add("workflows")
         elif rel == Path("books"):
@@ -39,6 +49,23 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         return skipped.intersection(names)
 
     shutil.copytree(root, destination, dirs_exist_ok=True, ignore=ignore)
+
+
+def install_shelf_reader_boundary(destination: Path) -> None:
+    """Turn the copied upstream Reader entrypoint into a local Shelf boundary.
+
+    The initial framework app is materialized as ``app-core.js``. ``app.js`` is
+    then instance-owned and remains stable across ``--shelf-safe`` upgrades,
+    which replace the local core without making Shelf import Bookself at runtime.
+    """
+
+    app = destination / "reader" / "js" / "app.js"
+    core = destination / "reader" / "js" / "app-core.js"
+    if not app.is_file():
+        raise SystemExit(f"copied Reader entrypoint missing: {app}")
+    core.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(app, core)
+    app.write_text(SHELF_ADAPTER, encoding="utf-8")
 
 
 def main() -> int:
@@ -62,6 +89,8 @@ def main() -> int:
     repository = args.repository or destination.name
     destination.mkdir(parents=True, exist_ok=True)
     copy_platform(root, destination, args.role)
+    if args.role == "shelf":
+        install_shelf_reader_boundary(destination)
 
     shutil.copy2(root / "docs" / "instances" / f"{args.role}-README.md", destination / "README.md")
 
@@ -71,8 +100,10 @@ def main() -> int:
             "shortName": "Desk",
             "description": "Private Bookself workspace for drafts and manuscripts.",
             "kicker": "Private manuscripts · Git-native writing",
-            "lede": "Draft and revise here. The same Reader and publishing Desk are shared with your public Shelf.",
+            "lede": "Draft and revise here. The Reader and publishing Desk are local to this authoring repository.",
             "homeLabel": "Desk",
+            "writeHref": "../desk/",
+            "writeLabel": "Publishing Desk",
         }
     else:
         values = {
@@ -80,8 +111,12 @@ def main() -> int:
             "shortName": "Shelf",
             "description": "Public Bookself shelf for published Markdown books.",
             "kicker": "Published on Git · Read like a book",
-            "lede": "Published books live here. Drafts stay on the private Desk.",
+            "lede": "Published books live here. Drafts and authoring tools stay on the separate Desk.",
             "homeLabel": "Shelf",
+            # A generic Shelf cannot infer the URL of its separate Desk. An
+            # instance may explicitly configure that external link later.
+            "writeHref": "",
+            "writeLabel": "",
         }
 
     imprint = {
@@ -89,8 +124,6 @@ def main() -> int:
         **values,
         "credit": "",
         "creditHref": "",
-        "writeHref": "../desk/",
-        "writeLabel": "Publishing Desk",
         "forkHref": "",
         "forkLabel": "",
         "storagePrefix": storage_prefix(args.role, repository),
@@ -108,7 +141,11 @@ def main() -> int:
     stamp_reader_identity(destination)
 
     print(f"Stamped {args.role} -> {destination}")
-    print("Shared UI included: reader/ + desk/")
+    if args.role == "shelf":
+        print("Shared software included: local Reader engine only; no Publishing Desk tree")
+        print("Shelf Reader boundary: reader/js/app.js -> local reader/js/app-core.js")
+    else:
+        print("Shared software included: reader/ + desk/")
     print("Instance-owned files: books/, README.md, imprint.json")
     print("Reader install identity: stamped from imprint.json")
     if args.role == "shelf":

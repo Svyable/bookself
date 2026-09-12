@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const gui = fs.readFileSync(new URL('./shelf-gui.js', import.meta.url), 'utf8');
+const librarySort = fs.readFileSync(new URL('./library-sort.js', import.meta.url), 'utf8');
 
 let assertions = 0;
 const check = (run) => {
@@ -29,4 +30,14 @@ check(() => assert.match(gui, /@media \(forced-colors: active\)/));
 check(() => assert.match(gui, /touch-action: pan-y/));
 check(() => assert.match(gui, /setLibraryView\(loadLibraryView\(\), \{ persist: false \}\)/));
 
-console.log(`Compact shelf contract: ${assertions}/19 assertions passed`);
+check(() => assert.match(librarySort, /shelfIndexLetters/));
+check(() => assert.match(librarySort, /shelfLetter/));
+check(() => assert.match(librarySort, /aria-label', 'Jump through bookshelf by letter'/));
+check(() => assert.match(librarySort, /data\.shelfLetterStart/));
+check(() => assert.match(librarySort, /compact-shelf-landmark/));
+check(() => assert.match(librarySort, /index\.addEventListener\('pointerdown'/));
+check(() => assert.match(librarySort, /index\.addEventListener\('pointermove'/));
+check(() => assert.match(librarySort, /touch-action: pan-y/));
+check(() => assert.match(librarySort, /prefers-reduced-motion: reduce/));
+
+console.log(`Compact shelf contract: ${assertions}/28 assertions passed`);

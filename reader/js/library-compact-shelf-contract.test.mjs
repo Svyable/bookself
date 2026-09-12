@@ -40,4 +40,11 @@ check(() => assert.match(librarySort, /index\.addEventListener\('pointermove'/))
 check(() => assert.match(librarySort, /touch-action: pan-y/));
 check(() => assert.match(librarySort, /prefers-reduced-motion: reduce/));
 
-console.log(`Compact shelf contract: ${assertions}/28 assertions passed`);
+check(() => assert.match(librarySort, /libraryShelfPolishStyles/));
+check(() => assert.match(librarySort, /repeating-linear-gradient\(/));
+check(() => assert.match(librarySort, /blur\(26px\) saturate\(1\.28\)/));
+check(() => assert.match(librarySort, /top: calc\(env\(safe-area-inset-top\) \+ 76px\) !important/));
+check(() => assert.match(librarySort, /width: min\(19rem, calc\(100vw - 28px\)\)/));
+check(() => assert.match(librarySort, /background: Canvas;[\s\S]*box-shadow: none;/));
+
+console.log(`Compact shelf contract: ${assertions}/34 assertions passed`);

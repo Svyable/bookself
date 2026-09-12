@@ -335,6 +335,91 @@ body[data-stage="library"] .compact-spine.is-index-target {
   document.head.appendChild(style);
 }
 
+function injectShelfPolishStyles() {
+  if ($('libraryShelfPolishStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'libraryShelfPolishStyles';
+  style.textContent = `
+body[data-stage="library"] .compact-shelf-grid {
+  border-color: color-mix(in srgb, var(--border) 82%, var(--text-primary) 5%);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--compact-row) - 12px),
+      color-mix(in srgb, var(--text-primary) 4%, transparent) calc(var(--compact-row) - 12px),
+      color-mix(in srgb, var(--text-primary) 9%, var(--border)) calc(var(--compact-row) - 8px),
+      color-mix(in srgb, var(--shadow) 44%, var(--border)) calc(var(--compact-row) - 5px),
+      color-mix(in srgb, var(--shadow) 66%, transparent) var(--compact-row),
+      color-mix(in srgb, var(--shadow) 24%, transparent) calc(var(--compact-row) + 6px),
+      transparent calc(var(--compact-row) + 18px)
+    ),
+    radial-gradient(64rem 18rem at 50% 0%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 72%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-secondary) 78%, transparent), color-mix(in srgb, var(--bg-primary) 92%, transparent));
+  box-shadow:
+    inset 0 18px 32px color-mix(in srgb, var(--shadow) 13%, transparent),
+    inset 0 -12px 22px color-mix(in srgb, var(--shadow) 20%, transparent),
+    0 12px 32px color-mix(in srgb, var(--shadow) 12%, transparent);
+}
+
+body[data-stage="library"] .compact-spine {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.16), transparent 17%, rgba(255,255,255,.035) 52%, transparent 76%, rgba(0,0,0,.22)),
+    linear-gradient(180deg, rgba(255,255,255,.055), transparent 20%, rgba(0,0,0,.075)),
+    var(--spine-cloth, #67584a);
+  box-shadow:
+    1px 3px 5px rgba(0,0,0,.28),
+    inset 1px 0 rgba(255,255,255,.1),
+    inset -1px 0 rgba(0,0,0,.12);
+}
+
+body[data-stage="library"] .library-spine-loupe {
+  border-color: color-mix(in srgb, white 27%, var(--border));
+  background: color-mix(in srgb, var(--bg-elevated) 68%, transparent);
+  box-shadow: 0 20px 54px rgba(0,0,0,.4), inset 0 1px rgba(255,255,255,.16);
+  -webkit-backdrop-filter: blur(26px) saturate(1.28);
+  backdrop-filter: blur(26px) saturate(1.28);
+}
+
+@media (max-width: 760px) {
+  body[data-stage="library"] .library-spine-loupe {
+    top: calc(env(safe-area-inset-top) + 76px) !important;
+    left: 50% !important;
+    width: min(19rem, calc(100vw - 28px));
+    min-height: 72px;
+    padding: .82rem 1rem .78rem;
+    border-radius: 24px;
+    transform: translate(-50%, 0) scale(.94);
+    transform-origin: 50% 0;
+  }
+
+  body[data-stage="library"] .library-spine-loupe.visible {
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  body[data-stage="library"] .library-spine-loupe-title {
+    font-size: 1.2rem;
+    line-height: 1.12;
+  }
+
+  body[data-stage="library"] .library-spine-loupe-meta {
+    margin-top: .28rem;
+    font-size: .8rem;
+  }
+}
+
+@media (forced-colors: active) {
+  body[data-stage="library"] .compact-shelf-grid,
+  body[data-stage="library"] .compact-spine,
+  body[data-stage="library"] .library-spine-loupe {
+    background: Canvas;
+    box-shadow: none;
+  }
+}
+`;
+  document.head.appendChild(style);
+}
+
 function shelfIndexElement(section) {
   let index = $('compactShelfIndex');
   if (index) return index;
@@ -539,6 +624,7 @@ function installObserver() {
 
 function initialize() {
   injectShelfIndexStyles();
+  injectShelfPolishStyles();
   installSortControl();
   installObserver();
   restoreSortPreference();

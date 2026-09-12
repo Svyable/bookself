@@ -47,7 +47,11 @@ check(() => assert.match(app, /function renderPublisherFilters\(entries\)/));
 check(() => assert.match(app, /function renderShelf\(entries\)/));
 check(() => assert.match(app, /function sortEntries\(list\)/));
 check(() => assert.match(app, /async function runLibrarySearch\(query\)/));
-check(() => assert.match(worker, /const CACHE = 'obb-shell-v104';/));
+check(() => assert.match(worker, /const CACHE = 'obb-shell-v106';/));
 check(() => assert.match(worker, /'\.\/css\/library-home\.css'/));
+check(() => assert.match(worker, /'\.\/css\/shelf-gui\.css'/));
+check(() => assert.match(worker, /'\.\/js\/shelf-gui\.js'/));
+check(() => assert.match(worker, /'\.\/js\/library-sort-model\.js'/));
+check(() => assert.match(worker, /'\.\/js\/library-sort\.js'/));
 
-console.log(`Library home GUI contract: ${assertions}/34 assertions passed`);
+console.log(`Library home GUI contract: ${assertions}/38 assertions passed`);

@@ -2,107 +2,161 @@
 
 **Write like a repo. Publish like a book.**
 
-Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the shared **Reader** used by both. It is infrastructure, not an author's catalog.
+Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the **Reader** used by both roles. It is infrastructure, not an author's catalog.
 
 > **See Bookself in action:** [Open the embedded demo Shelf →](https://svyable.github.io/bookself/shelf/reader/)
 >
-> This demo is self-contained in the Bookself repository. It uses deliberately published, neutral platform specimens from `books/` and the same shared Reader used by real Desk and Shelf instances. It does not route through an author's personal Shelf.
+> The demo is self-contained inside the upstream Bookself repository and uses neutral platform specimens. It is not an author's production Shelf.
 
-- **Desk** owns working manuscripts, drafts, research, revisions, and the next edition. It is private by default, but may deliberately be public or lower-profile.
-- **Shelf** owns deliberately released publication snapshots and is the canonical promoted public release surface.
-- **Bookself** owns the reusable Reader, Publishing Desk, templates, release tools, validation, documentation, neutral platform specimens, and the upgrade path that keeps Desk and Shelf current.
+- **Desk** owns working manuscripts, drafts, research, revisions, and the next edition. It contains the Publishing Desk authoring application.
+- **Shelf** owns deliberately released publication snapshots and canonical public release history. It contains a local Reader and **does not contain the Publishing Desk application**.
+- **Bookself upstream** owns reusable framework code, templates, release/validation tools, documentation, neutral specimens, and the upgrade path.
 
-**[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Research trail](docs/research.md)** · **[Upgrade shared UI](#upgrade-desk-and-shelf)**
+**[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Research trail](docs/research.md)** · **[Revisions](docs/revisions.md)**
 
 ## The contract
 
 | Layer | Owns | Does not own |
 |---|---|---|
-| **Bookself** | `reader/`, `desk/`, reusable scripts, templates, schemas, docs, neutral platform demos | An author's live catalog or released library |
-| **Desk** | Working `books/`, root catalog, instance identity, draft/revision state | A released edition merely because it is newest |
-| **Shelf** | Released `books/`, public catalog, instance identity, release history | Unreleased Desk work |
-| **Reader** | Presentation, navigation, search, notes, citation, accessibility | Manuscript truth or publication state |
+| **Bookself** | reusable Reader/Desk framework, scripts, templates, schemas, docs, neutral demos | an author's live catalog or released library |
+| **Desk** | working `books/`, root inventory, identity, authoring UI, draft/revision state | public release state merely because it is newest |
+| **Shelf** | released `books/`, public catalog, identity, local Reader boundary, release provenance/history | `desk/` authoring UI or unreleased Desk work |
+| **Reader** | presentation, navigation, search, notes, citation, accessibility | manuscript truth or publication state |
 
-A normal release is **Desk → Shelf**. Shelf never reaches back into Desk at runtime. A released snapshot remains independently readable and versioned until a later deliberate release replaces it.
+A normal publication release is **Desk → Shelf**. Shelf never reaches back into Desk at runtime. A released snapshot remains independently readable/versioned until a later deliberate release replaces it.
 
-The `shelf/` directory in this upstream repository is a deliberately small **embedded demo surface**, not a production author Shelf. It reuses the platform's neutral fixture corpus so the open-source project can demonstrate Shelf behavior without duplicating those fixtures or depending on somebody else's deployment. Real author Shelves remain separate repositories with their own content and history.
+A framework update is a different operation. Bookself software is copied locally into the target instance; Shelf never executes `https://svyable.github.io/bookself/` as a production runtime dependency.
+
+## The upstream demo is not an author Shelf
+
+The `shelf/` directory in this upstream repository is a small embedded **platform demo surface**. It reuses the neutral fixture corpus so the open-source project can demonstrate Shelf behavior without depending on somebody else's deployment.
+
+Real author Shelves are separate repositories with their own identity, content, history, and release provenance.
 
 ## Research is publication content
 
 Every Bookself publication has a canonical `research/` component alongside `manuscript/` and `media/`. Its entry point is `books/<slug>/research/README.md`.
 
-The manuscript is the reader-facing work. The research trail is the inspectable evidence and provenance behind it: source ledgers, claim checks, calculations, counterevidence, methodological boundaries, dated update notes, and release fact-checks. Agents should read existing research before repeating searches and leave durable source context behind when research materially informs a change.
+The manuscript is reader-facing work. The research trail is inspectable evidence/provenance: source ledgers, claim checks, calculations, counterevidence, methodological boundaries, dated updates, and release fact-checks. Agents should read existing research before repeating searches and leave durable source context when evidence materially informs a change.
 
-Reader-facing evidence still belongs in the manuscript when it helps the reading experience—citations, footnotes, references, figures, and necessary methodology. `research/` carries the deeper apparatus without making the narrative table of contents a research notebook.
+On Desk, research may move ahead of the released edition. On Shelf, it is frozen with the released snapshot. The release transaction copies and verifies the complete publication tree.
 
-On Desk, the research trail may move ahead of the current edition. On Shelf, it is frozen with the released edition. The release helper copies and verifies the complete publication tree, so committed research travels with the manuscript automatically.
-
-Research is provenance, not permission to redistribute sources. Prefer links, bibliographic metadata, lawful short quotations, hashes, and author/agent notes over copied third-party files unless redistribution rights are clear. See **[Publication research](docs/research.md)**.
-
-## Upgrade Desk and Shelf
-
-Bookself upgrades flow outward without copying author content inward or outward.
-
-```bash
-python3 scripts/sync-ui.py
-```
-
-The sync operation replaces only the shared Reader and Publishing Desk implementation. It does **not** replace `books/`, the root `README.md`, or `imprint.json`. After shared UI is copied, Bookself re-stamps the Reader's native/install identity from the destination's own `imprint.json`, so a Shelf keeps being that Shelf and a Desk keeps being that Desk.
-
-You can target explicit instances:
-
-```bash
-python3 scripts/sync-ui.py ../desk ../shelf
-```
-
-The shell wrapper delegates to the same Python implementation:
-
-```bash
-scripts/sync-ui.sh ../desk ../shelf
-```
+Research is provenance, not permission to redistribute sources. Prefer links, bibliographic metadata, lawful short quotations, hashes, and original notes over copied third-party files unless redistribution rights are clear. See **[Publication research](docs/research.md)**.
 
 ## Start a Desk and Shelf
 
-Create a working Desk and a release Shelf from the portable platform:
+Create complementary working/release instances from upstream:
 
 ```bash
 python3 scripts/stamp-instance.py ../desk desk YOUR_GITHUB_OWNER desk
 python3 scripts/stamp-instance.py ../shelf shelf YOUR_GITHUB_OWNER shelf
 ```
 
-A new Desk receives blank publication starters. A new Shelf starts without manuscript content. Instance identity is stamped from each instance's `imprint.json` rather than inherited as Bookself branding.
+Or bootstrap the pair and validate it in one operation:
 
-The standard bootstrap keeps Desk private by default, but visibility is an authoring-policy choice rather than the definition of the `desk` role. A deliberately public Desk is still a Desk; it is simply public working history and should be treated as such. Shelf remains the canonical promoted release surface.
+```bash
+python3 scripts/bootstrap-workspace.py ../my-bookself-workspace --owner YOUR_GITHUB_OWNER --json
+```
+
+A new **Desk** receives:
+
+- local Reader;
+- local `desk/` Publishing Desk application;
+- blank publication starters;
+- authoring/release tooling.
+
+A new **Shelf** receives:
+
+- local Reader;
+- an instance-owned Reader entrypoint plus local `app-core.js` framework core;
+- no `desk/` authoring application;
+- no platform examples or blank starters;
+- no publication content until the first deliberate release.
+
+Pair validation should return `setupReady: true` when these complementary roles, separate Git histories, identity, and release boundaries are healthy.
+
+## Upgrade Desk and Shelf safely
+
+Framework sync requires explicit targets.
+
+Update a Desk:
+
+```bash
+python3 scripts/sync-ui.py ../desk
+```
+
+Update a Shelf:
+
+```bash
+python3 scripts/sync-ui.py --shelf-safe ../shelf
+```
+
+The Shelf-safe operation:
+
+- refuses a non-Shelf target;
+- preserves Shelf-owned publications/catalog/identity;
+- preserves Shelf-owned Reader shell, service worker, adapter, and instance styles;
+- updates reusable Reader modules locally;
+- materializes upstream `reader/js/app.js` as local `reader/js/app-core.js`;
+- does **not** copy Bookself's `desk/` tree.
+
+Whole-tree sync into a `role=shelf` destination is rejected before mutation. Multi-target operations are preflighted before any target is changed.
+
+The shell wrapper delegates to the same role-aware Python implementation:
+
+```bash
+scripts/sync-ui.sh ../desk
+scripts/sync-ui.sh --shelf-safe ../shelf
+```
+
+Commit framework updates in each instance separately. Sync is a copy operation, not a live runtime relationship.
 
 ## Write and release
 
-Write on Desk in plain Markdown, keep research and provenance with the publication, commit meaningful revisions, and preview through the shared Reader. When an edition is deliberately ready for release:
+Write on Desk in plain Markdown, keep research/provenance with the publication, commit meaningful revisions, and preview locally or through an intentionally exposed Desk Reader.
+
+When an edition is deliberately ready:
 
 ```bash
-python3 scripts/release-book.py your-title ../shelf
+scripts/release-book.sh your-title ../shelf
 ```
 
-The release helper copies a committed publication snapshot from Desk to Shelf—including `manuscript/`, `research/`, `media/`, rights, and presentation files—updates Shelf publication state/catalog data, verifies the prepared copy, and stops before commit or push.
+The canonical release transaction:
+
+1. verifies Desk/Shelf roles and clean release paths;
+2. pins the exact committed Desk source;
+3. prepares the complete publication snapshot including research, media, rights, and presentation files;
+4. sets Shelf publication state to `Published` and updates catalog/public release surfaces;
+5. byte-verifies the authored payload against the committed Desk snapshot;
+6. writes `books/<slug>/release.json` with exact Desk source commit and deterministic payload integrity;
+7. rolls back the prepared release if a later verification step fails;
+8. stops before commit or push.
+
+Review and land the resulting Shelf diff through normal Git. CI can independently verify invariants, but CI is not the publishing mechanism.
+
+`scripts/promote-book.sh` and lower-level release helpers are implementation/copy primitives. They do not replace the canonical provenance-producing transaction above.
 
 ## What belongs where
 
-| Shared Bookself platform | Instance-owned state |
-|---|---|
-| `reader/` — reading interface | `books/` — manuscripts, research trails, media, and publication metadata |
-| `desk/` — publishing/readiness interface | root `README.md` — catalog and human-facing instance context |
-| `scripts/` — bootstrap, release, validation, synchronization | `imprint.json` — instance name, role, links, Reader identity |
-| `docs/` — architecture and workflow | publication-specific rights/presentation metadata |
-| blank `_..._TEMPLATE` starters and neutral demo specimens | real author content and evidence trails |
+| Bookself upstream | Desk instance | Shelf instance |
+|---|---|---|
+| `reader/` framework source | local Reader | local Reader adapter + core |
+| `desk/` framework source | local Publishing Desk app | **absent** |
+| scripts/templates/docs | authoring/release tooling + blank starters | verification/release-support tooling as applicable |
+| neutral demo specimens | working author publications | deliberate released publication snapshots |
+| platform identity | Desk identity | Shelf identity |
 
-Bookself should remain portable: shared code must not hard-code a person's identity, Desk URL, or unrelated Shelf branding.
+Instance-owned publication state includes `books/`, root `README.md`, `catalog.json`, `imprint.json`, rights metadata, and release history. Shelf additionally owns the Reader integration boundary that keeps its runtime local and independent.
+
+Bookself must remain portable: reusable framework code must not hard-code a person's identity, Desk URL, or unrelated Shelf branding.
 
 ## Reader and Publishing Desk
 
-The Reader renders plain Markdown as a designed publication while preserving the repository as source of truth. It supports paged and continuous reading, typography controls, search, notes, bookmarks, citations, history/source links, accessibility surfaces, and publication-specific presentation recommendations.
+The **Reader** renders plain Markdown as a designed publication while preserving the repository as source of truth. It supports paged/continuous reading, typography controls, search, notes, bookmarks, citations, history/source links, accessibility surfaces, and publication-specific presentation recommendations.
 
-The Publishing Desk surfaces publication readiness, metadata, state, release mismatches, and next actions without turning Bookself into a CMS.
+The **Publishing Desk** surfaces authoring/readiness state. It lives on Desk (and in upstream framework development), not on a production Shelf.
 
-Publication presentation can be recommended with `reader.json`; the reader's own browser-local preferences remain authoritative.
+Publication presentation can be recommended with `reader.json`; browser-local reader preferences remain authoritative.
 
 ## Local-first invariant
 
@@ -110,42 +164,44 @@ Writing, researching, previewing, validating, releasing, and reading must work w
 
 GitHub Pages can deliver a public Shelf or an intentionally public Desk preview, but Pages is a delivery surface, not the publishing engine.
 
+Custom Shelf automation should verify rather than silently rewrite publication state.
+
 ## Rights
 
-Bookself's framework software, documentation, shared UI, scripts, and blank starters are MIT licensed. Real publications are **All Rights Reserved by default** unless their own rights files deliberately grant another license.
+Bookself framework software, documentation, scripts, and blank starters are MIT licensed. Real publications are **All Rights Reserved by default** unless their own rights files deliberately grant another license.
 
-Public visibility is not the same as an open license. Publication-specific `RIGHTS.md` and `rights.json` travel with a release and remain author-controlled. Research notes and source metadata can travel with the publication without changing the rights of underlying third-party works. See [Rights, copyright, and AI](docs/rights-and-ai.md).
+Public visibility is not the same as an open license. Publication-specific `RIGHTS.md` and `rights.json` travel with releases and remain author-controlled. Research notes/source metadata can travel with the publication without changing rights in underlying third-party works. See [Rights, copyright, and AI](docs/rights-and-ai.md).
 
 ## The books
 
-Bookself keeps a deliberately published **neutral demo catalog** in this repository so the Reader, media handling, publication formats, and Shelf experience can be exercised without using an author's personal library. The catalog is defined in [`catalog.json`](catalog.json) and includes specimens such as *Bookself 101*, *The Bookself Daily*, *The Bookself Review*, the format gallery, scholarly examples, and Reader style specimens.
+Bookself upstream keeps a deliberately published **neutral demo catalog** so Reader/media/publication-format behavior can be exercised without using an author's personal library. The catalog is defined in [`catalog.json`](catalog.json) and shown through the embedded [`shelf/reader/`](shelf/reader/) demo surface.
 
-Those platform specimens remain under root `books/` as their single source of truth, including their existing media assets. They are shown through the embedded [`shelf/reader/`](shelf/reader/) demo surface. Blank underscore-prefixed starters remain authoring templates. Real working manuscripts belong in an author's Desk; deliberate author releases belong in that author's separate Shelf.
+Blank underscore-prefixed starters remain authoring templates. Real working manuscripts belong on an author's Desk; deliberate author releases belong in that author's separate Shelf.
 
 ## Documentation
 
 | Need | Go here |
 |---|---|
-| See the live product | [Embedded demo Shelf](https://svyable.github.io/bookself/shelf/reader/) |
+| Live neutral demo | [Embedded demo Shelf](https://svyable.github.io/bookself/shelf/reader/) |
 | Start a workspace | [START HERE](START-HERE.md) |
 | Architecture | [Bookself architecture](docs/bookself.md) |
+| Agent orchestration | [Agent-first Bookself](docs/agent-first.md) |
 | Author workflow | [Author guide](docs/author-guide.md) |
 | Research and provenance | [Publication research](docs/research.md) |
-| Publication formats | [Publication formats](docs/publication-formats.md) |
-| Writing lifecycle | [Writing lifecycle](docs/writing-lifecycle.md) |
 | Revisions and releases | [Revisions and releases](docs/revisions.md) |
+| Publication formats | [Publication formats](docs/publication-formats.md) |
 | Reader presentation | [Reader design](docs/reader-presentation.md) |
 | Rights and AI | [Rights guide](docs/rights-and-ai.md) |
-| Agent-readable project map | [llms.txt](llms.txt) |
+| Agent-readable contract | [bookself.json](bookself.json) |
 | Contributor / agent rules | [AGENTS.md](AGENTS.md) |
 
-## Local platform development
+## Local upstream development
 
 ```bash
 python3 -m http.server
 ```
 
-The shared Reader and Publishing Desk remain available for software development at `reader/` and `desk/`. The same neutral catalog is exposed as the embedded demo Shelf at `shelf/reader/`, so local and GitHub Pages examples stay inside this repository.
+Upstream Reader and Publishing Desk framework surfaces remain available at `reader/` and `desk/` for software development. The neutral catalog is exposed as the embedded demo Shelf at `shelf/reader/`.
 
 ## Citation and license
 

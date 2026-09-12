@@ -1,7 +1,12 @@
-import { sortByLastRead, volumeSlug } from './library-sort-model.js';
+import {
+  normalizeLibrarySort,
+  sortByLastRead,
+  volumeSlug,
+} from './library-sort-model.js';
 
 let lastReadActive = false;
 let sortFrame = 0;
+let restoreComplete = false;
 
 function $(id) {
   return document.getElementById(id);
@@ -11,11 +16,34 @@ function libraryStage() {
   return document.body.dataset.stage === 'library';
 }
 
+function storagePrefix() {
+  return window.__IMPRINT?.storagePrefix || 'bookself';
+}
+
+function sortPreferenceKey() {
+  return `${storagePrefix()}:library-sort`;
+}
+
+function loadSortPreference() {
+  try {
+    return normalizeLibrarySort(localStorage.getItem(sortPreferenceKey()));
+  } catch {
+    return 'title';
+  }
+}
+
+function saveSortPreference(mode) {
+  try {
+    localStorage.setItem(sortPreferenceKey(), normalizeLibrarySort(mode));
+  } catch {
+    // Preference persistence is optional; sorting itself must remain usable.
+  }
+}
+
 function progressSavedAt(slug) {
   if (!slug) return 0;
-  const prefix = window.__IMPRINT?.storagePrefix || 'bookself';
   try {
-    const progress = JSON.parse(localStorage.getItem(`${prefix}:${slug}:progress`) || 'null');
+    const progress = JSON.parse(localStorage.getItem(`${storagePrefix()}:${slug}:progress`) || 'null');
     return Number(progress?.savedAt) || 0;
   } catch {
     return 0;
@@ -76,15 +104,36 @@ function scheduleLastReadSort() {
   sortFrame = requestAnimationFrame(applyLastReadSort);
 }
 
-function activateLastRead() {
+function activateLastRead({ persist = true } = {}) {
   lastReadActive = true;
+  restoreComplete = true;
+  if (persist) saveSortPreference('last-read');
   syncControls();
   scheduleLastReadSort();
 }
 
-function deactivateLastRead() {
-  if (!lastReadActive) return;
+function deactivateLastRead(mode = null) {
   lastReadActive = false;
+  restoreComplete = true;
+  if (mode) saveSortPreference(mode);
+  syncControls();
+}
+
+function restoreSortPreference() {
+  if (restoreComplete || !currentVolumes().length) return;
+  const mode = loadSortPreference();
+  if (mode === 'last-read') {
+    activateLastRead({ persist: false });
+    return;
+  }
+  if (mode === 'updated') {
+    const updated = document.querySelector('.library-bar [data-sort="recent"]');
+    if (!updated) return;
+    restoreComplete = true;
+    updated.click();
+    return;
+  }
+  restoreComplete = true;
   syncControls();
 }
 
@@ -108,11 +157,14 @@ function installSortControl() {
   button.title = 'Sort by your most recently read books';
   button.setAttribute('aria-label', 'Sort by your most recently read books');
   button.setAttribute('aria-pressed', 'false');
-  button.addEventListener('click', activateLastRead);
+  button.addEventListener('click', () => activateLastRead());
   group.appendChild(button);
 
   group.addEventListener('click', (event) => {
-    if (event.target.closest('[data-sort]')) deactivateLastRead();
+    const core = event.target.closest('[data-sort]');
+    if (!core) return;
+    const mode = core.dataset.sort === 'recent' ? 'updated' : 'title';
+    deactivateLastRead(mode);
   });
 }
 
@@ -120,6 +172,7 @@ function installObserver() {
   const library = $('libraryView');
   if (!library) return;
   const observer = new MutationObserver(() => {
+    restoreSortPreference();
     if (!lastReadActive) return;
     syncControls();
     scheduleLastReadSort();
@@ -130,6 +183,7 @@ function installObserver() {
 function initialize() {
   installSortControl();
   installObserver();
+  restoreSortPreference();
   syncControls();
 }
 

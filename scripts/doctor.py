@@ -132,13 +132,90 @@ def inspect_reader_presentations(root: Path, out: list[Finding]) -> None:
             )
             continue
         for item in validate_presentation(data):
+            out.append(finding(item.level, item.code, f"{rel}: {item.message}"))
+
+
+def inspect_role_surfaces(root: Path, role: str, out: list[Finding]) -> None:
+    reader_index = root / "reader" / "index.html"
+    if reader_index.is_file():
+        out.append(finding("ok", "reader_present", "Reader is present."))
+    else:
+        out.append(
+            finding(
+                "error" if role in {"platform", "desk", "shelf"} else "warning",
+                "reader_missing",
+                "Reader is missing (reader/index.html).",
+            )
+        )
+
+    desk_index = root / "desk" / "index.html"
+    if role == "shelf":
+        if (root / "desk").exists():
             out.append(
                 finding(
-                    item.level,
-                    item.code,
-                    f"{rel}: {item.message}",
+                    "error",
+                    "shelf_desk_present",
+                    "Shelf contains a Publishing Desk application tree; authoring UI belongs only on Desk.",
                 )
             )
+        else:
+            out.append(
+                finding(
+                    "ok",
+                    "shelf_no_desk",
+                    "Shelf correctly contains no Publishing Desk application tree.",
+                )
+            )
+
+        adapter = root / "reader" / "js" / "app.js"
+        core = root / "reader" / "js" / "app-core.js"
+        if adapter.is_file() and core.is_file():
+            out.append(
+                finding(
+                    "ok",
+                    "shelf_reader_boundary",
+                    "Shelf has an instance Reader adapter and a local framework core.",
+                )
+            )
+        else:
+            missing = [
+                rel
+                for rel, path in (("reader/js/app.js", adapter), ("reader/js/app-core.js", core))
+                if not path.is_file()
+            ]
+            out.append(
+                finding(
+                    "error",
+                    "shelf_reader_boundary_missing",
+                    "Shelf Reader boundary is incomplete: " + ", ".join(missing) + ".",
+                )
+            )
+        if adapter.is_file():
+            try:
+                app_text = adapter.read_text(encoding="utf-8")
+            except OSError as exc:
+                out.append(finding("error", "shelf_adapter_unreadable", f"Could not read {adapter}: {exc}"))
+            else:
+                if "svyable.github.io/bookself" in app_text.lower():
+                    out.append(
+                        finding(
+                            "error",
+                            "shelf_remote_runtime",
+                            "Shelf Reader adapter must not execute the Bookself Pages deployment at runtime.",
+                        )
+                    )
+        return
+
+    if desk_index.is_file():
+        out.append(finding("ok", "publishing_desk_present", "Publishing Desk is present."))
+    else:
+        out.append(
+            finding(
+                "error" if role in {"platform", "desk"} else "warning",
+                "publishing_desk_missing",
+                "Publishing Desk is missing (desk/index.html).",
+            )
+        )
 
 
 def inspect_root(root: Path) -> list[Finding]:
@@ -186,21 +263,7 @@ def inspect_root(root: Path) -> list[Finding]:
         else:
             out.append(finding("ok", "clean_worktree", "Working tree is clean."))
 
-    for label, path in (
-        ("Reader", root / "reader" / "index.html"),
-        ("Publishing Desk", root / "desk" / "index.html"),
-    ):
-        code = label.lower().replace(" ", "_")
-        if path.is_file():
-            out.append(finding("ok", f"{code}_present", f"{label} is present."))
-        else:
-            out.append(
-                finding(
-                    "error" if role in {"platform", "desk", "shelf"} else "warning",
-                    f"{code}_missing",
-                    f"{label} is missing ({path.relative_to(root)}).",
-                )
-            )
+    inspect_role_surfaces(root, role, out)
 
     readme_path = root / "README.md"
     portal = ""
@@ -230,13 +293,7 @@ def inspect_root(root: Path) -> list[Finding]:
             continue
         hub_path = root / "books" / slug / "README.md"
         if not hub_path.is_file():
-            out.append(
-                finding(
-                    "error",
-                    "missing_publication_hub",
-                    f"Catalog entry {slug!r} has no books/{slug}/README.md.",
-                )
-            )
+            out.append(finding("error", "missing_publication_hub", f"Catalog entry {slug!r} has no books/{slug}/README.md."))
             continue
         hub = read_text(hub_path, out, "unreadable_publication_hub")
         if hub is None:
@@ -370,17 +427,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Read-only health check for a Bookself platform, Desk, or Shelf checkout."
     )
-    parser.add_argument(
-        "--root",
-        default=".",
-        help="Repository root to inspect (default: current directory).",
-    )
-    parser.add_argument(
-        "--json",
-        action="store_true",
-        dest="as_json",
-        help="Emit machine-readable JSON.",
-    )
+    parser.add_argument("--root", default=".", help="Repository root to inspect (default: current directory).")
+    parser.add_argument("--json", action="store_true", dest="as_json", help="Emit machine-readable JSON.")
     args = parser.parse_args(argv)
     root = Path(args.root)
     findings = inspect_root(root)

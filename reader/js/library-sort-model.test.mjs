@@ -1,5 +1,14 @@
 import assert from 'node:assert/strict';
-import { sortByLastRead, volumeSlug } from './library-sort-model.js';
+import {
+  normalizeLibrarySort,
+  sortByLastRead,
+  volumeSlug,
+} from './library-sort-model.js';
+
+assert.equal(normalizeLibrarySort('title'), 'title');
+assert.equal(normalizeLibrarySort('updated'), 'updated');
+assert.equal(normalizeLibrarySort('last-read'), 'last-read');
+assert.equal(normalizeLibrarySort('bogus'), 'title');
 
 assert.equal(volumeSlug('#/b/alpha-book/'), 'alpha-book');
 assert.equal(volumeSlug('#/b/A%20Book/'), 'A Book');
@@ -27,4 +36,4 @@ assert.deepEqual(rows.map((row) => row.title), [
   'Same A',
 ]);
 
-console.log('Library sort model: 5/5 assertions passed');
+console.log('Library sort model: 9/9 assertions passed');

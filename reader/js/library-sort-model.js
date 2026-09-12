@@ -1,3 +1,9 @@
+const LIBRARY_SORTS = new Set(['title', 'updated', 'last-read']);
+
+export function normalizeLibrarySort(value) {
+  return LIBRARY_SORTS.has(value) ? value : 'title';
+}
+
 export function volumeSlug(href = '') {
   const match = String(href).match(/#\/b\/([^/]+)\//);
   if (!match) return '';

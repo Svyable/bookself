@@ -3,7 +3,7 @@ importScripts('./js/offline-fetch-policy.js');
 importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
-const CACHE = 'obb-shell-v105';
+const CACHE = 'obb-shell-v106';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -24,6 +24,7 @@ const SHELL = [
   './css/content-scroll-regions.css',
   './css/one-handed-actions.css',
   './css/gui.css',
+  './css/shelf-gui.css',
   './css/settings-panel.css',
   './css/library-quick-look.css',
   './css/search-navigation.css',
@@ -68,6 +69,7 @@ const SHELL = [
   './js/scroll-performance-model.js',
   './js/scroll-performance.js',
   './js/gui.js',
+  './js/shelf-gui.js',
   './js/dialog-stack.js',
   './js/pwa-update-model.js',
   './js/pwa-update.js',
@@ -83,6 +85,8 @@ const SHELL = [
   './js/formats.js',
   './js/library-book-preview-model.js',
   './js/library-quick-look.js',
+  './js/library-sort-model.js',
+  './js/library-sort.js',
   './js/theme-controls.js',
   './js/math.js',
   './js/academic.js',

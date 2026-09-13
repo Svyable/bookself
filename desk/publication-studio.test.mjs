@@ -37,8 +37,7 @@ test('manuscript cards expose only the focused primary action set', async () => 
   assert.match(template, /<summary>More<\/summary>/);
   assert.match(template, /class="export-epub-action"[^>]*hidden/);
   assert.match(template, /class="export-kdp-action"[^>]*hidden/);
-  assert.doesNotMatch(template, />Export Kindle \(\.epub\)</);
-  assert.doesNotMatch(template, />HTML fallback</);
+  assert.match(template, /class="book-secondary-links"[\s\S]*?>Files<[\s\S]*?>History</);
 });
 
 test('print editions are honest about current capability', async () => {

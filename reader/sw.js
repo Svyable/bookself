@@ -3,7 +3,7 @@ importScripts('./js/offline-fetch-policy.js');
 importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
-const CACHE = 'obb-shell-v106';
+const CACHE = 'obb-shell-v107';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -49,6 +49,7 @@ const SHELL = [
   './js/navigation.js',
   './js/content-navigation.js',
   './js/reading-surface.js',
+  './js/spread-state.js',
   './js/viewport-stability.js',
   './js/viewport-stability-runtime.js',
   './js/global-reader-controls.js',

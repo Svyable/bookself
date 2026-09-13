@@ -1,16 +1,20 @@
 cff-version: 1.2.0
-message: "If you use Bookself in research, teaching, publishing, or software work, please cite the software using this metadata."
+message: "If you use Bookself in research, teaching, publishing, agentic authorship, or software work, please cite the software using this metadata."
 type: software
 title: "Bookself"
 authors:
   - family-names: "Benson"
     given-names: "Sven"
-abstract: "Bookself is open-source, Git-native publishing software for books, papers, course texts, and other long-form work. It keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from intentional public releases, and includes a browser Reader plus a Publishing Desk."
+abstract: "Bookself is open-source, Git-native infrastructure for agentic authorship and long-form publishing. It helps humans and AI agents research, write, review, revise, cite, and deliberately publish durable work while preserving provenance, revision history, rights metadata, and a Desk/Shelf release boundary."
 license: MIT
 repository-code: "https://github.com/Svyable/bookself"
-url: "https://github.com/Svyable/bookself"
+url: "https://svyable.github.io/bookself/"
 keywords:
+  - agentic-authorship
+  - agentic-publishing
+  - ai-agents
   - publishing
+  - research-provenance
   - scholarly-writing
   - academic-writing
   - markdown

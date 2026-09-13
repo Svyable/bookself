@@ -1,0 +1,98 @@
+name: One-time merged branch cleanup
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cleanup-merged-branches-once.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete only branches proven safe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          repo="$GITHUB_REPOSITORY"
+          owner="${repo%%/*}"
+          default_branch="${{ github.event.repository.default_branch }}"
+
+          git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*'
+
+          deleted=0
+          kept=0
+
+          while IFS=$'\t' read -r branch sha protected; do
+            if [[ "$branch" == "$default_branch" ]]; then
+              continue
+            fi
+
+            if [[ "$protected" == "true" ]]; then
+              echo "KEEP protected: $branch"
+              kept=$((kept + 1))
+              continue
+            fi
+
+            open_count=$(gh api --paginate --method GET "repos/$repo/pulls" \
+              -f state=open \
+              -f head="$owner:$branch" \
+              -f per_page=100 \
+              --jq 'length' | awk '{n += $1} END {print n + 0}')
+
+            if [[ "$open_count" -gt 0 ]]; then
+              echo "KEEP open PR: $branch"
+              kept=$((kept + 1))
+              continue
+            fi
+
+            safe=false
+            reason=""
+
+            if git merge-base --is-ancestor "$sha" "origin/$default_branch"; then
+              safe=true
+              reason="tip is already contained in $default_branch"
+            else
+              merged_same_tip=$(gh api --paginate --method GET "repos/$repo/pulls" \
+                -f state=closed \
+                -f head="$owner:$branch" \
+                -f per_page=100 \
+                --jq ".[] | select(.merged_at != null and .head.sha == \"$sha\") | .number" | wc -l | tr -d ' ')
+
+              if [[ "$merged_same_tip" -gt 0 ]]; then
+                safe=true
+                reason="current tip exactly matches a merged PR head"
+              fi
+            fi
+
+            if [[ "$safe" == "true" ]]; then
+              echo "DELETE $branch — $reason"
+              gh api --method DELETE "repos/$repo/git/refs/heads/$branch"
+              deleted=$((deleted + 1))
+            else
+              echo "KEEP unproven/unmerged: $branch"
+              kept=$((kept + 1))
+            fi
+          done < <(gh api --paginate "repos/$repo/branches?per_page=100" --jq '.[] | [.name, .commit.sha, .protected] | @tsv')
+
+          echo "Deleted branches: $deleted"
+          echo "Kept branches: $kept"
+          {
+            echo "## Branch cleanup"
+            echo ""
+            echo "Deleted **$deleted** branches proven safe."
+            echo "Kept **$kept** non-default branches because they were protected, had an open PR, or were not proven merged."
+          } >> "$GITHUB_STEP_SUMMARY"

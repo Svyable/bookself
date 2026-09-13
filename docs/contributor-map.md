@@ -1,136 +1,98 @@
 # Contributor map
 
-Bookself is intentionally small enough that you should not need to understand the whole project before improving one part of it.
+Bookself is easier to work on when one question is answered first: **who owns the thing you are changing?**
 
-Pick the lane that matches the change you want to make. Stay in that lane unless the change genuinely crosses a boundary.
+The system has three repository roles and one shared reading surface:
 
-## Where changes belong
+- **Bookself (`platform`)** owns reusable software, templates, tooling, and documentation.
+- **Desk (`desk`)** owns working manuscripts, research, authoring state, and the next edition.
+- **Shelf (`shelf`)** owns deliberately released publication snapshots and public publishing state.
+- **Reader** is reusable Bookself software copied into Desk and Shelf. It is not a fourth source of publication truth.
 
-| You want to change… | Work here | Keep the PR shaped like… |
-|---|---|---|
-| A sentence, chapter, book, or paper | `books/<slug>/` | One numbered chapter per PR; update that publication's README only when its TOC/count needs to match |
-| Reading, navigation, accessibility, media, math, citations, or Shelf presentation | `reader/` | One coherent Reader behavior; no manuscript edits |
-| Publishing readiness and author-facing workflow | `desk/` | One coherent Publishing Desk behavior; no manuscript edits |
-| Desk → Shelf release behavior or instance setup | `scripts/` and relevant docs | One local-first workflow change with tests where practical |
-| Templates and publication conventions | underscore-prefixed starters under `books/` (for example `_TEMPLATE`, `_PAPER_TEMPLATE`, `_MAGAZINE_TEMPLATE`) and relevant docs | Keep the default simple; avoid adding configuration just because a format can support it |
-| Explanations, examples, onboarding, or community guidance | root docs, `docs/`, `.github/` | Documentation/community change only unless code is required to make the documentation true |
+Desk and Shelf are separate repositories with separate histories. A release copies a committed Desk publication into Shelf. A framework update copies Bookself-owned software into an instance. Those are different operations.
 
-If you are unsure, open a **Platform idea** issue and describe the problem before designing a new subsystem.
+## Where a change belongs
 
-## The architectural boundary that matters most
+| Change | Canonical home |
+|---|---|
+| Reader behavior, pagination, accessibility, search, media, citations, typesetting | Bookself `reader/` |
+| Shared publishing/authoring UI | Bookself `desk/` |
+| Framework sync, bootstrap, doctor, release mechanics | Bookself `scripts/` |
+| Reusable templates and conventions | Bookself template folders and `docs/` |
+| Draft or next-edition prose | the author's Desk `books/<slug>/` |
+| Released prose or publication state | Shelf, normally only through the Desk → Shelf release transaction |
+| Instance identity, local adapters, local policy | that Desk or Shelf instance |
 
-Bookself is the whole product/ecosystem. Its repository roles are:
+Do not fix shared Reader behavior independently in Desk and Shelf. Fix it in Bookself, then synchronize it outward. Do not put unpublished prose in Bookself or Shelf merely because their Readers can display it.
 
-- **platform** — reusable upstream software, templates, docs, and neutral demos
-- **desk** — private working edition
-- **shelf** — public released edition
+## Dependency direction
 
-The **Reader** is the reading interface for Desk proofs and Shelf releases.
+Keep the graph boring:
 
-`reader/` and `desk/` are shared Bookself UI. `books/`, root `README.md`, and `imprint.json` belong to each instance.
+```text
+Bookself software  ──sync──▶  Desk
+        │
+        └──────────sync──▶  Shelf
 
-A platform contributor does **not** need access to somebody's private Desk in order to improve Bookself. Make the shared change in this repository. Maintainers can mirror the final `reader/` / `desk/` bytes into reference instances when the change lands.
+Desk publication  ─release▶  Shelf publication
+```
 
-Do not hard-code a repository owner, private URL, publication identity, or Svyable-specific behavior into shared UI.
+Production Desk and Shelf Readers execute **local committed files**. Neither instance should import executable Reader code from another instance, and Bookself Pages is not a production CDN for them.
 
-## Local verification without a build system
+This means:
 
-Bookself should remain useful with Git, a browser, and Python's standard library. You do not need a Node package install, container, cloud project, or GitHub Actions run just to contribute.
+- Bookself must not depend on a personal Desk or Shelf.
+- Desk must not execute Reader code from Shelf.
+- Shelf must not execute Reader code from Desk or Bookself Pages.
+- Shelf must never receive Bookself's authoring `desk/` application tree.
+- Instance-owned books, identity, catalog/release state, and adapters are not framework-sync payloads.
 
-For a dependency-free repository health check, start with:
+## Updating an instance from Bookself
+
+Use the role-specific safe boundary. The flags are intentional: they make destructive whole-tree copying harder to do accidentally.
+
+```bash
+scripts/sync-ui.sh --desk-safe /path/to/desk
+scripts/sync-ui.sh --shelf-safe /path/to/shelf
+```
+
+A Desk normally exposes the friendlier instance-side wrapper:
+
+```bash
+scripts/sync-bookself.sh /path/to/bookself
+```
+
+That wrapper delegates to Bookself's `--desk-safe` implementation; it should not grow a second synchronization engine.
+
+`--desk-safe` copies the Bookself-owned Reader runtime declared by Bookself's service-worker shell, verifies the next Reader away from the live instance, localizes its runtime references, and only then promotes it. Desk-owned shell/integration files and manuscripts remain Desk state.
+
+`--shelf-safe` updates reusable Reader engine code while preserving the Shelf-owned public shell, service worker, adapter, identity styles, books, catalog, and release state. Bookself's core app is materialized locally for the Shelf adapter.
+
+If either role needs special behavior, prefer a small instance adapter over a fork of shared Reader logic.
+
+## Working locally
+
+Bookself remains no-build and local-first. Start with the checks closest to the change rather than installing a large toolchain.
 
 ```bash
 python3 scripts/doctor.py
-```
-
-The doctor is read-only. It checks the repository role, Git worktree state, Reader and Publishing Desk presence, catalog/publication consistency, and other structural invariants so you can spot a baseline problem before attributing it to your change.
-
-Serve a checkout from its root:
-
-```bash
+python3 -m unittest discover -s tests -p 'test_*.py'
 python3 -m http.server
 ```
 
-Then inspect:
+Then open `/reader/` or `/desk/` from the local server. Reader modules also have focused zero-install Node tests where appropriate.
 
-- `http://127.0.0.1:8000/reader/`
-- `http://127.0.0.1:8000/desk/`
+GitHub Actions may repeat these checks, but hosted CI is verification, not part of the authoring or publishing mechanism.
 
-For Reader parser work, run the relevant zero-install Node tests when Node is available. Current focused tests include:
+## A small-change rule
 
-```bash
-node reader/js/catalog.test.mjs
-node reader/js/math.test.mjs
-node reader/js/academic.test.mjs
-```
+Prefer one owner and one reason per PR. A good change usually answers four questions without a diagram:
 
-For release-tooling changes:
+1. What user or maintainer problem does this solve?
+2. Which repository owns the behavior?
+3. Which instance-owned state must remain untouched?
+4. What focused check proves the boundary still holds?
 
-```bash
-python3 scripts/test_release_book.py
-```
+If the answer requires copying the same implementation into Bookself, Desk, and Shelf, the boundary is probably wrong. If the answer requires a new configuration system for one bug, the design is probably too large.
 
-Run the checks related to your change; Bookself does not require every contributor to install a giant test stack for a typo or documentation fix.
-
-## Shared Reader / Desk changes
-
-If you maintain local Desk or Shelf instances, sync shared UI after changing `reader/` or `desk/`:
-
-```bash
-scripts/sync-ui.sh /path/to/instance
-```
-
-The command replaces only `reader/` and `desk/`; it does not own books, root README content, or imprint identity.
-
-If you are contributing only to the public Bookself repository and do not have instance checkouts, say so in the PR. That is fine. The important review question is whether the shared change remains instance-neutral and portable.
-
-## Academic and research features
-
-Bookself welcomes scholarly features when they make plain publications stronger without silently turning every publication into a build project.
-
-Core academic Markdown currently includes figures/captions, footnotes, citations/bibliography definitions, LaTeX-style math, and chapter-local equation labels/references. See [Academic writing](academic-writing.md).
-
-A proposal for CSL, `.bib`, full TeX projects, executable notebooks, or another richer system should explain the **optional boundary**: ordinary Markdown books must keep working without that subsystem.
-
-## What makes a good platform PR
-
-A strong platform PR is usually easy to answer in five questions:
-
-1. What reader/author problem does this solve?
-2. What is the smallest coherent behavior that solves it?
-3. Which files own that behavior?
-4. How did you verify it locally?
-5. Does the normal Bookself path still work without hosted CI or a mandatory build?
-
-Screenshots are useful for visual changes. Small reproduction snippets are useful for parser bugs. A failing example is often more valuable than a long architectural essay.
-
-## Stacked PRs: verify where the merge lands
-
-Sometimes one review genuinely depends on another. If you stack PRs, the child PR may temporarily use the parent branch as its base. That is useful for keeping the child diff small, but it creates one easy-to-miss trap: GitHub can report the child as **merged** even when it merged only into the old review branch rather than into `main`.
-
-When the parent lands:
-
-1. re-check the child PR's **base branch**;
-2. retarget it to `main` if the parent change is now on `main`;
-3. re-check the child diff;
-4. after merging, verify the intended files on `main` directly.
-
-Do not treat the green “Merged” badge as proof that the default branch received the change. The destination branch is part of the review.
-
-## What not to bundle
-
-Please split changes when review would otherwise require unrelated decisions. In particular, avoid combining:
-
-- manuscript prose with Reader/Desk code;
-- a new academic syntax with an unrelated visual redesign;
-- release tooling with a private-repository Actions workflow;
-- repo-wide formatting with a functional change;
-- a bug fix with a new configuration system that is not needed to fix the bug.
-
-Small does not mean timid. It means the reviewer can see the idea clearly.
-
-## You do not need permission to notice something
-
-If you found a bug, confusing interaction, accessibility problem, broken example, missing academic case, or awkward contributor workflow, that is useful information even if you do not know how to fix it.
-
-Use the issue form that best matches what you saw. A good report is already a contribution.
+The goal is not abstraction for its own sake. The goal is that a human or agent can change one thing confidently without learning the entire publishing system first.

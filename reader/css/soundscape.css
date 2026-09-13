@@ -1,0 +1,204 @@
+.soundscape-panel {
+  margin: 1rem 0 1.1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg-secondary) 62%, transparent);
+}
+
+.soundscape-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.soundscape-eyebrow {
+  color: var(--accent);
+  font: 600 0.64rem/1.1 "IBM Plex Sans", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.soundscape-head h4 {
+  margin: 0.1rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 500;
+}
+
+.soundscape-lede {
+  margin: 0.45rem 0 0.95rem;
+  color: var(--text-muted);
+  font: 400 0.76rem/1.4 "IBM Plex Sans", sans-serif;
+}
+
+.soundscape-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.38rem;
+}
+
+.soundscape-option {
+  display: grid;
+  grid-template-columns: 2.15rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3.2rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg-elevated) 52%, transparent);
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.soundscape-option:hover {
+  border-color: color-mix(in srgb, var(--accent) 46%, var(--border));
+  background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
+}
+
+.soundscape-option.active,
+.soundscape-option[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.soundscape-option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.soundscape-orb {
+  display: block;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 30%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 46%),
+    color-mix(in srgb, var(--bg-primary) 92%, transparent);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: box-shadow 140ms ease;
+}
+
+.soundscape-option.active .soundscape-orb {
+  box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 10px var(--accent-glow);
+}
+
+.soundscape-orb[data-orb="off"] {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--bg-elevated) 92%, transparent), color-mix(in srgb, var(--bg-primary) 96%, transparent)),
+    var(--bg-primary);
+}
+
+.soundscape-orb[data-orb="rain"] {
+  background:
+    radial-gradient(circle at 50% 74%, color-mix(in srgb, #6fa8ae 46%, transparent) 0 4px, transparent 5px),
+    radial-gradient(circle at 34% 58%, color-mix(in srgb, #6fa8ae 46%, transparent) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 66% 48%, color-mix(in srgb, #6fa8ae 40%, transparent) 0 2px, transparent 3px),
+    color-mix(in srgb, var(--bg-primary) 90%, transparent);
+}
+
+.soundscape-orb[data-orb="fire"] {
+  background:
+    radial-gradient(circle at 50% 72%, #e8853b 0 3px, #c45e22 4px, transparent 6px),
+    radial-gradient(circle at 36% 46%, #a7461e 0 2px, transparent 4px),
+    color-mix(in srgb, var(--bg-primary) 88%, transparent);
+}
+
+.soundscape-orb[data-orb="waves"] {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 4px, color-mix(in srgb, #5a86a8 55%, transparent) 4px 5px, transparent 5px 8px),
+    color-mix(in srgb, var(--bg-primary) 90%, transparent);
+}
+
+.soundscape-orb[data-orb="breeze"] {
+  background:
+    repeating-linear-gradient(120deg, transparent 0 5px, color-mix(in srgb, #b8c4c9 50%, transparent) 5px 6px, transparent 6px 10px),
+    color-mix(in srgb, var(--bg-primary) 90%, transparent);
+}
+
+.soundscape-orb[data-orb="night"] {
+  background:
+    radial-gradient(circle at 64% 30%, #f0e6cf 0 1.2px, transparent 2px),
+    radial-gradient(circle at 34% 52%, #e8dcc0 0 1px, transparent 1.8px),
+    radial-gradient(circle at 72% 66%, #e8dcc0 0 1px, transparent 1.8px),
+    radial-gradient(circle at 26% 78%, #f0e6cf 0 1.2px, transparent 2px),
+    color-mix(in srgb, var(--bg-primary) 90%, transparent);
+}
+
+.soundscape-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+}
+
+.soundscape-copy strong {
+  color: var(--text-primary);
+  font: 600 0.74rem/1.15 "IBM Plex Sans", sans-serif;
+}
+
+.soundscape-copy small {
+  color: var(--text-muted);
+  font: 400 0.62rem/1.2 "IBM Plex Sans", sans-serif;
+}
+
+.soundscape-volume-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.68rem;
+  margin-top: 0.85rem;
+}
+
+.soundscape-volume-row label {
+  color: var(--text-secondary);
+  font: 600 0.72rem/1 "IBM Plex Sans", sans-serif;
+}
+
+.soundscape-volume-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.soundscape-volume-value {
+  min-width: 2.4rem;
+  color: var(--accent);
+  font: 600 0.68rem/1 "IBM Plex Sans", sans-serif;
+  text-align: right;
+}
+
+.soundscape-hint {
+  margin: 0.6rem 0 0;
+  color: var(--text-muted);
+  font: 400 0.66rem/1.35 "IBM Plex Sans", sans-serif;
+}
+
+.soundscape-option:focus-visible,
+.soundscape-volume-row input[type="range"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+[data-theme="contrast"] .soundscape-option.active,
+[data-theme="contrast-dark"] .soundscape-option.active {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+@media (max-width: 480px) {
+  .soundscape-options {
+    gap: 0.32rem;
+  }
+  .soundscape-head h4 {
+    font-size: 1rem;
+  }
+  .soundscape-lede {
+    margin-bottom: 0.75rem;
+    font-size: 0.69rem;
+  }
+}

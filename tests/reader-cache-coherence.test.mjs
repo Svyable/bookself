@@ -41,7 +41,7 @@ assert.match(
 
 assert.match(
   serviceWorker,
-  /const CACHE = 'obb-shell-v105';/,
+  /const CACHE = 'obb-shell-v108';/,
   'cache generation must rotate when changing shell coherence semantics',
 );
 

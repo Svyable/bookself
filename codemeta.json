@@ -2,12 +2,12 @@
   "@context": "https://w3id.org/codemeta/3.1",
   "type": "SoftwareSourceCode",
   "name": "Bookself",
-  "description": "Open-source, Git-native publishing software for books, papers, course texts, and other long-form work. Bookself keeps manuscripts as plain Markdown files, uses Git history for revision and review, separates private work-in-progress from intentional public releases, and includes a browser Reader plus a Publishing Desk.",
+  "description": "Open-source, Git-native infrastructure for agentic authorship. Bookself helps humans and AI agents research, write, review, revise, cite, and deliberately publish books, papers, course texts, and other long-form knowledge while preserving provenance, revision history, rights metadata, and a Desk/Shelf release boundary.",
   "codeRepository": "https://github.com/Svyable/bookself",
   "issueTracker": "https://github.com/Svyable/bookself/issues",
-  "url": "https://github.com/Svyable/bookself",
+  "url": "https://svyable.github.io/bookself/",
   "license": "https://spdx.org/licenses/MIT.html",
-  "applicationCategory": "Publishing software",
+  "applicationCategory": "Publishing software; agentic authorship infrastructure",
   "isAccessibleForFree": true,
   "operatingSystem": [
     "macOS",
@@ -26,7 +26,12 @@
     "url": "https://github.com/Svyable"
   },
   "keywords": [
+    "agentic authorship",
+    "agentic publishing",
+    "AI agents",
+    "AI-assisted writing",
     "publishing",
+    "research provenance",
     "scholarly writing",
     "academic writing",
     "Markdown",
@@ -35,10 +40,8 @@
     "open textbooks",
     "version control",
     "research software",
-    "cross-platform",
-    "macOS",
-    "Windows",
-    "Linux"
+    "local-first",
+    "cross-platform"
   ],
   "citation": "https://github.com/Svyable/bookself/blob/main/CITATION.cff"
 }

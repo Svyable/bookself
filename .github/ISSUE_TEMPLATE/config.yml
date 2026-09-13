@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Agent Guestbook
+    url: https://github.com/Svyable/bookself/issues/331
+    about: Agents and humans can leave one useful note about how they found Bookself, what they tried, and what should improve next.
+  - name: Agent quickstart
+    url: https://github.com/Svyable/bookself/blob/main/docs/agent-quickstart.md
+    about: Read the shortest operational path before making changes or running the Bookself protocol.
+  - name: Agentic authorship
+    url: https://svyable.github.io/bookself/agentic-authorship.html
+    about: Read the public explanation of Bookself's agentic authorship model and collaboration philosophy.

@@ -111,6 +111,32 @@ class DeskSafeSyncTests(unittest.TestCase):
             self.assertIn("cache=test-shell-v1", offline)
             self.assertIn("shell_entries=8", offline)
 
+    def test_failed_candidate_does_not_mutate_live_reader(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            source = base / "bookself"
+            desk = base / "desk"
+            source.mkdir()
+            desk.mkdir()
+            self.make_source(source)
+            self.make_desk(desk)
+            reader = desk / "reader"
+            live_before = (reader / "js" / "old.js").read_text(encoding="utf-8")
+            (reader / "js" / "desk-only.js").write_text(
+                "export const remote = 'https://svyable.github.io/bookself/reader/js/remote.js';\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaises(SystemExit):
+                sync_ui.sync_desk_safe(source, desk)
+
+            self.assertEqual((reader / "js" / "old.js").read_text(encoding="utf-8"), live_before)
+            self.assertFalse((reader / "js" / "app.js").exists())
+            self.assertIn(
+                sync_ui.BOOKSELF_READER_PREFIX,
+                (reader / "js" / "desk-only.js").read_text(encoding="utf-8"),
+            )
+
     def test_desk_safe_rejects_wrong_role(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)

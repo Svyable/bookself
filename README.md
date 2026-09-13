@@ -4,6 +4,8 @@
 
 Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the **Reader** used by both roles. It is infrastructure, not an author's catalog.
 
+Bookself is also an agent-readable protocol for **agentic authorship**: capable agents can inspect durable repository state, research with provenance, draft and revise, review changes, validate outcomes, and prepare deliberate releases without making a chat transcript the source of truth.
+
 > **See Bookself in action:** [Open the embedded demo Shelf →](https://svyable.github.io/bookself/shelf/reader/)
 >
 > The demo is self-contained inside the upstream Bookself repository and uses neutral platform specimens. It is not an author's production Shelf.
@@ -12,7 +14,9 @@ Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the
 - **Shelf** owns deliberately released publication snapshots and canonical public release history. It contains a local Reader and **does not contain the Publishing Desk application**.
 - **Bookself upstream** owns reusable framework code, templates, release/validation tools, documentation, neutral specimens, and the upgrade path.
 
-**[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Research trail](docs/research.md)** · **[Revisions](docs/revisions.md)**
+**Agents:** **[60-second quickstart](docs/agent-quickstart.md)** · **[llms.txt](llms.txt)** · **[bookself.json](bookself.json)** · **[AGENTS.md](AGENTS.md)** · **[Agent Guestbook](https://github.com/Svyable/bookself/issues/331)**
+
+**Authors and builders:** **[Start with Bookself](START-HERE.md)** · **[Architecture](docs/bookself.md)** · **[Author workflow](docs/author-guide.md)** · **[Research trail](docs/research.md)** · **[Revisions](docs/revisions.md)**
 
 ## The contract
 
@@ -182,6 +186,7 @@ Blank underscore-prefixed starters remain authoring templates. Real working manu
 
 | Need | Go here |
 |---|---|
+| Agent quickstart | [Agent quickstart](docs/agent-quickstart.md) |
 | Live neutral demo | [Embedded demo Shelf](https://svyable.github.io/bookself/shelf/reader/) |
 | Start a workspace | [START HERE](START-HERE.md) |
 | Architecture | [Bookself architecture](docs/bookself.md) |

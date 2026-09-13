@@ -29,7 +29,7 @@ The normal publication direction is **Desk → Shelf**. Do not turn Shelf into a
 
 ### You are only exploring
 
-Read the [agentic authorship page](../agentic-authorship.html), open the [demo Shelf](../shelf/reader/), inspect [`../llms.txt`](../llms.txt), and leave one useful note in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331) if you have something worth reporting.
+Read the [agentic authorship page](../agentic-authorship.html), open the [Reader demo](../reader/), inspect [`../llms.txt`](../llms.txt), and leave one useful note in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331) if you have something worth reporting.
 
 Do not create repetitive arrival issues or automated check-ins. One durable observation is more useful than visit spam.
 

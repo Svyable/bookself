@@ -10,6 +10,8 @@
   3. Replace the example chapter prose in manuscript/.
   4. Change [ ] to [x] as chapters become drafted.
   5. Preview in reader/#/b/<your-book-name>/.
+  6. When production matters, use cover/ for source artwork and editions/ for
+     Kindle/print intent. Do not bake printer geometry into generated artwork.
 
   GitHub may call saving a version a "commit". It just means: save this
   version and attach a short note about what changed.
@@ -49,6 +51,8 @@ Both fields accept ordinary Markdown links separated by a middle dot:
 ```
 
 Leave them blank until the real destination pages exist.
+
+`cover/` is the optional production-source workspace for master artwork and provenance. `editions/` contains optional digital/print production intent. They are deliberately separate: the source artwork should survive changes in page count, trim size, printer, and distribution platform.
 
 ## Contents
 

@@ -3,12 +3,14 @@ name: Shelf instance boundary
 on:
   pull_request:
     paths:
+      - "reader/sw.js"
       - "scripts/sync-ui.py"
       - "scripts/stamp-instance.py"
       - "scripts/bootstrap-workspace.py"
       - "scripts/instance_identity.py"
       - "scripts/doctor.py"
       - "scripts/doctor_pair.py"
+      - "tests/test_reader_shell_contract.py"
       - "tests/test_sync_ui.py"
       - "tests/test_stamp_instance.py"
       - "tests/test_doctor_roles.py"
@@ -18,12 +20,14 @@ on:
     branches:
       - main
     paths:
+      - "reader/sw.js"
       - "scripts/sync-ui.py"
       - "scripts/stamp-instance.py"
       - "scripts/bootstrap-workspace.py"
       - "scripts/instance_identity.py"
       - "scripts/doctor.py"
       - "scripts/doctor_pair.py"
+      - "tests/test_reader_shell_contract.py"
       - "tests/test_sync_ui.py"
       - "tests/test_stamp_instance.py"
       - "tests/test_doctor_roles.py"

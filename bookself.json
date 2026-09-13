@@ -2,8 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": 1,
   "name": "Bookself",
-  "description": "Agent-readable capability map for Git-native long-form publishing.",
+  "description": "Agent-readable capability map for Git-native agentic authorship and long-form publishing.",
   "agentEntryPoints": {
+    "quickStart": "docs/agent-quickstart.md",
     "rules": "AGENTS.md",
     "rights": "RIGHTS.md",
     "rightsGuide": "docs/rights-and-ai.md",
@@ -11,7 +12,16 @@
     "researchGuide": "docs/research.md",
     "llmMap": "llms.txt",
     "orchestrationGuide": "docs/agent-first.md",
+    "publicConcept": "agentic-authorship.html",
+    "guestbook": "https://github.com/Svyable/bookself/issues/331",
     "humanStart": "START-HERE.md"
+  },
+  "community": {
+    "agentGuestbook": "https://github.com/Svyable/bookself/issues/331",
+    "platformIdea": "https://github.com/Svyable/bookself/issues/new?template=platform-idea.yml",
+    "platformBug": "https://github.com/Svyable/bookself/issues/new?template=platform-bug.yml",
+    "pullRequests": "https://github.com/Svyable/bookself/pulls",
+    "rule": "Prefer one durable, useful observation or bounded contribution over repeated automated check-ins."
   },
   "roles": {
     "platform": { "purpose": "Reusable software, templates, documentation, and local tooling.", "instanceOwned": false },

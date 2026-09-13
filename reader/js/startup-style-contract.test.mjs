@@ -13,7 +13,7 @@ for (const href of [
   'css/interface-v2.css',
   'css/interface-v3.css?v=r5',
 ]) {
-  assert.match(index, new RegExp(`href=[\\"']${href.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}[\\"']`));
+  assert.ok(index.includes(`href="${href}"`), `reader/index.html must load ${href}`);
 }
 
 assert.doesNotMatch(imprint, /await\s+coreReaderStylesReady/);

@@ -28,55 +28,55 @@ jobs:
 
           surface = Path('reader/js/reading-surface.js')
           text = surface.read_text()
-          import_needle = "import { installFontReadiness } from './font-readiness-runtime.js';\n"
-          import_replacement = import_needle + "import { intendedPagedSpread } from './spread-state.js';\n"
-          assert import_needle in text and "./spread-state.js" not in text
-          text = text.replace(import_needle, import_replacement, 1)
 
-          old_sync = """function syncSpreadState() {
-            const right = document.getElementById('pageRight');
-            const wrapper = document.getElementById('pagesWrapper');
-            if (!wrapper) return;
-            const spread = !!right?.classList.contains('active');
-            wrapper.dataset.readerSpread = spread ? 'spread' : 'single';
-          }
-          """
-          new_sync = """function syncSpreadState() {
-            const right = document.getElementById('pageRight');
-            const wrapper = document.getElementById('pagesWrapper');
-            const toggle = document.getElementById('viewModeBtn');
-            if (!wrapper) return;
-            const spread = intendedPagedSpread({
-              stage: document.body.dataset.stage || '',
-              mode: root().dataset.readerMode || 'paged',
-              rightActive: !!right?.classList.contains('active'),
-              toggleHidden: !!toggle?.hidden,
-              toggleLabel: toggle?.textContent || '',
-            });
-            wrapper.dataset.readerSpread = spread ? 'spread' : 'single';
-          }
-          """
+          import_needle = "import { installFontReadiness } from './font-readiness-runtime.js';\n"
+          assert import_needle in text and "./spread-state.js" not in text
+          text = text.replace(
+              import_needle,
+              import_needle + "import { intendedPagedSpread } from './spread-state.js';\n",
+              1,
+          )
+
+          old_sync = (
+              "function syncSpreadState() {\n"
+              "  const right = document.getElementById('pageRight');\n"
+              "  const wrapper = document.getElementById('pagesWrapper');\n"
+              "  if (!wrapper) return;\n"
+              "  const spread = !!right?.classList.contains('active');\n"
+              "  wrapper.dataset.readerSpread = spread ? 'spread' : 'single';\n"
+              "}\n"
+          )
+          new_sync = (
+              "function syncSpreadState() {\n"
+              "  const right = document.getElementById('pageRight');\n"
+              "  const wrapper = document.getElementById('pagesWrapper');\n"
+              "  const toggle = document.getElementById('viewModeBtn');\n"
+              "  if (!wrapper) return;\n"
+              "  const spread = intendedPagedSpread({\n"
+              "    stage: document.body.dataset.stage || '',\n"
+              "    mode: root().dataset.readerMode || 'paged',\n"
+              "    rightActive: !!right?.classList.contains('active'),\n"
+              "    toggleHidden: !!toggle?.hidden,\n"
+              "    toggleLabel: toggle?.textContent || '',\n"
+              "  });\n"
+              "  wrapper.dataset.readerSpread = spread ? 'spread' : 'single';\n"
+              "}\n"
+          )
           assert old_sync in text
           text = text.replace(old_sync, new_sync, 1)
 
-          stage_needle = """  const stageObserver = new MutationObserver(() => {
-            syncModeSemantics();
-          """
-          stage_replacement = """  const stageObserver = new MutationObserver(() => {
-            syncSpreadState();
-            syncModeSemantics();
-          """
+          stage_needle = "  const stageObserver = new MutationObserver(() => {\n    syncModeSemantics();"
+          stage_replacement = "  const stageObserver = new MutationObserver(() => {\n    syncSpreadState();\n    syncModeSemantics();"
           assert stage_needle in text
           text = text.replace(stage_needle, stage_replacement, 1)
           surface.write_text(text)
 
-          spread = Path('reader/js/spread-state.js')
-          spread.write_text("""/**
+          Path('reader/js/spread-state.js').write_text('''/**
            * Resolve the page geometry the core reader intends before the first
            * visible page has been painted. The legacy signal (right page is
            * active) is unavailable during initial pagination, so the view-mode
            * control is the authoritative pre-paint hint: when it offers
-           * \"Single\", the current mode is Spread.
+           * "Single", the current mode is Spread.
            */
           export function intendedPagedSpread({
             stage = '',
@@ -89,48 +89,38 @@ jobs:
             if (rightActive) return true;
             return !toggleHidden && /^single$/i.test(String(toggleLabel).trim());
           }
-          """)
+          ''')
 
-          test = Path('reader/js/spread-state.test.mjs')
-          test.write_text("""import test from 'node:test';
+          Path('reader/js/spread-state.test.mjs').write_text('''import test from 'node:test';
           import assert from 'node:assert/strict';
           import { intendedPagedSpread } from './spread-state.js';
 
           test('uses the requested spread before the right page has painted', () => {
             assert.equal(intendedPagedSpread({
-              stage: 'read',
-              mode: 'paged',
-              rightActive: false,
-              toggleHidden: false,
-              toggleLabel: 'Single',
+              stage: 'read', mode: 'paged', rightActive: false,
+              toggleHidden: false, toggleLabel: 'Single',
             }), true);
           });
 
           test('keeps a requested single-page layout single before paint', () => {
             assert.equal(intendedPagedSpread({
-              stage: 'read',
-              mode: 'paged',
-              rightActive: false,
-              toggleHidden: false,
-              toggleLabel: 'Spread',
+              stage: 'read', mode: 'paged', rightActive: false,
+              toggleHidden: false, toggleLabel: 'Spread',
             }), false);
           });
 
           test('never invents a spread when the spread control is unavailable', () => {
             assert.equal(intendedPagedSpread({
-              stage: 'read',
-              mode: 'paged',
-              rightActive: false,
-              toggleHidden: true,
-              toggleLabel: 'Single',
+              stage: 'read', mode: 'paged', rightActive: false,
+              toggleHidden: true, toggleLabel: 'Single',
             }), false);
           });
 
-          test('preserves an already-painted spread and ignores stale pages in scroll mode', () => {
+          test('preserves painted spread and ignores stale pages in scroll mode', () => {
             assert.equal(intendedPagedSpread({ stage: 'read', rightActive: true }), true);
             assert.equal(intendedPagedSpread({ stage: 'read', mode: 'scroll', rightActive: true }), false);
           });
-          """)
+          ''')
 
           index = Path('reader/index.html')
           html = index.read_text()
@@ -138,7 +128,7 @@ jobs:
           css_line = '  <link rel="stylesheet" href="css/navigation.css?v=r2" data-reader-navigation="true" data-reader-critical="true">\n'
           assert css_needle in html
           if css_line not in html:
-            html = html.replace(css_needle, css_needle + css_line, 1)
+              html = html.replace(css_needle, css_needle + css_line, 1)
           index.write_text(html)
 
           sw = Path('reader/sw.js')
@@ -148,7 +138,7 @@ jobs:
           shell_needle = "  './js/reading-surface.js',\n"
           assert shell_needle in sw_text
           if "  './js/spread-state.js',\n" not in sw_text:
-            sw_text = sw_text.replace(shell_needle, shell_needle + "  './js/spread-state.js',\n", 1)
+              sw_text = sw_text.replace(shell_needle, shell_needle + "  './js/spread-state.js',\n", 1)
           sw.write_text(sw_text)
           PY
 

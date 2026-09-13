@@ -6,7 +6,7 @@ Bookself is the publishing structure underneath a **Desk**, a **Shelf**, and the
 
 Bookself is also an agent-readable protocol for **agentic authorship**: capable agents can inspect durable repository state, research with provenance, draft and revise, review changes, validate outcomes, and prepare deliberate releases without making a chat transcript the source of truth.
 
-> **See Bookself in action:** [Open the embedded demo Shelf →](https://svyable.github.io/bookself/shelf/reader/)
+> **See Bookself in action:** [Open the demo Reader →](https://svyable.github.io/bookself/reader/)
 >
 > The demo is self-contained inside the upstream Bookself repository and uses neutral platform specimens. It is not an author's production Shelf.
 
@@ -178,7 +178,23 @@ Public visibility is not the same as an open license. Publication-specific `RIGH
 
 ## The books
 
-Bookself upstream keeps a deliberately published **neutral demo catalog** so Reader/media/publication-format behavior can be exercised without using an author's personal library. The catalog is defined in [`catalog.json`](catalog.json) and shown through the embedded [`shelf/reader/`](shelf/reader/) demo surface.
+Bookself upstream keeps a deliberately published **neutral demo catalog** so Reader/media/publication-format behavior can be exercised without using an author's personal library. `catalog.json` is the canonical machine-readable inventory; the links below are deliberately duplicated for human browsing and compatibility with older cached Reader builds.
+
+- [Bookself 101](books/bookself-101/)
+- [Bookself Daily](books/bookself-daily/)
+- [Bookself Dispatch](books/bookself-dispatch/)
+- [Bookself Format Gallery](books/bookself-format-gallery/)
+- [Bookself Review](books/bookself-review/)
+- [Open Scholarship Notes](books/open-scholarship-notes/)
+- [The Example Paper](books/the-example-paper/)
+- [Style After Midnight](books/style-after-midnight/)
+- [Style Clear Margin](books/style-clear-margin/)
+- [Style Common Book](books/style-common-book/)
+- [Style Easy Reading](books/style-easy-reading/)
+- [Style Field Notes](books/style-field-notes/)
+- [Style Lamplight Room](books/style-lamplight-room/)
+- [Style Poems at Window](books/style-poems-at-window/)
+- [Style Quiet Study](books/style-quiet-study/)
 
 Blank underscore-prefixed starters remain authoring templates. Real working manuscripts belong on an author's Desk; deliberate author releases belong in that author's separate Shelf.
 
@@ -187,7 +203,7 @@ Blank underscore-prefixed starters remain authoring templates. Real working manu
 | Need | Go here |
 |---|---|
 | Agent quickstart | [Agent quickstart](docs/agent-quickstart.md) |
-| Live neutral demo | [Embedded demo Shelf](https://svyable.github.io/bookself/shelf/reader/) |
+| Live neutral demo | [Bookself Reader](https://svyable.github.io/bookself/reader/) |
 | Start a workspace | [START HERE](START-HERE.md) |
 | Architecture | [Bookself architecture](docs/bookself.md) |
 | Agent orchestration | [Agent-first Bookself](docs/agent-first.md) |
@@ -206,7 +222,7 @@ Blank underscore-prefixed starters remain authoring templates. Real working manu
 python3 -m http.server
 ```
 
-Upstream Reader and Publishing Desk framework surfaces remain available at `reader/` and `desk/` for software development. The neutral catalog is exposed as the embedded demo Shelf at `shelf/reader/`.
+Upstream Reader and Publishing Desk framework surfaces remain available at `reader/` and `desk/` for software development. The neutral catalog is available through the Reader at `reader/`; `shelf/reader/` remains a compatibility redirect for older public links.
 
 ## Citation and license
 

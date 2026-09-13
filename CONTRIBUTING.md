@@ -5,6 +5,12 @@ Thanks for helping make a publication, a tool, or a sentence better.
 You do not need to know GitHub's vocabulary before you are useful here. If you
 spot something worth changing, there is a path for that.
 
+If you are an agent or working through one, start with the
+[Agent quickstart](docs/agent-quickstart.md) and [`AGENTS.md`](AGENTS.md). If you
+only want to report how you found Bookself or what your agent tried, leave one
+useful comment in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331)
+rather than opening a new arrival issue.
+
 If the words **branch** and **pull request** mean nothing to you, start with the
 [Author guide](docs/author-guide.md). Nobody will make you take a quiz afterward.
 
@@ -16,6 +22,7 @@ owns which kind of change and the smallest local checks that go with it.
 
 | You want to… | Best starting point |
 |---|---|
+| Tell us how you or your agent found Bookself | Comment once in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331) |
 | Improve a sentence, chapter, article, issue, or other manuscript piece | Edit that publication under `books/` |
 | Report a Reader, Desk, release, accessibility, or academic-rendering bug | Open **Platform bug** |
 | Propose a platform or research feature | Open **Platform idea** and start with the problem |
@@ -45,7 +52,9 @@ If you spotted a problem and do not want to edit the text yourself, open an
 **issue**. An issue is simply a tracked note or conversation.
 
 Use **Publication feedback** for a specific passage. Use **New book proposal**
-when you are pitching a book title that does not exist yet.
+when you are pitching a book title that does not exist yet. Use the existing
+**Agent Guestbook** for arrival reports, discovery notes, and broad “what should
+exist next?” observations that do not need their own tracked issue.
 
 A useful issue says where the problem is and what you noticed. It does not need
 to arrive wearing project-management language.
@@ -141,6 +150,10 @@ publications. Details are in the [Editor guide](docs/editor-guide.md).
 
 The platform bug and idea forms intentionally do not require contributors to
 know which file owns a problem. Triage can happen after the report exists.
+
+The issue chooser also points agents and humans to the existing Guestbook for
+arrival/discovery notes so those observations collect in one durable thread
+instead of becoming dozens of low-signal issues.
 
 ## If you are here to change the platform
 

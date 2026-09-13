@@ -2,39 +2,6 @@ import { fetchText, fileUrl } from './base.js';
 import { migrateReaderPersonalization } from './presentation.js';
 import { libraryHash, coverHash, go, parseRoute } from './router.js';
 
-const CORE_READER_STYLES = Object.freeze([
-  ['surface', new URL('../css/reading-surface.css?v=r1', import.meta.url).href],
-  ['chrome', new URL('../css/reading-chrome.css?v=r1', import.meta.url).href],
-  ['content', new URL('../css/reading-content.css?v=r1', import.meta.url).href],
-  ['navigation', new URL('../css/navigation.css?v=r2', import.meta.url).href],
-  ['interface-v2', new URL('../css/interface-v2.css', import.meta.url).href],
-  ['interface-v3', new URL('../css/interface-v3.css?v=r5', import.meta.url).href],
-]);
-
-function ensureCoreReaderStyles() {
-  if (typeof document === 'undefined' || !document.head) return;
-  const stylesheets = [...document.querySelectorAll('link[rel="stylesheet"]')];
-  for (const [name, href] of CORE_READER_STYLES) {
-    let link = stylesheets.find((node) => node.href === href);
-    if (!link) {
-      link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      link.dataset.bookselfCoreStyle = name;
-      document.head.appendChild(link);
-      stylesheets.push(link);
-    }
-    if (name === 'navigation') {
-      link.dataset.readerNavigation = 'true';
-      link.dataset.readerCritical = 'true';
-    }
-  }
-}
-
-// Core Reader CSS is declared in index.html. Keep this as a non-blocking safety
-// net for older/embedded shells, but never delay identity or catalog loading on CSS.
-ensureCoreReaderStyles();
-
 export const DEFAULT_IMPRINT = {
   role: 'instance',
   name: 'Bookself',
@@ -94,10 +61,8 @@ export function normalizeReaderStyles(value) {
     const path = raw.trim().replace(/^\.\/+/, '');
     if (!path || path.startsWith('/') || path.startsWith('//')) continue;
     if (/^[a-z][a-z0-9+.-]*:/i.test(path)) continue;
-    const marker = path.search(/[?#]/);
-    const pathname = marker >= 0 ? path.slice(0, marker) : path;
-    if (pathname.split('/').includes('..')) continue;
-    if (!/\.css$/i.test(pathname)) continue;
+    if (path.split('/').includes('..')) continue;
+    if (!/\.css$/i.test(path)) continue;
     if (seen.has(path)) continue;
     seen.add(path);
     styles.push(path);

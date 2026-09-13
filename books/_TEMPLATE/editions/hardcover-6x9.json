@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "hardcover-6x9",
+  "medium": "print",
+  "binding": "case-laminate",
+  "target": "amazon-kdp",
+  "trim": {
+    "width": 6,
+    "height": 9,
+    "units": "in"
+  },
+  "interior": {
+    "ink": "black-white",
+    "paper": "cream",
+    "bleed": false,
+    "pageCount": null
+  },
+  "cover": {
+    "sourceManifest": "../cover/cover.json",
+    "finish": "matte",
+    "spineText": "auto-when-supported",
+    "barcode": "platform-or-export"
+  },
+  "preflight": {
+    "requireFinalPageCountForCover": true,
+    "verifyTargetTemplate": true,
+    "minimumEffectiveImagePpi": 300,
+    "requireEmbeddedFonts": true
+  }
+}

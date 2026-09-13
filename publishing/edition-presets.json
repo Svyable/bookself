@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "reviewed": "2026-09-12",
+  "units": "inches",
+  "principle": "source-before-format",
+  "bookselfPresets": {
+    "compact": { "width": 5, "height": 8, "use": ["poetry", "spiritual", "compact-literary"] },
+    "trade-small": { "width": 5.25, "height": 8, "use": ["memoir", "self-help", "mystery", "thriller"] },
+    "trade": { "width": 5.5, "height": 8.5, "use": ["nonfiction", "literary-fiction", "young-adult"] },
+    "trade-large": { "width": 6, "height": 9, "use": ["general-fiction", "general-nonfiction", "business", "technical"] },
+    "academic": { "width": 6.14, "height": 9.21, "use": ["academic", "international-trade"] },
+    "reference": { "width": 7, "height": 10, "use": ["manual", "reference", "technical"] },
+    "visual": { "width": 8, "height": 10, "use": ["visual", "workbook"] },
+    "square-small": { "width": 8.25, "height": 8.25, "use": ["children", "visual"] },
+    "square": { "width": 8.5, "height": 8.5, "use": ["children", "visual"] },
+    "letter": { "width": 8.5, "height": 11, "use": ["workbook", "textbook", "reference"] },
+    "a4": { "width": 8.27, "height": 11.69, "use": ["report", "manual", "international"] }
+  },
+  "amazonKdp": {
+    "source": "https://kdp.amazon.com/en_US/help/topic/GVBQ3CMEQW3W2VL6",
+    "paperback": {
+      "customTrim": { "minWidth": 4, "maxWidth": 8.5, "minHeight": 6, "maxHeight": 11.69 },
+      "largeTrim": { "widthGreaterThan": 6.12, "heightGreaterThan": 9 },
+      "interiorBleed": { "outside": 0.125, "top": 0.125, "bottom": 0.125 },
+      "coverBleed": 0.125,
+      "minimumOutsideMarginNoBleed": 0.25,
+      "minimumOutsideMarginWithBleed": 0.375,
+      "minimumInsideMargins": [
+        { "minPages": 24, "maxPages": 150, "margin": 0.375 },
+        { "minPages": 151, "maxPages": 300, "margin": 0.5 },
+        { "minPages": 301, "maxPages": 500, "margin": 0.625 },
+        { "minPages": 501, "maxPages": 700, "margin": 0.75 },
+        { "minPages": 701, "maxPages": 828, "margin": 0.875 }
+      ],
+      "spineInchesPerPage": {
+        "black-white-white": 0.002252,
+        "black-white-cream": 0.0025,
+        "black-white-groundwood": 0.00235,
+        "premium-color-white": 0.002347,
+        "standard-color-white": 0.002252
+      },
+      "spineText": { "minimumPagesExclusive": 79, "minimumEdgeClearance": 0.0625 },
+      "trimSizes": [
+        { "width": 5, "height": 8, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 5.06, "height": 7.81, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 5.25, "height": 8, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 5.5, "height": 8.5, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 6, "height": 9, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 6.14, "height": 9.21, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 6.69, "height": 9.61, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 7, "height": 10, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 7.44, "height": 9.69, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 7.5, "height": 9.25, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 8, "height": 10, "maxPages": { "blackWhiteWhite": 828, "blackWhiteCream": 776, "groundwood": 812, "standardColor": 600, "premiumColor": 828 } },
+        { "width": 8.25, "height": 6, "maxPages": { "blackWhiteWhite": 800, "blackWhiteCream": 750, "groundwood": 784, "standardColor": 600, "premiumColor": 800 } },
+        { "width": 8.25, "height": 8.25, "maxPages": { "blackWhiteWhite": 800, "blackWhiteCream": 750, "groundwood": 784, "standardColor": 600, "premiumColor": 800 } },
+        { "width": 8.5, "height": 8.5, "maxPages": { "blackWhiteWhite": 590, "blackWhiteCream": 550, "groundwood": 578, "standardColor": 600, "premiumColor": 590 } },
+        { "width": 8.5, "height": 11, "maxPages": { "blackWhiteWhite": 590, "blackWhiteCream": 550, "groundwood": 578, "standardColor": 600, "premiumColor": 590 } },
+        { "width": 8.27, "height": 11.69, "maxPages": { "blackWhiteWhite": 780, "blackWhiteCream": 730, "groundwood": 764, "standardColor": null, "premiumColor": 590 } }
+      ],
+      "minimumPages": { "blackWhite": 24, "groundwood": 24, "standardColor": 72, "premiumColor": 24 }
+    },
+    "hardcover": {
+      "binding": "case-laminate",
+      "minimumPages": 75,
+      "maximumPages": 550,
+      "wrap": 0.51,
+      "hinge": 0.4,
+      "minimumImportantContentFromFileEdge": 0.635,
+      "trimSizes": [
+        { "width": 5.5, "height": 8.5 },
+        { "width": 6, "height": 9 },
+        { "width": 6.14, "height": 9.21 },
+        { "width": 7, "height": 10 },
+        { "width": 8.25, "height": 11 }
+      ]
+    },
+    "ebookCover": {
+      "source": "https://kdp.amazon.com/en_US/help/topic/G200645690",
+      "idealWidthPx": 1600,
+      "idealHeightPx": 2560,
+      "minimumWidthPx": 625,
+      "minimumHeightPx": 1000,
+      "maximumDimensionPx": 10000,
+      "maximumFileSizeMb": 50,
+      "colorSpace": "RGB",
+      "accepted": ["jpeg", "tiff"]
+    }
+  },
+  "industry": {
+    "ingramSpark": {
+      "trimSource": "https://www.ingramspark.com/plan-your-book/print/trim-sizes",
+      "fileGuide": "https://www.ingramspark.com/hubfs/downloads/file-creation-guide.pdf",
+      "coverResolutionPpi": 300,
+      "standardCoverBleed": 0.125,
+      "recommendedTypeSafety": 0.25,
+      "coverColorSpace": "CMYK",
+      "coverFormat": "PDF"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sourceMode": "artwork-plus-deterministic-type",
+  "front": {
+    "source": null,
+    "textInArtwork": false,
+    "focalPoint": null
+  },
+  "back": {
+    "source": null,
+    "mode": "extend-or-compose"
+  },
+  "wrap": {
+    "source": null,
+    "continuous": false
+  },
+  "authorPhoto": null,
+  "publisherMark": null,
+  "typography": {
+    "title": "deterministic",
+    "subtitle": "deterministic",
+    "author": "deterministic",
+    "spine": "deterministic",
+    "backCopy": "deterministic"
+  },
+  "barcode": {
+    "mode": "reserve-at-export",
+    "source": null
+  },
+  "provenance": {
+    "artworkCreator": null,
+    "generationTool": null,
+    "generationPromptFile": null,
+    "licenseOrRightsNote": null,
+    "createdAt": null
+  }
+}

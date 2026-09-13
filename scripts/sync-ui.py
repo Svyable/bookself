@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import tempfile
 from pathlib import Path
 
 from instance_identity import stamp_reader_identity
@@ -237,18 +238,36 @@ def write_desk_offline_version(destination: Path, shell_entries: list[str]) -> N
     )
 
 
+def build_desk_candidate(root: Path, destination: Path, stage: Path) -> Path:
+    """Build and verify the next Desk Reader without mutating the live instance."""
+    candidate = stage / "desk"
+    candidate.mkdir(parents=True)
+    shutil.copy2(destination / "imprint.json", candidate / "imprint.json")
+    source_reader = destination / "reader"
+    if source_reader.is_dir():
+        shutil.copytree(source_reader, candidate / "reader")
+    else:
+        (candidate / "reader").mkdir()
+
+    _, shell_entries = copy_desk_runtime(root, candidate)
+    rewrite_desk_runtime_links(candidate)
+    verify_reader_shell(candidate, shell_entries)
+    verify_local_bookself_runtime(candidate)
+    write_desk_offline_version(candidate, shell_entries)
+    stamp_reader_identity(candidate)
+    return candidate
+
+
 def sync_desk_safe(root: Path, destination: Path) -> None:
     """Update Bookself-owned Reader runtime without replacing Desk-owned state."""
     imprint = read_imprint(destination)
     if str(imprint.get("role") or "").strip().lower() != "desk":
         raise SystemExit(f"--desk-safe requires imprint role=desk: {destination}")
 
-    _, shell_entries = copy_desk_runtime(root, destination)
-    rewrite_desk_runtime_links(destination)
-    verify_reader_shell(destination, shell_entries)
-    verify_local_bookself_runtime(destination)
-    write_desk_offline_version(destination, shell_entries)
-    stamp_reader_identity(destination)
+    with tempfile.TemporaryDirectory(prefix="bookself-desk-sync-") as tmp:
+        candidate = build_desk_candidate(root, destination, Path(tmp))
+        replace_tree(candidate / "reader", destination / "reader")
+
     print(
         f"Safely synced Reader runtime -> {destination} "
         "(Desk shell/content preserved; Bookself runtime is local)"

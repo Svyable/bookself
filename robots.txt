@@ -1,0 +1,7 @@
+# Bookself welcomes conventional web discovery.
+# Crawling does not change copyright, publication rights, AI-use permissions,
+# or the rights metadata attached to individual publications.
+User-agent: *
+Allow: /
+
+Sitemap: https://svyable.github.io/bookself/sitemap.xml

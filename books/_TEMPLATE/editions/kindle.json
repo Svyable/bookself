@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "kindle",
+  "medium": "ebook",
+  "format": "epub-reflowable",
+  "target": "amazon-kdp",
+  "language": "from-publication",
+  "cover": {
+    "sourceManifest": "../cover/cover.json",
+    "marketingImage": "derive-from-front-source"
+  },
+  "preflight": {
+    "validateEpub": true,
+    "requireLocalAssets": true,
+    "requireTitle": true,
+    "requireAuthor": true
+  }
+}

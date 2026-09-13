@@ -6,62 +6,34 @@ const CORE_READER_STYLES = Object.freeze([
   ['surface', new URL('../css/reading-surface.css?v=r1', import.meta.url).href],
   ['chrome', new URL('../css/reading-chrome.css?v=r1', import.meta.url).href],
   ['content', new URL('../css/reading-content.css?v=r1', import.meta.url).href],
-  ['navigation', new URL('../css/navigation.css?v=r1', import.meta.url).href],
+  ['navigation', new URL('../css/navigation.css?v=r2', import.meta.url).href],
   ['interface-v2', new URL('../css/interface-v2.css', import.meta.url).href],
   ['interface-v3', new URL('../css/interface-v3.css?v=r5', import.meta.url).href],
 ]);
 
-function stylesheetReady(link, timeoutMs = 1800) {
-  if (!link) return Promise.resolve(false);
-  try {
-    if (link.sheet) return Promise.resolve(true);
-  } catch {
-    // Cross-origin stylesheets can still be observed through load/error events.
-  }
-  return new Promise((resolve) => {
-    let settled = false;
-    const done = (ok) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      resolve(ok);
-    };
-    const timer = setTimeout(() => done(false), timeoutMs);
-    link.addEventListener('load', () => done(true), { once: true });
-    link.addEventListener('error', () => done(false), { once: true });
-  });
-}
-
 function ensureCoreReaderStyles() {
-  if (typeof document === 'undefined' || !document.head) return Promise.resolve([]);
+  if (typeof document === 'undefined' || !document.head) return;
   const stylesheets = [...document.querySelectorAll('link[rel="stylesheet"]')];
-  const waits = CORE_READER_STYLES.map(([name, href]) => {
+  for (const [name, href] of CORE_READER_STYLES) {
     let link = stylesheets.find((node) => node.href === href);
     if (!link) {
       link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
       link.dataset.bookselfCoreStyle = name;
-      if (name === 'navigation') {
-        link.dataset.readerNavigation = 'true';
-        link.dataset.readerCritical = 'true';
-      }
       document.head.appendChild(link);
       stylesheets.push(link);
-    } else if (name === 'navigation') {
+    }
+    if (name === 'navigation') {
       link.dataset.readerNavigation = 'true';
       link.dataset.readerCritical = 'true';
     }
-    return stylesheetReady(link);
-  });
-  return Promise.all(waits);
+  }
 }
 
-// Start geometry and interface CSS immediately when the module graph evaluates,
-// then make Reader initialization wait for that first stable style generation.
-// This avoids paginating against fallback geometry and removes the visible
-// "snap into place" that used to happen after later navigation/UI modules ran.
-const coreReaderStylesReady = ensureCoreReaderStyles();
+// Core Reader CSS is declared in index.html. Keep this as a non-blocking safety
+// net for older/embedded shells, but never delay identity or catalog loading on CSS.
+ensureCoreReaderStyles();
 
 export const DEFAULT_IMPRINT = {
   role: 'instance',
@@ -263,7 +235,6 @@ function emptyLibraryText(role) {
 }
 
 export async function loadImprint() {
-  await coreReaderStylesReady;
   try {
     const data = JSON.parse(await fetchText('imprint.json'));
     return {

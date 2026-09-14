@@ -3,7 +3,8 @@ importScripts('./js/offline-fetch-policy.js');
 importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
-const CACHE = 'obb-shell-v108';
+const CACHE_PREFIX = 'bookself-reader-shell-';
+const CACHE = 'bookself-reader-shell-v109';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -237,7 +238,9 @@ self.addEventListener('message', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys
+        .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE)
+        .map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -373,8 +376,9 @@ self.addEventListener('fetch', (event) => {
     shellUrls: SHELL_URLS,
   });
 
-  // Keep revalidation alive even when a cached response wins immediately or
-  // after the publication deadline. The next request then sees the fresh copy.
+  // Keep revalidation alive even when a cached response wins immediately. The
+  // next request then sees the fresh copy; network-first requests simply share
+  // the same in-flight response.
   event.waitUntil(network.then(() => {}).catch(() => {}));
 
   if (sameOrigin && self.BookselfOfflineCache.isPublicationReadme(url.href)) {

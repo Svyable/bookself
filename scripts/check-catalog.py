@@ -84,6 +84,15 @@ def check(root: Path) -> list[str]:
         if slug not in statuses:
             errors.append(f"{slug}: catalog entry has no readable books/{slug}/README.md")
 
+    if role == "shelf":
+        for slug in sorted(catalog):
+            status = statuses.get(slug)
+            if status is not None and status != "Published":
+                errors.append(
+                    f"{slug}: Shelf catalog entry is not Published "
+                    f"(Status: {status or 'missing'})"
+                )
+
     if role in {"platform", "shelf"}:
         for slug, status in sorted(statuses.items()):
             if status == "Published" and slug not in catalog:

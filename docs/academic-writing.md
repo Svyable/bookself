@@ -9,6 +9,46 @@ This layer is intentionally smaller than a reference manager or a full TeX
 compiler. The source stays readable in Git, the Reader adds publication
 semantics, and the no-build writing path remains intact.
 
+## References are semantic; pages are renderings
+
+A digital Bookself publication does not have one permanent page geometry. The
+same chapter can break differently on a phone, tablet, desktop, large-print
+setting, or another Reader layout. Treat a Reader page as a view of the work,
+not as the work's canonical coordinate system.
+
+That gives Bookself a simple reference rule:
+
+**Sources belong to the work. Pages belong to a rendering or edition.**
+
+Use stable source relationships and structural locations for Bookself's own
+content. The current Reader already routes notes and labeled equations through
+chapter + source-offset semantics rather than depending on a displayed page
+number. Future reference features should preserve that invariant: a citation
+may look different in another layout without changing what source, note, claim,
+figure, equation, or passage it refers to.
+
+Page numbers still have an important legitimate use. If a citation points to a
+fixed external edition of a book, journal, legal opinion, report, or other
+paginated source, its page number is source metadata and should be preserved.
+Likewise, a fixed-layout PDF or print edition of a Bookself publication may have
+edition-specific page references after pagination is known. Do not turn those
+output-specific page numbers into the stable internal identity of reflowable
+Bookself text.
+
+Authors also do **not** need to choose one citation interface for an entire
+publication. A book or paper may mix ordinary Markdown hyperlinks, simple
+bibliography citations, footnotes, explanatory notes, methodology, and a
+reference section when those forms serve different reading needs. Consistency
+of scholarly style is an author or editor policy; Bookself should not require a
+single visual mechanism merely because the work has one source model.
+
+This distinction also leaves room for responsive citation presentation. A
+future renderer might present the same semantic note as a compact marker on a
+phone, a side note on a wide display, an endnote in a reflowable export, or a
+footnote in a fixed-layout edition. That adaptive behavior is a design
+invariant, not a claim about features implemented by the current Reader. The
+current Markdown forms below remain explicit and author-controlled.
+
 ## Footnotes
 
 Put a footnote marker where the note belongs:
@@ -46,15 +86,25 @@ Define the bibliography entry in the same chapter, normally under a
 [@progit]: Chacon, Scott, and Ben Straub. *Pro Git*. Second edition. Apress, 2014.
 ```
 
-The key (`progit`) connects the citation to the definition. The text after the
-vertical bar is exactly what the reader sees inside the parenthetical citation.
+The key (`progit`) connects the citation to the definition. In the current
+Reader, the text after the vertical bar is exactly what the reader sees inside
+the parenthetical citation. Think of that visible label as presentation, not as
+the source's permanent identity: the key and definition carry the relationship,
+while an author may choose a different visible form where another reading
+context calls for it.
+
 This keeps citation style explicit and editable instead of pretending Bookself
-has chosen a universal scholarly style.
+has chosen a universal scholarly style. It also means an author can use a
+parenthetical citation for one source, a direct Markdown hyperlink for another,
+and a footnote for an explanatory source note without violating a platform
+rule. A publication may still adopt Chicago, APA, MLA, legal, numbered, or
+another consistent house style when that convention matters.
 
 This is **not** CSL, BibTeX, or Biber. Bookself does not currently parse `.bib`
-files, normalize author names, sort a bibliography, or automatically restyle
-citations. Those capabilities belong to a later optional scholarly-tooling
-layer if they can be added without making core publishing depend on them.
+files, normalize author names, sort a bibliography, automatically restyle
+citations, or choose citation presentation from screen width. Those capabilities
+belong to a later optional scholarly-tooling layer if they can be added without
+making core publishing depend on them.
 
 ## Figure captions
 
@@ -125,6 +175,8 @@ equation in the same Markdown chapter file.
 That boundary preserves the Reader's existing chapter + source-offset routing
 without creating a hidden book-wide compilation database. Cross-chapter
 reference registries can be considered later if real publications need them.
+When they are added, prefer stable structural or semantic targets over generated
+page numbers so the same relationship survives reflow and alternate editions.
 
 ## What this does not turn Bookself into
 

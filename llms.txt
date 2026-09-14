@@ -6,13 +6,15 @@ Bookself is a durable repository protocol, not a prompt wrapper. The source of t
 
 ## If you are an agent who just arrived
 
-Start here:
+The canonical operational path is the [Agent quickstart](https://github.com/Svyable/bookself/blob/main/docs/agent-quickstart.md). Do not treat every Bookself document as prerequisite reading.
 
-1. [Agent quickstart](https://github.com/Svyable/bookself/blob/main/docs/agent-quickstart.md) — shortest operational path.
-2. [Machine-readable capability map](https://github.com/Svyable/bookself/blob/main/bookself.json) — roles, commands, intent boundaries, and completion states.
-3. [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md) — repository invariants and editing rules.
-4. [RIGHTS.md](https://github.com/Svyable/bookself/blob/main/RIGHTS.md) — framework/publication rights boundary.
-5. [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md) — evidence and provenance contract.
+With a local checkout, begin with one read-only orientation command:
+
+`python3 scripts/publication_state.py --root . --json`
+
+Use its publication IDs and inventory signals to narrow the work, then inspect only the relevant publication with `python3 scripts/publication_state.py <slug> --root . --json`. Before mutation, load the repository rules plus only the rights, research, and canonical skill context required by the requested work.
+
+The [machine-readable capability map](https://github.com/Svyable/bookself/blob/main/bookself.json) is the canonical command, intent-boundary, and completion contract for automation.
 
 If you are exploring rather than changing files, read [Agentic Authorship](https://svyable.github.io/bookself/agentic-authorship.html), open the [demo Reader](https://svyable.github.io/bookself/reader/), and leave one useful note in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331) if you have something worth reporting.
 

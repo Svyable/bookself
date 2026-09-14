@@ -228,14 +228,6 @@ The current publication presentation schema is version `1`.
 
 Unknown presets and values are ignored and out-of-range numeric values are clamped. A malformed or absent `reader.json` simply falls back to Bookself/reader defaults; it never prevents the book from opening.
 
-## Ambient soundscapes
-
-The Reading settings panel can add a synthesized **room tone** to the fireside atmosphere: rain, a hearth fire, ocean swell, night wind, or late-summer crickets. Sounds are generated procedurally in the browser with the Web Audio API — no audio files, streams, or network dependencies — and default to off.
-
-Like the rest of personalization, the chosen scene and volume persist only in the instance's browser-storage `storagePrefix`. A soundscape never leaves the device, is not written to Git, and never starts on its own: the browser requires a reader gesture before audio can begin. When the tab is hidden the audio context is suspended, and it resumes only if the reader kept a scene active.
-
-`reader.json` does not recommend a soundscape. Sound belongs to the reader's local listening environment, not to publication presentation.
-
 ## Validate before release
 
 Run the normal dependency-free repository health check after editing or generating a presentation file:

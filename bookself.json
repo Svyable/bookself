@@ -12,6 +12,9 @@
     "researchGuide": "docs/research.md",
     "llmMap": "llms.txt",
     "orchestrationGuide": "docs/agent-first.md",
+    "scalingGuide": "docs/scaling-agentic-authorship.md",
+    "publicationStateGuide": "docs/publication-state.md",
+    "skillsGuide": ".agents/skills/README.md",
     "publicConcept": "agentic-authorship.html",
     "guestbook": "https://github.com/Svyable/bookself/issues/331",
     "humanStart": "START-HERE.md"
@@ -37,6 +40,9 @@
     "runtimeRule": "Desk and Shelf execute local committed software. Shelf must not import executable Reader code from the Bookself Pages deployment.",
     "instanceOwned": ["books/", "README.md", "catalog.json", "imprint.json", "RIGHTS.md"],
     "publicationRoot": "books/<slug>/",
+    "publicationId": "<slug>",
+    "publicationIdScope": "bookself-instance",
+    "publicationIdRule": "The books/<slug>/ directory slug is the stable publication ID within one Desk/Shelf installation. Treat a later slug change as an identity migration, not a cosmetic rename.",
     "publicationMetadata": "books/<slug>/README.md",
     "publicationRights": "books/<slug>/RIGHTS.md",
     "publicationRightsManifest": "books/<slug>/rights.json",
@@ -89,6 +95,18 @@
       "kind": "local-command",
       "command": "python3 scripts/doctor-pair.py <desk-path> <shelf-path>",
       "result": "Validates complementary Desk/Shelf roles, separate Git worktrees, Desk authoring UI and starters, Shelf release-only software boundary and local Reader core, Shelf release content, and distinct instance identity.",
+      "requires": ["python3", "git"]
+    },
+    "inspectPublication": {
+      "kind": "local-command",
+      "command": "python3 scripts/publication_state.py <slug> --root . --json",
+      "result": "Returns bounded state for one publication ID: metadata, role, catalog membership, publication-scoped Git dirtiness, available release provenance, and structural errors/warnings without requiring whole-catalog manuscript reasoning.",
+      "requires": ["python3"]
+    },
+    "changedPublications": {
+      "kind": "local-command",
+      "command": "python3 scripts/changed_publications.py <base> [head] --root . --json",
+      "result": "Uses a merge-base Git diff to return concrete changed publication IDs plus non-publication global paths. Supervisors can process only affected publications and choose their own fan-out policy for global changes.",
       "requires": ["python3", "git"]
     },
     "createPublication": {
@@ -163,6 +181,7 @@
       "Create or locate the Desk and public Shelf. Standard setup names are desk and shelf unless the user requests other names. Desk is private by default but may deliberately be public or lower-profile; creating an empty public Shelf as part of Bookself setup does not authorize publishing manuscript content to it.",
       "Validate the Desk/Shelf installation with validateWorkspacePair when the environment permits. A valid pair is complementary: Desk contains authoring UI/starters; Shelf contains no desk/ tree and uses a local Reader adapter/core boundary.",
       "If repository hosting metadata is available, verify Shelf is public and treat the Desk's actual visibility as a publication/security fact rather than assuming unadvertised means private.",
+      "When work can be narrowed by publication, identify affected publication IDs and inspect publication-scoped state before performing expensive research, editorial, build, or release work.",
       "Create the publication on the Desk using the nearest format contract, preserve the default rights files unless the rightsholder requests another license, preserve the canonical research/ component, and add it to the Desk inventory.",
       "Before or alongside factual manuscript changes, read existing research and add durable provenance for material new evidence, including source identity, manuscript use, limits, counterevidence, and recheck notes when relevant.",
       "Draft requested content in bounded, reviewable changes while preserving the user's voice and factual constraints.",
@@ -175,8 +194,8 @@
     ]
   },
   "intentBoundaries": {
-    "mayInferWithoutAsking": ["standard repository names desk and shelf for a new Bookself setup", "slug", "starter template", "reasonable chapter filenames", "initial Reader preset", "mechanical metadata needed by Bookself", "commit messages for mechanical steps", "creating and maintaining research notes and source ledgers inside the publication when they support the requested writing/research task"],
-    "requiresUserIntent": ["making unpublished manuscript content public", "publishing or replacing a Shelf release when publication was not requested", "changing a Desk repository's visibility", "deleting publication history or repositories", "changing licensing, copyright ownership, AI-use grants, RIGHTS.md, or rights.json permission grants", "asserting or changing Copyright Office registration information", "sending manuscript content to a new external AI service, training corpus, vector store, RAG system, AI index, publisher, or other third party", "redistributing third-party research source files when rights are not already clear", "adding secrets, credentials, paid services, or mandatory external dependencies"],
+    "mayInferWithoutAsking": ["standard repository names desk and shelf for a new Bookself setup", "slug for a new publication", "starter template", "reasonable chapter filenames", "initial Reader preset", "mechanical metadata needed by Bookself", "commit messages for mechanical steps", "creating and maintaining research notes and source ledgers inside the publication when they support the requested writing/research task"],
+    "requiresUserIntent": ["making unpublished manuscript content public", "publishing or replacing a Shelf release when publication was not requested", "changing a Desk repository's visibility", "deleting publication history or repositories", "changing a publication slug/ID after it has acquired history when that migration may break external references", "changing licensing, copyright ownership, AI-use grants, RIGHTS.md, or rights.json permission grants", "asserting or changing Copyright Office registration information", "sending manuscript content to a new external AI service, training corpus, vector store, RAG system, AI index, publisher, or other third party", "redistributing third-party research source files when rights are not already clear", "adding secrets, credentials, paid services, or mandatory external dependencies"],
     "explicitPublishExamples": ["publish it to my shelf", "release this book", "make the finished version public"]
   },
   "completion": {

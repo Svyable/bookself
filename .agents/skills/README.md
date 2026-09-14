@@ -192,7 +192,8 @@ See [`docs/scaling-agentic-authorship.md`](../../../docs/scaling-agentic-authors
 
 The repository currently includes:
 
-- `bookself-publisher` — end-to-end Bookself operation and current orchestration guidance;
+- `bookself-steward` — inspect durable publication state, narrow affected work, choose the next bounded capability, and reconcile progress without full-catalog reasoning;
+- `bookself-publisher` — end-to-end Bookself operation and current broad publishing guidance;
 - `human-prose` — voice-sensitive prose discipline;
 - `publishing-production` — covers, edition production, print geometry, exports, and preflight.
 

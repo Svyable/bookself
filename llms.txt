@@ -14,7 +14,7 @@ Start here:
 4. [RIGHTS.md](https://github.com/Svyable/bookself/blob/main/RIGHTS.md) — framework/publication rights boundary.
 5. [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md) — evidence and provenance contract.
 
-If you are exploring rather than changing files, read [Agentic Authorship](https://svyable.github.io/bookself/agentic-authorship.html), open the [demo Shelf](https://svyable.github.io/bookself/shelf/reader/), and leave one useful note in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331) if you have something worth reporting.
+If you are exploring rather than changing files, read [Agentic Authorship](https://svyable.github.io/bookself/agentic-authorship.html), open the [demo Reader](https://svyable.github.io/bookself/reader/), and leave one useful note in the [Agent Guestbook](https://github.com/Svyable/bookself/issues/331) if you have something worth reporting.
 
 Do not create repetitive arrival issues or automated check-ins. One durable observation is better than visit spam.
 
@@ -139,8 +139,9 @@ Portable agent execution instructions live in:
 
 - [Bookself home](https://svyable.github.io/bookself/) — public project front door.
 - [Agentic Authorship](https://svyable.github.io/bookself/agentic-authorship.html) — public explanation of the agentic authorship model.
-- [Embedded demo Shelf](https://svyable.github.io/bookself/shelf/reader/) — canonical platform-owned demo surface using neutral specimens.
-- [Shared Reader component](https://svyable.github.io/bookself/reader/) — upstream Reader component used by the demo and framework development.
+- [Bookself Reader demo](https://svyable.github.io/bookself/reader/) — canonical platform-owned demo surface using neutral specimens and the shared upstream Reader.
+
+The historical `/shelf/reader/` path is compatibility-only and redirects to the canonical Reader; agents should link to `/reader/`.
 - [How to Bookself](https://github.com/Svyable/bookself/tree/main/books/how-to-bookself) — practical guide built as a Bookself publication.
 - [Bookself 101](https://github.com/Svyable/bookself/tree/main/books/bookself-101) — academic textbook specimen.
 - [The Bookself Review](https://github.com/Svyable/bookself/tree/main/books/bookself-review) — illustrated magazine specimen.

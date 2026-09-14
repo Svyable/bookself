@@ -41,8 +41,18 @@ assert.match(
 
 assert.match(
   serviceWorker,
-  /const CACHE = 'obb-shell-v108';/,
-  'cache generation remains stable because only online response preference changed',
+  /const CACHE_PREFIX = 'bookself-reader-shell-';/,
+  'Bookself caches need a deployment-specific namespace on shared GitHub Pages origins',
+);
+assert.match(
+  serviceWorker,
+  /const CACHE = 'bookself-reader-shell-v109';/,
+  'cache generation must rotate when changing cache ownership semantics',
+);
+assert.match(
+  serviceWorker,
+  /key\.startsWith\(CACHE_PREFIX\) && key !== CACHE/,
+  'activation must delete only older Bookself Reader caches, never sibling Desk or Shelf caches',
 );
 
 console.log('reader cache coherence tests ok');

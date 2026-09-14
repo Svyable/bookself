@@ -1,0 +1,35 @@
+name: Agent entry contract
+
+on:
+  pull_request:
+    paths:
+      - "bookself.json"
+      - "llms.txt"
+      - "docs/agent-quickstart.md"
+      - ".agents/skills/**"
+      - "scripts/publication_state.py"
+      - "tests/test_agent_entry_contract.py"
+      - ".github/workflows/agent-entry-contract.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "bookself.json"
+      - "llms.txt"
+      - "docs/agent-quickstart.md"
+      - ".agents/skills/**"
+      - "scripts/publication_state.py"
+      - "tests/test_agent_entry_contract.py"
+      - ".github/workflows/agent-entry-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify cold-agent entry surfaces stay aligned
+        run: python3 -m unittest tests.test_agent_entry_contract

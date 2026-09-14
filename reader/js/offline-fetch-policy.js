@@ -47,12 +47,10 @@
   }
 
   function responsePlan(kind, hasCached = false) {
-    // Reader shell code must stay generation-coherent. Serving cached JS/CSS
-    // before revalidation can mix a newly versioned entry module with stale
-    // unversioned imports from the previous shell. Prefer the network when it
-    // is available and retain the cached shell strictly as the offline fallback.
+    // Reader shell and publication content must stay current while online.
+    // Cached copies are resilience for offline/network failure, not a deadline
+    // winner that can leave an already-open Reader on stale manuscript text.
     if (kind === 'external' && hasCached) return 'cache-then-network';
-    if (kind === 'publication' && hasCached) return 'network-with-cache-deadline';
     return 'network-first';
   }
 

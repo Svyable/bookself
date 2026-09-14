@@ -31,20 +31,28 @@ Do not use stewardship as an excuse to perform every specialist task in one gian
 
 ## Required context
 
-Before changing publication state:
+Start with read-only orientation. If the target publication is not yet known, run:
 
-1. Read repository `AGENTS.md`.
-2. Read `bookself.json`.
-3. Read `.agents/skills/README.md`.
-4. For large-catalog work, read `docs/scaling-agentic-authorship.md` and `docs/publication-state.md`.
-5. Identify the repository role from `imprint.json`.
-6. Inspect the target publication state rather than assuming the previous agent completed what it intended.
+```text
+python3 scripts/publication_state.py --root . --json
+```
 
-For one publication, prefer:
+This compact pass identifies repository role, Git state, publication IDs, and catalog inventory mismatches without opening every manuscript. It is safe to do before loading the full rule set because it does not mutate publication state.
+
+Once the target is known, inspect it directly:
 
 ```text
 python3 scripts/publication_state.py <publication-id> --root . --json
 ```
+
+Before changing files, read only the context required by the bounded work:
+
+1. repository `AGENTS.md`;
+2. applicable root/publication `RIGHTS.md` and `rights.json` when rights, external use, or release is implicated;
+3. the publication's existing `research/` trail before factual research or manuscript changes;
+4. the nearest canonical skill for the job; use `.agents/skills/README.md` when capability discovery is needed;
+5. `bookself.json` when a machine-readable capability, intent boundary, or completion contract is needed;
+6. `docs/scaling-agentic-authorship.md` and `docs/publication-state.md` only for genuine large-catalog/orchestration work.
 
 For a Git change affecting an unknown subset of publications, prefer:
 

@@ -97,6 +97,12 @@
       "result": "Validates complementary Desk/Shelf roles, separate Git worktrees, Desk authoring UI and starters, Shelf release-only software boundary and local Reader core, Shelf release content, and distinct instance identity.",
       "requires": ["python3", "git"]
     },
+    "orientRepository": {
+      "kind": "local-command",
+      "command": "python3 scripts/publication_state.py --root . --json",
+      "result": "Returns cheap cold-arrival orientation: repository role and Git state, concrete publication IDs, cataloged/uncataloged IDs, missing catalog targets, and next actions without opening every manuscript.",
+      "requires": ["python3"]
+    },
     "inspectPublication": {
       "kind": "local-command",
       "command": "python3 scripts/publication_state.py <slug> --root . --json",
@@ -176,7 +182,8 @@
   "outcomeProtocol": {
     "defaultGoal": "Turn natural-language publishing intent into a valid working Desk, a well-formed publication with durable research provenance, and optionally a deliberately released public Shelf snapshot while preserving the rightsholder's licensing choices and evidence metadata.",
     "steps": [
-      "Read AGENTS.md, RIGHTS.md, this manifest, docs/research.md, and the target publication RIGHTS.md / rights.json when present before editing.",
+      "When entering an unfamiliar Bookself repository, begin with the read-only orientRepository capability; use its publication IDs and inventory signals to narrow the work before loading deep context.",
+      "Before editing, read AGENTS.md plus only the rights, research, and canonical skill context required by the requested work. Use this manifest when capability, intent-boundary, or completion-contract details are needed.",
       "Infer publication format, structure, style, and workflow details from the user's goal when reasonable; ask only when a missing choice materially changes the intended work.",
       "Create or locate the Desk and public Shelf. Standard setup names are desk and shelf unless the user requests other names. Desk is private by default but may deliberately be public or lower-profile; creating an empty public Shelf as part of Bookself setup does not authorize publishing manuscript content to it.",
       "Validate the Desk/Shelf installation with validateWorkspacePair when the environment permits. A valid pair is complementary: Desk contains authoring UI/starters; Shelf contains no desk/ tree and uses a local Reader adapter/core boundary.",

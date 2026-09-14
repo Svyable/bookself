@@ -6,6 +6,7 @@ Bookself's canonical local tools are Python so the same commands work on macOS, 
 python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json
 python3 scripts/doctor.py --root .
 python3 scripts/doctor-pair.py <desk-path> <shelf-path>
+python3 scripts/publication_state.py --root . --json
 python3 scripts/publication_state.py <slug> --root . --json
 python3 scripts/changed_publications.py <base> [head] --root . --json
 python3 scripts/check-catalog.py
@@ -20,7 +21,7 @@ python3 scripts/stamp-instance.py <destination> <desk|shelf> <owner> <repository
 
 `doctor.py` validates one Bookself repository. `doctor-pair.py` validates an installation as a pair: exact Desk/Shelf roles, separate Git worktrees, instance identities, Reader/Desk presence, and release-state invariants.
 
-`publication_state.py` reports bounded state for one publication rather than asking an agent to reason over the entire library. Its JSON result includes the publication ID/path, human metadata, repository role, catalog membership, publication-scoped Git dirtiness, available release provenance, and structural errors/warnings. The canonical publication ID is currently the publication slug under `books/`, scoped to one Bookself installation. Treat that slug as durable after creation; changing it is a publication-identity migration, not a cosmetic rename.
+`publication_state.py` has two read-only scopes. With no slug it is the cold-arrival orientation command: it reports repository role, Git state, concrete publication IDs, cataloged/uncataloged IDs, and catalog entries whose publication directory is missing without opening every manuscript. With a slug it reports bounded state for one publication: publication ID/path, human metadata, role, catalog membership, publication-scoped Git dirtiness, available release provenance, and structural errors/warnings. The canonical publication ID is currently the publication slug under `books/`, scoped to one Bookself installation. Treat that slug as durable after creation; changing it is a publication-identity migration, not a cosmetic rename.
 
 `changed_publications.py` converts a Git diff into the publication IDs that actually changed. It uses merge-base diff semantics (`base...head`), excludes underscore-prefixed starter/template directories from concrete publication work, and reports non-publication changes separately as `globalPaths` / `globalChange`. A supervisor can deeply process the returned publications while deciding independently whether a framework/template/global change should fan out more broadly.
 

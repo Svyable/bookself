@@ -40,6 +40,42 @@ class PublicationStateTests(unittest.TestCase):
         )
         return temp, root
 
+    def test_repository_overview_orients_before_slug_is_known(self):
+        temp, root = self.make_root()
+        self.addCleanup(temp.cleanup)
+        (root / "books" / "uncataloged").mkdir()
+        (root / "books" / "_TEMPLATE").mkdir()
+
+        state = publication_state.repository_state(root)
+
+        self.assertEqual(state["scope"], "repository")
+        self.assertEqual(state["repositoryRole"], "desk")
+        self.assertEqual(state["publications"]["ids"], ["example", "uncataloged"])
+        self.assertEqual(state["publications"]["catalogedIds"], ["example"])
+        self.assertEqual(state["publications"]["uncatalogedIds"], ["uncataloged"])
+        self.assertEqual(state["publications"]["missingCatalogIds"], [])
+        self.assertTrue(state["checks"]["structurallyReady"])
+        self.assertEqual(state["checks"]["warningCount"], 0)
+
+    def test_repository_overview_reports_catalog_entries_without_directories(self):
+        temp, root = self.make_root()
+        self.addCleanup(temp.cleanup)
+        (root / "catalog.json").write_text(
+            json.dumps({"version": 1, "books": ["example", "missing"]}),
+            encoding="utf-8",
+        )
+
+        state = publication_state.repository_state(root)
+
+        self.assertFalse(state["checks"]["structurallyReady"])
+        self.assertEqual(state["publications"]["missingCatalogIds"], ["missing"])
+        self.assertTrue(
+            any(
+                item["code"] == "catalog_publications_missing"
+                for item in state["checks"]["errors"]
+            )
+        )
+
     def test_slug_is_stable_instance_publication_id(self):
         temp, root = self.make_root()
         self.addCleanup(temp.cleanup)

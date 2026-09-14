@@ -4,17 +4,33 @@ If Bookself reached you through search, another agent, a repository link, or a h
 
 Bookself is not a prompt collection and it is not an AI writing wrapper. It is a Git-native publishing protocol with durable state outside any one conversation. Humans and agents can research, draft, review, revise, validate, and deliberately release long-form work while preserving provenance, rights metadata, and revision history.
 
-## Sixty-second map
+## Sixty-second loop
 
-Read these in this order when you are going to act:
+If you have a local checkout and do not yet know which publication matters, start with one read-only command:
 
-1. [`../AGENTS.md`](../AGENTS.md) — repository rules and architectural invariants.
-2. [`../RIGHTS.md`](../RIGHTS.md) — framework/publication rights boundary.
-3. [`../bookself.json`](../bookself.json) — machine-readable roles, capabilities, intent boundaries, and completion states.
-4. [`research.md`](research.md) — publication evidence and provenance contract.
-5. The target publication's `RIGHTS.md`, `rights.json`, and existing `research/` trail when present.
+```bash
+python3 scripts/publication_state.py --root . --json
+```
 
-For the longer orchestration model, read [`agent-first.md`](agent-first.md). For the public idea behind the protocol, read [Agentic Authorship](../agentic-authorship.html).
+It reports repository role, Git state, publication IDs, catalog inventory, and obvious inventory mismatches without opening every manuscript.
+
+Then use the same tool to inspect only the publication relevant to the user's outcome:
+
+```bash
+python3 scripts/publication_state.py <slug> --root . --json
+```
+
+From there the normal loop is:
+
+```text
+inspect → load only the applicable rules/rights/skill → act → validate → inspect again
+```
+
+Before changing files, read [`../AGENTS.md`](../AGENTS.md), the applicable root/publication rights files, the target publication's existing `research/` trail when factual work is involved, and the nearest canonical skill for the job. Use [`../bookself.json`](../bookself.json) when you need the machine-readable capability, intent-boundary, or completion contract; use [`agent-first.md`](agent-first.md) for the longer orchestration model.
+
+You do **not** need to read every Bookself document before first inspection. Read deeper documentation when the state or requested work makes it relevant.
+
+For the public idea behind the protocol, read [Agentic Authorship](../agentic-authorship.html).
 
 ## Know which role you are touching
 
@@ -49,7 +65,7 @@ Do not infer permission to publish manuscript content merely because creating an
 
 ### You were asked to research, write, or revise
 
-Work on Desk unless the request explicitly targets an intentionally public proof or a released Shelf hotfix.
+Work on Desk unless the request explicitly targets an intentionally public proof or a released Shelf hotfix. Inspect the target publication first, then use the nearest canonical research, author, editor, or prose skill rather than loading the entire publishing stack.
 
 Before changing factual prose:
 
@@ -64,7 +80,7 @@ Research notes are durable evidence artifacts, not hidden chain-of-thought and n
 
 ### You were asked to publish
 
-Publishing is a deliberate boundary. Confirm that public release is actually within the user's request, then use the release contract rather than copying files casually.
+Publishing is a deliberate boundary. Confirm that public release is actually within the user's request, inspect the publication and applicable rights state, then use the release contract rather than copying files casually.
 
 The canonical local command is:
 
@@ -109,6 +125,8 @@ Prefer durable outcomes over narration of mechanics.
 - **Draft:** requested work exists on Desk; metadata, research, and rights state are coherent; structural validation passes.
 - **Release:** the Desk source is committed; Shelf contains a verified Published snapshot; research and rights metadata traveled with it; release provenance identifies the exact Desk source.
 - **Contribution:** the change is narrow, understandable, verified, and does not weaken Bookself's role, rights, or local-first boundaries.
+
+After meaningful work, re-run the target publication state and the smallest relevant deterministic validator instead of assuming the previous plan is still correct.
 
 ## Leave the next agent a better starting state
 

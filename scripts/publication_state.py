@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report publication-scoped Bookself state for agents and automation."""
+"""Report repository- or publication-scoped Bookself state for agents and automation."""
 
 from __future__ import annotations
 
@@ -84,6 +84,97 @@ def catalog_slugs(root: Path) -> set[str]:
             r"\]\((?:\./)?books/([a-z0-9][a-z0-9-]*)/?\)", text, re.I
         )
     )
+
+
+def publication_ids(root: Path) -> list[str]:
+    books = root / "books"
+    if not books.is_dir():
+        return []
+    return sorted(
+        child.name
+        for child in books.iterdir()
+        if child.is_dir()
+        and not child.name.startswith("_")
+        and SAFE_SLUG.fullmatch(child.name)
+    )
+
+
+def repository_state(root: Path) -> dict[str, Any]:
+    """Return cheap repository orientation without opening every publication."""
+    root = root.resolve()
+    errors: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
+
+    books = root / "books"
+    if not books.is_dir():
+        errors.append(
+            {
+                "code": "books_root_missing",
+                "message": "books/ does not exist; this does not look like a complete Bookself repository.",
+            }
+        )
+
+    present = publication_ids(root)
+    present_set = set(present)
+    cataloged = sorted(catalog_slugs(root))
+    cataloged_set = set(cataloged)
+    uncataloged = sorted(present_set - cataloged_set)
+    missing = sorted(cataloged_set - present_set)
+
+    if missing:
+        errors.append(
+            {
+                "code": "catalog_publications_missing",
+                "message": "Catalog entries have no matching publication directory: "
+                + ", ".join(missing),
+            }
+        )
+    head = git_output(root, "rev-parse", "HEAD")
+    dirty_output = git_output(root, "status", "--porcelain")
+    dirty = None if dirty_output is None else bool(dirty_output)
+    role = read_role(root)
+
+    next_actions: list[str] = []
+    if errors:
+        next_actions.append("Repair the reported repository inventory errors before publication work.")
+    if not present:
+        next_actions.append("Create or locate the publication required by the user's outcome.")
+    elif len(present) == 1:
+        next_actions.append(
+            f"Inspect the publication with: python3 scripts/publication_state.py {present[0]} --root . --json"
+        )
+    else:
+        next_actions.append(
+            "Choose only the publication IDs relevant to the requested outcome, then inspect each with publication_state.py <slug> --root . --json."
+        )
+    next_actions.append(
+        "Before mutation, read AGENTS.md plus the applicable publication rights/research files and the bounded skill for the work."
+    )
+
+    return {
+        "schemaVersion": 1,
+        "scope": "repository",
+        "repositoryRole": role or None,
+        "git": {
+            "head": head,
+            "dirty": dirty,
+        },
+        "publications": {
+            "count": len(present),
+            "ids": present,
+            "catalogedIds": cataloged,
+            "uncatalogedIds": uncataloged,
+            "missingCatalogIds": missing,
+        },
+        "checks": {
+            "errors": errors,
+            "warnings": warnings,
+            "errorCount": len(errors),
+            "warningCount": len(warnings),
+            "structurallyReady": not errors,
+        },
+        "nextActions": next_actions,
+    }
 
 
 def release_record(path: Path) -> dict[str, Any] | None:
@@ -240,6 +331,28 @@ def publication_state(root: Path, slug: str) -> dict[str, Any]:
     }
 
 
+def print_repository_human(state: dict[str, Any]) -> None:
+    print("Bookself repository")
+    print(f"Role: {state['repositoryRole'] or 'unknown'}")
+    dirty = state["git"]["dirty"]
+    print(f"Dirty: {'unknown' if dirty is None else ('yes' if dirty else 'no')}")
+    pubs = state["publications"]
+    print(f"Publications: {pubs['count']}")
+    if pubs["ids"]:
+        print("IDs: " + ", ".join(pubs["ids"]))
+    checks = state["checks"]
+    print(
+        f"Checks: {checks['errorCount']} error(s), "
+        f"{checks['warningCount']} warning(s)"
+    )
+    for item in checks["errors"]:
+        print(f"✗ {item['message']}")
+    for item in checks["warnings"]:
+        print(f"! {item['message']}")
+    for action in state["nextActions"]:
+        print(f"→ {action}")
+
+
 def print_human(state: dict[str, Any]) -> None:
     print(f"{state['publicationId']} — {state['title']}")
     print(f"Path: {state['path']}")
@@ -261,21 +374,31 @@ def print_human(state: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Report machine-readable state for one Bookself publication."
+        description="Report machine-readable state for a Bookself repository or one publication."
     )
-    parser.add_argument("slug", help="Publication ID/slug under books/.")
+    parser.add_argument(
+        "slug",
+        nargs="?",
+        help="Optional publication ID/slug under books/. Omit for repository orientation.",
+    )
     parser.add_argument("--root", default=".", help="Bookself repository root.")
     parser.add_argument("--json", action="store_true", help="Emit JSON.")
     args = parser.parse_args(argv)
 
     try:
-        state = publication_state(Path(args.root), args.slug.strip())
+        state = (
+            publication_state(Path(args.root), args.slug.strip())
+            if args.slug
+            else repository_state(Path(args.root))
+        )
     except ValueError as exc:
         print(f"publication_state: {exc}", file=sys.stderr)
         return 2
 
     if args.json:
         print(json.dumps(state, indent=2, ensure_ascii=False))
+    elif state.get("scope") == "repository":
+        print_repository_human(state)
     else:
         print_human(state)
     return 1 if state["checks"]["errors"] else 0

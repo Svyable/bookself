@@ -19,6 +19,27 @@ Renaming `books/<slug>/` after a publication has acquired history is therefore a
 
 This keeps the base protocol free of mandatory UUID services, databases, or a second publication metadata store. A large operator may map the Bookself publication ID to an external registry ID if needed.
 
+## Orient before the publication is known
+
+A cold-arrival agent should not need to know a slug or read every manuscript just to understand the repository. Use:
+
+```bash
+python3 scripts/publication_state.py --root . --json
+```
+
+Without a slug, `publication_state.py` performs a cheap repository-level orientation pass. It reports:
+
+- repository role (`desk`, `shelf`, or `platform`) when available;
+- current Git HEAD and whether the repository is dirty;
+- concrete publication IDs under `books/`, excluding underscore-prefixed starters/templates;
+- cataloged and uncataloged publication IDs;
+- catalog IDs whose matching publication directory is missing;
+- compact `nextActions` for narrowing the work.
+
+This mode deliberately does **not** open every publication README, manuscript, research tree, or release record. It is an orientation primitive, not a whole-catalog editorial scan. Uncataloged publication directories are reported as inventory rather than automatically treated as errors because a platform repository or working Desk can legitimately contain publications that are not on the promoted catalog surface.
+
+Once the user's outcome identifies a publication, switch to the bounded publication view below.
+
 ## Inspect one publication
 
 Use:
@@ -66,11 +87,9 @@ Deleted publications are still returned by ID with `present: false`, so cleanup/
 At scale, a supervisor should prefer:
 
 ```text
-Git/event
+Git/event or repository orientation
    ↓
-changed_publications
-   ↓
-publication IDs
+publication IDs / changed_publications
    ↓
 publication_state for affected IDs
    ↓

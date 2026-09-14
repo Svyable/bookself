@@ -6,6 +6,21 @@ They are not a mandatory multi-agent framework, not a job-title hierarchy, and n
 
 The durable interface is the repository state plus these skill contracts.
 
+## Choose the smallest skill that fits
+
+Do not load every skill. Inspect repository/publication state first, then load the one nearest capability. Add another skill only when the work actually crosses that boundary.
+
+| Need | Start with |
+|---|---|
+| You inherited unfamiliar, changed, stalled, or multi-stage work and need to decide what happens next | `bookself-steward` |
+| The user asked for an end-to-end Bookself outcome and no narrower skill covers the job | `bookself-publisher` |
+| The work is specifically about prose voice, rhythm, specificity, or removing generic/synthetic writing | `human-prose` |
+| The work is covers, edition production, PDF/EPUB/print geometry, exports, or production preflight | `publishing-production` |
+
+`bookself-publisher` is the broad fallback, not a prerequisite for every task. `bookself-steward` routes work; it should hand off to the bounded capability once the next job is clear.
+
+If no canonical skill fits, use the repository contracts directly and leave the gap visible rather than pretending an unrelated skill applies.
+
 ## Why skills exist
 
 A capable agent can already write prose or edit files. Bookself skills exist to encode the less obvious parts of competent full-chain authorship:
@@ -190,14 +205,7 @@ See [`docs/scaling-agentic-authorship.md`](../../../docs/scaling-agentic-authors
 
 ## Current canonical skills
 
-The repository currently includes:
-
-- `bookself-steward` — inspect durable publication state, narrow affected work, choose the next bounded capability, and reconcile progress without full-catalog reasoning;
-- `bookself-publisher` — end-to-end Bookself operation and current broad publishing guidance;
-- `human-prose` — voice-sensitive prose discipline;
-- `publishing-production` — covers, edition production, print geometry, exports, and preflight.
-
-The skill library is expected to become more granular over time. Until then, existing broader skills may cover several responsibilities.
+The routing table above is the current canonical set. The skill library may become more granular over time. Until then, existing broader skills may cover several responsibilities.
 
 ## Quality bar
 

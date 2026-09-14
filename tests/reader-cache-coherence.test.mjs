@@ -24,8 +24,8 @@ assert.equal(
 );
 assert.equal(
   policy.responsePlan('publication', true),
-  'network-with-cache-deadline',
-  'publication Markdown should retain its resilient network deadline behavior',
+  'network-first',
+  'cached publication content must be an offline fallback rather than outrank fresh manuscript text',
 );
 
 assert.doesNotMatch(
@@ -42,7 +42,7 @@ assert.match(
 assert.match(
   serviceWorker,
   /const CACHE = 'obb-shell-v108';/,
-  'cache generation must rotate when changing shell coherence semantics',
+  'cache generation remains stable because only online response preference changed',
 );
 
 console.log('reader cache coherence tests ok');

@@ -44,20 +44,68 @@ export function normalizeFirstRenderPrefs(raw = {}) {
   };
 }
 
-async function resolveStoragePrefix(window) {
-  if (window.__IMPRINT?.storagePrefix) return String(window.__IMPRINT.storagePrefix);
+function normalizeReaderStyles(value) {
+  if (!Array.isArray(value)) return [];
+  const styles = [];
+  const seen = new Set();
+  for (const raw of value) {
+    if (styles.length >= 8) break;
+    if (typeof raw !== 'string') continue;
+    const path = raw.trim().replace(/^\.\/+/, '');
+    if (!path || path.startsWith('/') || path.startsWith('//')) continue;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(path)) continue;
+    if (path.split('/').includes('..')) continue;
+    if (!/\.css$/i.test(path)) continue;
+    if (seen.has(path)) continue;
+    seen.add(path);
+    styles.push(path);
+  }
+  return styles;
+}
+
+async function resolveImprint(window) {
+  if (window.__IMPRINT) return window.__IMPRINT;
   try {
     const response = await window.fetch(new URL('../../imprint.json', import.meta.url), { cache: 'default' });
-    if (response.ok) {
-      const imprint = await response.json();
-      const prefix = String(imprint?.storagePrefix || '').trim();
-      if (prefix) return prefix;
-    }
+    if (response.ok) return await response.json();
   } catch {
-    // The canonical imprint loader will report/fallback later; first render can
-    // safely use Bookself defaults when the identity file is unavailable.
+    // The canonical imprint loader will report/fallback later.
   }
-  return 'bookself';
+  return {};
+}
+
+function stylesheetReady(link, window) {
+  if (link.sheet) return Promise.resolve();
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    link.addEventListener('load', finish, { once: true });
+    link.addEventListener('error', finish, { once: true });
+    window.setTimeout(finish, 5000);
+  });
+}
+
+async function preloadReaderStyles(imprint, { window, document }) {
+  const styles = normalizeReaderStyles(imprint?.readerStyles);
+  if (!styles.length) return;
+  const links = [];
+  for (const path of styles) {
+    let link = document.querySelector(`link[data-bookself-instance-style="${CSS.escape(path)}"]`);
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = new URL(`../../${path}`, import.meta.url).href;
+      link.dataset.bookselfInstanceStyle = path;
+      link.dataset.readerFirstRenderStyle = 'true';
+      document.head.appendChild(link);
+    }
+    links.push(link);
+  }
+  await Promise.all(links.map((link) => stylesheetReady(link, window)));
 }
 
 function loadStoredPrefs(window, prefix) {
@@ -185,7 +233,9 @@ export async function prepareReaderFirstRender({
   }
 
   const guard = guardRedundantStartupResize({ window, document });
-  const prefix = await resolveStoragePrefix(window);
+  const imprint = await resolveImprint(window);
+  const prefix = String(imprint?.storagePrefix || window.__IMPRINT?.storagePrefix || 'bookself');
+  await preloadReaderStyles(imprint, { window, document });
   const prefs = applyFirstRenderPrefs(loadStoredPrefs(window, prefix), document);
   window.__BOOKSELF_READER_FIRST_RENDER_PREFS = prefs;
   await settleSelectedFont(prefs, { window, document });

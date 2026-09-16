@@ -76,6 +76,8 @@ jobs:
                 hasTouch: viewport.mobile,
                 isMobile: viewport.mobile,
               });
+              await context.route('https://fonts.googleapis.com/**', (route) => route.abort());
+              await context.route('https://fonts.gstatic.com/**', (route) => route.abort());
               await context.addInitScript((prefs) => {
                 localStorage.setItem('bookself-demo:reader-experience', JSON.stringify(prefs));
               }, saved);
@@ -143,14 +145,15 @@ jobs:
               assert.equal(firstVisible.indent, 'gentle');
               assert.equal(firstVisible.hyphens, 'off');
 
-              const identityStyle = await page.evaluate(() => {
-                const link = document.querySelector('link[data-reader-first-render-style="true"]');
-                return link ? {
-                  connected: link.isConnected,
-                  path: link.dataset.bookselfInstanceStyle || '',
-                } : null;
-              });
-              assert.ok(identityStyle?.connected, `${viewport.name}: instance Reader style must survive imprint setup`);
+              const identityStyles = await page.evaluate(() => (
+                [...document.querySelectorAll('link[data-reader-first-render-style="true"]')]
+                  .map((link) => ({
+                    connected: link.isConnected,
+                    path: link.dataset.bookselfInstanceStyle || '',
+                  }))
+              ));
+              assert.ok(identityStyles.length >= 2, `${viewport.name}: all configured instance Reader styles must preload`);
+              assert.ok(identityStyles.every((style) => style.connected), `${viewport.name}: preloaded instance styles must survive imprint setup`);
 
               await page.waitForTimeout(700);
               const settled = await snapshot();

@@ -70,6 +70,12 @@ Pages and Scroll agree about where it lives.
 Footnote keys are author-facing identifiers. Choose short, stable names such as
 `edition`, `method`, or `sample-size`; the reader-facing number is generated.
 
+For narrative nonfiction, biography, history, and other prose where
+parenthetical author-date citations would interrupt the voice, **Chicago-style
+notes are a strong default**. Put the unobtrusive numbered marker in the prose
+and let the note carry the source title, creator or institution, date, locator,
+and link.
+
 ## Citations and bibliography entries
 
 A simple citation uses an author-controlled visible label:
@@ -99,6 +105,41 @@ parenthetical citation for one source, a direct Markdown hyperlink for another,
 and a footnote for an explanatory source note without violating a platform
 rule. A publication may still adopt Chicago, APA, MLA, legal, numbered, or
 another consistent house style when that convention matters.
+
+### Descriptive source links
+
+A source link is part of the citation, not UI filler. Link the **name of the
+record readers are opening** whenever that name is known.
+
+Prefer:
+
+```markdown
+Nicholas Burns, [“Preparing for the International Age”](https://1997-2001.state.gov/policy_remarks/970524.burns.html),
+U.S. Department of State, May 24, 1997.
+```
+
+Avoid:
+
+```markdown
+[primary source](https://1997-2001.state.gov/policy_remarks/970524.burns.html)
+[source](https://example.org/report)
+[click here](https://example.org/report)
+https://example.org/report
+```
+
+Useful visible link text is normally the source title. Surrounding citation
+text can supply the author, institution, publication, date, page or section,
+and a short evidence qualifier such as `retrospective interview` or
+`contemporaneous report` when that distinction matters.
+
+When the source has no stable human-readable title, use the most precise honest
+record label available—for example `U.S. Senate Foreign Relations Committee
+hearing record, September 2021`—rather than a generic `source` label. Do not
+invent a document title merely to make a citation look complete.
+
+The Reader intentionally keeps external-source affordances restrained on screen
+and exposes full destination URLs in print references. That means the prose can
+stay bibliographic instead of carrying raw URLs for verification.
 
 This is **not** CSL, BibTeX, or Biber. Bookself does not currently parse `.bib`
 files, normalize author names, sort a bibliography, automatically restyle

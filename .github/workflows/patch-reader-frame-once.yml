@@ -55,27 +55,24 @@ jobs:
               raise SystemExit('openRead marker not found')
             source = source.replace(marker, helper + marker, 1)
 
-          old_double = '    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));'
-          if old_double in source:
-            source = source.replace(old_double, '    await settleRenderFrames(2);', 1)
+          double_wait = 'await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));'
+          if double_wait in source:
+            if source.count(double_wait) != 1:
+              raise SystemExit(f'expected one double-frame wait, found {source.count(double_wait)}')
+            source = source.replace(double_wait, 'await settleRenderFrames(2);', 1)
 
-          old_retry = '''    if (!app.pages.length) {
-              await new Promise((r) => requestAnimationFrame(r));
-              await rebuildPages({ commitUi: false });
-            }'''
-          new_retry = '''    if (!app.pages.length) {
-              await settleRenderFrames(1);
-              await rebuildPages({ commitUi: false });
-            }'''
-          if old_retry in source:
-            source = source.replace(old_retry, new_retry, 1)
+          single_wait = 'await new Promise((r) => requestAnimationFrame(r));'
+          if single_wait in source:
+            if source.count(single_wait) != 1:
+              raise SystemExit(f'expected one single-frame retry wait, found {source.count(single_wait)}')
+            source = source.replace(single_wait, 'await settleRenderFrames(1);', 1)
 
           if 'await settleRenderFrames(2);' not in source:
             raise SystemExit('double-frame replacement missing')
           if 'await settleRenderFrames(1);' not in source:
             raise SystemExit('retry-frame replacement missing')
-          if 'await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));' in source:
-            raise SystemExit('unbounded double requestAnimationFrame wait remains')
+          if double_wait in source or single_wait in source:
+            raise SystemExit('unbounded first-open frame wait remains')
 
           app_path.write_text(source, encoding='utf-8')
 
@@ -88,7 +85,7 @@ jobs:
               raise SystemExit('first-layout test read anchor not found')
             test = test.replace(anchor, anchor + app_read, 1)
 
-          assertions = '''assert.match(
+          assertions = r'''assert.match(
             app,
             /const FIRST_READ_FRAME_DEADLINE_MS = 160;/,
             'canonical first-open frame settlement must be bounded',

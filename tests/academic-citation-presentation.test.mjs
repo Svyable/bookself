@@ -9,6 +9,8 @@ assert.match(css, /\.reader-footnote-marker[\s\S]*vertical-align:\s*0\.52em/, 'f
 assert.match(css, /content:\s*" ↗"/, 'screen citations should expose a restrained external-source affordance');
 assert.match(css, /content:\s*" <" attr\(href\) ">"/, 'print citations should expose the original destination URL');
 assert.match(css, /@media \(max-width: 640px\), \(pointer: coarse\)/, 'compact readers should keep the citation bottom-sheet treatment');
+assert.match(css, /var\(--bg-page\)/, 'academic surfaces should inherit the canonical Reader page theme token');
+assert.doesNotMatch(css, /var\(--page-bg\)/, 'academic surfaces should not use the obsolete page-bg token');
 
 assert.match(docs, /Chicago-style\s+notes are a strong default/i, 'narrative nonfiction should document the notes-and-bibliography default');
 assert.match(docs, /Preparing for the International Age/, 'documentation should use a real descriptive source-title example');

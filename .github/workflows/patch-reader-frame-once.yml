@@ -1,0 +1,130 @@
+name: One-shot Reader frame-settlement patch
+
+on:
+  push:
+    branches:
+      - fix/reader-first-render-mobile-contents
+    paths:
+      - ".github/workflows/patch-reader-frame-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/reader-first-render-mobile-contents
+          fetch-depth: 0
+      - name: Bound canonical first-open frame settlement
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          app_path = Path('reader/js/app.js')
+          source = app_path.read_text(encoding='utf-8')
+
+          helper = '''const FIRST_READ_FRAME_DEADLINE_MS = 160;
+
+          function settleRenderFrames(count = 1) {
+            const frames = new Promise((resolve) => {
+              const step = (remaining) => {
+                if (remaining <= 0) {
+                  resolve();
+                  return;
+                }
+                window.requestAnimationFrame(() => step(remaining - 1));
+              };
+              step(Math.max(0, count | 0));
+            });
+            return Promise.race([
+              frames,
+              new Promise((resolve) => window.setTimeout(resolve, FIRST_READ_FRAME_DEADLINE_MS)),
+            ]);
+          }
+
+          '''
+
+          if 'function settleRenderFrames(count = 1)' not in source:
+            marker = 'async function openRead(slug, chapter, offset) {'
+            if marker not in source:
+              raise SystemExit('openRead marker not found')
+            source = source.replace(marker, helper + marker, 1)
+
+          old_double = '    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));'
+          if old_double in source:
+            source = source.replace(old_double, '    await settleRenderFrames(2);', 1)
+
+          old_retry = '''    if (!app.pages.length) {
+              await new Promise((r) => requestAnimationFrame(r));
+              await rebuildPages({ commitUi: false });
+            }'''
+          new_retry = '''    if (!app.pages.length) {
+              await settleRenderFrames(1);
+              await rebuildPages({ commitUi: false });
+            }'''
+          if old_retry in source:
+            source = source.replace(old_retry, new_retry, 1)
+
+          if 'await settleRenderFrames(2);' not in source:
+            raise SystemExit('double-frame replacement missing')
+          if 'await settleRenderFrames(1);' not in source:
+            raise SystemExit('retry-frame replacement missing')
+          if 'await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));' in source:
+            raise SystemExit('unbounded double requestAnimationFrame wait remains')
+
+          app_path.write_text(source, encoding='utf-8')
+
+          test_path = Path('tests/reader-first-layout-contract.test.mjs')
+          test = test_path.read_text(encoding='utf-8')
+          app_read = "const app = await readFile(new URL('../reader/js/app.js', import.meta.url), 'utf8');\n"
+          if app_read not in test:
+            anchor = "const firstRenderCss = await readFile(new URL('../reader/css/first-render.css', import.meta.url), 'utf8');\n"
+            if anchor not in test:
+              raise SystemExit('first-layout test read anchor not found')
+            test = test.replace(anchor, anchor + app_read, 1)
+
+          assertions = '''assert.match(
+            app,
+            /const FIRST_READ_FRAME_DEADLINE_MS = 160;/,
+            'canonical first-open frame settlement must be bounded',
+          );
+          assert.match(
+            app,
+            /await settleRenderFrames\(2\);/,
+            'first read should prefer two render frames before measuring',
+          );
+          assert.match(
+            app,
+            /if \(!app\.pages\.length\) \{\s*await settleRenderFrames\(1\);/s,
+            'empty first pagination retry must also use bounded frame settlement',
+          );
+          assert.doesNotMatch(
+            app,
+            /await new Promise\(\(r\) => requestAnimationFrame\(\(\) => requestAnimationFrame\(r\)\)\);/,
+            'first open must not depend on an unbounded nested requestAnimationFrame promise',
+          );
+          '''
+          if 'canonical first-open frame settlement must be bounded' not in test:
+            anchor = "assert.match(\n  runtime,\n  /installCriticalReadingStyles/"
+            if anchor not in test:
+              raise SystemExit('first-layout assertion anchor not found')
+            test = test.replace(anchor, assertions + anchor, 1)
+
+          test_path.write_text(test, encoding='utf-8')
+          PY
+
+          node --check reader/js/app.js
+          node --test tests/reader-first-layout-contract.test.mjs
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/patch-reader-frame-once.yml
+          git add reader/js/app.js tests/reader-first-layout-contract.test.mjs
+          git diff --cached --check
+          git commit -m "fix(reader): bound first-open frame settlement"
+          git push origin HEAD:fix/reader-first-render-mobile-contents

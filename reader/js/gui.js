@@ -20,7 +20,7 @@ import('./pwa-update.js').catch((error) => {
 
 const SETTINGS_STYLE_HREF = 'css/settings-panel.css?v=r1';
 const OVERLAYS = [
-  { id: 'tocOverlay', close: 'tocClose', opener: 'tocBtn', initial: 'tocSearch', label: 'Contents' },
+  { id: 'tocOverlay', close: 'tocClose', opener: 'tocBtn', label: 'Contents', modal: false },
   { id: 'progressPanel', close: 'statsClose', opener: 'progressBtn', label: 'Reading progress' },
   { id: 'settingsPanel', close: 'settingsClose', opener: 'settingsBtn', initial: 'resetAppearanceBtn', label: 'Reading experience' },
   { id: 'searchOverlay', close: 'searchClose', opener: 'searchBtn', initial: 'bookSearch', label: 'Search this book' },
@@ -36,6 +36,10 @@ let idleTimer = null;
 
 function $(id) {
   return document.getElementById(id);
+}
+
+function isModal(config) {
+  return config?.modal !== false;
 }
 
 function installSettingsStyles() {
@@ -141,6 +145,12 @@ function activeOverlayIds() {
   return activeOverlays().map((overlay) => overlay.id);
 }
 
+function activeModalIds(activeIds = activeOverlayIds()) {
+  return OVERLAYS
+    .filter((config) => isModal(config) && activeIds.includes(config.id))
+    .map((config) => config.id);
+}
+
 function topOverlay() {
   const id = topDialogId(overlayStack, activeOverlayIds());
   return id ? $(id) : null;
@@ -170,7 +180,8 @@ function syncOpenerSemantics(config, active) {
   const opener = $(config.opener);
   if (!opener) return;
   opener.setAttribute('aria-controls', config.id);
-  opener.setAttribute('aria-haspopup', 'dialog');
+  if (isModal(config)) opener.setAttribute('aria-haspopup', 'dialog');
+  else opener.removeAttribute('aria-haspopup');
   opener.setAttribute('aria-expanded', String(active));
 }
 
@@ -178,23 +189,33 @@ function syncOverlayStack() {
   const activeIds = activeOverlayIds();
   overlayStack = reconcileDialogStack(overlayStack, activeIds);
   const topId = topDialogId(overlayStack, activeIds);
+  const modalIds = activeModalIds(activeIds);
+  const topModalId = topDialogId(overlayStack, modalIds);
 
   OVERLAYS.forEach((config) => {
     const overlay = $(config.id);
     if (!overlay) return;
-    const isActive = activeIds.includes(config.id);
+    const active = activeIds.includes(config.id);
     const stackIndex = overlayStack.indexOf(config.id);
-    syncOverlayAccessibility(overlay, isActive && config.id === topId);
-    syncOpenerSemantics(config, isActive);
-    overlay.style.zIndex = isActive ? String(80 + Math.max(0, stackIndex)) : '';
+    const accessible = active && (isModal(config)
+      ? config.id === topModalId
+      : !topModalId && config.id === topId);
+    syncOverlayAccessibility(overlay, accessible);
+    syncOpenerSemantics(config, active);
+    overlay.style.zIndex = active ? String(80 + Math.max(0, stackIndex)) : '';
   });
 
-  syncBackgroundIsolation(Boolean(topId));
+  syncBackgroundIsolation(Boolean(topModalId));
 }
 
 function setOverlaySemantics(overlay, config) {
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
+  if (isModal(config)) {
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+  } else {
+    overlay.setAttribute('role', 'navigation');
+    overlay.setAttribute('aria-modal', 'false');
+  }
   if (!overlay.hasAttribute('aria-label') && !overlay.hasAttribute('aria-labelledby')) {
     overlay.setAttribute('aria-label', config.label);
   }
@@ -204,12 +225,17 @@ function setOverlaySemantics(overlay, config) {
 
 function syncBodyOverlayState() {
   const active = activeOverlays();
-  document.body.classList.toggle('gui-overlay-open', active.length > 0);
+  const modalOpen = active.some((overlay) => {
+    const config = OVERLAYS.find((entry) => entry.id === overlay.id);
+    return isModal(config);
+  });
+  document.body.classList.toggle('gui-overlay-open', modalOpen);
   document.body.classList.toggle('gui-toc-open', $('tocOverlay')?.classList.contains('active') || false);
   if (active.length) wakeChrome();
 }
 
 function focusOverlay(overlay, config) {
+  if (!isModal(config)) return;
   if (!overlay.classList.contains('active') || overlay !== topOverlay()) return;
 
   if (overlay.id === 'settingsPanel') {
@@ -236,15 +262,15 @@ function restoreFocus(overlay) {
 }
 
 function onOverlayMutation(overlay, config) {
-  const isActive = overlay.classList.contains('active');
+  const active = overlay.classList.contains('active');
   const wasActive = overlay.dataset.guiActive === 'true';
-  if (isActive === wasActive) return;
-  overlay.dataset.guiActive = String(isActive);
+  if (active === wasActive) return;
+  overlay.dataset.guiActive = String(active);
 
-  if (isActive) {
-    const active = document.activeElement;
-    const opener = active && active !== document.body && !overlay.contains(active)
-      ? active
+  if (active) {
+    const focused = document.activeElement;
+    const opener = focused && focused !== document.body && !overlay.contains(focused)
+      ? focused
       : lastExternalFocus;
     if (opener?.isConnected && !overlay.contains(opener)) {
       openers.set(overlay.id, opener);
@@ -314,15 +340,17 @@ function installOverlayPolish() {
 function handleModalKeys(event) {
   const overlay = topOverlay();
   if (!overlay) return;
+  const config = OVERLAYS.find((entry) => entry.id === overlay.id);
+  if (!config) return;
 
   if (event.key === 'Escape') {
     event.preventDefault();
     event.stopImmediatePropagation();
-    closeTopOverlay();
+    closeOverlay(config);
     return;
   }
 
-  if (event.key !== 'Tab') return;
+  if (!isModal(config) || event.key !== 'Tab') return;
   const items = focusables(overlay);
   if (!items.length) {
     event.preventDefault();

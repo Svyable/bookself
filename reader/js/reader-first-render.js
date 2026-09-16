@@ -24,6 +24,8 @@ const FONT_FAMILIES = Object.freeze({
   system: 'system-ui',
 });
 
+const ASSET_SETTLE_DEADLINE_MS = 1800;
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -54,8 +56,8 @@ function normalizeReaderStyles(value) {
     const path = raw.trim().replace(/^\.\/+/, '');
     if (!path || path.startsWith('/') || path.startsWith('//')) continue;
     if (/^[a-z][a-z0-9+.-]*:/i.test(path)) continue;
-    if (path.split('/').includes('..')) continue;
-    if (!/\.css$/i.test(path)) continue;
+    if (path.split(/[/?#]/).includes('..')) continue;
+    if (!/\.css(?:\?[^#]*)?$/i.test(path)) continue;
     if (seen.has(path)) continue;
     seen.add(path);
     styles.push(path);
@@ -74,19 +76,19 @@ async function resolveImprint(window) {
   return {};
 }
 
+function after(window, ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
 function stylesheetReady(link, window) {
   if (link.sheet) return Promise.resolve();
-  return new Promise((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      resolve();
-    };
-    link.addEventListener('load', finish, { once: true });
-    link.addEventListener('error', finish, { once: true });
-    window.setTimeout(finish, 5000);
-  });
+  return Promise.race([
+    new Promise((resolve) => {
+      link.addEventListener('load', resolve, { once: true });
+      link.addEventListener('error', resolve, { once: true });
+    }),
+    after(window, ASSET_SETTLE_DEADLINE_MS),
+  ]);
 }
 
 async function preloadReaderStyles(imprint, { window, document }) {
@@ -94,7 +96,8 @@ async function preloadReaderStyles(imprint, { window, document }) {
   if (!styles.length) return;
   const links = [];
   for (const path of styles) {
-    let link = document.querySelector(`link[data-bookself-instance-style="${CSS.escape(path)}"]`);
+    let link = [...document.querySelectorAll('link[data-bookself-instance-style]')]
+      .find((node) => node.dataset.bookselfInstanceStyle === path);
     if (!link) {
       link = document.createElement('link');
       link.rel = 'stylesheet';
@@ -212,15 +215,16 @@ function guardRedundantStartupResize({ window, document }) {
 }
 
 async function settleSelectedFont(prefs, { window, document }) {
-  if (document.fonts?.load) {
-    const family = FONT_FAMILIES[prefs.font] || FONT_FAMILIES.book;
-    try {
-      await document.fonts.load(`${prefs.fontSize}px ${family}`);
-    } catch {
-      // A local/system fallback remains usable if a web font cannot load.
-    }
+  if (!document.fonts?.load) return;
+  const family = FONT_FAMILIES[prefs.font] || FONT_FAMILIES.book;
+  try {
+    await Promise.race([
+      document.fonts.load(`${prefs.fontSize}px ${family}`),
+      after(window, ASSET_SETTLE_DEADLINE_MS),
+    ]);
+  } catch {
+    // A local/system fallback remains usable if a web font cannot load.
   }
-  await twoFrames(window);
 }
 
 export async function prepareReaderFirstRender({
@@ -235,10 +239,15 @@ export async function prepareReaderFirstRender({
   const guard = guardRedundantStartupResize({ window, document });
   const imprint = await resolveImprint(window);
   const prefix = String(imprint?.storagePrefix || window.__IMPRINT?.storagePrefix || 'bookself');
-  await preloadReaderStyles(imprint, { window, document });
   const prefs = applyFirstRenderPrefs(loadStoredPrefs(window, prefix), document);
   window.__BOOKSELF_READER_FIRST_RENDER_PREFS = prefs;
-  await settleSelectedFont(prefs, { window, document });
+
+  await Promise.all([
+    preloadReaderStyles(imprint, { window, document }),
+    settleSelectedFont(prefs, { window, document }),
+  ]);
+  await twoFrames(window);
+
   document.documentElement.dataset.readerFirstRenderReady = 'true';
   guard.arm();
   return prefs;

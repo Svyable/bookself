@@ -1,7 +1,13 @@
-/* Scholarly Markdown primitives: figures, citations, bibliography entries, and footnotes. */
+/* Scholarly Markdown primitives: figures, citations, bibliography entries, and footnotes.
+ *
+ * The default presentation follows a notes-and-bibliography sensibility: citations
+ * should stay quiet in the reading line and become explicit, readable records at
+ * the note/reference layer. Publication-specific CSS may add a house style, but
+ * these primitives must remain useful in every Bookself Reader.
+ */
 
 .reader-figure {
-  margin: 1.35em auto;
+  margin: 1.5em auto;
   break-inside: avoid;
   text-align: center;
 }
@@ -15,70 +21,163 @@
 
 .reader-figure figcaption {
   max-width: 42rem;
-  margin: 0.65em auto 0;
+  margin: 0.7em auto 0;
   color: var(--text-secondary);
-  font-size: 0.82em;
-  line-height: 1.45;
+  font-family: var(--font-accent, var(--reader-font, inherit));
+  font-size: 0.8em;
+  line-height: 1.5;
   text-align: left;
   text-indent: 0;
+  text-wrap: pretty;
 }
 
+/* Inline scholarly marks should read as editorial apparatus, not ordinary links. */
 .reader-citation,
 .reader-equation-ref,
 .reader-footnote-ref {
-  color: var(--accent);
-  text-decoration-thickness: 0.07em;
+  color: color-mix(in srgb, var(--accent) 88%, var(--text-primary, currentColor));
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 48%, transparent);
+  text-decoration-thickness: 0.055em;
   text-underline-offset: 0.15em;
+  text-decoration-skip-ink: auto;
+  font-variant-numeric: tabular-nums;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.reader-citation:hover,
+.reader-equation-ref:hover,
+.reader-footnote-ref:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+.reader-citation:focus-visible,
+.reader-equation-ref:focus-visible,
+.reader-footnote-ref:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 74%, transparent);
+  outline-offset: 0.16em;
+  border-radius: 0.14em;
 }
 
 .reader-footnote-marker {
   margin-left: 0.08em;
-  font-size: 0.72em;
+  font-family: var(--font-ui, system-ui, sans-serif);
+  font-size: 0.68em;
+  font-weight: 650;
   line-height: 0;
-  vertical-align: super;
-}
-
-.reader-footnote {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.45em;
-  margin: 0.85em 0;
-  padding-top: 0.65em;
-  border-top: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
-  color: var(--text-secondary);
-  font-size: 0.82em;
-  line-height: 1.5;
-  text-indent: 0;
-}
-
-.reader-footnote > sup {
-  color: var(--accent);
+  vertical-align: 0.52em;
   font-variant-numeric: tabular-nums;
 }
 
-.reader-footnote > div > :first-child {
-  margin-top: 0;
+.reader-footnote-marker .reader-footnote-ref {
+  text-decoration: none;
 }
 
+/* Notes use a restrained rule and generous measure so long documentary citations
+ * remain readable on a page rather than collapsing into small-print legalese. */
+.reader-footnote {
+  display: grid;
+  grid-template-columns: 1.5em minmax(0, 1fr);
+  gap: 0.45em;
+  margin: 1.05em 0;
+  padding: 0.72em 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--border) 66%, transparent);
+  color: var(--text-secondary);
+  font-family: var(--font-body, var(--reader-font, inherit));
+  font-size: 0.82em;
+  line-height: 1.58;
+  text-align: left;
+  text-indent: 0;
+  text-wrap: pretty;
+  hanging-punctuation: first allow-end last;
+  scroll-margin-block: 5rem;
+}
+
+.reader-footnote > sup {
+  padding-top: 0.09em;
+  color: var(--accent);
+  font-family: var(--font-ui, system-ui, sans-serif);
+  font-size: 0.88em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.reader-footnote > div {
+  min-width: 0;
+}
+
+.reader-footnote > div > :first-child { margin-top: 0; }
+.reader-footnote > div > :last-child { margin-bottom: 0; }
+
+/* Bibliography/reference entries use the classic hanging indent. */
 .reader-reference {
-  margin: 0.72em 0;
-  padding-left: 1.2em;
-  text-indent: -1.2em;
-  font-size: 0.9em;
-  line-height: 1.5;
+  --reference-indent: 1.45em;
+  margin: 0.82em 0;
+  padding: 0 0 0 var(--reference-indent);
+  color: var(--text-primary, inherit);
+  font-family: var(--font-body, var(--reader-font, inherit));
+  font-size: 0.88em;
+  line-height: 1.58;
+  text-align: left;
+  text-indent: calc(-1 * var(--reference-indent));
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+  hanging-punctuation: first allow-end last;
+  scroll-margin-block: 5rem;
+}
+
+.reader-reference + .reader-reference {
+  margin-top: 0.98em;
+}
+
+/* External records should look like citations to sources, not generic web links. */
+.reader-reference a[href^="http"],
+.reader-footnote a[href^="http"],
+.reader-academic-preview__body a[href^="http"] {
+  color: color-mix(in srgb, var(--accent) 90%, var(--text-primary, currentColor));
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 44%, transparent);
+  text-decoration-thickness: 0.055em;
+  text-underline-offset: 0.16em;
+  text-decoration-skip-ink: auto;
+}
+
+.reader-reference a[href^="http"]::after,
+.reader-footnote a[href^="http"]::after,
+.reader-academic-preview__body a[href^="http"]::after {
+  content: " ↗";
+  display: inline;
+  font-family: var(--font-ui, system-ui, sans-serif);
+  font-size: 0.68em;
+  font-style: normal;
+  font-weight: 650;
+  line-height: 1;
+  vertical-align: 0.3em;
+  text-decoration: none;
+}
+
+.reader-reference a[href^="http"]:hover,
+.reader-footnote a[href^="http"]:hover,
+.reader-academic-preview__body a[href^="http"]:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
 }
 
 .reader-footnote[data-academic-landed="true"],
 .reader-reference[data-academic-landed="true"] {
   position: relative;
-  outline: 2px solid color-mix(in srgb, var(--accent) 72%, transparent);
-  outline-offset: 0.28rem;
+  border-radius: 0.22rem;
+  outline: 2px solid color-mix(in srgb, var(--accent) 66%, transparent);
+  outline-offset: 0.38rem;
+  background: color-mix(in srgb, var(--accent) 3.5%, transparent);
 }
 
 .reader-footnote:focus,
 .reader-reference:focus {
   outline: 2px solid color-mix(in srgb, var(--accent) 72%, transparent);
-  outline-offset: 0.28rem;
+  outline-offset: 0.32rem;
 }
 
 .reader-academic-return {
@@ -86,14 +185,16 @@
   z-index: 1210;
   inset-inline-start: 50%;
   bottom: max(1rem, calc(env(safe-area-inset-bottom) + 0.65rem));
-  min-height: 2.55rem;
-  padding: 0.5rem 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 52%, var(--border));
+  min-height: 2.6rem;
+  padding: 0.52rem 0.94rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--page-bg) 94%, var(--accent) 6%);
+  background: color-mix(in srgb, var(--page-bg) 95%, var(--accent) 5%);
   box-shadow: 0 0.55rem 1.6rem rgb(0 0 0 / 0.16);
   color: var(--accent);
-  font: 700 0.86rem/1.2 system-ui, sans-serif;
+  font: 700 0.78rem/1.2 var(--font-ui, system-ui, sans-serif);
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
   transform: translateX(-50%);
   cursor: pointer;
 }
@@ -108,76 +209,88 @@
   text-decoration: none;
 }
 
+/* Citation preview: a compact editorial card on large screens and a reading sheet
+ * on compact/coarse-input devices. It deliberately inherits the book palette. */
 .reader-academic-preview {
   position: fixed;
   z-index: 1200;
-  width: min(28rem, calc(100vw - max(24px, env(safe-area-inset-left)) - max(24px, env(safe-area-inset-right))));
-  max-height: min(22rem, calc(100dvh - max(24px, env(safe-area-inset-top)) - max(24px, env(safe-area-inset-bottom))));
+  width: min(30rem, calc(100vw - max(24px, env(safe-area-inset-left)) - max(24px, env(safe-area-inset-right))));
+  max-height: min(24rem, calc(100dvh - max(24px, env(safe-area-inset-top)) - max(24px, env(safe-area-inset-bottom))));
   overflow: auto;
-  padding: 0.9rem 1rem 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--border) 78%, var(--accent) 22%);
-  border-radius: 0.8rem;
-  background: color-mix(in srgb, var(--page-bg) 96%, var(--accent) 4%);
-  box-shadow: 0 0.85rem 2.4rem rgb(0 0 0 / 0.18);
-  color: var(--text);
-  font-family: var(--reader-font, inherit);
+  padding: 1rem 1.08rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, var(--accent) 28%);
+  border-radius: 0.92rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 2.8%, transparent), transparent 5rem),
+    color-mix(in srgb, var(--page-bg) 97%, var(--accent) 3%);
+  box-shadow:
+    0 1.1rem 3rem rgb(0 0 0 / 0.2),
+    0 0 0 1px color-mix(in srgb, var(--page-bg) 55%, transparent) inset;
+  color: var(--text-primary, var(--text));
+  font-family: var(--font-body, var(--reader-font, inherit));
   font-size: clamp(0.9rem, 0.86rem + 0.18vw, 1rem);
-  line-height: 1.5;
+  line-height: 1.56;
   text-align: left;
   text-indent: 0;
+  text-wrap: pretty;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
 }
 
 .reader-academic-preview:focus {
-  outline: 2px solid color-mix(in srgb, var(--accent) 72%, transparent);
-  outline-offset: 2px;
+  outline: 2px solid color-mix(in srgb, var(--accent) 68%, transparent);
+  outline-offset: 3px;
 }
 
 .reader-academic-preview__header {
-  margin-bottom: 0.45rem;
-  color: var(--text-secondary);
-  font-size: 0.76em;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  margin-bottom: 0.58rem;
+  color: color-mix(in srgb, var(--text-secondary) 76%, var(--accent) 24%);
+  font-family: var(--font-ui, system-ui, sans-serif);
+  font-size: 0.69em;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+  line-height: 1.25;
   text-transform: uppercase;
 }
 
 .reader-academic-preview__body {
   overflow-wrap: anywhere;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
-.reader-academic-preview__body > :first-child {
-  margin-top: 0;
-}
-
-.reader-academic-preview__body > :last-child {
-  margin-bottom: 0;
-}
+.reader-academic-preview__body > :first-child { margin-top: 0; }
+.reader-academic-preview__body > :last-child { margin-bottom: 0; }
 
 .reader-academic-preview__actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 0.55rem;
-  margin-top: 0.8rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid color-mix(in srgb, var(--border) 68%, transparent);
+  margin-top: 0.92rem;
+  padding-top: 0.72rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
 }
 
 .reader-academic-preview__actions button {
-  min-height: 2.35rem;
-  padding: 0.38rem 0.7rem;
-  border: 1px solid color-mix(in srgb, var(--border) 76%, transparent);
-  border-radius: 0.55rem;
+  min-height: 2.38rem;
+  padding: 0.4rem 0.76rem;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  border-radius: 999px;
   background: transparent;
-  color: inherit;
-  font: inherit;
+  color: var(--text-secondary, inherit);
+  font: 700 0.74rem/1.15 var(--font-ui, system-ui, sans-serif);
+  letter-spacing: 0.035em;
   cursor: pointer;
 }
 
+.reader-academic-preview__actions button:hover {
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
+  color: var(--accent);
+}
+
 .reader-academic-preview__jump {
-  border-color: color-mix(in srgb, var(--accent) 48%, var(--border)) !important;
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border)) !important;
+  background: color-mix(in srgb, var(--accent) 7%, transparent) !important;
   color: var(--accent) !important;
 }
 
@@ -186,12 +299,7 @@
   outline-offset: 2px;
 }
 
-/*
- * On compact or coarse-input readers, treat references as a bottom reading sheet
- * instead of an anchored tooltip. This keeps long notes in thumb reach, avoids
- * covering the reference line with a tiny floating card, and preserves the
- * canonical reading surface underneath for immediate dismissal/return.
- */
+/* On compact or coarse-input readers, references become a bottom reading sheet. */
 @media (max-width: 640px), (pointer: coarse) {
   .reader-academic-preview {
     left: max(10px, env(safe-area-inset-left)) !important;
@@ -199,22 +307,22 @@
     top: auto !important;
     bottom: max(10px, env(safe-area-inset-bottom)) !important;
     width: auto;
-    max-height: min(68dvh, 30rem);
+    max-height: min(70dvh, 32rem);
     padding: 0;
-    border-radius: 1rem;
+    border-radius: 1.05rem;
     overflow: auto;
     overscroll-behavior: contain;
-    box-shadow: 0 -0.25rem 2.25rem rgb(0 0 0 / 0.2);
+    box-shadow: 0 -0.25rem 2.35rem rgb(0 0 0 / 0.22);
   }
 
   .reader-academic-preview::before {
     content: '';
     display: block;
-    width: 2.5rem;
-    height: 0.25rem;
-    margin: 0.48rem auto 0;
+    width: 2.65rem;
+    height: 0.24rem;
+    margin: 0.5rem auto 0;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--text-secondary) 42%, transparent);
+    background: color-mix(in srgb, var(--text-secondary) 38%, transparent);
   }
 
   .reader-academic-preview__header {
@@ -222,15 +330,15 @@
     z-index: 1;
     top: 0;
     margin: 0;
-    padding: 0.55rem 1rem 0.48rem;
+    padding: 0.58rem 1rem 0.5rem;
     background: color-mix(in srgb, var(--page-bg) 97%, var(--accent) 3%);
-    border-bottom: 1px solid color-mix(in srgb, var(--border) 54%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 52%, transparent);
   }
 
   .reader-academic-preview__body {
-    padding: 0.8rem 1rem 0.9rem;
-    font-size: max(0.96rem, 1em);
-    line-height: 1.58;
+    padding: 0.86rem 1rem 0.98rem;
+    font-size: max(0.98rem, 1em);
+    line-height: 1.62;
   }
 
   .reader-academic-preview__actions {
@@ -238,23 +346,18 @@
     z-index: 1;
     bottom: 0;
     margin: 0;
-    padding: 0.68rem 0.8rem max(0.72rem, env(safe-area-inset-bottom));
+    padding: 0.7rem 0.8rem max(0.74rem, env(safe-area-inset-bottom));
     background: color-mix(in srgb, var(--page-bg) 97%, var(--accent) 3%);
-    border-top-color: color-mix(in srgb, var(--border) 72%, transparent);
+    border-top-color: color-mix(in srgb, var(--border) 68%, transparent);
   }
 
   .reader-academic-preview__actions button {
     min-height: 3rem;
-    padding-inline: 0.85rem;
+    padding-inline: 0.92rem;
   }
 
-  .reader-academic-preview__jump {
-    flex: 1 1 auto;
-  }
-
-  .reader-academic-preview__close {
-    flex: 0 0 auto;
-  }
+  .reader-academic-preview__jump { flex: 1 1 auto; }
+  .reader-academic-preview__close { flex: 0 0 auto; }
 
   .reader-academic-return {
     min-height: 3rem;
@@ -262,7 +365,7 @@
   }
 }
 
-/* Short phone landscape needs the same reachable sheet without consuming the whole reading line. */
+/* Short phone landscape keeps the sheet reachable without covering the full line. */
 @media (max-height: 520px) and (orientation: landscape) {
   .reader-academic-preview {
     left: max(10px, env(safe-area-inset-left)) !important;
@@ -276,7 +379,7 @@
 
   .reader-academic-preview__body {
     padding-block: 0.62rem 0.7rem;
-    line-height: 1.46;
+    line-height: 1.48;
   }
 
   .reader-academic-preview__actions {
@@ -297,25 +400,13 @@
   }
 
   @keyframes reader-academic-preview-in {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(4px) scale(0.995); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @keyframes reader-academic-sheet-in {
-    from {
-      opacity: 0;
-      transform: translateY(0.75rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(0.75rem); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -341,9 +432,7 @@
     border-color: ButtonText;
   }
 
-  .reader-academic-preview::before {
-    background: ButtonText;
-  }
+  .reader-academic-preview::before { background: ButtonText; }
 }
 
 @media print {
@@ -351,6 +440,19 @@
   .reader-footnote,
   .reader-reference {
     break-inside: avoid;
+  }
+
+  .reader-reference,
+  .reader-footnote {
+    color: #111;
+  }
+
+  .reader-reference a[href^="http"]::after,
+  .reader-footnote a[href^="http"]::after {
+    content: " <" attr(href) ">";
+    font: 400 0.78em/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    vertical-align: baseline;
+    overflow-wrap: anywhere;
   }
 
   .reader-academic-preview,

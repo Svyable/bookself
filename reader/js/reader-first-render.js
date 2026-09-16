@@ -157,6 +157,27 @@ function twoFrames(window) {
   });
 }
 
+function installContentsGeometry({ window, document }) {
+  const root = document.documentElement;
+  const header = document.getElementById('readerChrome');
+  if (!root || !header || root.dataset.readerContentsGeometry === 'true') return;
+  root.dataset.readerContentsGeometry = 'true';
+
+  const sync = () => {
+    const height = Math.max(0, Math.ceil(header.getBoundingClientRect().height));
+    root.style.setProperty('--reader-toc-top', `${height}px`);
+  };
+
+  sync();
+  if ('ResizeObserver' in window) {
+    const observer = new window.ResizeObserver(sync);
+    observer.observe(header);
+    window.__BOOKSELF_CONTENTS_GEOMETRY_OBSERVER = observer;
+  }
+  window.addEventListener('orientationchange', sync, { passive: true });
+  window.visualViewport?.addEventListener('resize', sync, { passive: true });
+}
+
 function geometrySignature(window, document) {
   const root = document.documentElement;
   return [
@@ -236,6 +257,7 @@ export async function prepareReaderFirstRender({
     return window.__BOOKSELF_READER_FIRST_RENDER_PREFS || null;
   }
 
+  installContentsGeometry({ window, document });
   const guard = guardRedundantStartupResize({ window, document });
   const imprint = await resolveImprint(window);
   const prefix = String(imprint?.storagePrefix || window.__IMPRINT?.storagePrefix || 'bookself');

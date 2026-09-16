@@ -4,7 +4,7 @@ importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
 const CACHE_PREFIX = 'bookself-reader-shell-';
-const CACHE = 'bookself-reader-shell-v109';
+const CACHE = 'bookself-reader-shell-v110';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -12,6 +12,7 @@ const SHELL = [
   './css/style.css',
   './css/title-page.css',
   './css/experience.css',
+  './css/first-render.css',
   './css/experience-scroll.css',
   './css/scroll-performance.css',
   './css/typesetting.css',
@@ -66,6 +67,8 @@ const SHELL = [
   './js/reader-keyboard-runtime.js',
   './js/one-handed-actions-model.js',
   './js/one-handed-actions.js',
+  './js/app-loader.js',
+  './js/reader-first-render.js',
   './js/app.js',
   './js/route-queue.js',
   './js/pagination-scheduler.js',

@@ -33,6 +33,8 @@ import { searchBook, searchLibrary, wordCount, readingMinutes } from './search.j
 import { bookAsMarkdown, bookAsHtml, downloadText } from './export.js';
 import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint.js';
 
+console.info('[reader-trace] app:module-body');
+
 const app = {
   prefs: null,
   catalog: [],
@@ -255,8 +257,11 @@ let paginationScheduler = null;
 let paginationEpoch = 0;
 
 async function rebuildPages({ cooperative = true, commitUi = true } = {}) {
-  if (!app.book) return false;
-  if (!sizeMeasure()) return false;
+  console.info('[reader-trace] rebuild:start');
+  if (!app.book) { console.info('[reader-trace] rebuild:no-book'); return false; }
+  console.info('[reader-trace] rebuild:before-size');
+  if (!sizeMeasure()) { console.info('[reader-trace] rebuild:no-measure'); return false; }
+  console.info('[reader-trace] rebuild:measured');
   const run = ++paginationEpoch;
   const book = app.book;
   const box = $('pageMeasureInner');
@@ -278,16 +283,24 @@ async function rebuildPages({ cooperative = true, commitUi = true } = {}) {
   wrapper?.setAttribute('aria-busy', 'true');
   try {
     if (!paginationScheduler) {
+      console.info('[reader-trace] rebuild:scheduler-import:start');
       const { createCooperativePaginationScheduler } = await import('./pagination-scheduler.js');
+      console.info('[reader-trace] rebuild:scheduler-import:done');
       if (run !== paginationEpoch || app.book !== book) return false;
       paginationScheduler = createCooperativePaginationScheduler();
     }
 
+    console.info('[reader-trace] rebuild:scheduler-run:start');
     const result = await paginationScheduler.run(book.chapters, (ch) => {
+      console.info(`[reader-trace] paginate:${ch.id}:blocks:start`);
       box.classList.toggle('title-page-chapter', isTitlePageChapter(ch, book));
       const blocks = blocksFromMarkdown(ch.markdown, book.slug);
-      return paginateBlocks(ch.id, blocks, box);
+      console.info(`[reader-trace] paginate:${ch.id}:blocks:done:${blocks.length}`);
+      const pages = paginateBlocks(ch.id, blocks, box);
+      console.info(`[reader-trace] paginate:${ch.id}:done:${pages.length}`);
+      return pages;
     });
+    console.info(`[reader-trace] rebuild:scheduler-run:done:${result.status}`);
     box.classList.remove('title-page-chapter');
     if (
       result.status !== 'complete'
@@ -1097,17 +1110,25 @@ function settleRenderFrames(count = 1) {
 }
 
 async function openRead(slug, chapter, offset) {
+  console.info(`[reader-trace] openRead:start:${slug}:${chapter || ''}`);
   setLoader(true);
   try {
+    console.info('[reader-trace] openRead:loadBook:start');
     const book = await loadBook(slug);
+    console.info(`[reader-trace] openRead:loadBook:done:${book.chapters.length}`);
     app.slug = slug;
     app.book = book;
     rememberBook(slug);
     fillCover(book, { draft: !book.published });
     fillToc(book);
+    console.info('[reader-trace] openRead:show-stage');
     showStage('read');
+    console.info('[reader-trace] openRead:settle:start');
     await settleRenderFrames(2);
+    console.info('[reader-trace] openRead:settle:done');
+    console.info('[reader-trace] openRead:rebuild:start');
     await rebuildPages({ commitUi: false });
+    console.info(`[reader-trace] openRead:rebuild:done:${app.pages.length}`);
     if (!app.pages.length) {
       await settleRenderFrames(1);
       await rebuildPages({ commitUi: false });
@@ -1116,7 +1137,9 @@ async function openRead(slug, chapter, offset) {
       ? chapter
       : book.contents[0]?.id;
     app.pageIndex = pageIndexForOffset(app.pages, ch, offset || 0);
+    console.info('[reader-trace] openRead:paint:start');
     paintPages();
+    console.info('[reader-trace] openRead:paint:done');
     persist();
     startSession();
     markChapter(ch);
@@ -1805,10 +1828,14 @@ function scheduleServiceWorkerRegistration(afterInteractive) {
 }
 
 async function init() {
+  console.info('[reader-trace] init:start');
   applyImprint(await loadImprint());
+  console.info('[reader-trace] init:imprint');
   app.prefs = loadPrefs();
   applyPrefs();
+  console.info('[reader-trace] init:prefs');
   bindUi();
+  console.info('[reader-trace] init:ui-bound');
 
   const routeQueue = createLatestRouteQueue(async (route) => {
     if (routeNeedsCatalog(route)) await ensureCatalog();
@@ -1819,10 +1846,15 @@ async function init() {
     },
   });
 
-  const requestRoute = () => routeQueue.request(parseRoute());
+  const requestRoute = () => {
+    const route = parseRoute();
+    console.info(`[reader-trace] route:request:${route.stage || route.kind || ''}:${route.slug || ''}:${route.chapter || ''}`);
+    return routeQueue.request(route);
+  };
   window.addEventListener('hashchange', requestRoute);
   window.addEventListener('popstate', requestRoute);
   requestRoute();
+  console.info('[reader-trace] init:route-requested');
   scheduleServiceWorkerRegistration(routeQueue.idle());
 }
 

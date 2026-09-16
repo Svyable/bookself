@@ -61,8 +61,8 @@ export function normalizeReaderStyles(value) {
     const path = raw.trim().replace(/^\.\/+/, '');
     if (!path || path.startsWith('/') || path.startsWith('//')) continue;
     if (/^[a-z][a-z0-9+.-]*:/i.test(path)) continue;
-    if (path.split('/').includes('..')) continue;
-    if (!/\.css$/i.test(path)) continue;
+    if (path.split(/[/?#]/).includes('..')) continue;
+    if (!/\.css(?:\?[^#]*)?$/i.test(path)) continue;
     if (seen.has(path)) continue;
     seen.add(path);
     styles.push(path);

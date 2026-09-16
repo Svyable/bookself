@@ -43,6 +43,16 @@ assert.match(
 );
 assert.match(
   firstRender,
+  /FRAME_SETTLE_DEADLINE_MS/,
+  'pre-paint frame settlement must be time-bounded so startup cannot depend on requestAnimationFrame firing',
+);
+assert.match(
+  firstRender,
+  /Promise\.race\(\[\s*frames,\s*after\(window, FRAME_SETTLE_DEADLINE_MS\)/s,
+  'two-frame settlement should retain a timer escape hatch before app.js evaluation',
+);
+assert.match(
+  firstRender,
   /root\.style\.setProperty\('--reader-font-weight'/,
   'weight must participate in first-page measurement',
 );

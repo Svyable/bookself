@@ -1,0 +1,217 @@
+name: One-shot Reader first-render acceptance
+
+on:
+  push:
+    branches:
+      - fix/reader-first-render-mobile-contents
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Reader source contracts
+        run: |
+          node --check reader/js/reader-first-render.js
+          node --check reader/js/app-loader.js
+          node --check reader/js/gui.js
+          node --check reader/js/imprint.js
+          node --test \
+            tests/reader-first-layout-contract.test.mjs \
+            tests/reader-contents-navigation.test.mjs \
+            tests/reader-cache-coherence.test.mjs \
+            tests/reader-asset-version.test.mjs \
+            tests/reader-first-paint.test.mjs \
+            tests/reader-startup-budget.test.mjs
+      - name: Install Chromium harness
+        run: |
+          mkdir -p /tmp/reader-e2e
+          npm install --prefix /tmp/reader-e2e playwright@1.55.0
+          npx --prefix /tmp/reader-e2e playwright install --with-deps chromium
+      - name: Verify stable first visible page and Contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/reader-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/reader/ >/dev/null; then break; fi
+            sleep 0.25
+          done
+          cat >/tmp/reader-e2e/reader-first-render.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+
+          const base = 'http://127.0.0.1:4173/';
+          const route = 'reader/?b=bookself-101&c=ch01-versioned-course-text&o=0#/b/bookself-101/ch01-versioned-course-text/0';
+          const saved = {
+            fontSize: 22,
+            font: 'classic',
+            fontWeight: 500,
+            tracking: 0.02,
+            leading: 1.8,
+            measure: 'narrow',
+            align: 'left',
+            paragraph: 'airy',
+            indent: 'gentle',
+            mode: 'paged',
+            hyphens: 'off',
+          };
+          const viewports = [
+            { name: 'phone', width: 390, height: 844, mobile: true },
+            { name: 'tablet', width: 820, height: 1180, mobile: true },
+            { name: 'desktop', width: 1280, height: 900, mobile: false },
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          try {
+            for (const viewport of viewports) {
+              const context = await browser.newContext({
+                viewport: { width: viewport.width, height: viewport.height },
+                hasTouch: viewport.mobile,
+                isMobile: viewport.mobile,
+              });
+              await context.addInitScript((prefs) => {
+                localStorage.setItem('bookself-demo:reader-experience', JSON.stringify(prefs));
+              }, saved);
+              const page = await context.newPage();
+              const pageErrors = [];
+              page.on('pageerror', (error) => pageErrors.push(error.message));
+              await page.goto(`${base}${route}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+
+              await page.waitForFunction(() => {
+                const root = document.documentElement;
+                const wrapper = document.getElementById('pagesWrapper');
+                const visible = document.querySelector('#pagesWrapper .page-surface.active .page-inner');
+                const rect = visible?.getBoundingClientRect();
+                return root.dataset.readerFirstRenderReady === 'true'
+                  && root.dataset.readerPrefsPrimed === 'true'
+                  && document.body?.dataset.stage === 'read'
+                  && wrapper?.classList.contains('active')
+                  && !!visible
+                  && (rect?.width || 0) > 20
+                  && (rect?.height || 0) > 20
+                  && Number(document.getElementById('totalPages')?.textContent || '0') > 0;
+              }, null, { timeout: 90000 });
+              await page.waitForFunction(() => document.documentElement.dataset.guiEnhanced === 'true', null, { timeout: 30000 });
+
+              const snapshot = () => page.evaluate(() => {
+                const root = document.documentElement;
+                const pageInner = document.querySelector('#pagesWrapper .page-surface.active .page-inner');
+                const rect = pageInner?.getBoundingClientRect();
+                const style = pageInner ? getComputedStyle(pageInner) : null;
+                return {
+                  fontSize: root.style.getPropertyValue('--reader-font-size').trim(),
+                  leading: root.style.getPropertyValue('--reader-leading').trim(),
+                  weight: root.style.getPropertyValue('--reader-font-weight').trim(),
+                  tracking: root.style.getPropertyValue('--reader-tracking').trim(),
+                  font: root.dataset.readerFont,
+                  measure: root.dataset.readerMeasure,
+                  align: root.dataset.readerAlign,
+                  paragraph: root.dataset.readerParagraph,
+                  indent: root.dataset.readerIndent,
+                  hyphens: root.dataset.readerHyphens,
+                  primed: root.dataset.readerPrefsPrimed,
+                  ready: root.dataset.readerFirstRenderReady,
+                  renderedFontSize: style?.fontSize || '',
+                  renderedLineHeight: style?.lineHeight || '',
+                  renderedWeight: style?.fontWeight || '',
+                  renderedTracking: style?.letterSpacing || '',
+                  width: Math.round((rect?.width || 0) * 10) / 10,
+                  height: Math.round((rect?.height || 0) * 10) / 10,
+                  top: Math.round((rect?.top || 0) * 10) / 10,
+                  totalPages: document.getElementById('totalPages')?.textContent || '',
+                };
+              });
+
+              const firstVisible = await snapshot();
+              assert.equal(firstVisible.primed, 'true');
+              assert.equal(firstVisible.ready, 'true');
+              assert.equal(firstVisible.fontSize, '22px');
+              assert.equal(firstVisible.leading, '1.8');
+              assert.equal(firstVisible.weight, '500');
+              assert.equal(firstVisible.tracking, '0.02em');
+              assert.equal(firstVisible.font, 'classic');
+              assert.equal(firstVisible.measure, 'narrow');
+              assert.equal(firstVisible.align, 'left');
+              assert.equal(firstVisible.paragraph, 'airy');
+              assert.equal(firstVisible.indent, 'gentle');
+              assert.equal(firstVisible.hyphens, 'off');
+
+              const identityStyle = await page.evaluate(() => {
+                const link = document.querySelector('link[data-reader-first-render-style="true"]');
+                return link ? {
+                  connected: link.isConnected,
+                  path: link.dataset.bookselfInstanceStyle || '',
+                } : null;
+              });
+              assert.ok(identityStyle?.connected, `${viewport.name}: instance Reader style must survive imprint setup`);
+
+              await page.waitForTimeout(700);
+              const settled = await snapshot();
+              assert.deepEqual(settled, firstVisible, `${viewport.name}: first visible page must not snap into a second layout`);
+
+              await page.click('#tocBtn');
+              await page.waitForFunction(() => document.getElementById('tocOverlay')?.classList.contains('active'));
+              await page.waitForTimeout(350);
+
+              const contents = await page.evaluate(() => {
+                const drawer = document.getElementById('tocOverlay');
+                const header = document.getElementById('readerChrome');
+                const rect = drawer.getBoundingClientRect();
+                const headerRect = header.getBoundingClientRect();
+                const style = getComputedStyle(drawer);
+                return {
+                  activeElement: document.activeElement?.id || '',
+                  top: rect.top,
+                  bottom: rect.bottom,
+                  width: rect.width,
+                  height: rect.height,
+                  viewportWidth: window.innerWidth,
+                  viewportHeight: window.innerHeight,
+                  headerBottom: headerRect.bottom,
+                  expanded: document.getElementById('tocBtn')?.getAttribute('aria-expanded'),
+                  role: drawer.getAttribute('role'),
+                  modal: drawer.getAttribute('aria-modal'),
+                  appInert: !!document.querySelector('.app')?.inert,
+                  modalClass: document.body.classList.contains('gui-overlay-open'),
+                  tocClass: document.body.classList.contains('gui-toc-open'),
+                  display: style.display,
+                  visibility: style.visibility,
+                };
+              });
+              assert.ok(contents.width > 20 && contents.height > 20, `${viewport.name}: Contents must have visible geometry`);
+              assert.notEqual(contents.display, 'none');
+              assert.notEqual(contents.visibility, 'hidden');
+              assert.equal(contents.expanded, 'true', `${viewport.name}: Contents opener must report open state`);
+              assert.equal(contents.role, 'navigation', `${viewport.name}: Contents must be navigation`);
+              assert.equal(contents.modal, 'false', `${viewport.name}: Contents must remain non-modal`);
+              assert.equal(contents.appInert, false, `${viewport.name}: Reader shell must remain interactive`);
+              assert.equal(contents.modalClass, false, `${viewport.name}: Contents must not enter modal layout state`);
+              assert.equal(contents.tocClass, true, `${viewport.name}: Contents-specific state should be active`);
+              assert.ok(contents.top >= contents.headerBottom - 2, `${viewport.name}: Contents must begin below Reader header`);
+              assert.ok(contents.bottom <= contents.viewportHeight + 2, `${viewport.name}: Contents must stay inside viewport`);
+              if (viewport.mobile) {
+                assert.notEqual(contents.activeElement, 'tocSearch', `${viewport.name}: opening Contents must not invoke search keyboard`);
+                assert.ok(contents.width >= contents.viewportWidth - 2, `${viewport.name}: compact Contents must use available width`);
+              }
+
+              const withContents = await snapshot();
+              assert.deepEqual(withContents, settled, `${viewport.name}: Contents must not change visible page typography or geometry`);
+
+              await page.click('#tocClose');
+              await page.waitForFunction(() => !document.getElementById('tocOverlay')?.classList.contains('active'));
+              assert.deepEqual(pageErrors, [], `${viewport.name}: no uncaught Reader errors expected`);
+              console.log(`PASS ${viewport.name}: stable first render + non-modal Contents`);
+              await context.close();
+            }
+          } finally {
+            await browser.close();
+          }
+          EOF
+          node /tmp/reader-e2e/reader-first-render.mjs

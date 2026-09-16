@@ -71,8 +71,18 @@ export function normalizeReaderStyles(value) {
 }
 
 function applyReaderStyles(styles) {
-  document.querySelectorAll('link[data-bookself-instance-style]').forEach((node) => node.remove());
-  for (const path of normalizeReaderStyles(styles)) {
+  const next = normalizeReaderStyles(styles);
+  const keep = new Set(next);
+  const existing = [...document.querySelectorAll('link[data-bookself-instance-style]')];
+
+  existing.forEach((node) => {
+    if (!keep.has(node.dataset.bookselfInstanceStyle || '')) node.remove();
+  });
+
+  for (const path of next) {
+    const current = [...document.querySelectorAll('link[data-bookself-instance-style]')]
+      .find((node) => node.dataset.bookselfInstanceStyle === path);
+    if (current) continue;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = fileUrl(path);

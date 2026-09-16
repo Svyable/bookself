@@ -46,8 +46,23 @@ assert.match(
 );
 assert.match(
   serviceWorker,
-  /const CACHE = 'bookself-reader-shell-v109';/,
-  'cache generation must rotate when changing cache ownership semantics',
+  /const CACHE = 'bookself-reader-shell-v110';/,
+  'cache generation must rotate when first-render critical assets change',
+);
+assert.match(
+  serviceWorker,
+  /'\.\/css\/first-render\.css'/,
+  'offline Reader shell must include the first-render geometry contract',
+);
+assert.match(
+  serviceWorker,
+  /'\.\/js\/app-loader\.js'/,
+  'offline Reader shell must include the startup gate',
+);
+assert.match(
+  serviceWorker,
+  /'\.\/js\/reader-first-render\.js'/,
+  'offline Reader shell must include saved-experience priming',
 );
 assert.match(
   serviceWorker,

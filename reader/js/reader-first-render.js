@@ -25,6 +25,7 @@ const FONT_FAMILIES = Object.freeze({
 });
 
 const ASSET_SETTLE_DEADLINE_MS = 1800;
+const FRAME_SETTLE_DEADLINE_MS = 160;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -152,9 +153,16 @@ export function applyFirstRenderPrefs(prefs, document = globalThis.document) {
 }
 
 function twoFrames(window) {
-  return new Promise((resolve) => {
+  const frames = new Promise((resolve) => {
     window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
   });
+  // Parser/defer module evaluation can precede the browser's first render
+  // opportunity. Prefer two real frames when they are available, but never let
+  // startup depend on requestAnimationFrame being serviced before app.js runs.
+  return Promise.race([
+    frames,
+    after(window, FRAME_SETTLE_DEADLINE_MS),
+  ]);
 }
 
 function installContentsGeometry({ window, document }) {

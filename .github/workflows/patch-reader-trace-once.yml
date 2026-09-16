@@ -1,0 +1,106 @@
+name: One-shot Reader startup trace patch
+
+on:
+  push:
+    branches:
+      - fix/reader-first-render-mobile-contents
+    paths:
+      - ".github/workflows/patch-reader-trace-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/reader-first-render-mobile-contents
+          fetch-depth: 0
+      - name: Add temporary Reader startup milestones
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('reader/js/app.js')
+          source = path.read_text(encoding='utf-8')
+
+          def replace_once(old, new, label):
+              global source
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one match, found {count}')
+              source = source.replace(old, new, 1)
+
+          if "[reader-trace] app:module-body" not in source:
+              replace_once(
+                  "import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint.js';\n\nconst app = {",
+                  "import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint.js';\n\nconsole.info('[reader-trace] app:module-body');\n\nconst app = {",
+                  'module body',
+              )
+
+          if "[reader-trace] rebuild:start" not in source:
+              replace_once(
+                  "async function rebuildPages({ cooperative = true, commitUi = true } = {}) {\n  if (!app.book) return false;\n  if (!sizeMeasure()) return false;",
+                  "async function rebuildPages({ cooperative = true, commitUi = true } = {}) {\n  console.info('[reader-trace] rebuild:start');\n  if (!app.book) { console.info('[reader-trace] rebuild:no-book'); return false; }\n  console.info('[reader-trace] rebuild:before-size');\n  if (!sizeMeasure()) { console.info('[reader-trace] rebuild:no-measure'); return false; }\n  console.info('[reader-trace] rebuild:measured');",
+                  'rebuild entry',
+              )
+              replace_once(
+                  "      const { createCooperativePaginationScheduler } = await import('./pagination-scheduler.js');",
+                  "      console.info('[reader-trace] rebuild:scheduler-import:start');\n      const { createCooperativePaginationScheduler } = await import('./pagination-scheduler.js');\n      console.info('[reader-trace] rebuild:scheduler-import:done');",
+                  'scheduler import',
+              )
+              replace_once(
+                  "    const result = await paginationScheduler.run(book.chapters, (ch) => {\n      box.classList.toggle('title-page-chapter', isTitlePageChapter(ch, book));\n      const blocks = blocksFromMarkdown(ch.markdown, book.slug);\n      return paginateBlocks(ch.id, blocks, box);\n    });",
+                  "    console.info('[reader-trace] rebuild:scheduler-run:start');\n    const result = await paginationScheduler.run(book.chapters, (ch) => {\n      console.info(`[reader-trace] paginate:${ch.id}:blocks:start`);\n      box.classList.toggle('title-page-chapter', isTitlePageChapter(ch, book));\n      const blocks = blocksFromMarkdown(ch.markdown, book.slug);\n      console.info(`[reader-trace] paginate:${ch.id}:blocks:done:${blocks.length}`);\n      const pages = paginateBlocks(ch.id, blocks, box);\n      console.info(`[reader-trace] paginate:${ch.id}:done:${pages.length}`);\n      return pages;\n    });\n    console.info(`[reader-trace] rebuild:scheduler-run:done:${result.status}`);",
+                  'scheduler run',
+              )
+
+          if "[reader-trace] openRead:start" not in source:
+              replace_once(
+                  "async function openRead(slug, chapter, offset) {\n  setLoader(true);\n  try {\n    const book = await loadBook(slug);",
+                  "async function openRead(slug, chapter, offset) {\n  console.info(`[reader-trace] openRead:start:${slug}:${chapter || ''}`);\n  setLoader(true);\n  try {\n    console.info('[reader-trace] openRead:loadBook:start');\n    const book = await loadBook(slug);\n    console.info(`[reader-trace] openRead:loadBook:done:${book.chapters.length}`);",
+                  'openRead load',
+              )
+              replace_once(
+                  "    fillToc(book);\n    showStage('read');\n    await settleRenderFrames(2);\n    await rebuildPages({ commitUi: false });",
+                  "    fillToc(book);\n    console.info('[reader-trace] openRead:show-stage');\n    showStage('read');\n    console.info('[reader-trace] openRead:settle:start');\n    await settleRenderFrames(2);\n    console.info('[reader-trace] openRead:settle:done');\n    console.info('[reader-trace] openRead:rebuild:start');\n    await rebuildPages({ commitUi: false });\n    console.info(`[reader-trace] openRead:rebuild:done:${app.pages.length}`);",
+                  'openRead rebuild',
+              )
+              replace_once(
+                  "    app.pageIndex = pageIndexForOffset(app.pages, ch, offset || 0);\n    paintPages();",
+                  "    app.pageIndex = pageIndexForOffset(app.pages, ch, offset || 0);\n    console.info('[reader-trace] openRead:paint:start');\n    paintPages();\n    console.info('[reader-trace] openRead:paint:done');",
+                  'openRead paint',
+              )
+
+          if "[reader-trace] init:start" not in source:
+              replace_once(
+                  "async function init() {\n  applyImprint(await loadImprint());\n  app.prefs = loadPrefs();\n  applyPrefs();\n  bindUi();",
+                  "async function init() {\n  console.info('[reader-trace] init:start');\n  applyImprint(await loadImprint());\n  console.info('[reader-trace] init:imprint');\n  app.prefs = loadPrefs();\n  applyPrefs();\n  console.info('[reader-trace] init:prefs');\n  bindUi();\n  console.info('[reader-trace] init:ui-bound');",
+                  'init entry',
+              )
+              replace_once(
+                  "  const requestRoute = () => routeQueue.request(parseRoute());",
+                  "  const requestRoute = () => {\n    const route = parseRoute();\n    console.info(`[reader-trace] route:request:${route.stage || route.kind || ''}:${route.slug || ''}:${route.chapter || ''}`);\n    return routeQueue.request(route);\n  };",
+                  'route request',
+              )
+              replace_once(
+                  "  requestRoute();\n  scheduleServiceWorkerRegistration(routeQueue.idle());\n}\n\ninit();",
+                  "  requestRoute();\n  console.info('[reader-trace] init:route-requested');\n  scheduleServiceWorkerRegistration(routeQueue.idle());\n}\n\ninit();",
+                  'init tail',
+              )
+
+          path.write_text(source, encoding='utf-8')
+          PY
+
+          node --check reader/js/app.js
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/patch-reader-trace-once.yml
+          git add reader/js/app.js
+          git commit -m "test(reader): trace startup execution boundaries"
+          git push origin HEAD:fix/reader-first-render-mobile-contents

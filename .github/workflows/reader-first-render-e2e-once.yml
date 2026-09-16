@@ -84,7 +84,7 @@ jobs:
               const page = await context.newPage();
               const pageErrors = [];
               page.on('pageerror', (error) => pageErrors.push(error.message));
-              await page.goto(`${base}${route}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+              await page.goto(`${base}${route}`, { waitUntil: 'commit', timeout: 15000 });
 
               await page.waitForFunction(() => {
                 const root = document.documentElement;
@@ -99,8 +99,8 @@ jobs:
                   && (rect?.width || 0) > 20
                   && (rect?.height || 0) > 20
                   && Number(document.getElementById('totalPages')?.textContent || '0') > 0;
-              }, null, { timeout: 90000 });
-              await page.waitForFunction(() => document.documentElement.dataset.guiEnhanced === 'true', null, { timeout: 30000 });
+              }, null, { timeout: 30000 });
+              await page.waitForFunction(() => document.documentElement.dataset.guiEnhanced === 'true', null, { timeout: 10000 });
 
               const snapshot = () => page.evaluate(() => {
                 const root = document.documentElement;

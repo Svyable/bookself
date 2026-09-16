@@ -1,0 +1,137 @@
+:root {
+  --reader-font-weight: 400;
+  --reader-tracking: 0em;
+}
+
+/* These rules must exist before the paginated engine measures its first page. */
+[data-reader-font="book"] .page-inner,
+[data-reader-font="book"] .scroll-document,
+[data-reader-font="book"] .experience-preview-sample {
+  font-family: "Source Serif 4", Georgia, serif !important;
+}
+
+[data-reader-font="literary"] .page-inner,
+[data-reader-font="literary"] .scroll-document,
+[data-reader-font="literary"] .experience-preview-sample {
+  font-family: "Literata", Georgia, serif !important;
+}
+
+[data-reader-font="warm"] .page-inner,
+[data-reader-font="warm"] .scroll-document,
+[data-reader-font="warm"] .experience-preview-sample {
+  font-family: "Lora", Georgia, serif !important;
+}
+
+[data-reader-font="classic"] .page-inner,
+[data-reader-font="classic"] .scroll-document,
+[data-reader-font="classic"] .experience-preview-sample {
+  font-family: Georgia, "Times New Roman", serif !important;
+}
+
+[data-reader-font="modern"] .page-inner,
+[data-reader-font="modern"] .scroll-document,
+[data-reader-font="modern"] .experience-preview-sample {
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+[data-reader-font="clear"] .page-inner,
+[data-reader-font="clear"] .scroll-document,
+[data-reader-font="clear"] .experience-preview-sample {
+  font-family: "Atkinson Hyperlegible", Verdana, sans-serif !important;
+}
+
+[data-reader-font="humanist"] .page-inner,
+[data-reader-font="humanist"] .scroll-document,
+[data-reader-font="humanist"] .experience-preview-sample {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif !important;
+}
+
+[data-reader-font="system"] .page-inner,
+[data-reader-font="system"] .scroll-document,
+[data-reader-font="system"] .experience-preview-sample {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+.page-inner,
+.scroll-document,
+.experience-preview-sample {
+  font-weight: var(--reader-font-weight);
+  letter-spacing: var(--reader-tracking);
+}
+
+[data-reader-indent="gentle"] .page-inner p + p,
+[data-reader-indent="gentle"] .scroll-document p + p {
+  text-indent: .85em;
+}
+
+[data-reader-indent="classic"] .page-inner p + p,
+[data-reader-indent="classic"] .scroll-document p + p {
+  text-indent: 1.45em;
+}
+
+[data-reader-hyphens="off"] .page-inner p,
+[data-reader-hyphens="off"] .scroll-document p {
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+[data-reader-hyphens="auto"][data-reader-align="justify"] .page-inner p,
+[data-reader-hyphens="auto"][data-reader-align="justify"] .scroll-document p {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Contents is navigation, not a dialog. It occupies the remaining Reader
+   viewport below the persistent header and never changes page geometry. */
+.toc-overlay {
+  top: var(--reader-toc-top, 0px) !important;
+  bottom: auto !important;
+  height: calc(100dvh - var(--reader-toc-top, 0px)) !important;
+}
+
+.gui-toc-scrim {
+  top: var(--reader-toc-top, 0px) !important;
+}
+
+@media (max-width: 700px), (pointer: coarse) and (max-width: 900px) {
+  .toc-overlay {
+    right: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding-top: 1rem !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    border: 0 !important;
+    border-top: 1px solid var(--border) !important;
+    border-radius: 0 !important;
+    transform: translateX(102%) !important;
+    overflow: hidden !important;
+  }
+
+  .toc-overlay.active {
+    transform: translateX(0) !important;
+  }
+
+  .toc-overlay::before {
+    display: none !important;
+  }
+
+  .toc-header,
+  .toc-search {
+    flex: 0 0 auto;
+  }
+
+  #tocList {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .toc-close {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}

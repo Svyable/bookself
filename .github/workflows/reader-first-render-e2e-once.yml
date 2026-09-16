@@ -50,7 +50,7 @@ jobs:
           import assert from 'node:assert/strict';
 
           const base = 'http://127.0.0.1:4173/';
-          const route = 'reader/?b=bookself-101&c=ch01-versioned-course-text&o=0#/b/bookself-101/ch01-versioned-course-text/0';
+          const route = 'reader/?b=bookself-review&c=issue-01&o=0#/b/bookself-review/issue-01/0';
           const saved = {
             fontSize: 22,
             font: 'classic',

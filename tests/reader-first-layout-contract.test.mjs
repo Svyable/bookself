@@ -5,6 +5,7 @@ const index = await readFile(new URL('../reader/index.html', import.meta.url), '
 const loader = await readFile(new URL('../reader/js/app-loader.js', import.meta.url), 'utf8');
 const firstRender = await readFile(new URL('../reader/js/reader-first-render.js', import.meta.url), 'utf8');
 const firstRenderCss = await readFile(new URL('../reader/css/first-render.css', import.meta.url), 'utf8');
+const app = await readFile(new URL('../reader/js/app.js', import.meta.url), 'utf8');
 const runtime = await readFile(new URL('../reader/js/viewport-stability-runtime.js', import.meta.url), 'utf8');
 
 assert.match(
@@ -85,6 +86,26 @@ assert.match(
   firstRenderCss,
   /font-weight: var\(--reader-font-weight\)/,
   'critical CSS must apply saved weight to measured page content',
+);
+assert.match(
+  app,
+  /const FIRST_READ_FRAME_DEADLINE_MS = 160;/,
+  'canonical first-open frame settlement must be bounded',
+);
+assert.match(
+  app,
+  /await settleRenderFrames\(2\);/,
+  'first read should prefer two render frames before measuring',
+);
+assert.match(
+  app,
+  /if \(!app\.pages\.length\) \{\s*await settleRenderFrames\(1\);/s,
+  'empty first pagination retry must also use bounded frame settlement',
+);
+assert.doesNotMatch(
+  app,
+  /await new Promise\(\(r\) => requestAnimationFrame\(\(\) => requestAnimationFrame\(r\)\)\);/,
+  'first open must not depend on an unbounded nested requestAnimationFrame promise',
 );
 assert.match(
   runtime,

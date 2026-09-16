@@ -1077,6 +1077,25 @@ async function openCover(slug) {
   }
 }
 
+const FIRST_READ_FRAME_DEADLINE_MS = 160;
+
+function settleRenderFrames(count = 1) {
+  const frames = new Promise((resolve) => {
+    const step = (remaining) => {
+      if (remaining <= 0) {
+        resolve();
+        return;
+      }
+      window.requestAnimationFrame(() => step(remaining - 1));
+    };
+    step(Math.max(0, count | 0));
+  });
+  return Promise.race([
+    frames,
+    new Promise((resolve) => window.setTimeout(resolve, FIRST_READ_FRAME_DEADLINE_MS)),
+  ]);
+}
+
 async function openRead(slug, chapter, offset) {
   setLoader(true);
   try {
@@ -1087,10 +1106,10 @@ async function openRead(slug, chapter, offset) {
     fillCover(book, { draft: !book.published });
     fillToc(book);
     showStage('read');
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await settleRenderFrames(2);
     await rebuildPages({ commitUi: false });
     if (!app.pages.length) {
-      await new Promise((r) => requestAnimationFrame(r));
+      await settleRenderFrames(1);
       await rebuildPages({ commitUi: false });
     }
     const ch = chapter && book.contents.some((c) => c.id === chapter)

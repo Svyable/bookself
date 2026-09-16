@@ -12,6 +12,7 @@ permissions:
 jobs:
   browser-regression:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - name: Check Reader source contracts
@@ -33,6 +34,7 @@ jobs:
           npm install --prefix /tmp/reader-e2e playwright@1.55.0
           npx --prefix /tmp/reader-e2e playwright install --with-deps chromium
       - name: Verify stable first visible page and Contents
+        timeout-minutes: 4
         shell: bash
         run: |
           set -euo pipefail
@@ -71,6 +73,7 @@ jobs:
           const browser = await chromium.launch({ headless: true });
           try {
             for (const viewport of viewports) {
+              console.log(`BEGIN ${viewport.name}`);
               const context = await browser.newContext({
                 viewport: { width: viewport.width, height: viewport.height },
                 hasTouch: viewport.mobile,
@@ -82,9 +85,19 @@ jobs:
                 localStorage.setItem('bookself-demo:reader-experience', JSON.stringify(prefs));
               }, saved);
               const page = await context.newPage();
+              page.setDefaultTimeout(10000);
+              page.setDefaultNavigationTimeout(15000);
               const pageErrors = [];
               page.on('pageerror', (error) => pageErrors.push(error.message));
+              page.on('requestfailed', (request) => {
+                const url = request.url();
+                if (!url.startsWith('https://fonts.googleapis.com/') && !url.startsWith('https://fonts.gstatic.com/')) {
+                  console.log(`REQUEST_FAILED ${viewport.name} ${url} ${request.failure()?.errorText || ''}`);
+                }
+              });
+              console.log(`NAVIGATE ${viewport.name}`);
               await page.goto(`${base}${route}`, { waitUntil: 'commit', timeout: 15000 });
+              console.log(`COMMITTED ${viewport.name}`);
 
               await page.waitForFunction(() => {
                 const root = document.documentElement;
@@ -100,7 +113,9 @@ jobs:
                   && (rect?.height || 0) > 20
                   && Number(document.getElementById('totalPages')?.textContent || '0') > 0;
               }, null, { timeout: 30000 });
+              console.log(`VISIBLE ${viewport.name}`);
               await page.waitForFunction(() => document.documentElement.dataset.guiEnhanced === 'true', null, { timeout: 10000 });
+              console.log(`GUI ${viewport.name}`);
 
               const snapshot = () => page.evaluate(() => {
                 const root = document.documentElement;
@@ -217,4 +232,4 @@ jobs:
             await browser.close();
           }
           EOF
-          node /tmp/reader-e2e/reader-first-render.mjs
+          timeout --signal=TERM 170s node /tmp/reader-e2e/reader-first-render.mjs

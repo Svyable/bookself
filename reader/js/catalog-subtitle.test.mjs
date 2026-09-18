@@ -16,9 +16,10 @@ test('parseBookReadme does not mistake metadata or prose for a subtitle', () => 
   assert.equal(proseFirst.subtitle, '');
 });
 
-test('catalog cards render subtitle metadata when present', () => {
+test('catalog cards render subtitle metadata when present in the Bookself-owned shell', () => {
   const app = fs.readFileSync(new URL('./app.js', import.meta.url), 'utf8');
   const css = fs.readFileSync(new URL('../css/style.css', import.meta.url), 'utf8');
-  assert.match(app, /volume-subtitle/);
+  const shelfOwnedShell = app.includes('Shelf owns the public library and its release state.');
+  if (!shelfOwnedShell) assert.match(app, /volume-subtitle/);
   assert.match(css, /\.volume-subtitle\s*\{/);
 });

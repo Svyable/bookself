@@ -1,8 +1,16 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import { parseBookReadme, parseFrontMatterMeta } from './catalog.js';
 
-const source = await readFile(process.argv[2] || new URL('./app.js', import.meta.url), 'utf8');
+let sourceUrl = process.argv[2] ? new URL(process.argv[2], `file://${process.cwd()}/`) : new URL('./app.js', import.meta.url);
+const coreUrl = new URL('./app-core.js', import.meta.url);
+if (!process.argv[2]) {
+  try {
+    await access(coreUrl);
+    sourceUrl = coreUrl;
+  } catch {}
+}
+const source = await readFile(sourceUrl, 'utf8');
 const start = source.indexOf('async function loadBook(slug)');
 const end = source.indexOf('async function fetchRevision(slug)', start);
 assert.ok(start >= 0 && end > start);

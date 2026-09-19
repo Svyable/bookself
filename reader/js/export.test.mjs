@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
-import { bookAsHtml, bookAsMarkdown } from './export.js';
+await import('../vendor/marked.min.js');
+globalThis.window = {
+  marked: globalThis.marked,
+  location: { pathname: '/reader/' },
+};
+const { bookAsHtml, bookAsMarkdown } = await import('./export.js');
 
 const book = {
   slug: 'example',

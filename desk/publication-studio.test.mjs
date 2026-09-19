@@ -45,5 +45,5 @@ test('print editions are honest about current capability', async () => {
   assert.match(html, /Paperback · 6 × 9/);
   assert.match(html, /Hardcover · 6 × 9/);
   assert.match(html, /Print-PDF export is not enabled yet\./);
-  assert.match(html, /class="studio-export-epub"/);
+  assert.match(html, /class="[^"]*studio-export-epub[^"]*"/);
 });

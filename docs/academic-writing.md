@@ -49,6 +49,12 @@ footnote in a fixed-layout edition. That adaptive behavior is a design
 invariant, not a claim about features implemented by the current Reader. The
 current Markdown forms below remain explicit and author-controlled.
 
+The same principle applies to indexes and other publication apparatus. A digital
+index should navigate to durable concepts, chapters, sections, figures, or other
+semantic targets rather than pretending a reflowable Reader has one permanent
+set of pages. A fixed print or PDF edition may layer edition-specific page
+locators on top. See [Publication apparatus](publication-apparatus.md).
+
 ## Footnotes
 
 Put a footnote marker where the note belongs:

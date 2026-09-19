@@ -4,6 +4,47 @@ import { installMarkedAcademic, setAcademicContext } from './academic.js';
 import { withSourceRange } from './reading-position.js';
 import { createBoundedPairCache } from './derivation-cache.js';
 
+
+const BLOCKED_HTML = 'script,iframe,object,embed,base,meta,link,style,form,input,button,textarea,select,option';
+const URL_ATTRIBUTES = new Set(['href', 'src', 'xlink:href', 'action', 'formaction', 'poster']);
+
+export function safeHtmlUrl(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw || raw.startsWith('#') || raw.startsWith('/') || raw.startsWith('./') || raw.startsWith('../')) return true;
+  if (/^data:image\/(?:png|jpe?g|gif|webp);base64,/i.test(raw)) return true;
+  try {
+    const url = new URL(raw, 'https://bookself.invalid/');
+    return ['http:', 'https:', 'mailto:', 'tel:'].includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
+export function sanitizeRenderedHtml(html, doc = globalThis.document) {
+  const source = String(html ?? '');
+  if (!doc?.createElement) return source;
+  const template = doc.createElement('template');
+  template.innerHTML = source;
+  template.content.querySelectorAll(BLOCKED_HTML).forEach((node) => node.remove());
+  template.content.querySelectorAll('*').forEach((node) => {
+    for (const attr of [...node.attributes]) {
+      const name = attr.name.toLowerCase();
+      if (name.startsWith('on') || name === 'srcdoc' || name === 'style' || name === 'srcset') {
+        node.removeAttribute(attr.name);
+        continue;
+      }
+      if (URL_ATTRIBUTES.has(name) && !safeHtmlUrl(attr.value)) node.removeAttribute(attr.name);
+    }
+    if (node.getAttribute('target') === '_blank') {
+      const rel = new Set((node.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+      rel.add('noopener');
+      rel.add('noreferrer');
+      node.setAttribute('rel', [...rel].join(' '));
+    }
+  });
+  return template.innerHTML;
+}
+
 const CHAPTER = '(?:manuscript\\/)?((?:ch[\\w-]+|front-matter|back-matter)(?:\\.md)?)';
 const blockCache = createBoundedPairCache(96);
 const headingCache = createBoundedPairCache(192);
@@ -98,7 +139,7 @@ function prepareMarkdown(markdown, slug) {
 export function renderMarkdown(markdown, slug) {
   prepareMarkdown(markdown, slug);
   const raw = window.marked.parse(markdown, { gfm: true, breaks: false });
-  return rewriteUrls(raw, slug);
+  return sanitizeRenderedHtml(rewriteUrls(raw, slug));
 }
 
 export function headingOffsets(markdown) {
@@ -136,7 +177,7 @@ export function blocksFromMarkdown(markdown, slug) {
     offset = end;
     if (token.type === 'space' || raw.trim() === '') continue;
     const html = withSourceRange(
-      rewriteUrls(window.marked.parser([token]), scope),
+      sanitizeRenderedHtml(rewriteUrls(window.marked.parser([token]), scope)),
       start,
       end
     );

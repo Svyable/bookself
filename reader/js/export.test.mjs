@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
-await import('../vendor/marked.min.js');
+const markedModule = await import('../vendor/marked.min.js');
+const marked = markedModule.marked || markedModule.default?.marked || globalThis.marked;
+assert.equal(typeof marked?.parse, 'function');
 globalThis.window = {
-  marked: globalThis.marked,
+  marked,
   location: { pathname: '/reader/' },
 };
 const { bookAsHtml, bookAsMarkdown } = await import('./export.js');

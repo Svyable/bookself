@@ -34,6 +34,8 @@ import { bookAsMarkdown, bookAsHtml, downloadText } from './export.js';
 import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint.js';
 import { shouldProtectNativeKey } from './reader-keyboard-policy.js';
 
+let librarySearchSequence = 0;
+
 const app = {
   prefs: null,
   catalog: [],
@@ -989,6 +991,7 @@ function exportNotes() {
 }
 
 async function runLibrarySearch(query) {
+  const requestId = ++librarySearchSequence;
   const box = $('libraryHits');
   if (!box) return;
   const q = query.trim();
@@ -998,8 +1001,12 @@ async function runLibrarySearch(query) {
     return;
   }
   await Promise.all(app.catalog.map((e) => loadBook(e.slug).catch(() => null)));
+  if (requestId !== librarySearchSequence) return;
+
   const books = app.catalog.map((e) => app.books.get(e.slug)).filter(Boolean);
   const hits = searchLibrary(books, q);
+  if (requestId !== librarySearchSequence) return;
+
   box.innerHTML = '';
   box.hidden = hits.length === 0;
   if (!hits.length) {

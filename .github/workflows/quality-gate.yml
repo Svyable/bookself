@@ -1,0 +1,41 @@
+name: Quality gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Python contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -p 'test_*.py'
+          while IFS= read -r test; do
+            echo "::group::$test"
+            python3 "$test"
+            echo "::endgroup::"
+          done < <(find scripts -maxdepth 1 -name '*.test.py' -print | sort)
+      - name: JavaScript contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r test; do
+            echo "::group::$test"
+            node --test "$test"
+            echo "::endgroup::"
+          done < <(find reader desk -name '*.test.mjs' -print | sort)
+      - name: Catalog contract
+        run: python3 scripts/check-catalog.py

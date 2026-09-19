@@ -4,7 +4,7 @@ importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
 const CACHE_PREFIX = 'bookself-reader-shell-';
-const CACHE = 'bookself-reader-shell-v110';
+const CACHE = 'bookself-reader-shell-v111';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -155,6 +155,17 @@ const SHELL = [
   './js/offline-fetch-policy.js',
   './js/offline-storage-budget.js',
   './js/offline-shell-install.js',
+  './js/annotation-anchor-repair.js',
+  './js/title-page.js',
+  './js/dialog-focus-runtime.js',
+  './js/font-settlement.js',
+  './js/direct-route-interactions.js',
+  './js/page-tap-zones.js',
+  './js/annotation-anchor-model.js',
+  './js/immersive-focus.js',
+  './js/scroll-reflow-anchor.js',
+  './js/font-settlement-model.js',
+  './js/scroll-reflow-anchor-model.js',
   './js/progress-position.js',
   './js/semantic-progress.js',
 ];

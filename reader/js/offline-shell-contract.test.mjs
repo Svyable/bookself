@@ -45,6 +45,11 @@ const recentCompanions = [
   './js/reading-session-model.js',
   './js/reading-session.js',
   './css/settings-panel.css',
+  './css/media-resilience.css',
+  './js/media-resilience-model.js',
+  './js/read-aloud-model.js',
+  './js/reading-mode-transition-model.js',
+  './js/continuous-keyboard-model.js',
 ];
 
 const libraryAndThemeAssets = [

@@ -4,7 +4,7 @@ importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
 const CACHE_PREFIX = 'bookself-reader-shell-';
-const CACHE = 'bookself-reader-shell-v109';
+const CACHE = 'bookself-reader-shell-v110';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',
@@ -41,6 +41,7 @@ const SHELL = [
   './css/content-inspector.css',
   './css/direct-route-preview.css',
   './css/scroll-chapter-nav.css',
+  './css/media-resilience.css',
   './css/media.css',
   './css/formats.css',
   './css/math.css',
@@ -141,6 +142,14 @@ const SHELL = [
   './js/scroll-chapter-nav.js',
   './js/reading-session-model.js',
   './js/reading-session.js',
+  './js/media-resilience-model.js',
+  './js/media-resilience.js',
+  './js/read-aloud-model.js',
+  './js/read-aloud.js',
+  './js/reading-mode-transition-model.js',
+  './js/reading-mode-transition.js',
+  './js/continuous-keyboard-model.js',
+  './js/continuous-keyboard.js',
   './js/export.js',
   './js/offline-cache.js',
   './js/offline-fetch-policy.js',
@@ -165,6 +174,7 @@ const OPTIONAL_SHELL = new Set([
   './css/content-inspector.css',
   './css/direct-route-preview.css',
   './css/scroll-chapter-nav.css',
+  './css/media-resilience.css',
   './js/content-scroll-region-model.js',
   './js/content-scroll-regions.js',
   './js/pwa-update-model.js',
@@ -202,6 +212,14 @@ const OPTIONAL_SHELL = new Set([
   './js/scroll-chapter-nav.js',
   './js/reading-session-model.js',
   './js/reading-session.js',
+  './js/media-resilience-model.js',
+  './js/media-resilience.js',
+  './js/read-aloud-model.js',
+  './js/read-aloud.js',
+  './js/reading-mode-transition-model.js',
+  './js/reading-mode-transition.js',
+  './js/continuous-keyboard-model.js',
+  './js/continuous-keyboard.js',
   './js/library-book-preview-model.js',
   './js/library-quick-look.js',
   './js/theme-controls.js',

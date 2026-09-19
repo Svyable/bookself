@@ -275,7 +275,7 @@ export async function firstExisting(relativePaths) {
   return candidates.find(Boolean) || null;
 }
 
-const startupPlan = startupAcquisitionPlan(navigator.connection || {});
+const startupPlan = startupAcquisitionPlan(globalThis.navigator?.connection || {});
 
 const startupPrimer = createStartupPublicationPrimer({
   loadReadme: (slug) => fetchText(`books/${slug}/README.md`),
@@ -311,7 +311,7 @@ if (BROWSER_RUNTIME) {
   installPaginationReflowGuard(document);
   installNavigationPrefetch(document, {
     base: window.location.href,
-    connection: navigator.connection || {},
+    connection: globalThis.navigator?.connection || {},
     prime: primePublication,
   });
 }

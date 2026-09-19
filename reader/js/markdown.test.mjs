@@ -3,6 +3,8 @@ import {
   headingOffsets,
   installMarkedWiki,
   renderWikiLink,
+  safeHtmlUrl,
+  sanitizeRenderedTree,
   tokenizeWikiLink,
 } from './markdown.js';
 
@@ -21,6 +23,38 @@ assert.deepEqual(tokenizeWikiLink('[[manuscript/front-matter.md|Start]]'), {
 });
 assert.equal(tokenizeWikiLink('[[../private|Nope]]'), null);
 assert.equal(tokenizeWikiLink('plain text'), null);
+assert.equal(safeHtmlUrl('javascript:alert(1)'), false);
+assert.equal(safeHtmlUrl('data:text/html;base64,PHNjcmlwdD4='), false);
+assert.equal(safeHtmlUrl('data:image/png;base64,AAAA'), true);
+assert.equal(safeHtmlUrl('../media/cover.webp'), true);
+assert.equal(safeHtmlUrl('https://example.com/source'), true);
+
+const dangerous = {
+  removed: false,
+  remove() { this.removed = true; },
+};
+const link = {
+  attrs: new Map([
+    ['href', 'javascript:alert(1)'],
+    ['onclick', 'alert(1)'],
+    ['target', '_blank'],
+  ]),
+  get attributes() { return [...this.attrs].map(([name, value]) => ({ name, value })); },
+  removeAttribute(name) { this.attrs.delete(name); },
+  getAttribute(name) { return this.attrs.get(name) ?? null; },
+  setAttribute(name, value) { this.attrs.set(name, value); },
+};
+sanitizeRenderedTree({
+  querySelectorAll(selector) {
+    if (selector === '*') return [link];
+    return [dangerous];
+  },
+});
+assert.equal(dangerous.removed, true);
+assert.equal(link.getAttribute('href'), null);
+assert.equal(link.getAttribute('onclick'), null);
+assert.match(link.getAttribute('rel'), /noopener/);
+assert.match(link.getAttribute('rel'), /noreferrer/);
 
 assert.equal(
   renderWikiLink({ id: 'ch02-writing', label: 'Continue here' }, 'demo-book'),

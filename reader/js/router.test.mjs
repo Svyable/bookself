@@ -5,6 +5,8 @@ assert.equal(parseHash('#/').view, 'library');
 assert.equal(parseHash('#/b/the-example-book/').view, 'cover');
 assert.equal(parseHash('#/b/the-example-book/ch01-x/12').chapter, 'ch01-x');
 assert.equal(parseHash('#/b/the-example-book/ch01-x/12').offset, 12);
+assert.equal(parseHash('#/b/%E0%A4%A/ch01-x/12').view, 'library');
+assert.equal(parseHash('#/b/the-example-book/%E0%A4%A/12').view, 'library');
 
 const q = parseQuery('?b=the-example-book&c=ch01-x&o=12');
 assert.equal(q.view, 'read');

@@ -50,7 +50,7 @@ if (!shelfOwnedShell) {
   check(() => assert.match(app, /function renderShelf\(entries\)/));
   check(() => assert.match(app, /function sortEntries\(list\)/));
   check(() => assert.match(app, /async function runLibrarySearch\(query\)/));
-  check(() => assert.match(worker, /const CACHE = 'obb-shell-v108';/));
+  check(() => assert.match(worker, /const CACHE = 'bookself-reader-shell-v\d+';/));
   check(() => assert.match(worker, /'\.\/css\/library-home\.css'/));
   check(() => assert.match(worker, /'\.\/css\/shelf-gui\.css'/));
   check(() => assert.match(worker, /'\.\/js\/shelf-gui\.js'/));

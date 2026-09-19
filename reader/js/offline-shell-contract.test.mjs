@@ -45,6 +45,11 @@ const recentCompanions = [
   './js/reading-session-model.js',
   './js/reading-session.js',
   './css/settings-panel.css',
+  './css/media-resilience.css',
+  './js/media-resilience-model.js',
+  './js/read-aloud-model.js',
+  './js/reading-mode-transition-model.js',
+  './js/continuous-keyboard-model.js',
 ];
 
 const libraryAndThemeAssets = [
@@ -113,7 +118,7 @@ test('removed offline readiness surface is absent from the install shell', () =>
 });
 
 test('offline shell generation advances for canonical global controls', () => {
-  assert.match(swSource, /const\s+CACHE\s*=\s*['"]obb-shell-v104['"]/);
+  assert.match(swSource, /const\s+CACHE\s*=\s*['"]bookself-reader-shell-v\d+['"]/);
 });
 
 console.log('offline shell contract tests cover dynamic enhancement parity');

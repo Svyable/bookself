@@ -3,7 +3,7 @@ name: Shelf instance boundary
 on:
   pull_request:
     paths:
-      - "reader/sw.js"
+      - "reader/**"
       - "scripts/sync-ui.py"
       - "scripts/stamp-instance.py"
       - "scripts/bootstrap-workspace.py"
@@ -20,7 +20,7 @@ on:
     branches:
       - main
     paths:
-      - "reader/sw.js"
+      - "reader/**"
       - "scripts/sync-ui.py"
       - "scripts/stamp-instance.py"
       - "scripts/bootstrap-workspace.py"
@@ -45,3 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify role-aware creation, bootstrap, health, and safe sync
         run: python3 -m unittest discover -s tests -p 'test_*.py'
+      - name: Run Reader contract tests
+        run: |
+          set -e
+          for test in reader/js/*.test.mjs; do node --test "$test"; done

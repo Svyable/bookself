@@ -46,7 +46,7 @@ const runtime = fs.readFileSync(new URL('./viewport-stability-runtime.js', impor
 match(source, /buildProgressMap/);
 match(source, /progressAt/);
 match(source, /firstExisting\(coverCandidates\(slug\)\)/);
-match(source, /data\.currentBookEnhanced/);
+match(source, /dataset\.currentBookEnhanced/);
 match(source, /document\.body\.dataset\.stage !== 'library'/);
 match(source, /card\.dataset\.currentBookReady = 'fallback'/);
 match(source, /setAttribute\('aria-label'/);

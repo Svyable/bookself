@@ -155,6 +155,8 @@ const SHELL = [
   './js/annotation-anchor-model.js',
   './js/immersive-focus.js',
   './js/scroll-reflow-anchor.js',
+  './js/font-settlement-model.js',
+  './js/scroll-reflow-anchor-model.js',
   './js/progress-position.js',
   './js/semantic-progress.js',
 ];

@@ -28,3 +28,12 @@ test('library search clears visibly stale results while the newest query loads',
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   assert.match(html, /id="libraryHits" aria-live="polite" hidden/);
 });
+
+
+test('concurrent book loads share one in-flight promise and failures remain retryable', async () => {
+  const source = await readFile(new URL('./app.js', import.meta.url), 'utf8');
+  assert.match(source, /const bookLoads = new Map\(\)/);
+  assert.match(source, /if \(bookLoads\.has\(slug\)\) return bookLoads\.get\(slug\)/);
+  assert.match(source, /bookLoads\.set\(slug, task\)/);
+  assert.match(source, /return await task;\s*\} finally \{\s*if \(bookLoads\.get\(slug\) === task\) bookLoads\.delete\(slug\)/);
+});

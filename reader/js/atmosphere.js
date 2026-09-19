@@ -38,7 +38,7 @@ let favoriteThemes = new Set();
 let activeFilter = 'all';
 
 function storagePrefix() {
-  return window.__IMPRINT?.storagePrefix || 'obb';
+  return window.__IMPRINT?.storagePrefix || 'bookself';
 }
 
 function warmthKey() {

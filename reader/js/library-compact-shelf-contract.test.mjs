@@ -37,7 +37,7 @@ if (!shelfOwnedGui) {
 check(() => assert.match(librarySort, /shelfIndexLetters/));
 check(() => assert.match(librarySort, /shelfLetter/));
 check(() => assert.match(librarySort, /aria-label', 'Jump through bookshelf by letter'/));
-check(() => assert.match(librarySort, /data\.shelfLetterStart/));
+check(() => assert.match(librarySort, /dataset\.shelfLetterStart/));
 check(() => assert.match(librarySort, /compact-shelf-landmark/));
 check(() => assert.match(librarySort, /index\.addEventListener\('pointerdown'/));
 check(() => assert.match(librarySort, /index\.addEventListener\('pointermove'/));

@@ -28,7 +28,11 @@ test('does not mistake an ordinary first chapter for a title page', () => {
 
 test('Reader loads title-page CSS and carries title-page classes through both modes', () => {
   const index = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-  const app = fs.readFileSync(new URL('./app.js', import.meta.url), 'utf8');
+  const shellApp = fs.readFileSync(new URL('./app.js', import.meta.url), 'utf8');
+  const shelfOwnedShell = shellApp.includes('Shelf owns the public library and its release state.');
+  const app = shelfOwnedShell
+    ? fs.readFileSync(new URL('./app-core.js', import.meta.url), 'utf8')
+    : shellApp;
   const experience = fs.readFileSync(new URL('./experience.js', import.meta.url), 'utf8');
   const css = fs.readFileSync(new URL('../css/title-page.css', import.meta.url), 'utf8');
   assert.match(index, /css\/title-page\.css\?v=r1/);

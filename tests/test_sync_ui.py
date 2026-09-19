@@ -26,9 +26,10 @@ class ShelfSafeSyncTests(unittest.TestCase):
         (bookself / "reader" / "js").mkdir(parents=True)
         (bookself / "reader" / "js" / "app.js").write_text("// upstream core\n", encoding="utf-8")
         (bookself / "reader" / "js" / "shared.js").write_text("// shared module\n", encoding="utf-8")
-        (bookself / "reader" / "js" / "demo-catalog-contract.test.mjs").write_text(
-            "// Bookself repository-only catalog contract\n", encoding="utf-8"
-        )
+        for name in ("demo-catalog-contract.test.mjs", "fireside-aesthetic.test.mjs"):
+            (bookself / "reader" / "js" / name).write_text(
+                "// Bookself repository-only contract\n", encoding="utf-8"
+            )
         (bookself / "reader" / "index.html").write_text("<html>bookself</html>\n", encoding="utf-8")
         (bookself / "desk").mkdir()
         (bookself / "desk" / "index.html").write_text("bookself desk\n", encoding="utf-8")
@@ -80,10 +81,11 @@ class ShelfSafeSyncTests(unittest.TestCase):
                 self.assertEqual((shelf / path).read_bytes(), before, path.as_posix())
             self.assertEqual((shelf / "reader/js/app-core.js").read_text(encoding="utf-8"), "// upstream core\n")
             self.assertEqual((shelf / "reader/js/shared.js").read_text(encoding="utf-8"), "// shared module\n")
-            self.assertFalse(
-                (shelf / "reader/js/demo-catalog-contract.test.mjs").exists(),
-                "Shelf-safe sync must not copy Bookself repository-only catalog tests",
-            )
+            for name in ("demo-catalog-contract.test.mjs", "fireside-aesthetic.test.mjs"):
+                self.assertFalse(
+                    (shelf / "reader/js" / name).exists(),
+                    f"Shelf-safe sync must not copy Bookself repository-only test: {name}",
+                )
             self.assertFalse((shelf / "desk").exists(), "Shelf-safe sync must not copy Bookself Desk")
 
     def test_unsafe_sync_refuses_shelf_before_mutation(self) -> None:

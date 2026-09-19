@@ -18,6 +18,7 @@ RUNTIME_TEXT_SUFFIXES = {".html", ".js", ".mjs", ".css", ".json", ".webmanifest"
 SHELF_EXCLUDED_READER_PATHS = {
     Path("js/demo-catalog-contract.test.mjs"),
     Path("js/fireside-aesthetic.test.mjs"),
+    Path("js/offline-shell-contract.test.mjs"),
 }
 
 

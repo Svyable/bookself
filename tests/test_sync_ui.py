@@ -26,7 +26,7 @@ class ShelfSafeSyncTests(unittest.TestCase):
         (bookself / "reader" / "js").mkdir(parents=True)
         (bookself / "reader" / "js" / "app.js").write_text("// upstream core\n", encoding="utf-8")
         (bookself / "reader" / "js" / "shared.js").write_text("// shared module\n", encoding="utf-8")
-        for name in ("demo-catalog-contract.test.mjs", "fireside-aesthetic.test.mjs"):
+        for name in ("demo-catalog-contract.test.mjs", "fireside-aesthetic.test.mjs", "offline-shell-contract.test.mjs"):
             (bookself / "reader" / "js" / name).write_text(
                 "// Bookself repository-only contract\n", encoding="utf-8"
             )

@@ -997,9 +997,15 @@ async function runLibrarySearch(query) {
   const q = query.trim();
   if (q.length < 2) {
     box.hidden = true;
+    box.removeAttribute('aria-busy');
     box.innerHTML = '';
     return;
   }
+
+  box.hidden = false;
+  box.setAttribute('aria-busy', 'true');
+  box.innerHTML = '<li>Searching…</li>';
+
   await Promise.all(app.catalog.map((e) => loadBook(e.slug).catch(() => null)));
   if (requestId !== librarySearchSequence) return;
 
@@ -1007,6 +1013,7 @@ async function runLibrarySearch(query) {
   const hits = searchLibrary(books, q);
   if (requestId !== librarySearchSequence) return;
 
+  box.removeAttribute('aria-busy');
   box.innerHTML = '';
   box.hidden = hits.length === 0;
   if (!hits.length) {

@@ -17,7 +17,7 @@ check(() => assert.match(fireside, /--fireside-brass:/));
 check(() => assert.match(fireside, /body\[data-stage="library"\] \.shelf \{/));
 check(() => assert.match(fireside, /body\[data-stage="library"\] \.volume-cover::before/));
 check(() => assert.match(fireside, /body\[data-stage="library"\] \.volume:focus-visible/));
-check(() => assert.match(fireside, /body\[data-stage="cover"\] \.cover-front \{/));
+check(() => assert.match(fireside, /body\[data-stage="cover"\] \.cover-front(?:,|\s*\{)/));
 check(() => assert.match(fireside, /body\[data-stage="cover"\] \.cover-title \{/));
 check(() => assert.match(fireside, /body\[data-stage="read"\] \.page-surface \{/));
 check(() => assert.match(fireside, /\[data-reader-mode="scroll"\] body\[data-stage="read"\] \.scroll-reader/));

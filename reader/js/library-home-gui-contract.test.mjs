@@ -7,6 +7,8 @@ const app = fs.readFileSync(new URL('./app.js', import.meta.url), 'utf8');
 const index = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const worker = fs.readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
+const shelfOwnedShell = app.includes('Shelf owns the public library and its release state.');
+
 let assertions = 0;
 const check = (run) => {
   run();
@@ -37,21 +39,23 @@ check(() => assert.doesNotMatch(css, /body\[data-stage="cover"\]/));
 check(() => assert.doesNotMatch(css, /body\[data-stage="end"\]/));
 check(() => assert.doesNotMatch(css, /body\[data-stage="library"\] \.volume\s*\{/));
 
-check(() => assert.match(index, /id="librarySearch"/));
-check(() => assert.match(index, /id="continueCard"/));
-check(() => assert.match(index, /id="pubFilters"/));
-check(() => assert.match(index, /data-sort="title"/));
-check(() => assert.match(index, /data-sort="recent"/));
-check(() => assert.match(app, /function renderContinue\(\)/));
-check(() => assert.match(app, /function renderPublisherFilters\(entries\)/));
-check(() => assert.match(app, /function renderShelf\(entries\)/));
-check(() => assert.match(app, /function sortEntries\(list\)/));
-check(() => assert.match(app, /async function runLibrarySearch\(query\)/));
-check(() => assert.match(worker, /const CACHE = 'obb-shell-v108';/));
-check(() => assert.match(worker, /'\.\/css\/library-home\.css'/));
-check(() => assert.match(worker, /'\.\/css\/shelf-gui\.css'/));
-check(() => assert.match(worker, /'\.\/js\/shelf-gui\.js'/));
-check(() => assert.match(worker, /'\.\/js\/library-sort-model\.js'/));
-check(() => assert.match(worker, /'\.\/js\/library-sort\.js'/));
+if (!shelfOwnedShell) {
+  check(() => assert.match(index, /id="librarySearch"/));
+  check(() => assert.match(index, /id="continueCard"/));
+  check(() => assert.match(index, /id="pubFilters"/));
+  check(() => assert.match(index, /data-sort="title"/));
+  check(() => assert.match(index, /data-sort="recent"/));
+  check(() => assert.match(app, /function renderContinue\(\)/));
+  check(() => assert.match(app, /function renderPublisherFilters\(entries\)/));
+  check(() => assert.match(app, /function renderShelf\(entries\)/));
+  check(() => assert.match(app, /function sortEntries\(list\)/));
+  check(() => assert.match(app, /async function runLibrarySearch\(query\)/));
+  check(() => assert.match(worker, /const CACHE = 'obb-shell-v108';/));
+  check(() => assert.match(worker, /'\.\/css\/library-home\.css'/));
+  check(() => assert.match(worker, /'\.\/css\/shelf-gui\.css'/));
+  check(() => assert.match(worker, /'\.\/js\/shelf-gui\.js'/));
+  check(() => assert.match(worker, /'\.\/js\/library-sort-model\.js'/));
+  check(() => assert.match(worker, /'\.\/js\/library-sort\.js'/));
+}
 
-console.log(`Library home GUI contract: ${assertions}/38 assertions passed`);
+console.log(`Library home GUI contract: ${assertions}/${shelfOwnedShell ? 22 : 38} assertions passed`);

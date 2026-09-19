@@ -26,7 +26,7 @@ const STYLE_HREF = 'css/reader-state-backup.css?v=r2';
 const MAX_MB = Math.round(MAX_READER_STATE_FILE_BYTES / (1024 * 1024));
 let pendingImport = null;
 
-function storagePrefix() { return window.__IMPRINT?.storagePrefix || 'obb'; }
+function storagePrefix() { return window.__IMPRINT?.storagePrefix || 'bookself'; }
 function experienceKey() { return `${storagePrefix()}:reader-experience`; }
 function presetKey() { return `${storagePrefix()}:reader-experience:preset`; }
 function rollbackKey(slug) { return `${storagePrefix()}:${slug}:reader-state-rollback`; }

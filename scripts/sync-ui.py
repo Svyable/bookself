@@ -15,6 +15,7 @@ from instance_identity import stamp_reader_identity
 BOOKSELF_READER_PREFIX = "https://svyable.github.io/bookself/reader/"
 RUNTIME_DIRS = {"js", "css", "vendor"}
 RUNTIME_TEXT_SUFFIXES = {".html", ".js", ".mjs", ".css", ".json", ".webmanifest"}
+SHELF_EXCLUDED_READER_PATHS = {Path("js/demo-catalog-contract.test.mjs")}
 
 
 def replace_tree(source: Path, destination: Path) -> None:
@@ -288,6 +289,10 @@ def sync_shelf_safe(root: Path, destination: Path) -> None:
 
     preserved = snapshot_files(destination, shelf_owned_reader_paths(destination, imprint))
     replace_tree(root / "reader", destination / "reader")
+    for relative in SHELF_EXCLUDED_READER_PATHS:
+        target = destination / "reader" / relative
+        if target.is_file() or target.is_symlink():
+            target.unlink()
     restore_files(destination, preserved)
 
     upstream_app = root / "reader" / "js" / "app.js"

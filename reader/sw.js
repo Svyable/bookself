@@ -4,7 +4,7 @@ importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
 const CACHE_PREFIX = 'bookself-reader-shell-';
-const CACHE = 'bookself-reader-shell-v114';
+const CACHE = 'bookself-reader-shell-v115';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
   './',

@@ -48,7 +48,9 @@ zero-padded files (`ch99-…` then `ch100-…`). Do not switch schemes.
 
 **Front and back matter.** Always named `front-matter.md` and
 `back-matter.md`. Do not number them. They will not sort into reading order
-in the file list; the README table of contents is the reading order.
+in the file list; the README table of contents is the reading order. The
+back-matter file is a container, not a required checklist: a short book may use
+one section while a reference-heavy work may use several.
 
 **Research notes.** Keep `research/README.md` as the index. Other research
 filenames should describe the claim, chapter, method, dataset, or check they
@@ -112,8 +114,12 @@ the files, not a database dump.
   no HTML comments, nothing an author has to understand beyond Markdown.
 - Front matter holds the title page, a copyright line (`©` year author),
   and an optional dedication.
-- Back matter holds epilogue, acknowledgments, and about-the-author —
-  use `##` headings for those sections.
+- Back matter is composable rather than prescribed. Use only the sections the
+  work needs: epilogue or afterword, notes, references or bibliography, further
+  reading, glossary, appendices, index, acknowledgments, credits, colophon, or
+  about-the-author are all legitimate. Use `##` headings so ordinary Markdown
+  remains readable even when no special Reader treatment is available. See
+  [Publication apparatus](publication-apparatus.md).
 - Reader-facing evidence belongs here when readers need it in context: citations,
   footnotes, references, figures, or enough methodology to understand the claim.
 

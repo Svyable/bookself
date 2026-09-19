@@ -15,7 +15,10 @@ from instance_identity import stamp_reader_identity
 BOOKSELF_READER_PREFIX = "https://svyable.github.io/bookself/reader/"
 RUNTIME_DIRS = {"js", "css", "vendor"}
 RUNTIME_TEXT_SUFFIXES = {".html", ".js", ".mjs", ".css", ".json", ".webmanifest"}
-SHELF_EXCLUDED_READER_PATHS = {Path("js/demo-catalog-contract.test.mjs")}
+SHELF_EXCLUDED_READER_PATHS = {
+    Path("js/demo-catalog-contract.test.mjs"),
+    Path("js/fireside-aesthetic.test.mjs"),
+}
 
 
 def replace_tree(source: Path, destination: Path) -> None:

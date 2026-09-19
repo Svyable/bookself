@@ -254,6 +254,13 @@ manuscript.
   bibliography definition such as `[@source]: Full reference.`. The visible
   label and bibliography style are author-controlled; core Bookself does not
   pretend to be a CSL or BibTeX style engine.
+- Back matter is composable. A publication may use any useful combination of
+  notes, references or bibliography, further reading, glossary, appendices,
+  index, acknowledgments, credits, colophon, and about-the-author. Do not force
+  unused sections merely for house-style consistency. In reflowable digital
+  reading, index entries should prefer durable semantic or structural targets
+  over generated Reader page numbers; fixed editions may carry their own page
+  locators.
 - LaTeX-style math may be embedded directly in Markdown. Use `$...$` or
   `\(...\)` for inline math; use `$$...$$`, `\[...\]`, or the display
   environments `equation`, `align`, `alignat`, and `gather` (including starred

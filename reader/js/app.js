@@ -35,6 +35,7 @@ import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint
 import { shouldProtectNativeKey } from './reader-keyboard-policy.js';
 
 let librarySearchSequence = 0;
+const bookLoads = new Map();
 
 const app = {
   prefs: null,
@@ -193,7 +194,10 @@ function ensureCatalog() {
 
 async function loadBook(slug) {
   if (app.books.has(slug)) return app.books.get(slug);
-  const hubDoc = await fetchDocument(`books/${slug}/README.md`);
+  if (bookLoads.has(slug)) return bookLoads.get(slug);
+
+  const task = (async () => {
+    const hubDoc = await fetchDocument(`books/${slug}/README.md`);
   const hub = hubDoc.text;
   const meta = parseBookReadme(hub, slug);
   meta.modified = hubDoc.modified;
@@ -220,9 +224,17 @@ async function loadBook(slug) {
     )
   );
   const book = { ...meta, title: meta.title || fm.title, subtitle: meta.subtitle || fm.subtitle, year: fm.year, cover, chapters };
-  book.revision = await fetchRevision(slug);
-  app.books.set(slug, book);
-  return book;
+    book.revision = await fetchRevision(slug);
+    app.books.set(slug, book);
+    return book;
+  })();
+
+  bookLoads.set(slug, task);
+  try {
+    return await task;
+  } finally {
+    if (bookLoads.get(slug) === task) bookLoads.delete(slug);
+  }
 }
 
 async function fetchRevision(slug) {

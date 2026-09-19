@@ -34,6 +34,9 @@ import { bookAsMarkdown, bookAsHtml, downloadText } from './export.js';
 import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint.js';
 import { shouldProtectNativeKey } from './reader-keyboard-policy.js';
 
+let librarySearchSequence = 0;
+const bookLoads = new Map();
+
 const app = {
   prefs: null,
   catalog: [],
@@ -191,36 +194,54 @@ function ensureCatalog() {
 
 async function loadBook(slug) {
   if (app.books.has(slug)) return app.books.get(slug);
-  const hubDoc = await fetchDocument(`books/${slug}/README.md`);
-  const hub = hubDoc.text;
-  const meta = parseBookReadme(hub, slug);
-  meta.modified = hubDoc.modified;
-  let fm = { title: meta.title, subtitle: '', year: '' };
-  const chapters = await Promise.all(
-    meta.contents.map(async (c) => {
-      try {
-        const markdown = await fetchText(`books/${slug}/${c.file}`);
-        return { ...c, markdown, missing: false };
-      } catch {
-        return {
-          ...c,
-          markdown: `# ${c.title}\n\nThis chapter file is missing from the repository.\n`,
-          missing: true,
-        };
-      }
-    })
-  );
-  const front = chapters.find((c) => /^(?:\d+-)?front-matter$/.test(c.id));
-  if (front) fm = { ...fm, ...parseFrontMatterMeta(front.markdown) };
-  const cover = await firstExisting(
-    ['cover.png', 'cover.jpg', 'cover.webp', 'cover.jpeg'].map(
-      (name) => `books/${slug}/media/${name}`
-    )
-  );
-  const book = { ...meta, title: meta.title || fm.title, subtitle: meta.subtitle || fm.subtitle, year: fm.year, cover, chapters };
-  book.revision = await fetchRevision(slug);
-  app.books.set(slug, book);
-  return book;
+  if (bookLoads.has(slug)) return bookLoads.get(slug);
+
+  const task = (async () => {
+    const hubDoc = await fetchDocument(`books/${slug}/README.md`);
+    const hub = hubDoc.text;
+    const meta = parseBookReadme(hub, slug);
+    meta.modified = hubDoc.modified;
+    let fm = { title: meta.title, subtitle: '', year: '' };
+    const chapters = await Promise.all(
+      meta.contents.map(async (c) => {
+        try {
+          const markdown = await fetchText(`books/${slug}/${c.file}`);
+          return { ...c, markdown, missing: false };
+        } catch {
+          return {
+            ...c,
+            markdown: `# ${c.title}\n\nThis chapter file is missing from the repository.\n`,
+            missing: true,
+          };
+        }
+      })
+    );
+    const front = chapters.find((c) => /^(?:\d+-)?front-matter$/.test(c.id));
+    if (front) fm = { ...fm, ...parseFrontMatterMeta(front.markdown) };
+    const cover = await firstExisting(
+      ['cover.png', 'cover.jpg', 'cover.webp', 'cover.jpeg'].map(
+        (name) => `books/${slug}/media/${name}`
+      )
+    );
+    const book = {
+      ...meta,
+      title: meta.title || fm.title,
+      subtitle: meta.subtitle || fm.subtitle,
+      year: fm.year,
+      cover,
+      chapters,
+    };
+    book.revision = await fetchRevision(slug);
+    app.books.set(slug, book);
+    return book;
+  })();
+
+  bookLoads.set(slug, task);
+  try {
+    return await task;
+  } finally {
+    if (bookLoads.get(slug) === task) bookLoads.delete(slug);
+  }
 }
 
 async function fetchRevision(slug) {
@@ -989,17 +1010,29 @@ function exportNotes() {
 }
 
 async function runLibrarySearch(query) {
+  const requestId = ++librarySearchSequence;
   const box = $('libraryHits');
   if (!box) return;
   const q = query.trim();
   if (q.length < 2) {
     box.hidden = true;
+    box.removeAttribute('aria-busy');
     box.innerHTML = '';
     return;
   }
+
+  box.hidden = false;
+  box.setAttribute('aria-busy', 'true');
+  box.innerHTML = '<li>Searching…</li>';
+
   await Promise.all(app.catalog.map((e) => loadBook(e.slug).catch(() => null)));
+  if (requestId !== librarySearchSequence) return;
+
   const books = app.catalog.map((e) => app.books.get(e.slug)).filter(Boolean);
   const hits = searchLibrary(books, q);
+  if (requestId !== librarySearchSequence) return;
+
+  box.removeAttribute('aria-busy');
   box.innerHTML = '';
   box.hidden = hits.length === 0;
   if (!hits.length) {

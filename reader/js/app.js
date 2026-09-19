@@ -69,18 +69,34 @@ function applyPrefs() {
   document.body.classList.toggle('is-draft', !!(app.book && !app.book.published));
   $('nightLightOverlay').classList.toggle('active', !!app.prefs.nightLight);
   $('lampPool')?.classList.toggle('active', !!app.prefs.nightLight);
-  $('nightLightBtn')?.classList.toggle('active', !!app.prefs.nightLight);
-  $('nightLightBtn') && ($('nightLightBtn').textContent = app.prefs.nightLight ? 'On' : 'Off');
+  if ($('nightLightBtn')) {
+    const active = !!app.prefs.nightLight;
+    $('nightLightBtn').classList.toggle('active', active);
+    $('nightLightBtn').textContent = active ? 'On' : 'Off';
+    $('nightLightBtn').setAttribute('aria-pressed', String(active));
+    $('nightLightBtn').setAttribute('aria-label', active ? 'Lamp on' : 'Lamp off');
+  }
+  if ($('focusBtn')) {
+    const active = !!app.prefs.focus;
+    $('focusBtn').classList.toggle('active', active);
+    $('focusBtn').setAttribute('aria-pressed', String(active));
+  }
   document.querySelectorAll('[data-paper]').forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.paper === app.prefs.theme);
+    const active = btn.dataset.paper === app.prefs.theme;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   });
   $('viewModeBtn').hidden = !canSpreadViewport();
   $('viewModeBtn').textContent = app.prefs.viewMode === 'spread' ? 'Single' : 'Spread';
   document.querySelectorAll('[data-font]').forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.font === app.prefs.fontFamily);
+    const active = btn.dataset.font === app.prefs.fontFamily;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   });
   document.querySelectorAll('[data-leading]').forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.leading === String(app.prefs.lineHeight));
+    const active = btn.dataset.leading === String(app.prefs.lineHeight);
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   });
 }
 
@@ -350,6 +366,7 @@ function updateProgressUi() {
   const marks = loadBookmarks(app.slug);
   const here = marks.some((m) => m.chapter === ch?.chapter && m.offset === ch?.start);
   $('bookmarkBtn').classList.toggle('active', here);
+  $('bookmarkBtn').setAttribute('aria-pressed', String(here));
 }
 
 function isChapterOpen(html) {
@@ -687,7 +704,9 @@ function renderPublisherFilters(entries) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = label;
-    btn.classList.toggle('active', app.pubFilter === label);
+    const active = app.pubFilter === label;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
     btn.addEventListener('click', () => {
       app.pubFilter = label;
       renderShelf(app.catalog);
@@ -1381,10 +1400,18 @@ function bindUi() {
   });
   $('librarySearch')?.addEventListener('input', (e) => runLibrarySearch(e.target.value));
   document.querySelectorAll('[data-sort]').forEach((btn) => {
+    const syncSortState = () => {
+      const active = btn.dataset.sort === app.sortMode;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    };
+    syncSortState();
     btn.addEventListener('click', () => {
       app.sortMode = btn.dataset.sort;
       document.querySelectorAll('[data-sort]').forEach((b) => {
-        b.classList.toggle('active', b === btn);
+        const active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
       });
       renderShelf(app.catalog);
     });

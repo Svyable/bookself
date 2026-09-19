@@ -4,10 +4,16 @@ function cleanAuthor(book) {
   return String(book?.authors || '').replace(/@/g, '').trim();
 }
 
+function sentenceNotice(value) {
+  const notice = String(value || '').trim().replace(/\s+·\s+/g, '. ');
+  if (!notice || /[.!?]$/.test(notice)) return notice;
+  return `${notice}.`;
+}
+
 function copyrightNotice(book) {
   const declared = String(book?.rights || '').trim();
   if (/©|copyright|copr\./i.test(declared)) {
-    return declared.replace(/\s+·\s+/g, '. ').replace(/\s*\.\s*$/, '.');
+    return sentenceNotice(declared);
   }
   const author = cleanAuthor(book);
   const year = String(book?.year || '').trim();
@@ -17,9 +23,9 @@ function copyrightNotice(book) {
 }
 
 function aiNotice(book) {
-  return String(book?.aiUse || 'AI training, retrieval/grounding, indexing, and generative use reserved')
-    .trim()
-    .replace(/\s*\.\s*$/, '.');
+  return sentenceNotice(
+    book?.aiUse || 'AI training, retrieval/grounding, indexing, and generative use reserved'
+  );
 }
 
 function rightsMarkdown(book) {

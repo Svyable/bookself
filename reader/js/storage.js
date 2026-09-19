@@ -28,6 +28,15 @@ export function nextReaderTheme(theme) {
   return normalizeReaderTheme(theme) === 'dark' ? 'light' : 'dark';
 }
 
+function writeStorage(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function readingAppearanceDefaults(theme = 'dark') {
   return {
     theme: normalizeReaderTheme(theme),
@@ -71,7 +80,7 @@ export function loadPrefs() {
 }
 
 export function savePrefs(prefs) {
-  localStorage.setItem(prefsKey(), JSON.stringify(prefs));
+  return writeStorage(prefsKey(), JSON.stringify(prefs));
 }
 
 export function loadProgress(slug) {
@@ -83,7 +92,7 @@ export function loadProgress(slug) {
 }
 
 export function saveProgress(slug, data) {
-  localStorage.setItem(
+  return writeStorage(
     bookKey(slug, 'progress'),
     JSON.stringify({ ...data, savedAt: Date.now() })
   );
@@ -98,7 +107,7 @@ export function loadBookmarks(slug) {
 }
 
 export function saveBookmarks(slug, bookmarks) {
-  localStorage.setItem(bookKey(slug, 'bookmarks'), JSON.stringify(bookmarks));
+  return writeStorage(bookKey(slug, 'bookmarks'), JSON.stringify(bookmarks));
 }
 
 export function normalizeStats(stats = {}) {
@@ -130,5 +139,5 @@ export function loadStats(slug) {
 }
 
 export function saveStats(slug, stats) {
-  localStorage.setItem(bookKey(slug, 'stats'), JSON.stringify(normalizeStats(stats)));
+  return writeStorage(bookKey(slug, 'stats'), JSON.stringify(normalizeStats(stats)));
 }

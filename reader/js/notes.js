@@ -1,7 +1,7 @@
 import { quoteMatchesText } from './annotation-anchor-model.js';
 
 const key = (slug) => {
-  const prefix = (typeof window !== 'undefined' && window.__IMPRINT?.storagePrefix) || 'obb';
+  const prefix = (typeof window !== 'undefined' && window.__IMPRINT?.storagePrefix) || 'bookself';
   return `${prefix}:${slug}:notes`;
 };
 
@@ -14,7 +14,12 @@ export function loadNotes(slug) {
 }
 
 export function saveNotes(slug, notes) {
-  localStorage.setItem(key(slug), JSON.stringify(notes));
+  try {
+    localStorage.setItem(key(slug), JSON.stringify(notes));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function addNote(slug, note) {

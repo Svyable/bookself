@@ -17,7 +17,7 @@ check(() => assert.match(fireside, /--fireside-brass:/));
 check(() => assert.match(fireside, /body\[data-stage="library"\] \.shelf \{/));
 check(() => assert.match(fireside, /body\[data-stage="library"\] \.volume-cover::before/));
 check(() => assert.match(fireside, /body\[data-stage="library"\] \.volume:focus-visible/));
-check(() => assert.match(fireside, /body\[data-stage="cover"\] \.cover-front \{/));
+check(() => assert.match(fireside, /body\[data-stage="cover"\] \.cover-front(?:,| \{)/));
 check(() => assert.match(fireside, /body\[data-stage="cover"\] \.cover-title \{/));
 check(() => assert.match(fireside, /body\[data-stage="read"\] \.page-surface \{/));
 check(() => assert.match(fireside, /\[data-reader-mode="scroll"\] body\[data-stage="read"\] \.scroll-reader/));
@@ -29,7 +29,7 @@ check(() => assert.match(fireside, /@media \(prefers-reduced-motion: reduce\)/))
 check(() => assert.match(fireside, /@media \(forced-colors: active\)/));
 check(() => assert.doesNotMatch(fireside, /--reader-page-(?:top|bottom|pad|radius)/));
 check(() => assert.doesNotMatch(fireside, /\.page-inner\s*\{/));
-check(() => assert.match(worker, /const CACHE = 'bookself-reader-shell-v\\d+';/));
+check(() => assert.match(worker, /const CACHE = 'bookself-reader-shell-v[0-9]+';/));
 check(() => assert.match(worker, /'\.\/css\/fireside-library\.css'/));
 
 console.log(`Fireside aesthetic contract: ${assertions}/20 assertions passed`);

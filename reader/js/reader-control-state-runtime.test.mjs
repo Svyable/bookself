@@ -29,3 +29,11 @@ test('Reader HTML does not claim the lamp is on before preferences load', async 
   assert.match(html, /data-sort="title" aria-pressed="true"/);
   assert.match(html, /data-sort="recent" aria-pressed="false"/);
 });
+
+
+test('Focus mode hides chrome only while reading', async () => {
+  const css = await readFile(new URL('../css/style.css', import.meta.url), 'utf8');
+  assert.match(css, /body\[data-stage="read"\]\.focus-mode \.app-header/);
+  assert.match(css, /body\[data-stage="read"\]\.focus-mode:hover \.app-header/);
+  assert.doesNotMatch(css, /(^|\n)body\.focus-mode \.app-header/);
+});

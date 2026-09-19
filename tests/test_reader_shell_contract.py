@@ -49,6 +49,28 @@ def service_worker_shell(source: str) -> set[str]:
     return set(re.findall(r"['\"](\./[^'\"]+)['\"]", match.group(1)))
 
 
+STATIC_IMPORT_RE = re.compile(
+    r"""(?:import|export)\s+(?:[^'"\n]*?\s+from\s+)?['"](?P<path>\.[^'"]+\.js)['"]"""
+)
+
+
+def static_imports(entry: str) -> set[str]:
+    relative = entry.removeprefix("./")
+    source_path = READER / relative
+    if not source_path.is_file() or source_path.suffix != ".js":
+        return set()
+    source = source_path.read_text(encoding="utf-8")
+    imports: set[str] = set()
+    for match in STATIC_IMPORT_RE.finditer(source):
+        target = (source_path.parent / match.group("path")).resolve()
+        try:
+            reader_relative = target.relative_to(READER.resolve())
+        except ValueError:
+            continue
+        imports.add(f"./{reader_relative.as_posix()}")
+    return imports
+
+
 class ReaderShellContractTests(unittest.TestCase):
     def test_every_local_index_asset_is_in_the_deployable_shell(self) -> None:
         parser = IndexAssetParser()
@@ -57,6 +79,21 @@ class ReaderShellContractTests(unittest.TestCase):
 
         missing = sorted(parser.assets - shell)
         self.assertEqual(missing, [], f"Reader index assets missing from service-worker SHELL: {missing}")
+
+
+    def test_shell_is_closed_over_static_javascript_imports(self) -> None:
+        shell = service_worker_shell((READER / "sw.js").read_text(encoding="utf-8"))
+        missing: list[str] = []
+        for entry in sorted(shell):
+            for dependency in sorted(static_imports(entry)):
+                if dependency not in shell:
+                    missing.append(f"{entry} -> {dependency}")
+        self.assertEqual(
+            missing,
+            [],
+            "Reader service-worker SHELL is missing static JavaScript dependencies: "
+            + ", ".join(missing),
+        )
 
     def test_every_shell_file_exists(self) -> None:
         shell = service_worker_shell((READER / "sw.js").read_text(encoding="utf-8"))

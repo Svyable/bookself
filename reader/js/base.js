@@ -13,14 +13,18 @@ import {
   reportChapterAcquisitionSuccess,
 } from './chapter-availability.js';
 
-queueMicrotask(() => {
-  import('./accessibility-surfaces.js').catch((error) => {
-    console.warn('Accessibility surface isolation could not be loaded', error);
+const BROWSER_RUNTIME = typeof window !== 'undefined' && typeof document !== 'undefined';
+
+if (BROWSER_RUNTIME) {
+  queueMicrotask(() => {
+    import('./accessibility-surfaces.js').catch((error) => {
+      console.warn('Accessibility surface isolation could not be loaded', error);
+    });
+    import('./direct-route-preview.js').catch((error) => {
+      console.warn('Direct-route first paint could not be loaded', error);
+    });
   });
-  import('./direct-route-preview.js').catch((error) => {
-    console.warn('Direct-route first paint could not be loaded', error);
-  });
-});
+}
 
 function loadDeferredEnhancements() {
   import('./semantic-progress.js').catch((error) => {
@@ -64,6 +68,7 @@ function loadDeferredEnhancements() {
 }
 
 function scheduleDeferredEnhancements() {
+  if (!BROWSER_RUNTIME) return;
   const begin = () => {
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(loadDeferredEnhancements, { timeout: 2000 });
@@ -300,9 +305,9 @@ function primeInitialPublication() {
 
 // Only an intentional publication route is warmed at startup. The canonical
 // library loader owns catalog acquisition when the user actually needs it.
-primeInitialPublication();
+if (BROWSER_RUNTIME) primeInitialPublication();
 
-if (typeof document !== 'undefined') {
+if (BROWSER_RUNTIME) {
   installPaginationReflowGuard(document);
   installNavigationPrefetch(document, {
     base: window.location.href,

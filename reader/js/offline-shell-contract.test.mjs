@@ -113,7 +113,7 @@ test('removed offline readiness surface is absent from the install shell', () =>
 });
 
 test('offline shell generation advances for canonical global controls', () => {
-  assert.match(swSource, /const\s+CACHE\s*=\s*['"]obb-shell-v104['"]/);
+  assert.match(swSource, /const\s+CACHE\s*=\s*['"]bookself-reader-shell-v\d+['"]/);
 });
 
 console.log('offline shell contract tests cover dynamic enhancement parity');

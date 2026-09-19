@@ -29,7 +29,7 @@ check(() => assert.match(fireside, /@media \(prefers-reduced-motion: reduce\)/))
 check(() => assert.match(fireside, /@media \(forced-colors: active\)/));
 check(() => assert.doesNotMatch(fireside, /--reader-page-(?:top|bottom|pad|radius)/));
 check(() => assert.doesNotMatch(fireside, /\.page-inner\s*\{/));
-check(() => assert.match(worker, /const CACHE = 'obb-shell-v102';/));
+check(() => assert.match(worker, /const CACHE_PREFIX = 'bookself-reader-shell-';/));
 check(() => assert.match(worker, /'\.\/css\/fireside-library\.css'/));
 
 console.log(`Fireside aesthetic contract: ${assertions}/20 assertions passed`);

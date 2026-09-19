@@ -3,6 +3,7 @@ import {
   headingOffsets,
   installMarkedWiki,
   renderWikiLink,
+  safeHtmlUrl,
   tokenizeWikiLink,
 } from './markdown.js';
 
@@ -21,6 +22,11 @@ assert.deepEqual(tokenizeWikiLink('[[manuscript/front-matter.md|Start]]'), {
 });
 assert.equal(tokenizeWikiLink('[[../private|Nope]]'), null);
 assert.equal(tokenizeWikiLink('plain text'), null);
+assert.equal(safeHtmlUrl('javascript:alert(1)'), false);
+assert.equal(safeHtmlUrl('data:text/html;base64,PHNjcmlwdD4='), false);
+assert.equal(safeHtmlUrl('data:image/png;base64,AAAA'), true);
+assert.equal(safeHtmlUrl('../media/cover.webp'), true);
+assert.equal(safeHtmlUrl('https://example.com/source'), true);
 
 assert.equal(
   renderWikiLink({ id: 'ch02-writing', label: 'Continue here' }, 'demo-book'),

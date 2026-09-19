@@ -1,7 +1,7 @@
 import { quoteMatchesText } from './annotation-anchor-model.js';
 
 const key = (slug) => {
-  const prefix = (typeof window !== 'undefined' && window.__IMPRINT?.storagePrefix) || 'obb';
+  const prefix = (typeof window !== 'undefined' && window.__IMPRINT?.storagePrefix) || 'bookself';
   return `${prefix}:${slug}:notes`;
 };
 

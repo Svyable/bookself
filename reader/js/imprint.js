@@ -70,6 +70,32 @@ export function normalizeReaderStyles(value) {
   return styles;
 }
 
+export function migrateStorageNamespace(store, targetPrefix = DEFAULT_IMPRINT.storagePrefix, legacyPrefix = 'obb') {
+  const target = String(targetPrefix || DEFAULT_IMPRINT.storagePrefix).trim() || DEFAULT_IMPRINT.storagePrefix;
+  const legacy = String(legacyPrefix || '').trim();
+  if (!store || !legacy || target === legacy) return 0;
+
+  let migrated = 0;
+  try {
+    const keys = [];
+    for (let index = 0; index < store.length; index += 1) {
+      const key = store.key(index);
+      if (key?.startsWith(`${legacy}:`)) keys.push(key);
+    }
+    for (const key of keys) {
+      const targetKey = `${target}${key.slice(legacy.length)}`;
+      if (store.getItem(targetKey) != null) continue;
+      const value = store.getItem(key);
+      if (value == null) continue;
+      store.setItem(targetKey, value);
+      migrated += 1;
+    }
+  } catch {
+    // Storage migration is opportunistic; Reader remains usable without it.
+  }
+  return migrated;
+}
+
 function applyReaderStyles(styles) {
   document.querySelectorAll('link[data-bookself-instance-style]').forEach((node) => node.remove());
   for (const path of normalizeReaderStyles(styles)) {
@@ -216,6 +242,11 @@ export async function loadImprint() {
 
 export function applyImprint(imprint) {
   window.__IMPRINT = imprint;
+  try {
+    migrateStorageNamespace(window.localStorage, imprint.storagePrefix || DEFAULT_IMPRINT.storagePrefix);
+  } catch {
+    // Browser privacy settings may make localStorage unavailable.
+  }
   migrateReaderPersonalization();
   document.title = imprint.name;
   document.documentElement.dataset.bookselfRole = imprint.role || 'instance';

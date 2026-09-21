@@ -387,5 +387,7 @@ Optional book README rows (omit or leave blank if unused): **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**, **Format**, **Venue**,
 **DOI**, **Rights**, **AI use**, **Rights file**. Series groups volumes on the
 public Shelf. Tags are comma-separated. Wiki links `[[ch03-publishing|label]]`
-in chapter Markdown become in-Reader jumps. Do not invent another config file
-for these.
+become chapter jumps; `[[ch03-publishing#Release semantics|label]]` resolves a
+named heading to its current source offset at read time. Prefer the semantic
+heading form over hard-coded offsets for indexes and other durable cross-links.
+Do not invent another config file for these.

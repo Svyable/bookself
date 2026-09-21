@@ -66,8 +66,9 @@ The form `[[chapter#Heading|label]]` is a semantic section link. The manuscript
 stores the chapter and human-readable heading, not a generated page number or
 source offset. When a reader follows the link, Bookself resolves the heading
 against the current chapter and navigates to its current source location. Moving
-a section therefore does not require repairing the index. Keep index-target
-headings reasonably stable and unique within their chapter. If a heading can no
+a section within that chapter—or inserting material before it—therefore does not
+require repairing the index. Keep index-target headings reasonably stable and
+unique within their chapter. If a heading can no
 longer be found, the link degrades to the start of that chapter rather than
 becoming a dead destination.
 

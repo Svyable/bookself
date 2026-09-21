@@ -30,7 +30,7 @@ import {
   applyNotes,
 } from './notes.js';
 import { searchBook, searchLibrary, wordCount, readingMinutes } from './search.js';
-import { bookAsMarkdown, bookAsHtml, downloadText } from './export.js';
+import { bookAsMarkdown, bookAsHtml, downloadBlob, downloadText } from './export.js';
 import { loadImprint, applyImprint, imprintName, imprintGithub } from './imprint.js';
 import { shouldProtectNativeKey } from './reader-keyboard-policy.js';
 
@@ -946,11 +946,7 @@ async function downloadQuoteCard(quote, book) {
       toast('Could not make card');
       return;
     }
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${book.slug}-quote.png`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    downloadBlob(`${book.slug}-quote.png`, blob);
     toast('Quote card saved');
   }, 'image/png');
 }
@@ -1001,12 +997,10 @@ function exportNotes() {
     toast('No notes yet');
     return;
   }
-  const blob = new Blob([notesMarkdown(app.book, notes)], { type: 'text/markdown' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${app.book.slug}-notes.md`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  downloadBlob(
+    `${app.book.slug}-notes.md`,
+    new Blob([notesMarkdown(app.book, notes)], { type: 'text/markdown' }),
+  );
 }
 
 async function runLibrarySearch(query) {

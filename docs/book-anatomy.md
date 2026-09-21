@@ -104,8 +104,10 @@ Optional hub rows the Reader understands if present: **Publisher**,
 **Series**, **Tags**, **Edition**, **Language**, **ISBN**. Empty Publisher
 is fine. Publisher filters the Shelf. Series draws a labelled stack.
 Tags are comma-separated. In chapters, `[[ch03-publishing|Publishing]]`
-jumps inside the Reader. Download Markdown or HTML from Type and tools —
-the files, not a database dump.
+jumps to another chapter, while
+`[[ch03-publishing#Release semantics|release semantics]]` resolves that named
+heading at read time and jumps to the section's current source location. Download
+Markdown or HTML from Type and tools — the files, not a database dump.
 
 ## Manuscript
 

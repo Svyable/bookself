@@ -6,7 +6,7 @@ import {
   parseFrontMatterMeta,
   clothColor,
 } from './catalog.js';
-import { blocksFromMarkdown, headingOffsets } from './markdown.js';
+import { blocksFromMarkdown, headingOffsets, headingTargetOffset } from './markdown.js';
 import { paginateBlocks, pageIndexForOffset } from './paginate.js';
 import { isTitlePageChapter } from './title-page.js';
 import {
@@ -19,7 +19,7 @@ import {
   loadStats,
   saveStats,
 } from './storage.js';
-import { parseRoute, libraryHash, coverHash, readHash, go } from './router.js';
+import { parseHash, parseRoute, libraryHash, coverHash, readHash, go } from './router.js';
 import { createLatestRouteQueue, routeNeedsCatalog } from './route-queue.js';
 import { catalogCoverCandidates, runCatalogPrimer } from './startup-catalog-primer.js';
 import {
@@ -1453,7 +1453,18 @@ function bindUi() {
     const a = e.target.closest('a[data-internal]');
     if (!a) return;
     e.preventDefault();
-    go(a.getAttribute('href'));
+    const href = a.getAttribute('href');
+    const heading = a.dataset.internalHeading;
+    if (heading && app.book) {
+      const target = parseHash(href);
+      const chapter = app.book.chapters?.find((item) => item.id === target.chapter);
+      const offset = chapter ? headingTargetOffset(chapter.markdown, heading) : null;
+      if (offset !== null) {
+        go(readHash(target.slug, target.chapter, offset));
+        return;
+      }
+    }
+    go(href);
   });
   $('downloadMd')?.addEventListener('click', () => {
     if (!app.book) {

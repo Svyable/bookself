@@ -47,20 +47,33 @@ font size, screen width, accessibility settings, and device geometry can all
 change where a passage appears.
 
 For Bookself's digital Reader, treat the durable destination as the important
-part. An index entry may point to a chapter or other stable structural target
-that exists independently of current pagination. For example:
+part. An index entry may point to a chapter or, more precisely, to a named
+heading inside that chapter. For example:
 
 ```markdown
 ## Index
 
 **Agency**
-- institutional agency — [[ch03-institutions|Chapter 3]]
-- machine agency — [[ch08-machines|Chapter 8]]
+- institutional agency — [[ch03-institutions#Institutional agency|institutional agency]]
+- machine agency — [[ch08-machines#Machine agency|machine agency]]
 
 **Citations**
-- responsive presentation — [[ch05-evidence|Chapter 5]]
-- source identity — [[ch05-evidence|Chapter 5]]
+- responsive presentation — [[ch05-evidence#Responsive citations|responsive citations]]
+- source identity — [[ch05-evidence#Source identity|source identity]]
 ```
+
+The form `[[chapter#Heading|label]]` is a semantic section link. The manuscript
+stores the chapter and human-readable heading, not a generated page number or
+source offset. When a reader follows the link, Bookself resolves the heading
+against the current chapter and navigates to its current source location. Moving
+a section within that chapter—or inserting material before it—therefore does not
+require repairing the index. Keep index-target headings reasonably stable and
+unique within their chapter. If a heading can no
+longer be found, the link degrades to the start of that chapter rather than
+becoming a dead destination.
+
+Plain chapter links such as `[[ch03-institutions|Chapter 3]]` remain valid when
+chapter-level precision is enough.
 
 This first layer is deliberately author-curated. Bookself does not currently
 claim to scan prose for index terms, generate page ranges, infer subentries, or

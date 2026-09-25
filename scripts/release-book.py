@@ -65,9 +65,13 @@ def require_clean_paths(root: Path, label: str, paths: list[str]) -> None:
 
 
 def cell(markdown: str, label: str) -> str:
-    pattern = re.compile(rf"\|\s*\*\*{re.escape(label)}\*\*\s*\|\s*([^|\n]+)\|", re.I)
-    match = pattern.search(markdown)
-    return match.group(1).strip() if match else ""
+    wanted = re.compile(rf"\*\*{re.escape(label)}\*\*", re.I)
+    for line in markdown.splitlines():
+        for index, value in enumerate(table_cells(line)):
+            if wanted.fullmatch(value.strip()):
+                cells = table_cells(line)
+                return cells[index + 1].strip() if index + 1 < len(cells) else ""
+    return ""
 
 
 def set_status_published(markdown: str) -> str:
@@ -102,7 +106,24 @@ def table_cells(line: str) -> list[str]:
     stripped = line.strip()
     if not (stripped.startswith("|") and stripped.endswith("|")):
         return []
-    return [part.strip() for part in stripped[1:-1].split("|")]
+    content = stripped[1:-1]
+    cells: list[str] = []
+    current: list[str] = []
+    index = 0
+    while index < len(content):
+        character = content[index]
+        if character == "\\" and index + 1 < len(content) and content[index + 1] == "|":
+            current.append("\\|")
+            index += 2
+            continue
+        if character == "|":
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(character)
+        index += 1
+    cells.append("".join(current).strip())
+    return cells
 
 
 def is_divider(cells: list[str]) -> bool:
@@ -221,18 +242,43 @@ def upsert_catalog_manifest(text: str, slug: str) -> tuple[str, str]:
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n", action
 
 
+def file_digest(path: Path) -> str:
+    digest = sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def file_manifest(root: Path, *, exclude_readme: bool = False) -> dict[str, str]:
     manifest: dict[str, str] = {}
     if not root.exists():
         return manifest
     for path in sorted(p for p in root.rglob("*") if p.is_file()):
         rel = path.relative_to(root).as_posix()
-        if rel == ".DS_Store":
+        if rel in {".DS_Store", "release.json"}:
             continue
         if exclude_readme and rel == "README.md":
             continue
-        manifest[rel] = sha256(path.read_bytes()).hexdigest()
+        manifest[rel] = file_digest(path)
     return manifest
+
+
+def manifest_digest(manifest: dict[str, str]) -> str:
+    encoded = json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return sha256(encoded).hexdigest()
+
+
+def repository_identity(root: Path) -> dict[str, str | None]:
+    try:
+        imprint = json.loads((root / "imprint.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"role": None, "repository": None}
+    github = imprint.get("github") if isinstance(imprint.get("github"), dict) else {}
+    owner = str(github.get("owner") or "").strip() or None
+    repo = str(github.get("repo") or "").strip() or None
+    repository = f"{owner}/{repo}" if owner and repo else None
+    return {"role": str(imprint.get("role") or "").strip() or None, "repository": repository}
 
 
 def atomic_write(path: Path, text: str) -> None:
@@ -309,10 +355,7 @@ def prepare_release(desk: Path, shelf: Path, slug: str) -> dict[str, str]:
     next_catalog: str | None = None
     if original_catalog is not None:
         next_catalog, catalog_action = upsert_catalog_manifest(original_catalog, slug)
-        try:
-            next_root, _ = upsert_catalog_row(root_md, slug, title, authors, format_label)
-        except ReleaseError:
-            next_root = root_md
+        next_root, _ = upsert_catalog_row(root_md, slug, title, authors, format_label)
     else:
         next_root, catalog_action = upsert_catalog_row(
             root_md, slug, title, authors, format_label
@@ -321,6 +364,25 @@ def prepare_release(desk: Path, shelf: Path, slug: str) -> dict[str, str]:
 
     source_manifest = file_manifest(source_book, exclude_readme=True)
     source_commit = run_git(desk, "rev-parse", "HEAD")
+    payload_digest = manifest_digest(source_manifest)
+    release_manifest = {
+        "$schema": "https://svyable.github.io/bookself/schemas/release-v1.schema.json",
+        "schemaVersion": 1,
+        "kind": "bookself-release",
+        "publicationId": slug,
+        "sourceCommit": source_commit,
+        "sourceRepository": repository_identity(desk),
+        "destinationRepository": repository_identity(shelf),
+        "payload": {
+            "algorithm": "sha256",
+            "digest": payload_digest,
+            "fileCount": len(source_manifest),
+            "files": source_manifest,
+            "excludedFiles": ["README.md", "release.json"],
+        },
+        "tool": {"name": "scripts/release-book.py", "version": 1},
+    }
+    release_json = json.dumps(release_manifest, ensure_ascii=False, indent=2) + "\n"
     shelf_branch = run_git(shelf, "branch", "--show-current") or "(detached HEAD)"
 
     shelf_books.mkdir(parents=True, exist_ok=True)
@@ -333,6 +395,7 @@ def prepare_release(desk: Path, shelf: Path, slug: str) -> dict[str, str]:
             source_book, stage_book, ignore=shutil.ignore_patterns(".DS_Store")
         )
         (stage_book / "README.md").write_text(next_book_md, encoding="utf-8")
+        (stage_book / "release.json").write_text(release_json, encoding="utf-8")
         if file_manifest(stage_book, exclude_readme=True) != source_manifest:
             fail("staged publication does not byte-match the committed Desk content")
         if (stage_book / "README.md").read_text(encoding="utf-8") != next_book_md:
@@ -359,6 +422,8 @@ def prepare_release(desk: Path, shelf: Path, slug: str) -> dict[str, str]:
         shelf_book_md = (shelf_book / "README.md").read_text(encoding="utf-8")
         if shelf_book_md != next_book_md:
             fail("post-copy verification failed: Shelf book README differs from the prepared release")
+        if (shelf_book / "release.json").read_text(encoding="utf-8") != release_json:
+            fail("post-copy verification failed: release provenance differs from the prepared release")
         if shelf_root.read_text(encoding="utf-8") != next_root:
             fail("post-copy verification failed: Shelf README differs from the prepared release")
         if next_catalog is not None and shelf_catalog.read_text(encoding="utf-8") != next_catalog:
@@ -382,6 +447,7 @@ def prepare_release(desk: Path, shelf: Path, slug: str) -> dict[str, str]:
     return {
         "title": title,
         "source_commit": source_commit,
+        "payload_digest": payload_digest,
         "shelf_branch": shelf_branch,
         "catalog_action": catalog_action,
     }
@@ -408,6 +474,7 @@ def main(argv: list[str]) -> int:
 
     print(f"Prepared release: {result['title']}")
     print(f"Desk snapshot: {result['source_commit']}")
+    print(f"Payload digest: {result['payload_digest']}")
     print(f"Shelf branch: {result['shelf_branch']}")
     print(f"Catalog: {result['catalog_action']}")
     print(

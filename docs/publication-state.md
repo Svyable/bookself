@@ -57,6 +57,7 @@ The command reads only the bounded state needed to describe that publication and
 - current Git HEAD when available;
 - whether that publication path has uncommitted changes;
 - `release.json` when present;
+- the bounded `production` result when the publication opts into a production contract;
 - publication-scoped structural errors and warnings.
 
 `checks.structurallyReady` means the bounded structural checks in this command passed. It does **not** mean the work is editorially excellent, factually verified, rights-cleared, accessible, or authorized for public release. Those are separate skills and gates.

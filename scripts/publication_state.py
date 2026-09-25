@@ -116,6 +116,10 @@ def repository_state(root: Path) -> dict[str, Any]:
 
     present = publication_ids(root)
     present_set = set(present)
+    production_ids = [
+        slug for slug in present
+        if (root / "books" / slug / "production" / "manifest.json").is_file()
+    ]
     cataloged = sorted(catalog_slugs(root))
     cataloged_set = set(cataloged)
     uncataloged = sorted(present_set - cataloged_set)
@@ -162,6 +166,7 @@ def repository_state(root: Path) -> dict[str, Any]:
         "publications": {
             "count": len(present),
             "ids": present,
+            "productionIds": production_ids,
             "catalogedIds": cataloged,
             "uncatalogedIds": uncataloged,
             "missingCatalogIds": missing,
@@ -187,6 +192,82 @@ def release_record(path: Path) -> dict[str, Any] | None:
     if isinstance(data, dict):
         return data
     return {"invalid": True, "error": "release.json must contain an object"}
+
+
+def production_state(root: Path, slug: str) -> tuple[dict[str, Any] | None, list[dict[str, str]]]:
+    """Return bounded production evidence for one opt-in publication."""
+
+    manifest = root / "books" / slug / "production" / "manifest.json"
+    if not manifest.is_file():
+        return None, []
+    try:
+        from production_check import inspect_publication
+    except ImportError as exc:
+        return {"status": "unavailable", "error": str(exc)}, [{
+            "code": "production_checker_unavailable",
+            "message": "Production manifest exists, but production_check.py could not be imported.",
+        }]
+    try:
+        result = inspect_publication(root, slug)
+    except Exception as exc:
+        return {"status": "error", "error": str(exc)}, [{
+            "level": "error",
+            "code": "production_check_failed",
+            "message": f"Production checker failed safely: {exc}",
+        }]
+    bounded = {
+        "status": result.get("productionStatus"),
+        "healthy": result.get("healthy"),
+        "metrics": result.get("metrics", {}),
+        "findings": result.get("findings", []),
+    }
+    messages: list[dict[str, str]] = []
+    for item in result.get("findings", []):
+        if item.get("level") in {"error", "warning"}:
+            messages.append({
+                "level": item.get("level", "warning"),
+                "code": f"production_{item.get('code', 'finding')}",
+                "message": item.get("message", "Production contract finding."),
+            })
+    return bounded, messages
+
+
+def release_state(root: Path, slug: str) -> tuple[dict[str, Any] | None, list[dict[str, str]]]:
+    manifest = root / "books" / slug / "release.json"
+    if not manifest.is_file():
+        return None, []
+    try:
+        from release_check import inspect_release
+    except ImportError as exc:
+        return {"status": "unavailable", "error": str(exc)}, [{
+            "level": "warning",
+            "code": "release_checker_unavailable",
+            "message": "release.json exists, but release_check.py could not be imported.",
+        }]
+    try:
+        result = inspect_release(root, slug)
+    except Exception as exc:
+        return {"status": "error", "error": str(exc)}, [{
+            "level": "error",
+            "code": "release_check_failed",
+            "message": f"Release checker failed safely: {exc}",
+        }]
+    bounded = {
+        "status": "valid" if result.get("healthy") else "invalid",
+        "healthy": result.get("healthy"),
+        "metrics": result.get("metrics", {}),
+        "findings": result.get("findings", []),
+    }
+    messages = [
+        {
+            "level": item.get("level", "warning"),
+            "code": f"release_{item.get('code', 'finding')}",
+            "message": item.get("message", "Release provenance finding."),
+        }
+        for item in result.get("findings", [])
+        if item.get("level") in {"error", "warning"}
+    ]
+    return bounded, messages
 
 
 def publication_state(root: Path, slug: str) -> dict[str, Any]:
@@ -301,6 +382,19 @@ def publication_state(root: Path, slug: str) -> dict[str, Any]:
                 "message": str(release.get("error") or "Invalid release.json"),
             }
         )
+    production, production_messages = production_state(root, slug)
+    for message in production_messages:
+        target = errors if message.get("level") == "error" else warnings
+        target.append({key: value for key, value in message.items() if key != "level"})
+    release_provenance, release_messages = release_state(root, slug)
+    for message in release_messages:
+        target = errors if message.get("level") == "error" else warnings
+        target.append({key: value for key, value in message.items() if key != "level"})
+    if role == "shelf" and status == "Published" and release_provenance is None:
+        errors.append({
+            "code": "missing_release_provenance",
+            "message": "Published Shelf publication is missing release.json.",
+        })
 
     return {
         "schemaVersion": 1,
@@ -321,6 +415,8 @@ def publication_state(root: Path, slug: str) -> dict[str, Any]:
             "publicationDirty": git_dirty,
         },
         "release": release,
+        "releaseVerification": release_provenance,
+        "production": production,
         "checks": {
             "errors": errors,
             "warnings": warnings,
@@ -340,6 +436,8 @@ def print_repository_human(state: dict[str, Any]) -> None:
     print(f"Publications: {pubs['count']}")
     if pubs["ids"]:
         print("IDs: " + ", ".join(pubs["ids"]))
+    if pubs.get("productionIds"):
+        print("Production contracts: " + ", ".join(pubs["productionIds"]))
     checks = state["checks"]
     print(
         f"Checks: {checks['errorCount']} error(s), "
@@ -359,6 +457,9 @@ def print_human(state: dict[str, Any]) -> None:
     print(f"Role: {state['repositoryRole'] or 'unknown'}")
     print(f"Status: {state['publicationStatus'] or 'unknown'}")
     print(f"Cataloged: {'yes' if state['cataloged'] else 'no'}")
+    production = state.get("production")
+    if production:
+        print(f"Production: {production.get('status') or 'unknown'}")
     dirty = state["git"]["publicationDirty"]
     print(f"Dirty: {'unknown' if dirty is None else ('yes' if dirty else 'no')}")
     checks = state["checks"]

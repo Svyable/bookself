@@ -15,6 +15,7 @@ from instance_identity import stamp_reader_identity
 BOOKSELF_READER_PREFIX = "https://svyable.github.io/bookself/reader/"
 RUNTIME_DIRS = {"js", "css", "vendor"}
 RUNTIME_TEXT_SUFFIXES = {".html", ".js", ".mjs", ".css", ".json", ".webmanifest"}
+DESK_RUNTIME_SUFFIXES = {".html", ".js", ".mjs", ".css", ".json", ".webmanifest"}
 SHELF_EXCLUDED_READER_PATHS = {
     Path("js/demo-catalog-contract.test.mjs"),
     Path("js/fireside-aesthetic.test.mjs"),
@@ -164,6 +165,41 @@ def copy_desk_runtime(root: Path, destination: Path) -> tuple[list[Path], list[s
     return runtime, reader_shell_entries(root)
 
 
+def desk_runtime_paths(root: Path) -> list[Path]:
+    """Return Bookself-owned Desk application files, excluding prose/content."""
+
+    desk = root / "desk"
+    if not desk.is_dir():
+        return []
+    paths: list[Path] = []
+    for path in sorted(item for item in desk.rglob("*") if item.is_file()):
+        relative = path.relative_to(desk)
+        if path.name == ".bookself-runtime-files" or path.suffix not in DESK_RUNTIME_SUFFIXES:
+            continue
+        if ".test." in path.name:
+            continue
+        paths.append(relative)
+    return paths
+
+
+def copy_desk_application(root: Path, destination: Path) -> list[Path]:
+    """Update shared Desk application files without replacing Desk content."""
+
+    target_root = destination / "desk"
+    target_root.mkdir(parents=True, exist_ok=True)
+    paths = desk_runtime_paths(root)
+    for relative in paths:
+        source = root / "desk" / relative
+        target = target_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    (target_root / ".bookself-runtime-files").write_text(
+        "\n".join(str(path) for path in paths) + ("\n" if paths else ""),
+        encoding="utf-8",
+    )
+    return paths
+
+
 def rewrite_desk_runtime_links(destination: Path) -> None:
     """Cut the Desk-owned shell over from Bookself Pages to its local runtime."""
     reader = destination / "reader"
@@ -272,10 +308,11 @@ def sync_desk_safe(root: Path, destination: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="bookself-desk-sync-") as tmp:
         candidate = build_desk_candidate(root, destination, Path(tmp))
         replace_tree(candidate / "reader", destination / "reader")
+    desk_files = copy_desk_application(root, destination)
 
     print(
-        f"Safely synced Reader runtime -> {destination} "
-        "(Desk shell/content preserved; Bookself runtime is local)"
+        f"Safely synced Reader + Desk runtime -> {destination} "
+        f"({len(desk_files)} Desk application file(s); Desk content preserved; local runtime)"
     )
 
 

@@ -22,6 +22,7 @@ TEMPLATES = {
     "_REPORT_TEMPLATE",
     "_MANUAL_TEMPLATE",
     "_COMIC_TEMPLATE",
+    "_COLORING_BOOK_TEMPLATE",
 }
 
 
@@ -63,7 +64,7 @@ class BootstrapWorkspaceTests(unittest.TestCase):
             self.assertTrue((desk / "reader").is_dir())
             self.assertTrue((desk / "desk").is_dir())
             self.assertTrue((shelf / "reader").is_dir())
-            self.assertTrue((shelf / "desk").is_dir())
+            self.assertFalse((shelf / "desk").exists())
             self.assertNotEqual((desk / "README.md").read_text(), (shelf / "README.md").read_text())
 
     @unittest.skipUnless(shutil.which("git"), "git is not installed")

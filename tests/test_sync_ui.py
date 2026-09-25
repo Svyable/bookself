@@ -123,6 +123,8 @@ class DeskSafeSyncTests(unittest.TestCase):
         (source_reader / "css").mkdir(parents=True)
         (source_reader / "vendor").mkdir(parents=True)
         (bookself / "desk").mkdir()
+        (bookself / "desk" / "index.html").write_text("bookself desk runtime\n", encoding="utf-8")
+        (bookself / "desk" / "private-draft.md").write_text("instance prose\n", encoding="utf-8")
         (source_reader / "js" / "app.js").write_text("export const core = true;\n", encoding="utf-8")
         (source_reader / "js" / "reading-surface.js").write_text("export const surface = true;\n", encoding="utf-8")
         (source_reader / "js" / "spread-state.js").write_text("export const spread = true;\n", encoding="utf-8")
@@ -145,6 +147,8 @@ class DeskSafeSyncTests(unittest.TestCase):
 
         (desk_reader / "js").mkdir(parents=True)
         (desk_reader / "css").mkdir(parents=True)
+        (desk / "desk").mkdir()
+        (desk / "desk" / "private.md").write_text("instance-owned prose\n", encoding="utf-8")
         (desk / "imprint.json").write_text(
             json.dumps({"role": "desk", "name": "Test Desk", "shortName": "Desk"}),
             encoding="utf-8",
@@ -176,6 +180,8 @@ class DeskSafeSyncTests(unittest.TestCase):
             sync_ui.sync_one(bookself, desk, desk_safe=True)
 
             reader = desk / "reader"
+            self.assertEqual((desk / "desk/index.html").read_text(encoding="utf-8"), "bookself desk runtime\n")
+            self.assertTrue((desk / "desk/private.md").is_file())
             self.assertEqual((reader / "js/app.js").read_text(encoding="utf-8"), "export const core = true;\n")
             self.assertTrue((reader / "js/reading-surface.js").is_file())
             self.assertTrue((reader / "js/spread-state.js").is_file())

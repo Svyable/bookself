@@ -72,6 +72,20 @@ class DoctorRoleBoundaryTests(unittest.TestCase):
             self.assertIn("shelf_release_only", pair_codes)
             self.assertIn("shelf_local_core", pair_codes)
 
+    def test_published_shelf_publication_requires_release_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            shelf = base / "shelf"
+            self.make_instance(shelf, "shelf", "shelf")
+            publication = shelf / "books" / "released"
+            publication.mkdir()
+            (publication / "README.md").write_text(
+                "# Released\n\n| **Status** | Published |\n",
+                encoding="utf-8",
+            )
+            codes = {item.code for item in doctor.inspect_root(shelf) if item.level == "error"}
+            self.assertIn("missing_release_provenance", codes)
+
     def test_shelf_authoring_tree_is_an_error(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)

@@ -95,6 +95,7 @@ The current repository already includes:
 - [`bookself-publisher`](.agents/skills/bookself-publisher/SKILL.md) — end-to-end Bookself operation from natural-language publishing intent;
 - [`human-prose`](.agents/skills/human-prose/SKILL.md) — voice-sensitive writing and editing discipline;
 - [`publishing-production`](.agents/skills/publishing-production/SKILL.md) — covers, edition setup, production media, print geometry, exports, and preflight.
+- [`production-contract`](docs/production-contract.md) — optional, extensible page/scene/asset evidence and target preflight for visual, print, audio, and future editions.
 
 The developing canonical stack includes these responsibilities:
 
@@ -438,6 +439,7 @@ Blank underscore-prefixed starters remain authoring templates. Real working manu
 | Revisions and releases | [Revisions and releases](docs/revisions.md) |
 | Publication formats | [Publication formats](docs/publication-formats.md) |
 | Reader presentation | [Reader design](docs/reader-presentation.md) |
+| Production contracts | [Production contract](docs/production-contract.md) |
 | Rights and AI | [Rights guide](docs/rights-and-ai.md) |
 | Agent-readable contract | [bookself.json](bookself.json) |
 | Contributor / agent rules | [AGENTS.md](AGENTS.md) |

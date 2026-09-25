@@ -29,12 +29,25 @@ def is_publication_template(name: str) -> bool:
 
 
 def copy_platform(root: Path, destination: Path, role: str) -> None:
+    root = root.resolve()
+
     def ignore(directory: str, names: list[str]) -> set[str]:
         current = Path(directory).resolve()
         rel = current.relative_to(root)
         skipped = {".DS_Store"}
         if rel == Path("."):
-            skipped.update({".git", "imprint.json", "README.md", "catalog.json", "shelf"})
+            skipped.update({
+                ".git",
+                "imprint.json",
+                "README.md",
+                "catalog.json",
+                "llms.txt",
+                "robots.txt",
+                "sitemap.xml",
+                "index.html",
+                "agentic-authorship.html",
+                "shelf",
+            })
             if role == "shelf":
                 # The Publishing Desk is an authoring application. A public
                 # release-only Shelf must never contain a copied Desk tree.
@@ -44,6 +57,10 @@ def copy_platform(root: Path, destination: Path, role: str) -> None:
         elif rel == Path("books"):
             allowed = {name for name in names if role == "desk" and is_publication_template(name)}
             skipped.update(name for name in names if name not in allowed)
+        elif rel == Path("desk"):
+            # The shared Desk application is framework code. Publication prose
+            # belongs under books/<slug>/, never in a newly stamped instance.
+            skipped.update(name for name in names if name.endswith(".md") and name != "README.md")
         elif rel == Path("docs"):
             skipped.update({"superpowers", "instances"})
         return skipped.intersection(names)
@@ -66,6 +83,43 @@ def install_shelf_reader_boundary(destination: Path) -> None:
     core.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(app, core)
     app.write_text(SHELF_ADAPTER, encoding="utf-8")
+
+
+def write_instance_surfaces(destination: Path, role: str, name: str) -> None:
+    """Create small instance-owned public surfaces without platform URLs."""
+
+    if role == "shelf":
+        landing = (
+            "<!doctype html>\n"
+            "<meta charset=\"utf-8\">\n"
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+            f"<title>{name}</title>\n"
+            "<p>Open the <a href=\"reader/\">Bookself Reader</a>.</p>\n"
+        )
+        llms = (
+            f"# {name}\n\n"
+            "This Shelf is initially empty. Add a publication here only through a deliberate Desk → Shelf release. "
+            "Keep this file synchronized with catalog.json when publications change.\n"
+        )
+        robots = "User-agent: *\nAllow: /\n"
+    else:
+        landing = (
+            "<!doctype html>\n"
+            "<meta charset=\"utf-8\">\n"
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+            f"<title>{name}</title>\n"
+            "<p>Open the <a href=\"reader/\">Reader</a> or <a href=\"desk/\">Publishing Desk</a>.</p>\n"
+        )
+        llms = (
+            f"# {name}\n\n"
+            "This Desk is the private authoring surface. Use the local Reader and Publishing Desk; "
+            "release deliberately to a separate Shelf.\n"
+        )
+        robots = None
+    (destination / "index.html").write_text(landing, encoding="utf-8")
+    (destination / "llms.txt").write_text(llms, encoding="utf-8")
+    if robots is not None:
+        (destination / "robots.txt").write_text(robots, encoding="utf-8")
 
 
 def main() -> int:
@@ -93,6 +147,12 @@ def main() -> int:
         install_shelf_reader_boundary(destination)
 
     shutil.copy2(root / "docs" / "instances" / f"{args.role}-README.md", destination / "README.md")
+    catalog_path = destination / "catalog.json"
+    if not catalog_path.is_file():
+        catalog_path.write_text(
+            json.dumps({"version": 1, "books": []}, indent=2) + "\n",
+            encoding="utf-8",
+        )
 
     if args.role == "desk":
         values = {
@@ -138,6 +198,7 @@ def main() -> int:
         json.dumps(imprint, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+    write_instance_surfaces(destination, args.role, values["name"])
     stamp_reader_identity(destination)
 
     print(f"Stamped {args.role} -> {destination}")

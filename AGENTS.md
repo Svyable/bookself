@@ -183,7 +183,7 @@ integration boundary and publication state. Framework sync requires explicit
 destinations; do not rely on sibling auto-discovery:
 
 ```bash
-scripts/sync-ui.sh ../desk
+scripts/sync-ui.sh --desk-safe ../desk
 scripts/sync-ui.sh --shelf-safe ../shelf
 ```
 
@@ -418,6 +418,8 @@ while keeping the source as canonical truth.
   KDP or IngramSpark) disagree, stop or warn clearly and prefer that printer's
   current specification. Presets are convenience data and carry a reviewed
   date.
+- A publication may add an optional `production/manifest.json` when an edition needs page, scene, asset, print, audio, or other production evidence. Treat `kind`, `status`, target products, and asset states as open namespaced values; do not hard-code today's format taxonomy into core tooling. Declare required capabilities in the manifest's `requires` object and validate them with `python3 scripts/production_check.py <slug> --root . --json`.
+- Production manifests supplement rather than replace the manuscript, research trail, rights files, or edition intent. Keep source binaries and provenance publication-local, keep generated PDFs/EPUBs rebuildable, and never promote a candidate by changing metadata or a filename. A target-specific preflight is evidence for a human decision, not a claim of platform acceptance.
 - A distributor is a delivery target, not the canonical source of the work.
   See `docs/covers-and-editions.md`, `docs/open-publishing.md`, and
   `.agents/skills/publishing-production/SKILL.md`.
@@ -470,7 +472,7 @@ notation.
 **Start another publication format.** Choose the closest blank starter under
 `books/`: `_MAGAZINE_TEMPLATE`, `_NEWSPAPER_TEMPLATE`, `_JOURNAL_TEMPLATE`,
 `_NEWSLETTER_TEMPLATE`, `_ANTHOLOGY_TEMPLATE`, `_REPORT_TEMPLATE`,
-`_MANUAL_TEMPLATE`, or `_COMIC_TEMPLATE`. Copy it to a normal lowercase,
+`_MANUAL_TEMPLATE`, `_COMIC_TEMPLATE`, or `_COLORING_BOOK_TEMPLATE`. Copy it to a normal lowercase,
 hyphenated `books/<slug>/` folder on the Desk, replace the placeholder metadata
 and rights notice, preserve `research/README.md`, and keep `Status: Drafting`
 until a deliberate Desk → Shelf release. Use

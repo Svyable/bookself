@@ -23,12 +23,19 @@ release_book = load_module("release_book", ROOT / "scripts" / "release-book.py")
 with tempfile.TemporaryDirectory() as tmp:
     root = Path(tmp)
     (root / "imprint.json").write_text('{"role":"shelf"}\n', encoding="utf-8")
-    (root / "README.md").write_text("# Human-facing Shelf\n", encoding="utf-8")
+    (root / "README.md").write_text(
+        "# Human-facing Shelf\n\n"
+        "## The books\n\n"
+        "| Book | Status |\n|---|---|\n"
+        "| [Released](books/released/) | Published |\n"
+        "| [Public proof](books/public-proof/) | Published |\n",
+        encoding="utf-8",
+    )
     (root / "catalog.json").write_text(
         json.dumps({"version": 1, "books": ["released", "public-proof"]}) + "\n",
         encoding="utf-8",
     )
-    for slug, status in [("released", "Published"), ("public-proof", "Revised")]:
+    for slug, status in [("released", "Published"), ("public-proof", "Published")]:
         book = root / "books" / slug
         book.mkdir(parents=True)
         (book / "README.md").write_text(
@@ -37,6 +44,22 @@ with tempfile.TemporaryDirectory() as tmp:
         )
 
     assert check_catalog.check(root) == []
+
+    readme_path = root / "README.md"
+    readme_path.write_text(
+        readme_path.read_text().replace("| [Public proof](books/public-proof/) | Published |\n", ""),
+        encoding="utf-8",
+    )
+    mismatch_errors = check_catalog.check(root)
+    assert "public-proof: catalog.json entry is missing from root ## The books" in mismatch_errors
+    readme_path.write_text(
+        "# Human-facing Shelf\n\n"
+        "## The books\n\n"
+        "| Book | Status |\n|---|---|\n"
+        "| [Released](books/released/) | Published |\n"
+        "| [Public proof](books/public-proof/) | Published |\n",
+        encoding="utf-8",
+    )
 
     missing = root / "books" / "missing-release"
     missing.mkdir(parents=True)

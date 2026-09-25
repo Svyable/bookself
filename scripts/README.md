@@ -5,6 +5,9 @@ Bookself's canonical local tools are Python so the same commands work on macOS, 
 ```text
 python3 scripts/bootstrap-workspace.py <workspace> --owner <owner> --json
 python3 scripts/doctor.py --root .
+python3 scripts/production_check.py <slug> --root . --json
+python3 scripts/print_geometry.py --root . --width 8.5 --height 11 --ink black-white --paper white --pages 42 --json
+python3 scripts/release_check.py <slug> --root . --json
 python3 scripts/doctor-pair.py <desk-path> <shelf-path>
 python3 scripts/publication_state.py --root . --json
 python3 scripts/publication_state.py <slug> --root . --json
@@ -20,6 +23,8 @@ python3 scripts/stamp-instance.py <destination> <desk|shelf> <owner> <repository
 `bootstrap-workspace.py` is the outcome-oriented starting point for a new local Bookself setup. It creates sibling Desk and Shelf instances named `desk` and `shelf` by default, stamps their roles, initializes separate Git repositories, and immediately runs the pair doctor. Its JSON result includes `pairValidation.setupReady` so an agent has a concrete setup completion signal. Use `--no-git` only when another tool will initialize the repositories; pair validation is deferred until then.
 
 `doctor.py` validates one Bookself repository. `doctor-pair.py` validates an installation as a pair: exact Desk/Shelf roles, separate Git worktrees, instance identities, Reader/Desk presence, and release-state invariants.
+
+`production_check.py` validates only publications that opt into `production/manifest.json`. It reads the publication-local capability requirements, checks page/scene/asset relationships and target constraints, and reports pending human gates without pretending that a local profile is live distributor acceptance.
 
 `publication_state.py` has two read-only scopes. With no slug it is the cold-arrival orientation command: it reports repository role, Git state, concrete publication IDs, cataloged/uncataloged IDs, and catalog entries whose publication directory is missing without opening every manuscript. With a slug it reports bounded state for one publication: publication ID/path, human metadata, role, catalog membership, publication-scoped Git dirtiness, available release provenance, and structural errors/warnings. The canonical publication ID is currently the publication slug under `books/`, scoped to one Bookself installation. Treat that slug as durable after creation; changing it is a publication-identity migration, not a cosmetic rename.
 

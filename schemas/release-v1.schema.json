@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://svyable.github.io/bookself/schemas/release-v1.schema.json",
+  "title": "Bookself release provenance",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "kind",
+    "publicationId",
+    "sourceCommit",
+    "payload",
+    "tool"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "kind": {
+      "const": "bookself-release"
+    },
+    "publicationId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "sourceCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sourceRepository": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": ["string", "null"]
+        },
+        "repository": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "destinationRepository": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": ["string", "null"]
+        },
+        "repository": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "digest",
+        "fileCount",
+        "files",
+        "excludedFiles"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fileCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "files": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "excludedFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "tool": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -108,6 +108,39 @@ class DoctorTests(unittest.TestCase):
             codes = {item.code for item in inspect_root(root)}
             self.assertIn("missing_manuscript_file", codes)
 
+    def test_malformed_production_contract_does_not_abort_doctor(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            write(
+                root / "books" / "demo" / "production" / "manifest.json",
+                json.dumps({
+                    "schemaVersion": 1,
+                    "publicationId": "demo",
+                    "status": "drafting",
+                    "target": {"platform": "local", "product": "proof"},
+                    "qualityGates": {"minimumEffectiveImagePpi": "bad"},
+                }),
+            )
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("invalid_ppi_gate", codes)
+
+    def test_opt_in_production_contract_is_checked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root, "platform")
+            write(
+                root / "books" / "demo" / "production" / "manifest.json",
+                json.dumps({
+                    "schemaVersion": 1,
+                    "publicationId": "wrong-id",
+                    "status": "drafting",
+                    "target": {"platform": "local", "product": "proof"},
+                }),
+            )
+            codes = {item.code for item in inspect_root(root)}
+            self.assertIn("publication_id_mismatch", codes)
+
     def test_invalid_reader_presentation_is_an_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

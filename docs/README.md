@@ -6,6 +6,7 @@ Start with the document that matches what you are trying to do:
 - Agent-operated end-to-end publishing: [`agent-first.md`](agent-first.md)
 - Open publishing model — work → edition → export: [`open-publishing.md`](open-publishing.md)
 - Covers, trim sizes, source media, and print/eBook editions: [`covers-and-editions.md`](covers-and-editions.md)
+- Extensible page, scene, asset, and production evidence contracts: [`production-contract.md`](production-contract.md)
 - Start a publication without a terminal: [`new-publication-studio.md`](new-publication-studio.md)
 - Requirements and OS support: [`compatibility.md`](compatibility.md)
 - Architecture and workflow: [`bookself.md`](bookself.md)

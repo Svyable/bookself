@@ -14,21 +14,25 @@ From those answers it generates an ordinary Bookself publication folder. There i
 
 ## What it creates
 
-A new starter contains:
+A new starter contains the readable publication contract and its research entry point:
 
 ```text
 my-publication/
   README.md
+  RIGHTS.md
+  rights.json
   reader.json
+  research/
+    README.md
   manuscript/
     chapter-01.md
 ```
 
-The exact manuscript filename and starter structure vary by format. A paper begins with an abstract/question/evidence/conclusion shape; a report begins with an executive summary/findings/evidence/recommendations; a manual begins with an outcome, prerequisites, steps, and a result check; other formats receive similarly lightweight starting structures.
+The exact manuscript filename and starter structure vary by format. A paper begins with an abstract/question/evidence/conclusion shape; a report begins with an executive summary/findings/evidence/recommendations; a manual begins with an outcome, prerequisites, steps, and a result check; a coloring/activity book also receives a capability-based production sidecar; other formats receive similarly lightweight starting structures.
 
-The generated files remain plain text. You can immediately edit them in GitHub, a local editor, another Markdown tool, or an AI-assisted coding/writing environment.
+The generated files remain plain text. You can immediately edit them in GitHub, a local editor, another Markdown tool, or an AI-assisted coding/writing environment. Folder saving refuses to overwrite an existing publication directory; use a new working title or move the existing publication first.
 
-## Ten starting formats
+## Eleven starting formats
 
 The studio supports the same broad publication families as Bookself's blank starters:
 
@@ -42,6 +46,7 @@ The studio supports the same broad publication families as Bookself's blank star
 - Report
 - Manual / handbook
 - Comic / graphic narrative
+- Coloring / activity book
 
 The starter is intentionally small. It does not try to predict a finished book's full structure before the author has written it.
 

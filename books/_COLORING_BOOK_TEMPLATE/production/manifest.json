@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "publicationId": "your-coloring-book",
+  "editionId": "paperback-letter",
+  "kind": "activity/coloring",
+  "status": "drafting",
+  "target": {
+    "platform": "amazon-kdp",
+    "product": "paperback",
+    "profileReviewed": "2026-09-24",
+    "profileSource": "https://kdp.amazon.com/en_US/help/topic/G201857950",
+    "notes": "This is a starting profile, not a permanent promise. Recheck the live target specification before export."
+  },
+  "format": {
+    "medium": "print/paperback",
+    "trim": {
+      "width": 8.5,
+      "height": 11,
+      "units": "in"
+    },
+    "interior": {
+      "ink": "black-white",
+      "paper": "white"
+    },
+    "pageCount": 0,
+    "bleed": false,
+    "spineText": false
+  },
+  "layout": {
+    "readingDirection": "ltr",
+    "sceneTypes": [
+      "coloring"
+    ],
+    "sceneSide": "right",
+    "sceneParity": "odd",
+    "blankReverse": true,
+    "blankReversePolicy": "intentional-marker-bleed"
+  },
+  "requires": {
+    "pageMap": true,
+    "scenePlan": true,
+    "assetInventory": true,
+    "qaChecklist": true,
+    "printArtSpec": true
+  },
+  "canonicalPaths": {
+    "edition": "editions/paperback-letter.json",
+    "pageMap": "production/page-map.json",
+    "scenePlan": "production/scene-plan.json",
+    "assetInventory": "production/asset-inventory.json",
+    "qaChecklist": "production/qa-checklist.md",
+    "printArtSpec": "production/print-art-spec.md"
+  },
+  "qualityGates": {
+    "physicalProofRequired": true,
+    "physicalProofStatus": "pending",
+    "intentionalBlankPagesReviewed": false,
+    "minimumEffectiveImagePpi": 300,
+    "minimumLineWeightPt": 0.75,
+    "requireEmbeddedFonts": true,
+    "requireFlattenedTransparency": true,
+    "requireHumanApproval": true
+  }
+}

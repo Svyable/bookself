@@ -63,7 +63,7 @@ For releases prepared after the provenance cutover, Shelf carries:
 books/<slug>/release.json
 ```
 
-That manifest records:
+The machine-readable shape is [`schemas/release-v1.schema.json`](../schemas/release-v1.schema.json). That manifest records:
 
 - the Desk source repository;
 - the exact full Desk commit used by the release transaction;
@@ -115,7 +115,13 @@ It then:
 - verifies the result and rolls back the prepared release paths if a later step fails;
 - stops before commit or push.
 
-Review the resulting Shelf diff, including research, rights, and `release.json`. Commit/push it through the Shelf's normal Git workflow when correct. A pull request is useful but not required by Bookself itself.
+Review the resulting Shelf diff, including research, rights, and `release.json`. Verify the prepared provenance independently with:
+
+```bash
+python3 scripts/release_check.py <slug> --root <shelf-path> --json
+```
+
+Commit/push it through the Shelf's normal Git workflow when correct. A pull request is useful but not required by Bookself itself.
 
 ## Why Shelf should stay stable
 

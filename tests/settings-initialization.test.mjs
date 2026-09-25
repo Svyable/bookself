@@ -34,7 +34,7 @@ assert.match(
 
 assert.match(
   readerHtml,
-  /js\/experience\.js\?v=r3/,
+  /js\/experience\.js\?v=r4/,
   'Reader should request the early-initialization experience revision',
 );
 

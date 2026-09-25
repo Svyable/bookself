@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-labelledby="title desc">
+  <title id="title">Scene 1 placeholder</title>
+  <desc id="desc">A simple line-art placeholder with a moon, hills, and a winding path.</desc>
+  <rect width="600" height="800" fill="white"/>
+  <circle cx="430" cy="170" r="70" fill="none" stroke="black" stroke-width="4"/>
+  <path d="M0 610 Q150 500 300 610 T600 590 V800 H0Z" fill="none" stroke="black" stroke-width="4"/>
+  <path d="M270 800 Q300 650 240 520 Q300 450 360 520 Q300 650 330 800" fill="none" stroke="black" stroke-width="4"/>
+  <path d="M90 220 l18 36 40 6-29 28 7 40-36-19-36 19 7-40-29-28 40-6Z" fill="none" stroke="black" stroke-width="3"/>
+</svg>

@@ -10,6 +10,7 @@
     "rightsGuide": "docs/rights-and-ai.md",
     "rightsManifestGuide": "docs/rights-manifest.md",
     "researchGuide": "docs/research.md",
+    "productionGuide": "docs/production-contract.md",
     "llmMap": "llms.txt",
     "orchestrationGuide": "docs/agent-first.md",
     "scalingGuide": "docs/scaling-agentic-authorship.md",
@@ -52,8 +53,12 @@
     "publicationResearch": "books/<slug>/research/",
     "publicationResearchIndex": "books/<slug>/research/README.md",
     "publicationMedia": "books/<slug>/media/",
+    "productionManifest": "books/<slug>/production/manifest.json",
+    "productionSchema": "schemas/production-v1.schema.json",
+    "productionCommand": "python3 scripts/production_check.py <slug> --root . --json",
+    "printGeometryCommand": "python3 scripts/print_geometry.py --root . --width <width> --height <height> --ink <ink> --paper <paper> --pages <count> --json",
     "releaseProvenance": "books/<slug>/release.json",
-    "releaseProvenanceSchema": "svyable-release-v1",
+    "releaseProvenanceSchema": "schemas/release-v1.schema.json",
     "catalogSection": "## The books"
   },
   "researchDefaults": {
@@ -118,7 +123,7 @@
     "createPublication": {
       "kind": "file-contract",
       "formats": {
-        "book": "books/_TEMPLATE/", "paper": "books/_PAPER_TEMPLATE/", "magazine": "books/_MAGAZINE_TEMPLATE/", "newspaper": "books/_NEWSPAPER_TEMPLATE/", "journal": "books/_JOURNAL_TEMPLATE/", "newsletter": "books/_NEWSLETTER_TEMPLATE/", "anthology": "books/_ANTHOLOGY_TEMPLATE/", "report": "books/_REPORT_TEMPLATE/", "manual": "books/_MANUAL_TEMPLATE/", "comic": "books/_COMIC_TEMPLATE/"
+        "book": "books/_TEMPLATE/", "paper": "books/_PAPER_TEMPLATE/", "magazine": "books/_MAGAZINE_TEMPLATE/", "newspaper": "books/_NEWSPAPER_TEMPLATE/", "journal": "books/_JOURNAL_TEMPLATE/", "newsletter": "books/_NEWSLETTER_TEMPLATE/", "anthology": "books/_ANTHOLOGY_TEMPLATE/", "report": "books/_REPORT_TEMPLATE/", "manual": "books/_MANUAL_TEMPLATE/", "comic": "books/_COMIC_TEMPLATE/", "coloring-book": "books/_COLORING_BOOK_TEMPLATE/"
       },
       "browserStudio": "desk/#newPublicationStudio",
       "statusWhileDrafting": "Drafting",
@@ -154,6 +159,24 @@
       "result": "Checks publication RIGHTS.md / rights.json presence and internal consistency without making a legal conclusion.",
       "requires": ["python3"]
     },
+    "validateProduction": {
+      "kind": "local-command",
+      "command": "python3 scripts/production_check.py <slug> --root . --json",
+      "result": "Validates an optional publication-local production contract, declared page/scene/asset capabilities, target profile constraints, provenance, and proof gates without requiring a build step.",
+      "requires": ["python3"]
+    },
+    "verifyRelease": {
+      "kind": "local-command",
+      "command": "python3 scripts/release_check.py <slug> --root . --json",
+      "result": "Verifies release.json source provenance, payload hashes, file count, and digest against the current Shelf snapshot.",
+      "requires": ["python3"]
+    },
+    "calculatePrintGeometry": {
+      "kind": "local-command",
+      "command": "python3 scripts/print_geometry.py --root . --width <width> --height <height> --ink <ink> --paper <paper> --pages <count> --json",
+      "result": "Derives target-profile spine, wrap, bleed, page eligibility, and minimum placed raster dimensions from the reviewed preset data; the result is source preflight rather than distributor acceptance.",
+      "requires": ["python3"]
+    },
     "preview": {
       "kind": "local-command",
       "command": "python3 -m http.server",
@@ -166,7 +189,7 @@
     },
     "syncSharedUi": {
       "kind": "local-command",
-      "deskCommand": "python3 scripts/sync-ui.py <desk-path>",
+      "deskCommand": "python3 scripts/sync-ui.py --desk-safe <desk-path>",
       "shelfCommand": "python3 scripts/sync-ui.py --shelf-safe <shelf-path>",
       "rule": "Destinations are explicit and preflighted before mutation. Whole-tree sync into role=shelf is forbidden.",
       "requires": ["python3"]
@@ -195,6 +218,7 @@
       "Promote evidence readers need in context into manuscript citations, footnotes, references, figures, methodology, or back matter instead of expecting readers to reconstruct the argument from research/ alone.",
       "Choose or tune reader.json as an author recommendation, not a reader lock.",
       "Validate with doctor and rights-check, recheck time-sensitive research before release, and preview when the environment permits.",
+      "When a publication uses an edition, visual, print, audio, or other production contract, validate its declared artifacts and target gates with validateProduction; do not infer missing production evidence.",
       "Commit Desk work before release.",
       "If the user explicitly asked to publish, run the release transaction, review its Shelf diff including research, rights metadata, and release.json provenance, commit it, and push/publish using the environment's authorized Git/GitHub capabilities.",
       "Report the durable Desk/Shelf locations, publication slug, validation result, research/recheck state when material, rights posture, source commit/provenance when released, and release state rather than narrating every mechanical substep."
@@ -206,8 +230,9 @@
     "explicitPublishExamples": ["publish it to my shelf", "release this book", "make the finished version public"]
   },
   "completion": {
-    "setupReady": ["Desk role is valid and Desk is a Git repository.", "Shelf role is valid and Shelf is a separate Git repository.", "Desk contains a local Reader and Publishing Desk authoring application.", "Shelf contains a local Reader adapter/framework core and contains no desk/ authoring tree.", "Desk contains the blank publication starter library and Shelf contains no blank starters.", "Every publication present on Shelf is Published and cataloged.", "Desk and Shelf instance identities and browser storage prefixes are distinct.", "When repository hosting metadata is available, Shelf visibility is public and Desk visibility matches the author's intended working mode; a public Desk is treated as public content rather than as secrecy by obscurity."],
+    "setupReady": ["Desk role is valid and Desk is a Git repository.", "Shelf role is valid and Shelf is a separate Git repository.", "Desk contains a local Reader and Publishing Desk authoring application.", "Shelf contains a local Reader adapter/framework core and contains no desk/ authoring tree.", "Desk contains the blank publication starter library and Shelf contains no blank starters.", "Every publication present on Shelf is Published and cataloged.", "Desk and Shelf instance identities and browser storage prefixes are distinct.", "When repository hosting metadata is available, Shelf visibility is public and Desk visibility matches the author's intended working mode; a public Desk is treated as public content rather than as secrecy by obscurity.", "Release paths are preflighted and publication payloads are byte-for-byte verified before a Shelf snapshot is prepared."],
     "draftReady": ["Desk role is valid.", "Publication metadata and inventory entry are consistent.", "Requested manuscript content exists on the Desk.", "The canonical research/ entry point exists for starter-based publications, and material factual work leaves sufficient provenance for later verification.", "Publication rights posture is explicit or resolves to the Bookself All Rights Reserved default.", "rights-check reports no blocking rights-manifest errors for a manifest-equipped publication.", "doctor reports no blocking structural errors."],
-    "publishedReady": ["All draftReady conditions hold.", "Desk publication state used for release is committed.", "Shelf contains a verified released snapshot with Status Published.", "Shelf preserves the committed publication research trail with the released edition.", "Shelf preserves the publication RIGHTS.md and rights.json metadata.", "Shelf catalog points to the released publication.", "New releases/substantive revisions after the provenance cutover include release.json with the exact Desk source commit and matching payload integrity.", "Public delivery URL or repository location is reported when available."]
+    "publishedReady": ["All draftReady conditions hold.", "Desk publication state used for release is committed.", "Shelf contains a verified released snapshot with Status Published.", "Shelf preserves the committed publication research trail with the released edition.", "Shelf preserves the publication RIGHTS.md and rights.json metadata.", "Shelf catalog points to the released publication.", "New releases/substantive revisions after the provenance cutover include release.json with the exact Desk source commit and matching payload integrity.", "Public delivery URL or repository location is reported when available."],
+    "productionReady": ["The publication's optional production manifest, when present, has a matching publicationId and truthful status.", "Only capabilities declared in requires are treated as required; unknown production kinds and states remain forward-compatible.", "Declared page, scene, asset, and QA paths are publication-local and internally consistent.", "Target-specific checks are advisory until the live distributor specification is rechecked.", "Print or physical-media gates include a recorded human proof decision when required.", "Generated artifacts remain rebuildable derivatives and do not replace canonical source."]
   }
 }

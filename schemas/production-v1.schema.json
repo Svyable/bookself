@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://svyable.github.io/bookself/schemas/production-v1.schema.json",
+  "title": "Bookself extensible publication production contract",
+  "description": "An optional, publication-local contract for production intent, evidence, and handoffs. The manuscript remains the reader-facing source; this contract records only the capabilities a particular edition needs.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "publicationId",
+    "status",
+    "target"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "publicationId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "editionId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]*(?:/[a-z][a-z0-9._-]*)*$",
+      "description": "Open-ended, namespaced production family. Examples: book/chaptered, activity/coloring, print/visual, audio/narration, or a project-specific family. Core tooling must not assume a closed list."
+    },
+    "status": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]*(?:/[a-z][a-z0-9._-]*)*$",
+      "description": "Workflow state chosen by the publication. Built-in tooling recognizes common states but must preserve unknown states."
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "platform",
+        "product"
+      ],
+      "properties": {
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profileReviewed": {
+          "type": "string",
+          "format": "date"
+        },
+        "profileSource": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "format": {
+      "type": "object",
+      "required": [
+        "medium"
+      ],
+      "properties": {
+        "medium": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]*(?:/[a-z][a-z0-9._-]*)*$"
+        },
+        "trim": {
+          "type": "object",
+          "required": [
+            "width",
+            "height",
+            "units"
+          ],
+          "properties": {
+            "width": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "units": {
+              "enum": [
+                "in",
+                "mm",
+                "cm"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "interior": {
+          "type": "object",
+          "properties": {
+            "ink": {
+              "type": "string",
+              "minLength": 1
+            },
+            "paper": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "pageCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "bleed": {
+          "type": "boolean"
+        },
+        "spineText": {
+          "type": "boolean"
+        },
+        "margins": {
+          "type": "object",
+          "properties": {
+            "inside": {
+              "type": "number",
+              "minimum": 0
+            },
+            "outside": {
+              "type": "number",
+              "minimum": 0
+            },
+            "top": {
+              "type": "number",
+              "minimum": 0
+            },
+            "bottom": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "readingDirection": {
+          "enum": [
+            "ltr",
+            "rtl"
+          ]
+        },
+        "sceneTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "sceneSide": {
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "sceneParity": {
+          "enum": [
+            "odd",
+            "even",
+            "any"
+          ]
+        },
+        "blankReverse": {
+          "type": "boolean"
+        },
+        "blankReversePolicy": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "requires": {
+      "type": "object",
+      "description": "Capability requirements for this particular production contract. Unknown capability names are allowed for forward-compatible orchestration.",
+      "properties": {
+        "pageMap": {
+          "type": "boolean"
+        },
+        "scenePlan": {
+          "type": "boolean"
+        },
+        "assetInventory": {
+          "type": "boolean"
+        },
+        "qaChecklist": {
+          "type": "boolean"
+        },
+        "printArtSpec": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "canonicalPaths": {
+      "type": "object",
+      "description": "Paths are relative to books/<publicationId>/ and may point to Markdown or JSON artifacts.",
+      "properties": {
+        "edition": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pageMap": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scenePlan": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "assetInventory": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "qaChecklist": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "printArtSpec": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "qualityGates": {
+      "type": "object",
+      "description": "Quality gates are capability-specific and optional. Do not require a physical proof or raster gate for formats that do not use one.",
+      "properties": {
+        "physicalProofRequired": {
+          "type": "boolean"
+        },
+        "physicalProofStatus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "intentionalBlankPagesReviewed": {
+          "type": "boolean"
+        },
+        "minimumEffectiveImagePpi": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "minimumLineWeightPt": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "requireEmbeddedFonts": {
+          "type": "boolean"
+        },
+        "requireFlattenedTransparency": {
+          "type": "boolean"
+        },
+        "requireHumanApproval": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

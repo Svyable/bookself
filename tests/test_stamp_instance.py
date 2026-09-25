@@ -25,6 +25,7 @@ class StampShelfBoundaryTests(unittest.TestCase):
         (platform / "reader" / "index.html").write_text("reader\n", encoding="utf-8")
         (platform / "desk").mkdir()
         (platform / "desk" / "index.html").write_text("authoring app\n", encoding="utf-8")
+        (platform / "desk" / "private-draft.md").write_text("publication prose must stay in books/\n", encoding="utf-8")
         (platform / "books" / "_TEMPLATE").mkdir(parents=True)
         (platform / "books" / "_TEMPLATE" / "README.md").write_text("template\n", encoding="utf-8")
         (platform / "books" / "example").mkdir()
@@ -74,6 +75,7 @@ class StampShelfBoundaryTests(unittest.TestCase):
             stamp.copy_platform(platform, desk, "desk")
 
             self.assertTrue((desk / "desk/index.html").is_file())
+            self.assertFalse((desk / "desk/private-draft.md").exists())
             self.assertTrue((desk / "books/_TEMPLATE/README.md").is_file())
             self.assertFalse((desk / "books/example").exists())
 

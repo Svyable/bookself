@@ -11,11 +11,19 @@ Turn an author-owned Bookself work into professional digital and print editions 
 
 This skill is subordinate to explicit author instructions, repository-level `AGENTS.md`, publication rights files, and current printer/distributor requirements.
 
-Read `docs/open-publishing.md`, `docs/covers-and-editions.md`, and `publishing/edition-presets.json` before making production decisions.
+Read `docs/open-publishing.md`, `docs/covers-and-editions.md`, `docs/production-contract.md`, and `publishing/edition-presets.json` before making production decisions.
 
 ## Core rule
 
 **Generate source media; calculate production geometry.**
+
+For a publication that needs page, scene, asset, print, audio, or other structured evidence, use the optional publication-local contract at `books/<slug>/production/manifest.json`. Keep `kind`, `status`, targets, and capability names open and namespaced; declare what this edition actually requires. Validate it with:
+
+```bash
+python3 scripts/production_check.py <slug> --root . --json
+```
+
+The contract supplements the manuscript and edition intent. It never replaces them, and a local preset calculation is not a claim that KDP, IngramSpark, or another distributor has accepted an export. Read actual binary headers when checking raster assets; never promote a low-resolution candidate by changing DPI metadata.
 
 Do not ask an image model to guess a final paperback or hardcover wrap. Do not bake page-count-dependent spine widths, trim guides, barcode boxes, or printer marks into generative artwork.
 

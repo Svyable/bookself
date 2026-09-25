@@ -96,6 +96,15 @@ class ReleaseTests(unittest.TestCase):
         expected_shelf_readme = release_book.set_status_published(source_before)
         result = release_book.prepare_release(self.desk, self.shelf, "my-book")
         self.assertEqual(result["catalog_action"], "unchanged")
+        release_record = json.loads(
+            (self.shelf / "books" / "my-book" / "release.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(release_record["schemaVersion"], 1)
+        self.assertEqual(release_record["publicationId"], "my-book")
+        self.assertEqual(release_record["sourceCommit"], result["source_commit"])
+        self.assertEqual(release_record["payload"]["digest"], result["payload_digest"])
+        self.assertEqual(release_record["payload"]["fileCount"], 1)
+        self.assertEqual(release_record["payload"]["excludedFiles"], ["README.md", "release.json"])
         self.assertEqual(
             (self.desk / "books" / "my-book" / "README.md").read_text(),
             source_before,
@@ -182,6 +191,26 @@ class ReleaseTests(unittest.TestCase):
             "| [My Book](books/my-book/) | A Writer |",
             (self.shelf / "README.md").read_text(),
         )
+
+    def test_release_requires_root_catalog_row_when_catalog_manifest_exists(self):
+        (self.shelf / "catalog.json").write_text(
+            json.dumps({"version": 1, "books": []}) + "\n", encoding="utf-8"
+        )
+        (self.shelf / "README.md").write_text(
+            "# Shelf\n\n## The books\n\nNo table here.\n", encoding="utf-8"
+        )
+        commit_all(self.shelf, "catalog without root table")
+        with self.assertRaisesRegex(
+            release_book.ReleaseError, "needs a Markdown table"
+        ):
+            release_book.prepare_release(self.desk, self.shelf, "my-book")
+
+    def test_escaped_author_pipe_survives_catalog_row(self):
+        path = self.desk / "books" / "my-book" / "README.md"
+        path.write_text(path.read_text().replace("| **Author** | A Writer |", "| **Author** | Ada \\\\| Editor |"))
+        commit_all(self.desk, "escaped author")
+        release_book.prepare_release(self.desk, self.shelf, "my-book")
+        self.assertIn("Ada \\\\| Editor", (self.shelf / "README.md").read_text())
 
     def test_catalog_row_updated_when_title_changes(self):
         path = self.desk / "books" / "my-book" / "README.md"

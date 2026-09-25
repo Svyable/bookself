@@ -6,7 +6,7 @@ That separation is the whole trick. An image model is good at making visual mate
 
 This document describes the portable Bookself contract and records current Amazon KDP / industry production guidance. External platform rules change; the source book should not have to.
 
-**Last external-spec review:** 2026-09-12.
+**Last external-spec review:** 2026-09-24.
 
 ## The three layers
 
@@ -301,6 +301,8 @@ A future Desk Publication Studio should show checks in three levels:
 - **red** — export would violate a known target constraint.
 
 Do not hide platform arithmetic. Show authors the derived width, height, spine, bleed, safe zones, effective image resolution, and the source rule used to calculate each value.
+
+For a page-, scene-, or asset-aware edition, use the optional [production contract](production-contract.md) and validate it locally before calculating or exporting a final artifact.
 
 ## Source-of-truth rule
 

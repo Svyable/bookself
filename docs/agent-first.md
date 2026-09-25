@@ -157,7 +157,7 @@ Framework updates and publication releases are separate operations.
 With a local Bookself upstream checkout, target instances explicitly. A normal Desk update may target the Desk directly. A Shelf update must select the safe role-aware mode:
 
 ```text
-python3 scripts/sync-ui.py <desk-path>
+python3 scripts/sync-ui.py --desk-safe <desk-path>
 python3 scripts/sync-ui.py --shelf-safe <shelf-path>
 ```
 
@@ -179,6 +179,7 @@ Infer the closest publication family from the request:
 | report | `_REPORT_TEMPLATE` |
 | manual, handbook, guide | `_MANUAL_TEMPLATE` |
 | comic or graphic narrative | `_COMIC_TEMPLATE` |
+| coloring book, activity book, page-sequenced visual work | `_COLORING_BOOK_TEMPLATE` |
 
 Every starter includes `research/README.md`. Preserve it when creating a real publication.
 
@@ -219,6 +220,18 @@ For voice-sensitive prose, apply the repository's human-prose skill and preserve
 An agent may choose a named `reader.json` preset as a reasonable starting recommendation. Reader browser-local choices still win. Do not disable reader controls or persist one reader's preferences as publication content.
 
 The deeper research trail is not automatically chapter navigation. Keep the reading experience intentional and promote evidence readers need in context into the manuscript.
+
+## Production contracts
+
+A publication that needs page, scene, asset, print, audio, or other edition-specific evidence may keep an optional `production/manifest.json`. The contract is capability-based: `requires` declares the artifacts this edition needs, while `kind` and `status` remain open namespaced values. This lets a coloring book use page maps and asset provenance without forcing every future publication family into the same shape.
+
+Validate the declared contract locally:
+
+```text
+python3 scripts/production_check.py <slug> --root . --json
+```
+
+The checker reports structural errors separately from pending human gates. A target profile is convenience data with a reviewed date, not a claim that a live distributor has accepted the artifact. See [`docs/production-contract.md`](production-contract.md) and the [`publishing-production` skill](../.agents/skills/publishing-production/SKILL.md).
 
 ## Validation and release
 

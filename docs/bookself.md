@@ -117,7 +117,7 @@ Framework sync requires explicit destinations. There is no "sync whatever siblin
 For a Desk:
 
 ```bash
-scripts/sync-ui.sh ../desk
+scripts/sync-ui.sh --desk-safe ../desk
 ```
 
 For a Shelf:

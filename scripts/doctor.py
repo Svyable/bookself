@@ -31,6 +31,7 @@ PUBLICATION_TEMPLATES = (
     "_REPORT_TEMPLATE",
     "_MANUAL_TEMPLATE",
     "_COMIC_TEMPLATE",
+    "_COLORING_BOOK_TEMPLATE",
 )
 
 
@@ -218,6 +219,121 @@ def inspect_role_surfaces(root: Path, role: str, out: list[Finding]) -> None:
         )
 
 
+def inspect_production_contracts(root: Path, out: list[Finding]) -> None:
+    """Check opt-in production manifests without burdening ordinary books."""
+
+    books = root / "books"
+    if not books.is_dir():
+        return
+    try:
+        from production_check import inspect_publication
+    except ImportError:
+        out.append(
+            finding(
+                "warning",
+                "production_checker_unavailable",
+                "A publication production manifest exists, but the production checker could not be imported.",
+            )
+        )
+        return
+    for publication in sorted(books.iterdir()):
+        if not publication.is_dir() or publication.name.startswith("_") or not SAFE_SLUG.fullmatch(publication.name):
+            continue
+        if not (publication / "production" / "manifest.json").is_file():
+            continue
+        try:
+            result = inspect_publication(root, publication.name)
+        except Exception as exc:
+            out.append(
+                finding(
+                    "error",
+                    "production_check_failed",
+                    f"{publication.name}: production checker failed safely: {exc}",
+                )
+            )
+            continue
+        for item in result.get("findings", []):
+            if item.get("level") == "info":
+                continue
+            out.append(
+                finding(
+                    item.get("level", "warning"),
+                    item.get("code", "production_contract"),
+                    f"{publication.name}: {item.get('message', 'Production contract finding.')}",
+                )
+            )
+
+
+def publication_status(publication: Path) -> str:
+    readme = publication / "README.md"
+    if not readme.is_file():
+        return ""
+    try:
+        match = re.search(
+            r"\|\s*\*\*Status\*\*\s*\|\s*([^|\n]+)\|",
+            readme.read_text(encoding="utf-8"),
+            re.I,
+        )
+    except (OSError, UnicodeError):
+        return ""
+    return match.group(1).strip() if match else ""
+
+
+def inspect_release_provenance(root: Path, out: list[Finding], *, require_published: bool = False) -> None:
+    """Verify release records and require them for Published Shelf books."""
+
+    books = root / "books"
+    if not books.is_dir():
+        return
+    try:
+        from release_check import inspect_release
+    except ImportError:
+        if require_published:
+            out.append(
+                finding(
+                    "warning",
+                    "release_checker_unavailable",
+                    "Published Shelf publications require release.json, but release_check.py could not be imported.",
+                )
+            )
+        return
+    for publication in sorted(books.iterdir()):
+        if not publication.is_dir() or publication.name.startswith("_") or not SAFE_SLUG.fullmatch(publication.name):
+            continue
+        record = publication / "release.json"
+        if not record.is_file():
+            if require_published and publication_status(publication).lower() == "published":
+                out.append(
+                    finding(
+                        "error",
+                        "missing_release_provenance",
+                        f"{publication.name}: Published Shelf publication is missing release.json.",
+                    )
+                )
+            continue
+        try:
+            result = inspect_release(root, publication.name)
+        except Exception as exc:
+            out.append(
+                finding(
+                    "error",
+                    "release_check_failed",
+                    f"{publication.name}: release checker failed safely: {exc}",
+                )
+            )
+            continue
+        for item in result.get("findings", []):
+            if item.get("level") == "info":
+                continue
+            out.append(
+                finding(
+                    item.get("level", "warning"),
+                    item.get("code", "release_provenance"),
+                    f"{publication.name}: {item.get('message', 'Release provenance finding.')}",
+                )
+            )
+
+
 def inspect_root(root: Path) -> list[Finding]:
     root = root.resolve()
     out: list[Finding] = []
@@ -386,6 +502,8 @@ def inspect_root(root: Path) -> list[Finding]:
                 out.append(finding("error", f"{Path(rel).name}_missing", f"{rel} is missing."))
 
     inspect_reader_presentations(root, out)
+    inspect_production_contracts(root, out)
+    inspect_release_provenance(root, out, require_published=role == "shelf")
 
     workflows = root / ".github" / "workflows"
     if workflows.is_dir() and any(

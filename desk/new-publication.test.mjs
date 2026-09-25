@@ -8,13 +8,16 @@ import {
   crc32,
   publicationRightsManifest,
   slugifyTitle,
+  validateStarterInput,
   zipStore,
 } from './new-publication.js';
 
 assert.equal(slugifyTitle('  The Café & Moon  '), 'the-cafe-and-moon');
 assert.equal(slugifyTitle('---'), 'my-publication');
+assert.deepEqual(validateStarterInput({ title: '  Real\n title  ' }), { ok: true, title: 'Real title' });
+assert.equal(validateStarterInput({ title: '  ' }).ok, false);
 assert.ok(STARTER_PRESETS.some(([id]) => id === 'accessible'));
-assert.equal(Object.keys(PUBLICATION_FORMATS).length, 10);
+assert.equal(Object.keys(PUBLICATION_FORMATS).length, 11);
 
 const bundle = buildPublicationFiles({
   format: 'report',
@@ -40,6 +43,31 @@ assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /model training or fine
 assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /retrieval-augmented generation \(RAG\)/i);
 assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /copyright-management information/i);
 assert.match(bundle.files['field-notes-2026/RIGHTS.md'], /Hosting-provider terms are separate/i);
+assert.ok(bundle.files['field-notes-2026/research/README.md']);
+
+const coloring = buildPublicationFiles({
+  format: 'coloringBook',
+  title: 'Quiet Stars',
+  author: 'Ada Artist',
+  pieceTitle: 'Scene 1',
+  preset: 'accessible',
+});
+assert.equal(coloring.format, 'Coloring book');
+assert.ok(coloring.files['quiet-stars/research/README.md']);
+assert.ok(coloring.files['quiet-stars/production/manifest.json']);
+assert.ok(coloring.files['quiet-stars/production/page-map.json']);
+assert.ok(coloring.files['quiet-stars/production/scene-plan.json']);
+assert.ok(coloring.files['quiet-stars/production/asset-inventory.json']);
+const coloringManifest = JSON.parse(coloring.files['quiet-stars/production/manifest.json']);
+assert.equal(coloringManifest.editionId, 'paperback-letter');
+assert.equal(coloringManifest.kind, 'activity/coloring');
+assert.deepEqual(coloringManifest.requires, {
+  pageMap: true,
+  scenePlan: true,
+  assetInventory: true,
+  qaChecklist: true,
+  printArtSpec: true,
+});
 
 const manifest = JSON.parse(bundle.files['field-notes-2026/rights.json']);
 assert.equal(manifest.schemaVersion, 1);

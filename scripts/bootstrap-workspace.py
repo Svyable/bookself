@@ -53,6 +53,17 @@ def initialize_git(path: Path) -> None:
         raise RuntimeError("git is required to initialize Desk and Shelf repositories")
     run(["git", "init"], cwd=path)
     run(["git", "branch", "-M", "main"], cwd=path)
+    run(["git", "add", "."], cwd=path)
+    run([
+        "git",
+        "-c",
+        "user.name=Bookself Bootstrap",
+        "-c",
+        "user.email=bootstrap@bookself.invalid",
+        "commit",
+        "-m",
+        "Initialize Bookself instance",
+    ], cwd=path)
 
 
 def bootstrap(

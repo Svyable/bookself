@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "publicationId": "your-coloring-book",
+  "editionId": "paperback-letter",
+  "pageCount": 0,
+  "trim": {
+    "width": 8.5,
+    "height": 11,
+    "units": "in"
+  },
+  "bleed": false,
+  "pages": []
+}

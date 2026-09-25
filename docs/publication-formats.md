@@ -6,6 +6,12 @@ Bookself can stay simple while publishing more than books. The underlying rule i
 
 Copy `books/_TEMPLATE/` and write chapters as Markdown. A released book appears on the Shelf and opens in the full Reader.
 
+## Coloring and activity books
+
+Copy `books/_COLORING_BOOK_TEMPLATE/` for a page-sequenced visual or activity publication. The Reader still uses ordinary Markdown for the readable layer; the optional `production/` sidecar records exact page sequence, scene IDs, asset lineage, provenance, QA, and target preflight. Its `kind` is an open namespaced value such as `activity/coloring`, so the same capability model can serve visual workbooks, comics, and future page-based formats without expanding a closed core taxonomy.
+
+See [`production-contract.md`](production-contract.md) before declaring an interior print-ready.
+
 ## Papers, whitepapers, and research notes
 
 Copy `books/_PAPER_TEMPLATE/` instead. The generic starter begins with the neutral `Format: Paper` label and uses the same publication folder and Git history as other Bookself work. Change the format to a more specific real form such as `Whitepaper`, `Research Paper`, `Preprint`, `Thesis`, or `Dissertation` when that better describes the publication. Paper metadata can include:

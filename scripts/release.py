@@ -159,6 +159,7 @@ def main(argv: list[str]) -> int:
 
     print(f"Prepared release: {result['title']}")
     print(f"Desk snapshot: {result['source_commit']}")
+    print(f"Payload digest: {result['payload_digest']}")
     print(f"Shelf branch: {result['shelf_branch']}")
     print(f"Catalog: {result['catalog_action']}")
     print(
@@ -168,8 +169,9 @@ def main(argv: list[str]) -> int:
     if result.get("canonical_url"):
         print(f"Canonical URL: {result['canonical_url']}")
     print(
-        "Verified: Shelf content matches the committed Desk snapshot and the "
-        "Published catalog, canonical publication pages, and sitemap are current."
+        "Verified: Shelf content matches the committed Desk snapshot, release.json "
+        "records the source commit and payload digest, and the Published catalog, "
+        "canonical publication pages, and sitemap are current."
     )
     print("Nothing was committed or pushed.")
     print()

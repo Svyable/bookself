@@ -25,6 +25,16 @@ COVER_LAYOUTS = {"classic", "centered", "lower-third"}
 COVER_ALIGNS = {"left", "center"}
 COVER_FITS = {"cover", "contain"}
 COVER_TONES = {"light", "dark"}
+PRESETS = {
+    "book",
+    "literary",
+    "modern-essay",
+    "editorial",
+    "poetry",
+    "night-story",
+    "accessible",
+    "quiet-study",
+}
 
 
 @dataclass(frozen=True)
@@ -96,9 +106,10 @@ def validate_presentation(data: Any) -> list[PresentationIssue]:
     if not isinstance(data, dict):
         return [issue("error", "reader_shape", "reader.json must contain a JSON object.")]
 
-    unknown_top = sorted(set(data) - {"version", "appearance", "typography", "cover"})
+    unknown_top = sorted(set(data) - {"version", "preset", "appearance", "typography", "cover"})
     for name in unknown_top:
         out.append(issue("error", "reader_unknown_setting", f"Unknown reader.json setting: {name}."))
+    _enum(out, data, "preset", PRESETS, "preset")
 
     if "version" not in data:
         out.append(issue("warning", "reader_version_missing", "reader.json has no version; add \"version\": 1."))

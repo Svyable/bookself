@@ -37,6 +37,10 @@ books/<slug>/
 │   ├── kindle.json
 │   ├── paperback-6x9.json
 │   └── hardcover-6x9.json
+├── production/             # optional edition-specific evidence
+│   ├── manifest.json
+│   ├── page-map.json
+│   └── asset-inventory.json
 ├── reader.json
 ├── RIGHTS.md
 └── rights.json
@@ -87,4 +91,4 @@ This is the practical promise of Bookself open publishing:
 
 > Own the source. Describe the edition. Rebuild the artifact.
 
-See [Covers and editions](covers-and-editions.md) for production conventions and current print/eBook guidance.
+See [Covers and editions](covers-and-editions.md) for production conventions and current print/eBook guidance, and [Production contracts](production-contract.md) for extensible page, scene, asset, and target evidence.

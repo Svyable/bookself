@@ -80,6 +80,17 @@ def check(root: Path) -> list[str]:
     statuses = publication_statuses(root)
     errors: list[str] = []
 
+    if role in {"platform", "shelf"} and (root / "catalog.json").is_file():
+        readme = root / "README.md"
+        if not readme.is_file():
+            errors.append("root README.md is missing while catalog.json is authoritative")
+        else:
+            readme_catalog = portal_slugs(readme.read_text(encoding="utf-8"))
+            for slug in sorted(catalog - readme_catalog):
+                errors.append(f"{slug}: catalog.json entry is missing from root ## The books")
+            for slug in sorted(readme_catalog - catalog):
+                errors.append(f"{slug}: root ## The books entry is missing from catalog.json")
+
     for slug in sorted(catalog):
         if slug not in statuses:
             errors.append(f"{slug}: catalog entry has no readable books/{slug}/README.md")

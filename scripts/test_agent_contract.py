@@ -19,6 +19,7 @@ EXPECTED_TEMPLATES = {
     "report": "books/_REPORT_TEMPLATE/",
     "manual": "books/_MANUAL_TEMPLATE/",
     "comic": "books/_COMIC_TEMPLATE/",
+    "coloring-book": "books/_COLORING_BOOK_TEMPLATE/",
 }
 EXPECTED_PRESETS = {
     "book",
@@ -39,7 +40,8 @@ class AgentContractTests(unittest.TestCase):
 
     def test_entry_points_exist(self) -> None:
         for path in self.data["agentEntryPoints"].values():
-            self.assertTrue((ROOT / path).exists(), path)
+            if isinstance(path, str) and not path.startswith(("http://", "https://")):
+                self.assertTrue((ROOT / path).exists(), path)
         self.assertTrue((ROOT / ".agents/skills/bookself-publisher/SKILL.md").is_file())
         self.assertTrue((ROOT / ".agents/skills/human-prose/SKILL.md").is_file())
 
@@ -74,13 +76,21 @@ class AgentContractTests(unittest.TestCase):
             "bootstrapSingleInstance",
             "validateWorkspacePair",
             "validate",
+            "validateProduction",
+            "verifyRelease",
+            "calculatePrintGeometry",
             "syncSharedUi",
             "release",
         ):
-            command = self.data["capabilities"][capability]["command"]
-            match = re.search(r"scripts/[A-Za-z0-9._-]+", command)
-            self.assertIsNotNone(match, command)
-            self.assertTrue((ROOT / match.group(0)).is_file(), command)
+            capability_data = self.data["capabilities"][capability]
+            commands = [capability_data["command"]] if "command" in capability_data else [
+                capability_data["deskCommand"],
+                capability_data["shelfCommand"],
+            ]
+            for command in commands:
+                match = re.search(r"scripts/[A-Za-z0-9._-]+", command)
+                self.assertIsNotNone(match, command)
+                self.assertTrue((ROOT / match.group(0)).is_file(), command)
 
     def test_setup_completion_is_explicit(self) -> None:
         completion = self.data["completion"]

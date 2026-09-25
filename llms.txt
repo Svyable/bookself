@@ -86,6 +86,12 @@ Rights-manifest validation:
 
 `python3 scripts/rights-check.py --root .`
 
+Optional production-contract validation:
+
+`python3 scripts/production_check.py <slug> --root . --json`
+
+The production contract is capability-based and extensible. It is appropriate for page-, scene-, asset-, print-, audio-, or other edition-specific evidence; it does not replace the manuscript, research trail, rights, or edition intent. See [Production contract](https://github.com/Svyable/bookself/blob/main/docs/production-contract.md).
+
 Desk/Shelf pair validation:
 
 `python3 scripts/doctor-pair.py <desk-path> <shelf-path>`
@@ -95,6 +101,8 @@ Desk/Shelf pair validation:
 The canonical local release transaction is:
 
 `scripts/release-book.sh <slug> <path-to-shelf>`
+
+Verify a prepared Shelf release independently with `python3 scripts/release_check.py <slug> --root <shelf-path> --json`.
 
 A release preserves the complete publication snapshot, including manuscript, research, media, presentation data, publication rights files, exact Desk source provenance, and deterministic payload integrity. Review the prepared Shelf diff before committing or pushing it.
 
@@ -124,6 +132,7 @@ Read:
 - [AGENTS.md](https://github.com/Svyable/bookself/blob/main/AGENTS.md)
 - [Agent-first Bookself](https://github.com/Svyable/bookself/blob/main/docs/agent-first.md)
 - [Publication research](https://github.com/Svyable/bookself/blob/main/docs/research.md)
+- [Production contract](https://github.com/Svyable/bookself/blob/main/docs/production-contract.md)
 - [Start Here](https://github.com/Svyable/bookself/blob/main/START-HERE.md)
 - [Bookself architecture](https://github.com/Svyable/bookself/blob/main/docs/bookself.md)
 - [Author guide](https://github.com/Svyable/bookself/blob/main/docs/author-guide.md)

@@ -22,6 +22,7 @@ PUBLICATION_TEMPLATES = {
     "_REPORT_TEMPLATE",
     "_MANUAL_TEMPLATE",
     "_COMIC_TEMPLATE",
+    "_COLORING_BOOK_TEMPLATE",
 }
 
 
@@ -105,14 +106,14 @@ class PortabilityTests(unittest.TestCase):
                 [
                     sys.executable,
                     str(ROOT / "scripts" / "promote-book.py"),
-                    "how-to-bookself",
+                    "bookself-101",
                     str(shelf),
                 ],
                 check=True,
                 capture_output=True,
                 text=True,
             )
-            self.assertTrue((shelf / "books" / "how-to-bookself" / "README.md").is_file())
+            self.assertTrue((shelf / "books" / "bookself-101" / "README.md").is_file())
 
 
 if __name__ == "__main__":

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "publicationId": "your-coloring-book",
+  "status": "drafting",
+  "assets": [
+    {
+      "id": "scene-01-placeholder",
+      "originalFilename": "scene-01.svg",
+      "repositoryPath": "media/scene-01.svg",
+      "sourceFormat": "svg",
+      "dimensionsPx": null,
+      "measuredDimensionsPx": null,
+      "vectorGeometry": true,
+      "classification": "candidate",
+      "binaryState": "imported",
+      "approval": "review",
+      "sceneIds": [],
+      "provenance": {
+        "source": "Bookself neutral starter",
+        "creator": "Bookself",
+        "rights": "MIT-licensed framework placeholder; replace before publication"
+      }
+    }
+  ]
+}

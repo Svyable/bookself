@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewed": "2026-09-12",
+  "reviewed": "2026-09-24",
   "units": "inches",
   "principle": "source-before-format",
   "bookselfPresets": {
@@ -23,6 +23,11 @@
       "largeTrim": { "widthGreaterThan": 6.12, "heightGreaterThan": 9 },
       "interiorBleed": { "outside": 0.125, "top": 0.125, "bottom": 0.125 },
       "coverBleed": 0.125,
+      "minimumImagePpi": 300,
+      "recommendedMaximumImagePpi": 600,
+      "minimumLineWeightPt": 0.75,
+      "minimumFontPt": 7,
+      "maximumFileSizeMb": 650,
       "minimumOutsideMarginNoBleed": 0.25,
       "minimumOutsideMarginWithBleed": 0.375,
       "minimumInsideMargins": [

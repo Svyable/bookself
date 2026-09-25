@@ -23,13 +23,14 @@ const demoShelf = await read('shelf/reader/index.html');
 const shelfReadme = await read('shelf/README.md');
 
 const personalShelf = 'https://svyable.github.io/shelf/reader/';
-const embeddedShelf = 'https://svyable.github.io/bookself/shelf/reader/';
+const canonicalReader = 'https://svyable.github.io/bookself/reader/';
 
-assert.match(projectReadme, new RegExp(embeddedShelf.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+assert.match(projectReadme, new RegExp(canonicalReader.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 assert.ok(!projectReadme.includes(personalShelf), 'project README must not promote a personal Shelf');
 assert.ok(!sharedReader.includes(personalShelf), 'shared Reader must not hard-code a personal Shelf');
 assert.ok(!demoShelf.includes(personalShelf), 'embedded demo Shelf must not depend on a personal Shelf');
 assert.ok(!shelfReadme.includes(personalShelf), 'embedded Shelf documentation must not depend on a personal Shelf');
-assert.match(demoShelf, /<iframe\s+src="\.\.\/\.\.\/reader\/"/i);
+assert.match(demoShelf, /window\.location\.replace\(target\)/i);
+assert.match(demoShelf, /\.\.\/\.\.\/reader\//i);
 
 console.log('demo shelf tests ok');

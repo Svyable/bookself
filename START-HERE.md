@@ -124,6 +124,7 @@ Common starters include:
 - `books/_REPORT_TEMPLATE/` — reports and evidence-heavy publications
 - `books/_MANUAL_TEMPLATE/` — manuals, handbooks, and guides
 - `books/_COMIC_TEMPLATE/` — comics and graphic narratives
+- `books/_COLORING_BOOK_TEMPLATE/` — coloring books, activity books, and other page-sequenced visual work
 
 If none is a perfect match, choose the nearest shape. The templates are starter
 structures, not rigid schemas. The [publication formats guide](docs/publication-formats.md)

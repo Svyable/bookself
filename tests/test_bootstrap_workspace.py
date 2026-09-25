@@ -35,6 +35,12 @@ class BootstrapWorkspaceBoundaryTests(unittest.TestCase):
             self.assertTrue((shelf / "reader/js/app.js").is_file())
             self.assertTrue((shelf / "reader/js/app-core.js").is_file())
             self.assertFalse(any((shelf / "books").iterdir()))
+            self.assertTrue((shelf / "catalog.json").is_file())
+            self.assertTrue((desk / "catalog.json").is_file())
+            self.assertTrue((desk / ".git").is_dir())
+            self.assertTrue((shelf / ".git").is_dir())
+            self.assertTrue((desk / ".git/refs/heads/main").exists() or (desk / ".git/refs/heads/main").is_file())
+            self.assertTrue((shelf / ".git/refs/heads/main").exists() or (shelf / ".git/refs/heads/main").is_file())
 
 
 if __name__ == "__main__":

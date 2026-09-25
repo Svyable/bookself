@@ -5,14 +5,10 @@ const reader = await readFile(new URL('../reader/index.html', import.meta.url), 
 const demo = await readFile(new URL('../shelf/reader/index.html', import.meta.url), 'utf8');
 
 const readerVersion = reader.match(/js\/app\.js\?v=([^"']+)/)?.[1];
-const preloadVersion = demo.match(/reader\/js\/app\.js\?v=([^"']+)/)?.[1];
 
 assert.ok(readerVersion, 'Reader should version its app module URL');
-assert.ok(preloadVersion, 'embedded Shelf should version its app module preload');
-assert.equal(
-  preloadVersion,
-  readerVersion,
-  'embedded Shelf preload must match the Reader app module version',
-);
+assert.match(demo, /window\.location\.replace\(target\)/i, 'embedded Shelf should redirect to the shared Reader');
+assert.match(demo, /\.\.\/\.\.\/reader\//i, 'embedded Shelf should preserve query and hash data through the shared Reader redirect');
+assert.ok(!demo.includes('https://svyable.github.io/shelf/reader/'), 'embedded Shelf must not depend on a personal Shelf');
 
-console.log(`reader asset version parity ok (${readerVersion})`);
+console.log(`reader asset version and redirect contract ok (${readerVersion})`);

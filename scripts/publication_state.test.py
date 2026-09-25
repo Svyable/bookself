@@ -57,6 +57,33 @@ class PublicationStateTests(unittest.TestCase):
         self.assertTrue(state["checks"]["structurallyReady"])
         self.assertEqual(state["checks"]["warningCount"], 0)
 
+    def test_production_contract_is_included_when_present(self):
+        temp, root = self.make_root()
+        self.addCleanup(temp.cleanup)
+        production = root / "books" / "example" / "production"
+        production.mkdir()
+        (production / "manifest.json").write_text(
+            json.dumps({
+                "schemaVersion": 1,
+                "publicationId": "example",
+                "status": "drafting",
+                "target": {"platform": "local", "product": "proof"},
+            }),
+            encoding="utf-8",
+        )
+        state = publication_state.publication_state(root, "example")
+        self.assertIsNotNone(state["production"])
+        self.assertEqual(state["production"]["status"], "in-progress")
+        self.assertEqual(state["publications"]["productionIds"] if "publications" in state else [], [])
+
+    def test_published_shelf_publication_requires_release_provenance(self):
+        temp, root = self.make_root(role="shelf")
+        self.addCleanup(temp.cleanup)
+        readme = root / "books" / "example" / "README.md"
+        readme.write_text(readme.read_text().replace("**Status** | Drafting", "**Status** | Published"), encoding="utf-8")
+        state = publication_state.publication_state(root, "example")
+        self.assertIn("missing_release_provenance", {item["code"] for item in state["checks"]["errors"]})
+
     def test_repository_overview_reports_catalog_entries_without_directories(self):
         temp, root = self.make_root()
         self.addCleanup(temp.cleanup)

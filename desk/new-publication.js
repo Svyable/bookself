@@ -11,6 +11,7 @@ export const PUBLICATION_FORMATS = Object.freeze({
   report: Object.freeze({ label: 'Report', format: 'Report', pieceLabel: 'Findings', filename: 'findings.md' }),
   manual: Object.freeze({ label: 'Manual / handbook', format: 'Manual', pieceLabel: 'Getting started', filename: 'getting-started.md' }),
   comic: Object.freeze({ label: 'Comic / graphic narrative', format: 'Comic', pieceLabel: 'Page 1', filename: 'page-01.md' }),
+  coloringBook: Object.freeze({ label: 'Coloring / activity book', format: 'Coloring book', pieceLabel: 'Scene 1', filename: 'scene-01.md' }),
 });
 
 export const STARTER_PRESETS = Object.freeze([
@@ -125,6 +126,8 @@ function starterBody(formatId, title) {
       return `${shared}## What you will accomplish\n\n<!-- Tell the reader what success looks like. -->\n\n## Before you begin\n\n- What you need\n- What you should know\n\n## Step 1\n\nDo the smallest useful thing first.\n\n## Check your result\n\n<!-- Describe how the reader knows the step worked. -->\n`;
     case 'comic':
       return `${shared}## Page 1\n\n**Panel 1.** <!-- Establish place, character, or motion. -->\n\n*Caption:* Add narration only if the image cannot carry it.\n\n**Character:** Dialogue goes here.\n\n**Panel 2.** <!-- Change the information, angle, or emotional beat. -->\n\n**SFX:** *sound*\n`;
+    case 'coloringBook':
+      return `${shared}Describe the scene, its story beat, and the visual focus.\n\n![Scene 1 placeholder](../media/scene-01.svg)\n\nReplace the placeholder with an accessible Reader preview. Record the approved source, print asset, and provenance in production/.\n`;
     case 'book':
     default:
       return `${shared}<!-- Start with a scene, claim, question, or image that gives the reader somewhere to stand. -->\n\nWrite the first paragraph here.\n\n## Next movement\n\n<!-- Use headings only when the reader benefits from a visible turn. -->\n`;
@@ -133,6 +136,152 @@ function starterBody(formatId, title) {
 
 export function catalogSnippet({ title, slug, format }) {
   return `- [${String(title || 'Untitled').trim()}](books/${slugifyTitle(slug || title)}/) — ${format || 'Book'}`;
+}
+
+export function validateStarterInput(input = {}) {
+  const title = String(input.title || '').replace(/\s+/g, ' ').trim();
+  return title ? { ok: true, title } : { ok: false, message: 'Enter a working title before saving or downloading a starter.' };
+}
+
+function researchIndex(title, format) {
+  return `# Research index — ${title}\n\nThis is the canonical research entry point for this ${format.toLowerCase()}. Record source identity, stable links or identifiers, access dates for changing sources, how evidence informed the publication, limitations, counterevidence, and rechecks required before release.\n\nDo not treat this file as a scratchpad or a license to redistribute third-party source material.\n`;
+}
+
+function coloringBookExtras({ slug, title, author }) {
+  const manifest = {
+    schemaVersion: 1,
+    publicationId: slug,
+    editionId: 'paperback-letter',
+    kind: 'activity/coloring',
+    status: 'drafting',
+    target: {
+      platform: 'amazon-kdp',
+      product: 'paperback',
+      profileReviewed: '2026-09-24',
+      profileSource: 'https://kdp.amazon.com/en_US/help/topic/G201857950',
+      notes: 'Recheck the live target specification before export.',
+    },
+    format: {
+      medium: 'print/paperback',
+      trim: { width: 8.5, height: 11, units: 'in' },
+      interior: { ink: 'black-white', paper: 'white' },
+      pageCount: 0,
+      bleed: false,
+      spineText: false,
+    },
+    layout: {
+      readingDirection: 'ltr',
+      sceneTypes: ['coloring'],
+      sceneSide: 'right',
+      sceneParity: 'odd',
+      blankReverse: true,
+      blankReversePolicy: 'intentional-marker-bleed',
+    },
+    requires: {
+      pageMap: true,
+      scenePlan: true,
+      assetInventory: true,
+      qaChecklist: true,
+      printArtSpec: true,
+    },
+    canonicalPaths: {
+      edition: 'editions/paperback-letter.json',
+      pageMap: 'production/page-map.json',
+      scenePlan: 'production/scene-plan.json',
+      assetInventory: 'production/asset-inventory.json',
+      qaChecklist: 'production/qa-checklist.md',
+      printArtSpec: 'production/print-art-spec.md',
+    },
+    qualityGates: {
+      physicalProofRequired: true,
+      physicalProofStatus: 'pending',
+      intentionalBlankPagesReviewed: false,
+      minimumEffectiveImagePpi: 300,
+      minimumLineWeightPt: 0.75,
+      requireEmbeddedFonts: true,
+      requireFlattenedTransparency: true,
+      requireHumanApproval: true,
+    },
+  };
+  const pageMap = {
+    schemaVersion: 1,
+    publicationId: slug,
+    editionId: 'paperback-letter',
+    pageCount: 0,
+    trim: manifest.format.trim,
+    bleed: false,
+    pages: [],
+  };
+  const scenePlan = { schemaVersion: 1, publicationId: slug, status: 'drafting', scenes: [] };
+  const assetInventory = {
+    schemaVersion: 1,
+    publicationId: slug,
+    status: 'drafting',
+    assets: [{
+      id: 'scene-01-placeholder',
+      originalFilename: 'scene-01.svg',
+      repositoryPath: 'media/scene-01.svg',
+      sourceFormat: 'svg',
+      dimensionsPx: null,
+      measuredDimensionsPx: null,
+      vectorGeometry: true,
+      classification: 'candidate',
+      binaryState: 'imported',
+      approval: 'review',
+      sceneIds: [],
+      provenance: {
+        source: 'Bookself neutral starter',
+        creator: 'Bookself',
+        rights: 'MIT-licensed framework placeholder; replace before publication',
+      },
+    }],
+  };
+  const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
+  return {
+    'media/scene-01.svg': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-labelledby="title desc">\n  <title id="title">Scene 1 placeholder</title>\n  <desc id="desc">A simple line-art placeholder with a moon, hills, and a winding path.</desc>\n  <rect width="600" height="800" fill="white"/>\n  <circle cx="430" cy="170" r="70" fill="none" stroke="black" stroke-width="4"/>\n  <path d="M0 610 Q150 500 300 610 T600 590 V800 H0Z" fill="none" stroke="black" stroke-width="4"/>\n  <path d="M270 800 Q300 650 240 520 Q300 450 360 520 Q300 650 330 800" fill="none" stroke="black" stroke-width="4"/>\n</svg>\n`,
+    'cover/README.md': '# Cover source\n\nKeep source artwork separate from the final page-count-dependent wrap. Do not bake in title, author, ISBN, barcode, trim marks, or printer guides.\n',
+    'cover/cover.json': `${JSON.stringify({
+      schemaVersion: 1,
+      sourceMode: 'artwork-plus-deterministic-type',
+      front: { source: null, textInArtwork: false, focalPoint: null },
+      back: { source: null, mode: 'extend-or-compose' },
+      wrap: { source: null, continuous: false },
+      authorPhoto: null,
+      publisherMark: null,
+      typography: { title: 'deterministic', subtitle: 'deterministic', author: 'deterministic', spine: 'deterministic', backCopy: 'deterministic' },
+      barcode: { mode: 'reserve-at-export', source: null },
+      provenance: { artworkCreator: null, generationTool: null, generationPromptFile: null, licenseOrRightsNote: null, createdAt: null },
+    }, null, 2)}\n`,
+    'editions/README.md': '# Editions\n\nThese files describe target intent. Generated PDFs and EPUBs remain rebuildable derivatives.\n',
+    'editions/paperback-letter.json': json({
+      schemaVersion: 1,
+      id: 'paperback-letter',
+      medium: 'print',
+      binding: 'paperback-perfect-bound',
+      target: 'amazon-kdp',
+      trim: manifest.format.trim,
+      interior: { ink: 'black-white', paper: 'white', bleed: false, pageCount: null },
+      cover: { sourceManifest: '../cover/cover.json', finish: 'matte', spineText: 'auto-when-supported', barcode: 'platform-or-export' },
+      preflight: { requireFinalPageCountForCover: true, verifyTargetTemplate: true, minimumEffectiveImagePpi: 300, requireEmbeddedFonts: true },
+    }),
+    'editions/kindle.json': json({
+      schemaVersion: 1,
+      id: 'kindle',
+      medium: 'ebook',
+      format: 'epub-reflowable',
+      target: 'amazon-kdp',
+      language: 'from-publication',
+      cover: { sourceManifest: '../cover/cover.json', marketingImage: 'derive-from-front-source' },
+      preflight: { validateEpub: true, requireLocalAssets: true, requireTitle: true, requireAuthor: true },
+    }),
+    'production/README.md': `# Production workspace — ${title}\n\nThis contract is capability-based. Its kind is open-ended (${manifest.kind}), and requires declares which artifacts this edition needs. Keep generated outputs disposable and keep source evidence publication-local.\n`,
+    'production/manifest.json': json(manifest),
+    'production/page-map.json': json(pageMap),
+    'production/scene-plan.json': json(scenePlan),
+    'production/asset-inventory.json': json(assetInventory),
+    'production/qa-checklist.md': '# Production QA checklist\n\n- [ ] Scene plan and page map agree\n- [ ] Final page count is recorded\n- [ ] Asset provenance and rights are recorded\n- [ ] Current target profile is rechecked\n- [ ] Platform preflight passes\n- [ ] Physical proof is approved before publication\n',
+    'production/print-art-spec.md': '# Print-art acceptance specification\n\nRecord genuine placed resolution, safe areas, line integrity, audience fit, provenance, and approval before moving an asset to print status. Recheck the live target specification before export.\n',
+  };
 }
 
 export function buildPublicationFiles(input = {}) {
@@ -149,19 +298,26 @@ export function buildPublicationFiles(input = {}) {
   const readme = `# ${title}\n\n| | |\n|---|---|\n| **Authors** | ${authorCell} |\n| **Status** | Drafting |\n| **Format** | ${recipe.format} |\n| **Publisher** |  |\n| **Rights** | © ${year} ${rightsOwnerCell} · All Rights Reserved |\n| **AI use** | Training, RAG, AI indexing, and generative reuse reserved |\n| **Rights file** | [RIGHTS.md](RIGHTS.md) |\n| **Rights manifest** | [rights.json](rights.json) |\n| **Tags** |  |\n| **Edition** | 1 |\n| **Language** | English |\n| **Chapters** | 0 of 1 drafted |\n\n## Contents\n\n- [ ] [${pieceTitle}](manuscript/${recipe.filename})\n`;
   const presentation = `${JSON.stringify({ version: 1, preset }, null, 2)}\n`;
   const manuscript = starterBody(formatId, pieceTitle);
+  const files = {
+    [`${slug}/README.md`]: readme,
+    [`${slug}/RIGHTS.md`]: publicationRights(title, author, year),
+    [`${slug}/rights.json`]: publicationRightsManifest(title, author, year),
+    [`${slug}/reader.json`]: presentation,
+    [`${slug}/research/README.md`]: researchIndex(title, recipe.format),
+    [`${slug}/manuscript/${recipe.filename}`]: manuscript,
+  };
+  if (formatId === 'coloringBook') {
+    for (const [path, content] of Object.entries(coloringBookExtras({ slug, title, author }))) {
+      files[`${slug}/${path}`] = content;
+    }
+  }
   return {
     slug,
     title,
     format: recipe.format,
     preset,
     catalog: catalogSnippet({ title, slug, format: recipe.format }),
-    files: {
-      [`${slug}/README.md`]: readme,
-      [`${slug}/RIGHTS.md`]: publicationRights(title, author, year),
-      [`${slug}/rights.json`]: publicationRightsManifest(title, author, year),
-      [`${slug}/reader.json`]: presentation,
-      [`${slug}/manuscript/${recipe.filename}`]: manuscript,
-    },
+    files,
   };
 }
 
@@ -389,15 +545,39 @@ async function copyText(value) {
 }
 
 async function saveStarterFolder() {
-  const bundle = currentBundle();
+  const input = currentInput();
+  const validation = validateStarterInput(input);
+  if (!validation.ok) {
+    $('newPublicationHelp').textContent = validation.message;
+    return;
+  }
+  const bundle = buildPublicationFiles({ ...input, title: validation.title });
   if (typeof window.showDirectoryPicker !== 'function') {
     downloadBlob(`${bundle.slug}.zip`, zipStore(bundle.files), 'application/zip');
     $('newPublicationHelp').textContent = 'Your browser does not expose folder writing here, so Bookself downloaded the same starter as a ZIP.';
     return;
   }
+  let books = null;
+  let createdRoot = false;
   try {
-    const books = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const root = await books.getDirectoryHandle(bundle.slug, { create: true });
+    books = await window.showDirectoryPicker({ mode: 'readwrite' });
+    let root = null;
+    try {
+      root = await books.getDirectoryHandle(bundle.slug);
+    } catch (error) {
+      if (error?.name !== 'NotFoundError') throw error;
+    }
+    if (root) {
+      const existing = [];
+      for await (const entry of root.values()) existing.push(entry.name);
+      if (existing.length) {
+        $('newPublicationHelp').textContent = `Refused to overwrite existing ${bundle.slug}/. Choose another title or move the existing publication first.`;
+        return;
+      }
+    } else {
+      root = await books.getDirectoryHandle(bundle.slug, { create: true });
+      createdRoot = true;
+    }
     for (const [path, content] of Object.entries(bundle.files)) {
       const relative = path.slice(bundle.slug.length + 1).split('/');
       const filename = relative.pop();
@@ -410,6 +590,13 @@ async function saveStarterFolder() {
     }
     $('newPublicationHelp').textContent = `Saved ${bundle.slug}/. Add the catalog line to the root README when you want the Desk and Reader to discover it.`;
   } catch (error) {
+    if (createdRoot && books) {
+      try {
+        await books.removeEntry(bundle.slug, { recursive: true });
+      } catch {
+        // Preserve the original failure; the user can inspect or remove the partial folder.
+      }
+    }
     if (error?.name !== 'AbortError') $('newPublicationHelp').textContent = `Could not write the folder: ${error?.message || error}`;
   }
 }
@@ -426,12 +613,24 @@ function bindUi() {
     else delete event.target.dataset.touched;
   });
   $('newPublicationZip')?.addEventListener('click', () => {
-    const bundle = currentBundle();
+    const input = currentInput();
+    const validation = validateStarterInput(input);
+    if (!validation.ok) {
+      $('newPublicationHelp').textContent = validation.message;
+      return;
+    }
+    const bundle = buildPublicationFiles({ ...input, title: validation.title });
     downloadBlob(`${bundle.slug}.zip`, zipStore(bundle.files), 'application/zip');
   });
   $('newPublicationSaveFolder')?.addEventListener('click', saveStarterFolder);
   $('newPublicationCopyCatalog')?.addEventListener('click', async () => {
-    const copied = await copyText(currentBundle().catalog);
+    const input = currentInput();
+    const validation = validateStarterInput(input);
+    if (!validation.ok) {
+      $('newPublicationHelp').textContent = validation.message;
+      return;
+    }
+    const copied = await copyText(buildPublicationFiles({ ...input, title: validation.title }).catalog);
     $('newPublicationCopyCatalog').textContent = copied ? 'Copied' : 'Copy failed';
     window.setTimeout(() => { $('newPublicationCopyCatalog').textContent = 'Copy catalog line'; }, 1400);
   });

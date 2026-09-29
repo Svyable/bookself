@@ -46,7 +46,7 @@ assert.match(
 );
 assert.match(
   serviceWorker,
-  /const CACHE = 'bookself-reader-shell-v116';/,
+  /const CACHE = 'bookself-reader-shell-v117';/,
   'cache generation must rotate when changing cache ownership semantics',
 );
 assert.match(

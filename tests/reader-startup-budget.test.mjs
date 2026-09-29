@@ -34,7 +34,7 @@ assert.match(
 );
 assert.match(
   source,
-  /fetch\(url, \{ method: 'HEAD', cache: 'no-cache' \}\)/,
+  /requestWithDeadline\(url, \{ method: 'HEAD', cache: 'no-cache' \}\)/,
   'existence probes should use HEAD instead of downloading media bodies',
 );
 assert.match(

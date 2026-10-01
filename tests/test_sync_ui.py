@@ -113,6 +113,15 @@ class ShelfSafeSyncTests(unittest.TestCase):
 
 
 class DeskSafeSyncTests(unittest.TestCase):
+    def test_desk_sync_preserves_cache_namespace(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root, desk = self.make_fixture(Path(temp))
+            worker = root / "reader/sw.js"
+            worker.write_text(worker.read_text().replace("test-shell-v1", "bookself-reader-shell-v117"))
+            (desk / "reader/sw.js").write_text("const CACHE_PREFIX = 'instance-reader-';\n")
+            sync_ui.copy_desk_runtime(root, desk)
+            self.assertIn("instance-reader-v117", (desk / "reader/sw.js").read_text())
+
     def make_fixture(self, base: Path) -> tuple[Path, Path]:
         bookself = base / "bookself"
         desk = base / "desk"

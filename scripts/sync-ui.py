@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -20,6 +21,7 @@ SHELF_EXCLUDED_READER_PATHS = {
     Path("js/demo-catalog-contract.test.mjs"),
     Path("js/fireside-aesthetic.test.mjs"),
     Path("js/offline-shell-contract.test.mjs"),
+    Path("js/runtime-closure.test.mjs"),
 }
 
 
@@ -143,6 +145,9 @@ def copy_desk_runtime(root: Path, destination: Path) -> tuple[list[Path], list[s
     source_reader = root / "reader"
     target_reader = destination / "reader"
     target_reader.mkdir(parents=True, exist_ok=True)
+    previous_worker = target_reader / "sw.js"
+    previous_source = previous_worker.read_text(encoding="utf-8") if previous_worker.is_file() else ""
+    previous_prefix = re.search(r"const CACHE_PREFIX = '([^']+)';", previous_source)
     remove_previous_desk_runtime(destination)
 
     runtime = reader_runtime_paths(root)
@@ -155,7 +160,12 @@ def copy_desk_runtime(root: Path, destination: Path) -> tuple[list[Path], list[s
         shutil.copy2(source, target)
 
     worker = source_reader / "sw.js"
-    shutil.copy2(worker, target_reader / "sw.js")
+    worker_source = worker.read_text(encoding="utf-8")
+    # Cache Storage is origin-wide: preserve an instance's namespace when replacing
+    # its worker so activating Desk cannot evict Bookself's offline shell.
+    if previous_prefix:
+        worker_source = worker_source.replace("bookself-reader-shell-", previous_prefix.group(1))
+    (target_reader / "sw.js").write_text(worker_source, encoding="utf-8")
 
     manifest = target_reader / ".bookself-runtime-files"
     manifest.write_text(

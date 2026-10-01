@@ -4,9 +4,24 @@ importScripts('./js/offline-storage-budget.js');
 importScripts('./js/offline-shell-install.js');
 
 const CACHE_PREFIX = 'bookself-reader-shell-';
-const CACHE = 'bookself-reader-shell-v116';
+const CACHE = 'bookself-reader-shell-v117';
 const KATEX_CDN = 'https://cdn.jsdelivr.net/npm/katex@0.18.4/dist/katex.min.js';
 const SHELL = [
+  './js/request-deadline.js',
+  './css/book-opening-handoff.css',
+  './css/library-current-book.css',
+  './css/book-interior.css',
+  './css/app-shell-polish.css',
+  './js/app-shell-polish.js',
+  './js/book-interior.js',
+  './js/book-opening-handoff.js',
+  './js/chapter-availability-model.js',
+  './js/chapter-availability.js',
+  './js/cooperative-search-model.js',
+  './js/dialog-focus-model.js',
+  './js/direct-route-interaction-model.js',
+  './js/immersive-focus-model.js',
+  './js/library-current-book.js',
   './',
   './index.html',
   './css/style.css',

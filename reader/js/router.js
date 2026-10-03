@@ -2,14 +2,25 @@ import { navigationHistoryState } from './reading-trail-model.js';
 
 /** Routes: hash #/b/<slug>/<chapter>/<offset> and query ?b=&c=&o= */
 
+function decodeRoutePart(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
+
+function libraryRoute() {
+  return { view: 'library', slug: null, chapter: null, offset: 0 };
+}
+
 export function parseHash(hash = window.location.hash) {
   const raw = (hash || '#/').replace(/^#/, '');
   const parts = raw.split('/').filter(Boolean);
-  if (parts[0] !== 'b' || !parts[1]) {
-    return { view: 'library', slug: null, chapter: null, offset: 0 };
-  }
-  const slug = decodeURIComponent(parts[1]);
-  const chapter = parts[2] ? decodeURIComponent(parts[2]) : null;
+  if (parts[0] !== 'b' || !parts[1]) return libraryRoute();
+  const slug = decodeRoutePart(parts[1]);
+  const chapter = parts[2] ? decodeRoutePart(parts[2]) : null;
+  if (!slug || (parts[2] && chapter === null)) return libraryRoute();
   const offset = parts[3] ? Math.max(0, parseInt(parts[3], 10) || 0) : 0;
   if (!chapter) return { view: 'cover', slug, chapter: null, offset: 0 };
   return { view: 'read', slug, chapter, offset };

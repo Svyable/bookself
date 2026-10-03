@@ -49,7 +49,7 @@ function clamp(value, min, max) {
 }
 
 function storagePrefix() {
-  return window.__IMPRINT?.storagePrefix || 'obb';
+  return window.__IMPRINT?.storagePrefix || 'bookself';
 }
 
 function experienceKey() {

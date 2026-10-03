@@ -70,6 +70,41 @@ export function normalizeReaderStyles(value) {
   return styles;
 }
 
+export function migrateStorageNamespaces(
+  store,
+  targetPrefix = DEFAULT_IMPRINT.storagePrefix,
+  legacyPrefixes = ['obb', DEFAULT_IMPRINT.storagePrefix]
+) {
+  const target = String(targetPrefix || DEFAULT_IMPRINT.storagePrefix).trim() || DEFAULT_IMPRINT.storagePrefix;
+  if (!store) return 0;
+
+  const sources = [...new Set((Array.isArray(legacyPrefixes) ? legacyPrefixes : [legacyPrefixes])
+    .map((value) => String(value || '').trim())
+    .filter((value) => value && value !== target))];
+
+  let migrated = 0;
+  try {
+    const keys = [];
+    for (let index = 0; index < store.length; index += 1) {
+      const key = store.key(index);
+      if (key && sources.some((source) => key.startsWith(`${source}:`))) keys.push(key);
+    }
+    for (const key of keys) {
+      const source = sources.find((prefix) => key.startsWith(`${prefix}:`));
+      if (!source) continue;
+      const targetKey = `${target}${key.slice(source.length)}`;
+      if (store.getItem(targetKey) != null) continue;
+      const value = store.getItem(key);
+      if (value == null) continue;
+      store.setItem(targetKey, value);
+      migrated += 1;
+    }
+  } catch {
+    // Migration is opportunistic; Reader remains usable when storage is blocked.
+  }
+  return migrated;
+}
+
 function applyReaderStyles(styles) {
   document.querySelectorAll('link[data-bookself-instance-style]').forEach((node) => node.remove());
   for (const path of normalizeReaderStyles(styles)) {
@@ -216,6 +251,11 @@ export async function loadImprint() {
 
 export function applyImprint(imprint) {
   window.__IMPRINT = imprint;
+  try {
+    migrateStorageNamespaces(window.localStorage, imprint.storagePrefix || DEFAULT_IMPRINT.storagePrefix);
+  } catch {
+    // Browser privacy settings may make localStorage unavailable.
+  }
   migrateReaderPersonalization();
   document.title = imprint.name;
   document.documentElement.dataset.bookselfRole = imprint.role || 'instance';

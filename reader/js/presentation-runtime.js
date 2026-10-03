@@ -30,7 +30,7 @@ let appearanceRepairTimer = null;
 let baseAppearance = null;
 
 function storagePrefix() {
-  return window.__IMPRINT?.storagePrefix || 'obb';
+  return window.__IMPRINT?.storagePrefix || 'bookself';
 }
 
 function persistenceKeys() {
